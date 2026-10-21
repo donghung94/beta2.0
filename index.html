@@ -134,6 +134,26 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 .wr-meta{font-size:13px;color:#666;margin-top:5px}
 .wr-mnem{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:8px 12px;margin-top:10px;font-size:14px;color:#5d4037}
 .wr-nav{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+
+/* ===== Ngữ pháp ===== */
+#grammarbox{padding:14px 6px 6px}
+.gr-search{flex:1;min-width:160px;padding:8px 12px;border:1.5px solid #ddd;border-radius:20px;font-size:14px;outline:none}
+.gr-search:focus{border-color:#c62828}
+.gr-card{background:#fff;border:1.5px solid #eee;border-radius:12px;margin-top:10px;overflow:hidden}
+.gr-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}
+.gr-head:hover{background:#fdf3f3}
+.gr-num{background:#c62828;color:#fff;font-weight:800;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+.gr-pat{font-weight:800;color:#b71c1c;font-size:15.5px}
+.gr-arrow{margin-left:auto;color:#999}
+.gr-body{display:none;padding:4px 16px 14px 50px}
+.gr-card.open .gr-body{display:block}
+.gr-lab{font-size:11.5px;font-weight:800;color:#c62828;letter-spacing:.4px;margin-top:9px}
+.gr-struct{font-size:15px;color:#17324a;font-weight:700}
+.gr-txt{font-size:14px;color:#333;line-height:1.55}
+.gr-ex{display:flex;gap:8px;align-items:flex-start;margin-top:6px}
+.gr-ex .jp{font-size:14.5px;color:#111}
+.gr-ex .vn{font-size:13px;color:#777}
+.gr-note{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:7px 10px;font-size:13.5px;color:#5d4037;margin-top:9px}
 </style>
 </head>
 <body>
@@ -146,9 +166,9 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 </header>
 
 <aside class="sidebar">
-  <button class="sitem active"><span class="ic">🏯</span>Nhai Kanji</button>
+  <button class="sitem active" id="sb-kanji" onclick="closeGrammar()"><span class="ic">🏯</span>Nhai Kanji</button>
   <button class="sitem" onclick="soon()"><span class="ic">📚</span>Nhai Tango</button>
-  <button class="sitem" onclick="soon()"><span class="ic">📝</span>Nhai Bunpo</button>
+  <button class="sitem" id="sb-bunpo" onclick="openGrammar()"><span class="ic">📝</span>Nhai Bunpo</button>
   <button class="sitem" onclick="soon()"><span class="ic">📄</span>NhaiJLPT</button>
   <button class="sitem" onclick="soon()"><span class="ic">👤</span>Cá nhân hoá</button>
   <button class="sitem orange" onclick="soon()"><span class="ic">💎</span>Trọn đời</button>
@@ -238,6 +258,11 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
       </div>
     </div>
   </div>
+</div>
+<div id="grammarbox" style="display:none">
+  <div class="fc-top"><span class="t">📝 Ngữ pháp N5</span><span class="p" id="grcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeGrammar()">✕ Thoát</button></div>
+  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="grsearch" class="gr-search" placeholder="🔍 Tìm mẫu ngữ pháp… (vd: ます、 て、 quá khứ)" oninput="renderGrammar()"><span style="font-size:12.5px;color:#888;align-self:center">25 mẫu theo Minna no Nihongo Sơ cấp 1 · Ngữ pháp N4–N1 đang biên soạn</span></div>
+  <div id="grlist"></div>
 </div>
 <div id="flashbox" style="display:none">
   <div class="fc-top"><span class="t" id="fctitle">🗂 Flashcard</span><span class="p" id="fcprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeFlash()">✕ Thoát</button></div>
@@ -2443,7 +2468,7 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input', doSearch);
 function selectLevel(lv){
-  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
+  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true); if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
   document.querySelectorAll('.pill[data-lv]').forEach(function(t){ t.classList.toggle('active', t.dataset.lv === lv); });
   document.getElementById('grid').style.display = lv === 'N5' ? '' : 'none';
   document.getElementById('grid4').style.display = lv === 'N4' ? '' : 'none';
@@ -2513,6 +2538,7 @@ function fcLoadKnown(){ try { return JSON.parse(localStorage.getItem('kanjivn_fc
 function fcSaveKnown(m){ try { localStorage.setItem('kanjivn_fc_v1', JSON.stringify(m)); } catch(e){} }
 function fcKnownArr(lv){ var m = fcLoadKnown(); return m[lv] || []; }
 function openFlash(){
+  if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   FC.lv = window.CURLV || 'N5';
   window.__fcOn = true;
@@ -2602,6 +2628,7 @@ document.addEventListener('keydown', function(e){
 /* ===== Luyện viết ===== */
 var WR = {lv:'N5', deck:[], idx:0, shuffle:false, ghost:true, strokes:[], cur:null, drawing:false};
 function openWrite(){
+  if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   WR.lv = window.CURLV || 'N5';
   window.__wOn = true;
@@ -2688,6 +2715,49 @@ function wrInitCanvas(){
 }
 function wrUndo(){ WR.strokes.pop(); wrRedraw(); }
 function wrClear(){ WR.strokes = []; WR.cur = null; wrRedraw(); }
+
+
+/* ===== Ngữ pháp N5 ===== */
+var GRAMMAR5 = [{"p": "N は N です", "s": "[N1] は [N2] です。", "m": "“N1 là N2” — câu giới thiệu, khẳng định cơ bản nhất. は là trợ từ đánh dấu chủ đề của câu.", "ex": [["わたしは学生です。", "Tôi là học sinh."], ["田中さんは先生です。", "Anh Tanaka là giáo viên."]], "n": "は viết là は nhưng đọc là “wa”."}, {"p": "N は N じゃありません", "s": "[N1] は [N2] じゃありません。", "m": "Phủ định của です: “N1 không phải là N2”.", "ex": [["わたしは先生じゃありません。", "Tôi không phải là giáo viên."], ["あの人は日本人じゃありません。", "Người kia không phải là người Nhật."]], "n": "Văn viết trang trọng dùng ではありません thay cho じゃありません."}, {"p": "N も", "s": "[N] も [N] です。", "m": "も nghĩa là “cũng” — dùng khi một thứ có cùng tính chất với thứ đã nói trước.", "ex": [["わたしも学生です。", "Tôi cũng là học sinh."], ["あの人もベトナム人です。", "Người kia cũng là người Việt Nam."]], "n": "も thay hẳn vị trí của は (không viết はも)."}, {"p": "N の N", "s": "[N1] の [N2]", "m": "“N2 của N1” — の nối hai danh từ, chỉ sở hữu hoặc bổ nghĩa; danh từ chính nằm ở sau.", "ex": [["これはわたしの本です。", "Đây là sách của tôi."], ["あれは日本語の本です。", "Kia là sách tiếng Nhật."]], "n": "の còn dùng trong cụm như 会社の人 (người của công ty)."}, {"p": "これ・それ・あれ", "s": "これ／それ／あれ は [N] です。", "m": "Đại từ chỉ vật: これ gần người nói, それ gần người nghe, あれ xa cả hai người.", "ex": [["これは辞書です。", "Đây là từ điển."], ["あれは学校です。", "Kia là trường học."]], "n": "Không dùng これ／それ／あれ để chỉ người vì thiếu lịch sự; chỉ người dùng あの人."}, {"p": "この・その・あの", "s": "この／その／あの + [N]", "m": "Tính từ chỉ định đứng ngay trước danh từ: cái này / cái đó / cái kia.", "ex": [["この本は高いです。", "Cuốn sách này đắt."], ["その車は新しいです。", "Chiếc xe đó mới."]], "n": "この bắt buộc phải có danh từ đi sau; これ thì đứng một mình."}, {"p": "ここ・そこ・あそこ", "s": "ここ／そこ／あそこ は [nơi chốn] です。", "m": "Đại từ chỉ địa điểm: ở đây (gần tôi), ở đó (gần bạn), ở kia (xa cả hai).", "ex": [["ここは教室です。", "Đây là phòng học."], ["トイレはあそこです。", "Nhà vệ sinh ở đằng kia."]], "n": "Cách nói lịch sự hơn: こちら・そちら・あちら."}, {"p": "N は どこですか", "s": "[N] は どこですか。", "m": "Hỏi nơi chốn: “N ở đâu?”", "ex": [["駅はどこですか。", "Ga tàu ở đâu?"], ["銀行はどこですか。", "Ngân hàng ở đâu?"]], "n": "Trả lời: [N] は ここ／そこ／あそこです, hoặc dùng mẫu あります／います ở Bài 22."}, {"p": "Từ để hỏi: 何・だれ・いつ・いくつ・いくら", "s": "[Từ để hỏi] + ですか。", "m": "Từ để hỏi đặt đúng vào vị trí của thông tin cần hỏi trong câu: 何 (cái gì), だれ (ai), いつ (khi nào), いくつ (mấy cái / mấy tuổi), いくら (bao nhiêu tiền).", "ex": [["これは何ですか。", "Đây là cái gì?"], ["会議はいつですか。", "Cuộc họp là khi nào?"]], "n": "何 đọc là なん trước です và trước lượng từ (何時 なんじ), đọc là なに trong các trường hợp như 何を・何の."}, {"p": "V ます／ません", "s": "V + ます (khẳng định) / V + ません (phủ định)", "m": "Thể lịch sự ở hiện tại – tương lai: “làm / không làm”.", "ex": [["わたしは毎日日本語を勉強します。", "Tôi học tiếng Nhật mỗi ngày."], ["あしたは行きません。", "Ngày mai tôi không đi."]], "n": "Chia động từ: nhóm Ⅰ đổi âm cuối sang hàng い + ます (書きます); nhóm Ⅱ bỏ る + ます (食べます); nhóm Ⅲ: します・来ます."}, {"p": "V ました／ませんでした", "s": "V + ました (đã làm) / V + ませんでした (đã không làm)", "m": "Thể lịch sự ở quá khứ.", "ex": [["昨日映画を見ました。", "Hôm qua tôi đã xem phim."], ["先週は来ませんでした。", "Tuần trước tôi đã không đến."]], "n": "ました là quá khứ của ます; ませんでした là quá khứ của ません."}, {"p": "N を V", "s": "[N] を [V] ます", "m": "を đánh dấu tân ngữ trực tiếp — đối tượng chịu tác động của hành động.", "ex": [["パンを食べます。", "Tôi ăn bánh mì."], ["本を読みます。", "Tôi đọc sách."]], "n": "を đọc là “o”."}, {"p": "N へ／に 行きます", "s": "[Nơi chốn] へ／に + 行きます・来ます・帰ります", "m": "Chỉ hướng / đích đến của động từ di chuyển.", "ex": [["学校へ行きます。", "Tôi đi đến trường."], ["国へ帰ります。", "Tôi về nước."]], "n": "へ đọc là “e”. に cũng chỉ đích đến; へ nhấn mạnh hướng đi hơn."}, {"p": "N で 行きます", "s": "[Phương tiện] で + 行きます・来ます", "m": "で chỉ phương tiện, cách thức di chuyển: “bằng …”.", "ex": [["電車で行きます。", "Tôi đi bằng tàu điện."], ["バスで来ました。", "Tôi đã đến bằng xe buýt."]], "n": "Đi bộ không dùng で: nói 歩いて行きます."}, {"p": "N と V", "s": "[Người] と [V] ます", "m": "と nghĩa là “cùng với (ai đó)”.", "ex": [["友達と話します。", "Tôi nói chuyện với bạn."], ["家族と旅行します。", "Tôi đi du lịch cùng gia đình."]], "n": "“Một mình” nói là 一人で（ひとりで）."}, {"p": "N から N まで", "s": "[N1] から [N2] まで", "m": "“Từ N1 đến N2” — dùng cho cả thời gian lẫn nơi chốn.", "ex": [["9時から5時まで働きます。", "Tôi làm việc từ 9 giờ đến 5 giờ."], ["家から駅まで歩きます。", "Tôi đi bộ từ nhà đến ga."]], "n": "から và まで có thể dùng tách riêng từng trợ từ."}, {"p": "Tính từ い／な", "s": "Aい + です ／ Aな + です", "m": "Tính từ い kết thúc bằng い (高い, 面白い); tính từ な cần な khi đứng trước danh từ (静かな町) nhưng bỏ な trước です.", "ex": [["この本は面白いです。", "Cuốn sách này thú vị."], ["この町は静かです。", "Thị trấn này yên tĩnh."]], "n": "Phủ định: tính từ い → bỏ い + くないです (面白くないです); tính từ な → じゃありません (静かじゃありません)."}, {"p": "V たいです", "s": "V (bỏ ます) + たいです", "m": "“Muốn làm V” — chỉ nguyện vọng của chính người nói.", "ex": [["日本へ行きたいです。", "Tôi muốn đi Nhật."], ["寿司を食べたいです。", "Tôi muốn ăn sushi."]], "n": "Tân ngữ trước たい có thể dùng が thay を: 水が飲みたいです (Tôi muốn uống nước)."}, {"p": "V てください", "s": "V (thể て) + ください", "m": "“Hãy / Xin hãy …” — câu yêu cầu, nhờ vả lịch sự.", "ex": [["ここに名前を書いてください。", "Xin hãy viết tên vào đây."], ["もう一度言ってください。", "Xin hãy nói lại một lần nữa."]], "n": "Thể て: nhóm Ⅰ い・ち・り→って, み・び・に→んで, き→いて, ぎ→いで, し→して; nhóm Ⅱ bỏ る + て; nhóm Ⅲ: して・来て（きて)."}, {"p": "V てもいいです", "s": "V (thể て) + もいいです", "m": "“Được phép làm V” — cho phép hoặc xin phép.", "ex": [["写真を撮ってもいいです。", "Được chụp ảnh."], ["ここに座ってもいいですか。", "Tôi ngồi ở đây có được không?"]], "n": "Hỏi xin phép dùng dạng câu hỏi ～てもいいですか."}, {"p": "V てはいけません", "s": "V (thể て) + はいけません", "m": "“Không được làm V” — cấm đoán, quy định.", "ex": [["ここで写真を撮ってはいけません。", "Không được chụp ảnh ở đây."], ["タバコを吸ってはいけません。", "Không được hút thuốc."]], "n": "は trong ては đọc là “wa”."}, {"p": "N が あります／います", "s": "[Nơi] に [N] が あります／います", "m": "Nói về sự tồn tại: あります dùng cho đồ vật, cây cối; います dùng cho người và động vật.", "ex": [["部屋に机があります。", "Trong phòng có cái bàn."], ["公園に子供がいます。", "Ở công viên có trẻ con."]], "n": "Trợ từ đi kèm địa điểm là に; を không dùng trong mẫu này."}, {"p": "So sánh: より／のほうが", "s": "[A] は [B] より [Tính từ] です ／ [A] のほうが [B] より [Tính từ] です", "m": "So sánh hơn: “A … hơn B”.", "ex": [["電車はバスより速いです。", "Tàu điện nhanh hơn xe buýt."], ["肉のほうが魚より好きです。", "Tôi thích thịt hơn cá."]], "n": "So sánh nhất trong một nhóm: [Nhóm] で [A] が一番 [Tính từ] です."}, {"p": "V ながら", "s": "V1 (bỏ ます) + ながら、V2", "m": "“Vừa làm V1 vừa làm V2” — hai hành động xảy ra đồng thời, V2 là hành động chính.", "ex": [["音楽を聞きながら勉強します。", "Tôi vừa nghe nhạc vừa học."], ["歩きながら話します。", "Vừa đi bộ vừa nói chuyện."]], "n": "Chủ ngữ của hai hành động phải là cùng một người."}, {"p": "V てから", "s": "V1 (thể て) + から、V2", "m": "“Sau khi làm xong V1 thì làm V2” — nhấn mạnh trình tự các hành động.", "ex": [["手を洗ってから、ご飯を食べます。", "Rửa tay xong rồi mới ăn cơm."], ["宿題をしてから、遊びます。", "Làm bài tập xong rồi mới chơi."]], "n": "Một ngày thường có nhiều hành động nối nhau bằng てから."}];
+function grEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function openGrammar(){
+  if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
+  if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
+  window.__gOn = true;
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  document.getElementById('grammarbox').style.display = '';
+  document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-bunpo'); });
+  renderGrammar();
+}
+function closeGrammar(skip){
+  window.__gOn = false;
+  document.getElementById('grammarbox').style.display = 'none';
+  document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-kanji'); });
+  if(!skip) selectLevel(window.CURLV || 'N5');
+}
+function grSpeak(e, i, j){ e.stopPropagation(); speak(GRAMMAR5[i].ex[j][0]); }
+function grToggle(i){ var el = document.getElementById('grc' + i); if(el) el.classList.toggle('open'); }
+function renderGrammar(){
+  var q = (document.getElementById('grsearch').value || '').toLowerCase();
+  var html = '', shown = 0;
+  GRAMMAR5.forEach(function(g, i){
+    if(q && (g.p + ' ' + g.s + ' ' + g.m).toLowerCase().indexOf(q) < 0) return;
+    shown++;
+    var exs = g.ex.map(function(ex, j){
+      return '<div class="gr-ex"><button class="audio" onclick="grSpeak(event,' + i + ',' + j + ')">🔊</button><div><div class="jp">' + grEsc(ex[0]) + '</div><div class="vn">' + grEsc(ex[1]) + '</div></div></div>';
+    }).join('');
+    html += '<div class="gr-card' + (shown === 1 && !q ? ' open' : '') + '" id="grc' + i + '">' +
+      '<div class="gr-head" onclick="grToggle(' + i + ')"><span class="gr-num">' + (i + 1) + '</span><span class="gr-pat">' + grEsc(g.p) + '</span><span class="gr-arrow">▾</span></div>' +
+      '<div class="gr-body">' +
+      '<div class="gr-lab">CẤU TRÚC</div><div class="gr-struct">' + grEsc(g.s) + '</div>' +
+      '<div class="gr-lab">GIẢI NGHĨA</div><div class="gr-txt">' + grEsc(g.m) + '</div>' +
+      '<div class="gr-lab">VÍ DỤ</div>' + exs +
+      (g.n ? '<div class="gr-note">⚠ Lưu ý: ' + grEsc(g.n) + '</div>' : '') +
+      '</div></div>';
+  });
+  document.getElementById('grlist').innerHTML = html || '<div style="padding:18px;color:#777">Không tìm thấy mẫu nào khớp.</div>';
+  document.getElementById('grcount').textContent = shown + '/25 mẫu · Minna no Nihongo Sơ cấp 1';
+}
 
 </script>
 </body>
