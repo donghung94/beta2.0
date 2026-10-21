@@ -95,6 +95,31 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 .pk .p{font-size:22px;font-weight:800;color:#c62828}
 .pk ul{text-align:left;font-size:13px;color:#555;padding-left:18px}
 .btn-gold{background:linear-gradient(135deg,#f9a825,#f57f17);color:#fff}
+
+/* ===== Flashcard ===== */
+#flashbox{padding:14px 6px 6px}
+.fc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fc-top .t{font-weight:800;color:#b71c1c;font-size:17px}
+.fc-top .p{color:#555;font-size:13px}
+.fc-top .sp2{flex:1}
+.fc-modes{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}
+.fc-modes .chipbtn.active{background:#c62828;color:#fff;border-color:#c62828}
+.fc-shuf{font-size:13px;color:#444;display:flex;gap:5px;align-items:center;cursor:pointer}
+.fc-card{background:#fff;border:2px solid #ef9a9a;border-radius:18px;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px 16px;cursor:pointer;box-shadow:0 4px 14px rgba(198,40,40,.12);user-select:none}
+.fc-big{font-size:120px;line-height:1.1;color:#b71c1c;font-weight:700}
+.fc-hint{color:#999;font-size:13px;margin-top:10px}
+.fc-badge{display:inline-block;background:#e8f5e9;color:#2e7d32;border-radius:20px;padding:2px 12px;font-size:12px;font-weight:700;margin-bottom:8px}
+.fc-hv{font-size:24px;font-weight:800;color:#b71c1c}
+.fc-mean{font-size:16px;color:#222;margin-top:4px}
+.fc-meta{font-size:13px;color:#666;margin-top:6px}
+.fc-mnem{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:8px 12px;margin-top:10px;font-size:14px;color:#5d4037;max-width:520px}
+.fc-voc{margin-top:10px;font-size:15px;color:#333}
+.fc-voc b{color:#b71c1c}
+.fc-nav{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.fc-mark{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.fc-no{background:#fff;border:2px solid #e57373;color:#c62828;border-radius:24px;padding:9px 22px;font-size:15px;font-weight:700;cursor:pointer}
+.fc-yes{background:#c62828;border:2px solid #c62828;color:#fff;border-radius:24px;padding:9px 22px;font-size:15px;font-weight:700;cursor:pointer}
+.fc-note{text-align:center;color:#2e7d32;font-size:14px;margin-top:10px;min-height:18px}
 </style>
 </head>
 <body>
@@ -165,12 +190,31 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
         <div class="panelhead">
           <div class="pic">🗾</div>
           <div class="pt" id="paneltitle">Kanji N5</div>
-          <button class="chipbtn" onclick="soon()">🗂 Flashcard</button>
+          <button class="chipbtn" onclick="openFlash()">🗂 Flashcard</button>
           <button class="chipbtn" onclick="soon()">✍ Luyện viết</button>
           <div class="sp"></div>
           <button class="createfile" onclick="soon()">📄 Tạo file</button>
         </div>
-        <div class="grid" id="grid">
+        <div id="flashbox" style="display:none">
+  <div class="fc-top"><span class="t" id="fctitle">🗂 Flashcard</span><span class="p" id="fcprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeFlash()">✕ Thoát</button></div>
+  <div class="fc-modes">
+    <button id="fcmodeall" class="chipbtn active" onclick="fcSetMode('all')">Tất cả các thẻ</button>
+    <button id="fcmodeunk" class="chipbtn" onclick="fcSetMode('unknown')">Ôn thẻ chưa thuộc</button>
+    <label class="fc-shuf"><input type="checkbox" id="fcshuffle" onchange="fcToggleShuffle()"> 🔀 Xáo trộn</label>
+  </div>
+  <div id="fccard" class="fc-card" onclick="fcFlip()"></div>
+  <div class="fc-nav">
+    <button class="chipbtn" onclick="fcNav(-1)">⬅ Trước</button>
+    <button class="chipbtn" onclick="fcSpeakCur()">🔊 Nghe từ mẫu</button>
+    <button class="chipbtn" onclick="fcNav(1)">Tiếp ➡</button>
+  </div>
+  <div class="fc-mark">
+    <button class="fc-no" onclick="fcMark(false)">✗ Chưa thuộc</button>
+    <button class="fc-yes" onclick="fcMark(true)">✓ Đã thuộc</button>
+  </div>
+  <div id="fcnote" class="fc-note"></div>
+</div>
+<div class="grid" id="grid">
 <div class="cell" data-i="0" title="NHẤT" onclick="openItem(0)">一</div>
 <div class="cell" data-i="1" title="NHỊ" onclick="openItem(1)">二</div>
 <div class="cell" data-i="2" title="BÁT" onclick="openItem(2)">八</div>
@@ -2355,6 +2399,7 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input', doSearch);
 function selectLevel(lv){
+  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   document.querySelectorAll('.pill[data-lv]').forEach(function(t){ t.classList.toggle('active', t.dataset.lv === lv); });
   document.getElementById('grid').style.display = lv === 'N5' ? '' : 'none';
   document.getElementById('grid4').style.display = lv === 'N4' ? '' : 'none';
@@ -2416,6 +2461,98 @@ function openItemData(it){
 }
 function closeItem(){ document.getElementById('modal').classList.remove('open'); }
 document.getElementById('modal').addEventListener('click', function(e){ if(e.target.id === 'modal') closeItem(); });
+
+/* ===== Flashcard ===== */
+var FC = {lv:'N5', deck:[], idx:0, flipped:false, mode:'all', shuffle:false};
+var FCSETS = {N5:DATA, N4:DATA4, N3:DATA3, N2:DATA2, N1:DATA1};
+function fcLoadKnown(){ try { return JSON.parse(localStorage.getItem('kanjivn_fc_v1') || '{}'); } catch(e){ return {}; } }
+function fcSaveKnown(m){ try { localStorage.setItem('kanjivn_fc_v1', JSON.stringify(m)); } catch(e){} }
+function fcKnownArr(lv){ var m = fcLoadKnown(); return m[lv] || []; }
+function openFlash(){
+  FC.lv = window.CURLV || 'N5';
+  window.__fcOn = true;
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  document.getElementById('flashbox').style.display = '';
+  document.getElementById('fctitle').textContent = '\uD83D\uDDC2 Flashcard — Kanji ' + FC.lv;
+  FC.mode = 'all'; FC.shuffle = false;
+  var cb = document.getElementById('fcshuffle'); if(cb) cb.checked = false;
+  fcSyncModeBtns(); fcBuild(); fcRender();
+}
+function closeFlash(skip){
+  window.__fcOn = false;
+  document.getElementById('flashbox').style.display = 'none';
+  if(!skip) selectLevel(FC.lv);
+}
+function fcBuild(){
+  var all = (FCSETS[FC.lv] || []).slice();
+  if(FC.mode === 'unknown'){
+    var known = fcKnownArr(FC.lv);
+    all = all.filter(function(it){ return known.indexOf(it.kanji) < 0; });
+  }
+  if(FC.shuffle){
+    for(var i = all.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = all[i]; all[i] = all[j]; all[j] = t; }
+  }
+  FC.deck = all; FC.idx = 0; FC.flipped = false;
+}
+function fcSyncModeBtns(){
+  document.getElementById('fcmodeall').classList.toggle('active', FC.mode === 'all');
+  document.getElementById('fcmodeunk').classList.toggle('active', FC.mode === 'unknown');
+}
+function fcSetMode(m){ FC.mode = m; fcSyncModeBtns(); fcBuild(); fcRender(); }
+function fcToggleShuffle(){ FC.shuffle = document.getElementById('fcshuffle').checked; fcBuild(); fcRender(); }
+function fcRender(){
+  var total = (FCSETS[FC.lv] || []).length;
+  var knownN = fcKnownArr(FC.lv).length;
+  document.getElementById('fcprog').textContent = 'Đã thuộc ' + knownN + '/' + total + ' chữ của ' + FC.lv + (FC.deck.length ? ' · Thẻ ' + (FC.idx + 1) + '/' + FC.deck.length : '');
+  var card = document.getElementById('fccard');
+  var note = document.getElementById('fcnote');
+  if(!FC.deck.length){
+    card.innerHTML = '<div style="font-size:44px">🎉</div><div class="fc-mean" style="margin-top:8px">' + (FC.mode === 'unknown' ? 'Bạn đã thuộc hết các thẻ của ' + FC.lv + ' rồi!' : 'Không có thẻ nào.') + '</div><div class="fc-hint">Bấm "Tất cả các thẻ" để ôn lại từ đầu.</div>';
+    note.textContent = ''; return;
+  }
+  var it = FC.deck[FC.idx];
+  var isKnown = fcKnownArr(FC.lv).indexOf(it.kanji) >= 0;
+  if(!FC.flipped){
+    card.innerHTML = (isKnown ? '<div class="fc-badge">✓ Đã thuộc</div>' : '') + '<div class="fc-big">' + it.kanji + '</div><div class="fc-hint">Bấm vào thẻ để lật xem đáp án · Phím cách: lật · ←/→: chuyển thẻ</div>';
+  } else {
+    var v0 = it.vocab && it.vocab.length ? it.vocab[0] : null;
+    card.innerHTML =
+      '<div class="fc-hv">' + it.kanji + ' — ' + it.hanViet + '</div>' +
+      '<div class="fc-mean">' + it.meaning + '</div>' +
+      '<div class="fc-meta">Âm On: ' + it.on.join('、') + (it.kun.length ? ' · Âm Kun: ' + it.kun.join('、') : '') + '</div>' +
+      '<div class="fc-meta">' + it.jlpt + ' · ' + it.strokes + ' nét · Bộ: ' + it.radical + '</div>' +
+      '<div class="fc-mnem">💡 ' + it.mnemonic + '</div>' +
+      (v0 ? '<div class="fc-voc">Từ mẫu: <b>' + v0.word + '</b> (' + v0.reading + ') — ' + v0.meaning + '</div>' : '');
+  }
+  note.textContent = '';
+}
+function fcFlip(){ if(FC.deck.length){ FC.flipped = !FC.flipped; fcRender(); } }
+function fcNav(d){ if(!FC.deck.length) return; FC.idx = (FC.idx + d + FC.deck.length) % FC.deck.length; FC.flipped = false; fcRender(); }
+function fcSpeakCur(){ if(!FC.deck.length) return; var it = FC.deck[FC.idx]; speak(it.vocab && it.vocab.length ? it.vocab[0].word : it.kanji); }
+function fcMark(known){
+  if(!FC.deck.length) return;
+  var it = FC.deck[FC.idx];
+  var m = fcLoadKnown(); var arr = m[FC.lv] || [];
+  var pos = arr.indexOf(it.kanji);
+  if(known && pos < 0) arr.push(it.kanji);
+  if(!known && pos >= 0) arr.splice(pos, 1);
+  m[FC.lv] = arr; fcSaveKnown(m);
+  if(FC.mode === 'unknown' && known){
+    FC.deck.splice(FC.idx, 1);
+    if(FC.idx >= FC.deck.length) FC.idx = 0;
+    FC.flipped = false; fcRender();
+    if(FC.deck.length) document.getElementById('fcnote').textContent = 'Tốt lắm! Còn ' + FC.deck.length + ' thẻ chưa thuộc.';
+    return;
+  }
+  FC.idx = (FC.idx + 1) % FC.deck.length; FC.flipped = false; fcRender();
+}
+document.addEventListener('keydown', function(e){
+  if(!window.__fcOn) return;
+  if(e.key === ' '){ e.preventDefault(); fcFlip(); }
+  else if(e.key === 'ArrowRight'){ fcNav(1); }
+  else if(e.key === 'ArrowLeft'){ fcNav(-1); }
+});
+
 </script>
 </body>
 </html>
