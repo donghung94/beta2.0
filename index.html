@@ -120,6 +120,20 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 .fc-no{background:#fff;border:2px solid #e57373;color:#c62828;border-radius:24px;padding:9px 22px;font-size:15px;font-weight:700;cursor:pointer}
 .fc-yes{background:#c62828;border:2px solid #c62828;color:#fff;border-radius:24px;padding:9px 22px;font-size:15px;font-weight:700;cursor:pointer}
 .fc-note{text-align:center;color:#2e7d32;font-size:14px;margin-top:10px;min-height:18px}
+
+/* ===== Luyện viết ===== */
+#writebox{padding:14px 6px 6px}
+.wr-wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.wr-left{flex:0 0 auto}
+.wr-canvas{width:340px;height:340px;max-width:86vw;aspect-ratio:1/1;background:#fff;border:2px solid #ef9a9a;border-radius:14px;box-shadow:0 4px 14px rgba(198,40,40,.12);touch-action:none;cursor:crosshair}
+.wr-tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.wr-right{flex:1;min-width:220px}
+.wr-big{font-size:64px;color:#b71c1c;font-weight:700;line-height:1.05}
+.wr-hv{font-size:19px;font-weight:800;color:#333}
+.wr-mean{font-size:15px;color:#222;margin-top:2px}
+.wr-meta{font-size:13px;color:#666;margin-top:5px}
+.wr-mnem{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:8px 12px;margin-top:10px;font-size:14px;color:#5d4037}
+.wr-nav{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -191,11 +205,41 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
           <div class="pic">🗾</div>
           <div class="pt" id="paneltitle">Kanji N5</div>
           <button class="chipbtn" onclick="openFlash()">🗂 Flashcard</button>
-          <button class="chipbtn" onclick="soon()">✍ Luyện viết</button>
+          <button class="chipbtn" onclick="openWrite()">✍ Luyện viết</button>
           <div class="sp"></div>
           <button class="createfile" onclick="soon()">📄 Tạo file</button>
         </div>
-        <div id="flashbox" style="display:none">
+        <div id="writebox" style="display:none">
+  <div class="fc-top"><span class="t" id="wrtitle">✍ Luyện viết</span><span class="p" id="wrprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeWrite()">✕ Thoát</button></div>
+  <div class="fc-modes">
+    <label class="fc-shuf"><input type="checkbox" id="wrshuffle" onchange="wrToggleShuffle()"> 🔀 Xáo trộn thứ tự chữ</label>
+    <span style="font-size:13px;color:#777">Mẹo: ẩn chữ mẫu để tự viết từ trí nhớ, xong hiện lên đối chiếu.</span>
+  </div>
+  <div class="wr-wrap">
+    <div class="wr-left">
+      <canvas id="wrcanvas" class="wr-canvas" width="680" height="680"></canvas>
+      <div class="wr-tools">
+        <button class="chipbtn" id="wrghostbtn" onclick="wrToggleGhost()">🙈 Ẩn chữ mẫu</button>
+        <button class="chipbtn" onclick="wrUndo()">↩ Hoàn tác nét</button>
+        <button class="chipbtn" onclick="wrClear()">🗑 Xoá hết</button>
+      </div>
+    </div>
+    <div class="wr-right">
+      <div class="wr-big" id="wrbig"></div>
+      <div class="wr-hv" id="wrhv"></div>
+      <div class="wr-mean" id="wrmean"></div>
+      <div class="wr-meta" id="wrmeta"></div>
+      <div class="wr-meta" id="wrmeta2"></div>
+      <div class="wr-mnem" id="wrmnem"></div>
+      <div class="wr-nav">
+        <button class="chipbtn" onclick="wrNav(-1)">⬅ Chữ trước</button>
+        <button class="chipbtn" onclick="wrSpeak()">🔊 Nghe từ mẫu</button>
+        <button class="chipbtn" onclick="wrNav(1)">Chữ tiếp ➡</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="flashbox" style="display:none">
   <div class="fc-top"><span class="t" id="fctitle">🗂 Flashcard</span><span class="p" id="fcprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeFlash()">✕ Thoát</button></div>
   <div class="fc-modes">
     <button id="fcmodeall" class="chipbtn active" onclick="fcSetMode('all')">Tất cả các thẻ</button>
@@ -2399,7 +2443,7 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input', doSearch);
 function selectLevel(lv){
-  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
+  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   document.querySelectorAll('.pill[data-lv]').forEach(function(t){ t.classList.toggle('active', t.dataset.lv === lv); });
   document.getElementById('grid').style.display = lv === 'N5' ? '' : 'none';
   document.getElementById('grid4').style.display = lv === 'N4' ? '' : 'none';
@@ -2469,6 +2513,7 @@ function fcLoadKnown(){ try { return JSON.parse(localStorage.getItem('kanjivn_fc
 function fcSaveKnown(m){ try { localStorage.setItem('kanjivn_fc_v1', JSON.stringify(m)); } catch(e){} }
 function fcKnownArr(lv){ var m = fcLoadKnown(); return m[lv] || []; }
 function openFlash(){
+  if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   FC.lv = window.CURLV || 'N5';
   window.__fcOn = true;
   ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
@@ -2552,6 +2597,97 @@ document.addEventListener('keydown', function(e){
   else if(e.key === 'ArrowRight'){ fcNav(1); }
   else if(e.key === 'ArrowLeft'){ fcNav(-1); }
 });
+
+
+/* ===== Luyện viết ===== */
+var WR = {lv:'N5', deck:[], idx:0, shuffle:false, ghost:true, strokes:[], cur:null, drawing:false};
+function openWrite(){
+  if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
+  WR.lv = window.CURLV || 'N5';
+  window.__wOn = true;
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  document.getElementById('writebox').style.display = '';
+  document.getElementById('wrtitle').textContent = '✍ Luyện viết — Kanji ' + WR.lv;
+  WR.shuffle = false; WR.ghost = true;
+  var cb = document.getElementById('wrshuffle'); if(cb) cb.checked = false;
+  document.getElementById('wrghostbtn').textContent = '🙈 Ẩn chữ mẫu';
+  wrBuild(); wrRender(); wrInitCanvas();
+}
+function closeWrite(skip){
+  window.__wOn = false;
+  document.getElementById('writebox').style.display = 'none';
+  if(!skip) selectLevel(WR.lv);
+}
+function wrBuild(){
+  var all = (FCSETS[WR.lv] || []).slice();
+  if(WR.shuffle){
+    for(var i = all.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = all[i]; all[i] = all[j]; all[j] = t; }
+  }
+  WR.deck = all; WR.idx = 0;
+}
+function wrToggleShuffle(){ WR.shuffle = document.getElementById('wrshuffle').checked; wrBuild(); wrRender(); }
+function wrCur(){ return WR.deck[WR.idx] || null; }
+function wrRender(){
+  var it = wrCur(); if(!it) return;
+  document.getElementById('wrprog').textContent = 'Chữ ' + (WR.idx + 1) + '/' + WR.deck.length + ' của ' + WR.lv;
+  document.getElementById('wrbig').textContent = it.kanji;
+  document.getElementById('wrhv').textContent = it.kanji + ' — ' + it.hanViet;
+  document.getElementById('wrmean').textContent = it.meaning;
+  document.getElementById('wrmeta').textContent = 'Âm On: ' + it.on.join('、') + (it.kun.length ? ' · Âm Kun: ' + it.kun.join('、') : '');
+  document.getElementById('wrmeta2').textContent = it.jlpt + ' · ' + it.strokes + ' nét · Bộ: ' + it.radical;
+  document.getElementById('wrmnem').textContent = '💡 ' + it.mnemonic;
+  WR.strokes = []; WR.cur = null;
+  wrRedraw();
+}
+function wrNav(d){ if(!WR.deck.length) return; WR.idx = (WR.idx + d + WR.deck.length) % WR.deck.length; wrRender(); }
+function wrSpeak(){ var it = wrCur(); if(it) speak(it.vocab && it.vocab.length ? it.vocab[0].word : it.kanji); }
+function wrToggleGhost(){
+  WR.ghost = !WR.ghost;
+  document.getElementById('wrghostbtn').textContent = WR.ghost ? '🙈 Ẩn chữ mẫu' : '👀 Hiện chữ mẫu';
+  wrRedraw();
+}
+function wrCanvas(){ return document.getElementById('wrcanvas'); }
+function wrRedraw(){
+  var cv = wrCanvas(); if(!cv) return;
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height;
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#e3e3e3'; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+  ctx.strokeStyle = '#d7e3f2'; ctx.lineWidth = 2; ctx.setLineDash([10, 8]);
+  ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+  ctx.setLineDash([]);
+  var it = wrCur();
+  if(WR.ghost && it){
+    ctx.fillStyle = 'rgba(198,40,40,0.13)';
+    ctx.font = '560px "Hiragino Mincho ProN","Yu Mincho",serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(it.kanji, W / 2, H / 2 + 18);
+  }
+  ctx.strokeStyle = '#212121'; ctx.lineWidth = 13; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  WR.strokes.forEach(function(s){ wrDrawStroke(ctx, s); });
+  if(WR.cur) wrDrawStroke(ctx, WR.cur);
+}
+function wrDrawStroke(ctx, s){
+  if(!s.length) return;
+  ctx.beginPath(); ctx.moveTo(s[0][0], s[0][1]);
+  for(var i = 1; i < s.length; i++) ctx.lineTo(s[i][0], s[i][1]);
+  if(s.length === 1) ctx.lineTo(s[0][0] + 0.1, s[0][1] + 0.1);
+  ctx.stroke();
+}
+function wrPos(e){
+  var cv = wrCanvas(); var r = cv.getBoundingClientRect();
+  return [ (e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height ];
+}
+function wrInitCanvas(){
+  var cv = wrCanvas(); if(!cv || cv.__wrReady) return; cv.__wrReady = true;
+  cv.addEventListener('pointerdown', function(e){ e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(err){} WR.drawing = true; WR.cur = [wrPos(e)]; wrRedraw(); });
+  cv.addEventListener('pointermove', function(e){ if(!WR.drawing || !WR.cur) return; WR.cur.push(wrPos(e)); wrRedraw(); });
+  function end(){ if(WR.drawing && WR.cur && WR.cur.length){ WR.strokes.push(WR.cur); } WR.cur = null; WR.drawing = false; wrRedraw(); }
+  cv.addEventListener('pointerup', end);
+  cv.addEventListener('pointercancel', end);
+}
+function wrUndo(){ WR.strokes.pop(); wrRedraw(); }
+function wrClear(){ WR.strokes = []; WR.cur = null; wrRedraw(); }
 
 </script>
 </body>
