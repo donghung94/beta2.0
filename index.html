@@ -205,6 +205,24 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 .rad-cell.sel{border-color:#c62828;background:#fdecea}
 .rad-cell .rc-ch{display:block;font-size:24px;font-weight:800;color:#17324a;line-height:1.15}
 .rad-cell .rc-nm{display:block;font-size:11.5px;color:#888;font-weight:700}
+
+/* ===== Thi thử JLPT ===== */
+#jlptbox{padding:14px 6px 6px}
+.jl-timer{font-weight:800;color:#c62828;font-size:16px;font-variant-numeric:tabular-nums}
+.jl-q{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px 16px;margin-top:12px}
+.jl-q .jl-tag{display:inline-block;background:#fdecea;color:#c62828;font-size:11.5px;font-weight:800;border-radius:8px;padding:2px 8px;margin-bottom:6px}
+.jl-q .jl-qt{font-size:16.5px;font-weight:700;color:#17324a;line-height:1.5}
+.jl-opts{margin-top:10px;display:grid;gap:8px}
+.jl-opt{text-align:left;padding:10px 13px;border:2px solid #e2e2e2;border-radius:11px;background:#fff;font-size:15px;cursor:pointer;color:#223}
+.jl-opt:hover{border-color:#c62828}
+.jl-opt.sel{border-color:#c62828;background:#fdecea;font-weight:700}
+.jl-opt.ok{border-color:#2e7d32;background:#e8f5e9}
+.jl-opt.bad{border-color:#c62828;background:#fdecea}
+.jl-opt:disabled{cursor:default}
+.jl-exp{margin-top:9px;font-size:13.5px;color:#555;line-height:1.5;display:none}
+.jl-start{text-align:center;padding:26px 10px}
+.jl-big{font-size:19px;font-weight:800;color:#17324a}
+.jl-sub{color:#666;font-size:14px;margin-top:6px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -220,7 +238,7 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
   <button class="sitem active" id="sb-kanji" onclick="goHome()"><span class="ic">🏯</span>Nhai Kanji</button>
   <button class="sitem" id="sb-tango" onclick="openTango()"><span class="ic">📚</span>Nhai Tango</button>
   <button class="sitem" id="sb-bunpo" onclick="openGrammar()"><span class="ic">📝</span>Nhai Bunpo</button>
-  <button class="sitem" onclick="soon()"><span class="ic">📄</span>NhaiJLPT</button>
+  <button class="sitem" id="sb-jlpt" onclick="openJLPT()"><span class="ic">📄</span>NhaiJLPT</button>
   <button class="sitem" onclick="soon()"><span class="ic">👤</span>Cá nhân hoá</button>
   <button class="sitem orange" onclick="soon()"><span class="ic">💎</span>Trọn đời</button>
   <button class="sitem" onclick="soon()"><span class="ic">🎚️</span>Trọng âm</button>
@@ -310,6 +328,13 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
       </div>
     </div>
   </div>
+</div>
+<div id="jlptbox" style="display:none">
+  <div class="fc-top"><span class="t">📄 Thi thử JLPT</span><span class="jl-timer" id="jltimer" style="display:none"></span><span class="sp2"></span><button class="chipbtn" onclick="closeJLPT()">✕ Thoát</button></div>
+  <div class="tg-tabs" style="margin-top:10px">
+    <button class="tg-tab" id="jtab5" onclick="jlSet('N5')">N5</button><button class="tg-tab" id="jtab4" onclick="jlSet('N4')">N4</button><button class="tg-tab" id="jtab3" onclick="jlSet('N3')">N3</button><button class="tg-tab" id="jtab2" onclick="jlSet('N2')">N2</button><button class="tg-tab" id="jtab1" onclick="jlSet('N1')">N1</button>
+  </div>
+  <div id="jlbody"></div>
 </div>
 <div id="radicalbox" style="display:none">
   <div class="fc-top"><span class="t">🧩 214 Bộ thủ Khang Hy</span><span class="p" id="radcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeRadicals()">✕ Thoát</button></div>
@@ -2537,7 +2562,7 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input', doSearch);
 function selectLevel(lv){
-  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true); if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true); if(window.__tOn && typeof closeTango === 'function') closeTango(true); if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true); if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true); if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true); if(window.__tOn && typeof closeTango === 'function') closeTango(true); if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true); if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   document.querySelectorAll('.pill[data-lv]').forEach(function(t){ t.classList.toggle('active', t.dataset.lv === lv); });
   document.getElementById('grid').style.display = lv === 'N5' ? '' : 'none';
   document.getElementById('grid4').style.display = lv === 'N4' ? '' : 'none';
@@ -2607,7 +2632,7 @@ function fcLoadKnown(){ try { return JSON.parse(localStorage.getItem('kanjivn_fc
 function fcSaveKnown(m){ try { localStorage.setItem('kanjivn_fc_v1', JSON.stringify(m)); } catch(e){} }
 function fcKnownArr(lv){ var m = fcLoadKnown(); return m[lv] || []; }
 function openFlash(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -2700,7 +2725,7 @@ document.addEventListener('keydown', function(e){
 /* ===== Luyện viết ===== */
 var WR = {lv:'N5', deck:[], idx:0, shuffle:false, ghost:true, strokes:[], cur:null, drawing:false};
 function openWrite(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -2803,7 +2828,7 @@ var GRAMMAR2 = [{"ex": [["開会に先立って、注意事項を説明します
 var GRAMMAR1 = [{"ex": [["ドアが開くや否や、猫が飛び出しました。", "Cửa vừa mở là mèo phóng ra ngay."], ["発表されるや否や、批判が集まりました。", "Vừa công bố là chỉ trích đổ dồn tới."]], "group": "Thời gian & trình tự N1", "m": "“Ngay khi vừa…” — việc sau xảy ra tức thì sau việc trước (văn viết).", "n": "否や đọc いなや; động từ trước や否や dùng nguyên dạng hoặc た.", "p": "〜や否や", "s": "V + や否や、〜"}, {"ex": [["彼は帰るなり、寝てしまいました。", "Anh ta vừa về là ngủ luôn."], ["電話を切るなり、彼女は泣き出しました。", "Vừa cúp máy là cô ấy bật khóc."]], "group": "Thời gian & trình tự N1", "m": "Việc sau xảy ra ngay sau việc trước một cách bất ngờ, thường là hành động của người khác.", "n": "なり dùng cho chuỗi hành động nhanh và bất ngờ; không dùng cho dự định của người nói.", "p": "V-る なり", "s": "V-る + なり、〜"}, {"ex": [["掃除したそばから、子どもが散らかします。", "Vừa dọn xong là trẻ con lại bày bừa ra."], ["覚えたそばから忘れてしまいます。", "Vừa học thuộc là lại quên ngay."]], "group": "Thời gian & trình tự N1", "m": "Vừa làm xong việc trước thì (việc gây phiền) lại lặp lại ngay — sắc thái bất lực.", "n": "そばから luôn kết hợp việc lặp lại gây khó chịu.", "p": "V-た そばから", "s": "V-た + そばから、〜"}, {"ex": [["彼は食べては寝る生活をしています。", "Anh ta sống kiểu ăn rồi lại ngủ, lặp đi lặp lại."], ["書いては消し、消しては書いています。", "Cứ viết rồi xóa, xóa rồi viết."]], "group": "Thời gian & trình tự N1", "m": "ては…ては chỉ chu kỳ hành động lặp lại nhiều lần.", "n": "Mẫu này nhấn tính lặp lại đơn điệu của thói quen.", "p": "V-ては〜、V-ては", "s": "V1-ては V2、V2-ては V1"}, {"ex": [["病気をしてからというもの、健康に気をつけています。", "Kể từ khi bị bệnh, tôi rất chú ý sức khỏe."], ["子どもが生まれてからというもの、生活が一変しました。", "Từ khi có con, cuộc sống thay đổi hẳn."]], "group": "Thời gian & trình tự N1", "m": "“Kể từ khi…” — sau một bước ngoặt, trạng thái thay đổi hoàn toàn và kéo dài đến nay.", "n": "Mạnh hơn て以来: nhấn sự thay đổi triệt để sau sự kiện.", "p": "〜てからというもの", "s": "V-て + からというもの、〜"}, {"ex": [["今日を限りに、たばこをやめます。", "Từ hôm nay trở đi (lấy hôm nay làm mốc cuối), tôi bỏ thuốc."], ["今月を限りに、その雑誌は休刊となります。", "Lấy tháng này làm số cuối, tạp chí đó sẽ tạm ngưng."]], "group": "Thời gian & trình tự N1", "m": "“Lấy… làm lần cuối/mốc kết thúc” — văn trang trọng cho quyết định dứt điểm.", "n": "限りに đọc かぎりに.", "p": "N を限りに", "s": "N + を限りに"}, {"ex": [["その秘密を知るが最後、無事では済みません。", "Một khi biết bí mật đó thì không xong chuyện đâu."], ["彼に任せるが最後、めちゃくちゃになります。", "Một khi giao cho anh ta là rối tung lên."]], "group": "Thời gian & trình tự N1", "m": "“Một khi đã… thì (hệ quả xấu không tránh được)” — cảnh báo kết cục tất yếu.", "n": "が最後 dùng cho hệ quả tiêu cực, không đảo ngược được.", "p": "V-る が 最後", "s": "V-る / V-た + が最後、〜"}, {"ex": [["彼の結婚を境に、生活が変わりました。", "Lấy việc anh ấy kết hôn làm bước ngoặt, cuộc sống đã thay đổi."], ["その事件を境に、世論が変わり始めました。", "Từ vụ việc đó làm mốc, dư luận bắt đầu thay đổi."]], "group": "Thời gian & trình tự N1", "m": "“Lấy… làm ranh giới/bước ngoặt” — trước và sau mốc đó khác hẳn nhau.", "n": "境に đọc さかいに.", "p": "N を境に", "s": "N + を境に、〜"}, {"ex": [["他社に先駆けて、新製品を発表しました。", "Đi trước các công ty khác, chúng tôi công bố sản phẩm mới."], ["春に先駆けて、桜が咲きました。", "Đi trước mùa xuân, hoa anh đào đã nở."]], "group": "Thời gian & trình tự N1", "m": "“Đi tiên phong trước…” — làm trước mọi đối tượng khác (văn trang trọng).", "n": "先駆けて đọc さきがけて.", "p": "〜に先駆けて", "s": "N + に先駆けて"}, {"ex": [["出かけようとした矢先に、雨が降り出しました。", "Đúng lúc định ra ngoài thì trời đổ mưa."], ["忘れようとした矢先に、その曲が流れてきました。", "Đúng lúc cố quên đi thì bài hát đó lại vang lên."]], "group": "Thời gian & trình tự N1", "m": "“Đúng ngay lúc vừa định…” thì việc khác xen vào phá ngang.", "n": "矢先に đọc やさきに.", "p": "〜矢先に", "s": "V-ようとした / V-た + 矢先に"}, {"ex": [["問題が深刻な事態に至って、ようやく対策が取られました。", "Đến khi tình hình trở nên nghiêm trọng, biện pháp mới được đưa ra."], ["病気が悪化するに至って、入院しました。", "Đến mức bệnh nặng hơn, (anh ấy) đã nhập viện."]], "group": "Thời gian & trình tự N1", "m": "“Đến khi/mãi đến mức…” mới xảy ra hệ quả — nhấn quá trình kéo dài đến điểm cực.", "n": "至って đọc いたって; cũng dùng 事態に至る (đi đến tình trạng).", "p": "〜に至って", "s": "N / V-る + に至って"}, {"ex": [["結果いかんでは、計画を変更します。", "Tùy theo kết quả thế nào, chúng tôi sẽ thay đổi kế hoạch."], ["態度いかんでは、許しません。", "Tùy theo thái độ ra sao, tôi sẽ không tha thứ."]], "group": "Thời gian & trình tự N1", "m": "“Tùy vào (diễn biến)…” — dạng trang trọng của 次第で、 nhấn điều kiện chưa xác định.", "n": "いかん đọc いかん; văn viết/thông báo chính thức.", "p": "N + いかんでは", "s": "N + いかんでは、〜"}, {"ex": [["皆さんの協力あっての成功です。", "Thành công này là nhờ có sự hợp tác của mọi người."], ["努力あっての結果です。", "Kết quả này có được là nhờ nỗ lực."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Nhờ có X mới có Y” — Y tồn tại được là nhờ nền tảng X.", "n": "あっての luôn đặt X trước、Y sau: X あっての Y.", "p": "N + あっての + N", "s": "N1 + あっての + N2"}, {"ex": [["知らぬこととて、失礼いたしました。", "Vì tôi không biết nên đã thất lễ, xin thứ lỗi."], ["初めてのこととて、戸惑っております。", "Vì là lần đầu nên tôi còn bỡ ngỡ."]], "group": "Nguyên nhân & hệ quả N1", "m": "Lời xin lỗi/giải thích trang trọng: “vì là… nên (đã lỡ…)”.", "n": "こととて hay dùng trong thư từ, lời xin lỗi kinh doanh.", "p": "〜こととて", "s": "[Câu thường] + こととて、〜"}, {"ex": [["約束した手前、断るわけにはいきません。", "Vì đã hứa (giữ thể diện) nên không thể từ chối."], ["みんなの前で言った手前、引くに引けません。", "Đã nói trước mặt mọi người nên không rút lại được."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Vì thể diện/lập trường đã…” nên buộc phải hành xử tương xứng.", "n": "手前 đọc てまえ; chỉ tâm lý giữ mặt mũi trước người khác.", "p": "〜手前", "s": "V-た + 手前、〜"}, {"ex": [["私に免じて、今回だけは許してください。", "Vì nể tôi, xin tha cho lần này thôi."], ["亡き父に免じて、許してやってください。", "Vì nể người cha đã mất, xin hãy tha cho nó."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Vì nể…” — xin bỏ qua lỗi vì mối quan hệ/tình cảm với người được nêu.", "n": "免じて đọc めんじて; mẫu cầu xin trang trọng, ít gặp hội thoại thường.", "p": "N + に免じて", "s": "N + に免じて、〜"}, {"ex": [["アンケート結果を踏まえて、改善策を決めました。", "Dựa trên kết quả khảo sát, chúng tôi quyết định biện pháp cải thiện."], ["経験を踏まえて、判断してください。", "Hãy phán đoán trên cơ sở kinh nghiệm."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Đứng trên cơ sở…” — lấy kết quả/kinh nghiệm làm nền cho bước tiếp theo.", "n": "踏まえて đọc ふまえて.", "p": "N + を踏まえて", "s": "N + を踏まえて、〜"}, {"ex": [["住民の要望を受けて、市は計画を見直しました。", "Tiếp nhận yêu cầu của cư dân, thành phố đã xem lại kế hoạch."], ["批判を受けて、彼は謝罪しました。", "Nhận chỉ trích, anh ta đã xin lỗi."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Tiếp nhận/chịu tác động của…” rồi hành động đáp lại.", "n": "受けて ở đây là 'tiếp nhận (yêu cầu, chỉ thị, ảnh hưởng)'.", "p": "N + を受けて", "s": "N + を受けて、〜"}, {"ex": [["プロともなると、練習量が違います。", "Đã là dân chuyên nghiệp thì khối lượng luyện tập khác hẳn."], ["四十歳ともなれば、健康が気になります。", "Khi đã 40 tuổi thì sức khỏe thành mối lo."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Khi đã ở mức/vị thế…” thì đương nhiên khác thường.", "n": "ともなると/ともなれば dùng cho cột mốc vị thế, tuổi tác, quy mô.", "p": "〜ともなると / ともなれば", "s": "N + ともなると / ともなれば"}, {"ex": [["年のせいか、最近疲れやすいです。", "Có lẽ vì tuổi tác, dạo này tôi dễ mệt."], ["気のせいか、誰かに見られている気がします。", "Có lẽ do tôi tưởng tượng, cứ thấy như có ai nhìn mình."]], "group": "Nguyên nhân & hệ quả N1", "m": "Đoán nguyên nhân không chắc chắn: “có lẽ vì…”.", "n": "せいか hàm ý 'không rõ có phải vì thế không'.", "p": "〜せいか", "s": "[Câu thường] / N の + せいか"}, {"ex": [["過労に起因する事故が増えています。", "Tai nạn bắt nguồn từ làm việc quá sức đang tăng."], ["この問題は制度に起因しています。", "Vấn đề này bắt nguồn từ chế độ."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Bắt nguồn từ…” — cách nêu nguyên nhân khoa học/trang trọng.", "n": "起因する đọc きいんする; văn báo cáo, tin tức.", "p": "N + に起因する", "s": "N + に起因する / している"}, {"ex": [["この言葉はラテン語に由来します。", "Từ này có nguồn gốc từ tiếng Latin."], ["彼の芸術は故郷の自然に由来しています。", "Nghệ thuật của ông bắt nguồn từ thiên nhiên quê hương."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Có nguồn gốc từ…” — dùng cho từ ngữ, phong tục, tên gọi.", "n": "由来する đọc ゆらいする; khác 起因 (nguyên nhân gây hậu quả xấu là chủ yếu).", "p": "N + に由来する", "s": "N + に由来する / している"}, {"ex": [["油断がもとで、大きな失敗をしました。", "Vì lơ là mà gây ra thất bại lớn."], ["うそがもとで、信用を失いました。", "Vì một lời nói dối mà mất hết uy tín."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Chính… là nguồn cơn” gây ra hậu quả xấu.", "n": "がもとで luôn đi với kết quả tiêu cực.", "p": "N + がもとで", "s": "N + がもとで、〜"}, {"ex": [["命あっての物種です。", "Còn sống là còn tất cả (mạng sống là gốc của mọi thứ)."], ["健康あっての仕事です。", "Có sức khỏe mới làm việc được."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Có X mới có tất cả” — biến thể thành ngữ của あっての, nhấn điều kiện tiên quyết quý giá nhất.", "n": "命あっての物種 là câu thành ngữ cố định, hay được trích dẫn.", "p": "〜あってのことだ", "s": "N + あってのことだ"}, {"ex": [["彼は困難をものともせずに、前進しました。", "Anh ấy tiến lên không nao núng trước khó khăn."], ["周囲の反対をものともせず、計画を実行しました。", "Không để tâm đến phản đối xung quanh, (anh ấy) thực hiện kế hoạch."]], "group": "Nhượng bộ & đối lập N1", "m": "“Không hề nao núng/bận tâm trước…” — vượt qua trở ngại với ý chí mạnh.", "n": "ものともせず là mẫu văn trang trọng, sắc thái ca ngợi.", "p": "N + をものともせず（に）", "s": "N + をものともせず（に）"}, {"ex": [["家族を顧みず、仕事に打ち込みました。", "Không đoái hoài gia đình, anh ta đắm mình vào công việc."], ["危険を顧みず、人を助けました。", "Không màng nguy hiểm, anh ấy cứu người."]], "group": "Nhượng bộ & đối lập N1", "m": "“Không đoái hoài đến…” — bỏ qua điều đáng lẽ phải quan tâm.", "n": "顧みず đọc かえりみず.", "p": "N + を顧みず", "s": "N + を顧みず、〜"}, {"ex": [["冗談にもほどがあります。", "Đùa cũng phải có mức độ chứ!"], ["心配するにもほどがあるでしょう。", "Lo lắng cũng vừa phải thôi chứ."]], "group": "Nhượng bộ & đối lập N1", "m": "“Cái gì cũng có giới hạn!” — trách móc khi việc gì đó vượt quá mức chấp nhận được.", "n": "にもほどがある thường dùng độc lập khi phê phán trực tiếp.", "p": "〜にもほどがある", "s": "N / V-る + にもほどがある"}, {"ex": [["彼は疲れたばかりか、風邪まで引きました。", "Anh ta không chỉ mệt mà còn bị cảm nữa."], ["値段が高いばかりか、品質も悪いです。", "Giá không chỉ cao mà chất lượng còn tệ."]], "group": "Nhượng bộ & đối lập N1", "m": "“Không chỉ… mà còn…” — cộng thêm một yếu tố cùng chiều (thường xấu hơn).", "n": "ばかりか hay đi với まで/も ở vế sau.", "p": "〜ばかりか", "s": "[Câu thường] + ばかりか、〜も/まで"}, {"ex": [["兄が几帳面なのにひきかえ、弟は大雑把です。", "Trái hẳn với anh trai cẩn thận, em trai rất xuề xòa."], ["去年が豊作だったのにひきかえ、今年は不作です。", "Trái với năm ngoái được mùa, năm nay mất mùa."]], "group": "Nhượng bộ & đối lập N1", "m": "“Trái hẳn với…” — đối lập sắc nét giữa hai đối tượng.", "n": "ひきかえ đọc ひきかえ; hai vế phải đối xứng để so sánh.", "p": "〜にひきかえ", "s": "[Câu / N] + にひきかえ、〜"}, {"ex": [["期待とは裏腹に、結果は悪かったです。", "Trái với kỳ vọng, kết quả rất tệ."], ["彼の言葉とは裏腹に、表情は冷たかったです。", "Trái với lời nói, vẻ mặt anh ta lạnh lùng."]], "group": "Nhượng bộ & đối lập N1", "m": "“Trái ngược hoàn toàn với…” — thực tế ngược hẳn điều bề ngoài/kỳ vọng.", "n": "裏腹に đọc うらはらに.", "p": "〜とは裏腹に", "s": "N + とは裏腹に、〜"}, {"ex": [["予想に反して、株価が上がりました。", "Trái với dự đoán, giá cổ phiếu tăng."], ["親の期待に反して、彼は芸術の道を選びました。", "Trái với kỳ vọng của cha mẹ, anh ấy chọn con đường nghệ thuật."]], "group": "Nhượng bộ & đối lập N1", "m": "“Trái với (dự đoán, kỳ vọng, quy tắc)…” thì sự việc diễn ra khác hẳn.", "n": "反して đọc はんして; dạng danh từ: 規則に反する行為.", "p": "N + に反して", "s": "N + に反して、〜"}, {"ex": [["試験は終わったと思いきや、もう一つ残っていました。", "Tưởng thi xong rồi, hóa ra còn một môn nữa."], ["彼は怒ると思いましたが、思いきや笑い出しました。", "Tưởng anh ta sẽ giận, ai ngờ lại bật cười."]], "group": "Nhượng bộ & đối lập N1", "m": "“Tưởng là… ai ngờ…” — thực tế hoàn toàn ngoài dự đoán.", "n": "思いきや chỉ dùng khi kết quả bất ngờ trái hẳn suy nghĩ ban đầu.", "p": "〜と思いきや", "s": "[Câu quá khứ] + と思いきや、〜"}, {"ex": [["会社は倒産を余儀なくされました。", "Công ty bị buộc phải phá sản."], ["悪天候のため、延期を余儀なくされました。", "Vì thời tiết xấu nên buộc phải hoãn."]], "group": "Nhượng bộ & đối lập N1", "m": "“Bị buộc phải…” bởi hoàn cảnh, không còn lựa chọn nào khác.", "n": "余儀なくされる đọc よぎなくされる; mẫu văn trang trọng/báo chí.", "p": "N + を余儀なくされる", "s": "N + を余儀なくされる"}, {"ex": [["彼は事情を知っていながら、何も言いませんでした。", "Biết rõ tình hình vậy mà anh ta không nói gì."], ["悪いと知っていながら、止められませんでした。", "Biết là xấu vậy mà không dừng được."]], "group": "Nhượng bộ & đối lập N1", "m": "“Biết rõ là… vậy mà vẫn…” — sắc thái trách nhẹ hành vi trái với nhận thức.", "n": "ていながら dùng cho trạng thái đang duy trì (知っている、住んでいる…).", "p": "〜ていながら", "s": "V-て いる + ながら、〜"}, {"ex": [["たとえ子どもといえども、礼儀は必要です。", "Dù là trẻ con đi nữa, lễ phép vẫn cần thiết."], ["専門家といえども、間違えることがあります。", "Dù là chuyên gia cũng có lúc sai."]], "group": "Nhượng bộ & đối lập N1", "m": "“Dù cho là…” — dạng văn trang trọng của たとえ〜ても cho danh từ/thân phận.", "n": "といえども đọc といえども.", "p": "N + といえども", "s": "N + といえども、〜"}, {"ex": [["彼は嘘だと知りながら、黙っていました。", "Biết đó là lời nói dối mà vẫn im lặng."], ["危険だと知りながら、彼は進みました。", "Biết là nguy hiểm mà anh ấy vẫn tiến lên."]], "group": "Nhượng bộ & đối lập N1", "m": "“Biết rõ là… mà vẫn…” — cố ý làm bất chấp nhận thức (thường tiêu cực).", "n": "知りながら là dạng cố định hay gặp nhất của mẫu 〜ながら này.", "p": "〜と知りながら", "s": "[Câu] + と知りながら、〜"}, {"ex": [["約束した以上、守らねばなりません。", "Đã hứa thì phải giữ lời (văn trang trọng)."], ["行くと決めたら、行かねばなりません。", "Đã quyết đi thì phải đi."]], "group": "Nghĩa vụ & ý chí N1", "m": "〜ねばならない là dạng trang trọng/văn viết của なければならない.", "n": "ねば nối thể phủ định rút gọn: 行かなければ → 行かねば.", "p": "〜ねばならない", "s": "V-ない（ば形） + ねばならない"}, {"ex": [["先輩に対して失礼なことをしたので、謝らずにはすみません。", "Đã làm điều thất lễ với tiền bối nên không xin lỗi thì không xong."], ["借りたものは返さずにはすみません。", "Đồ mượn thì không trả là không được."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Không làm thì không xong (về mặt đạo lý/xã hội)” — áp lực nghĩa vụ từ bên ngoài.", "n": "すまない ở đây là 'không thể cho qua', khác すみません xin lỗi.", "p": "V + ずにはすまない", "s": "V-ない（ず） + にはすまない"}, {"ex": [["ここにゴミを捨ててはなりません。", "Không được vứt rác ở đây (văn quy định)."], ["関係者以外、入ってはなりません。", "Người không liên quan không được vào."]], "group": "Nghĩa vụ & ý chí N1", "m": "Cấm đoán ở văn quy định/biển báo — dạng trang trọng của てはいけません.", "n": "なりません mạnh và chính thức hơn いけません.", "p": "V-て はならない", "s": "V-て + はならない"}, {"ex": [["真実を知るべく、調査を続けています。", "Để biết sự thật, chúng tôi tiếp tục điều tra."], ["彼に会うべく、駅へ向かいました。", "Để gặp anh ấy, tôi hướng ra ga."]], "group": "Nghĩa vụ & ý chí N1", "m": "〜べく là dạng trang trọng của ために (mục đích) trong văn viết.", "n": "べく đi sau động từ nguyên dạng; する → すべく.", "p": "V-る + べく", "s": "V-る + べく、〜"}, {"ex": [["事故は起こるべくして起こりました。", "Tai nạn xảy ra là điều tất yếu phải xảy ra."], ["二人は出会うべくして出会ったのです。", "Hai người gặp nhau là duyên định sẵn (tất yếu)."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Xảy ra là điều tất yếu (do tích tụ nguyên nhân)” — không phải ngẫu nhiên.", "n": "べくして mang sắc thái triết lý/số phận của sự việc.", "p": "〜べくして", "s": "V-る + べくして + V-た"}, {"ex": [["学生にあるまじき行為です。", "Đó là hành vi không thể chấp nhận ở một học sinh."], ["プロにあるまじきミスをしました。", "Anh ta mắc lỗi không đáng có ở dân chuyên nghiệp."]], "group": "Nghĩa vụ & ý chí N1", "m": "まじ là phủ định ý chí văn cổ: あるまじき = “không được phép có (ở tư cách…)”.", "n": "Dạng cố định hay dùng: N にあるまじき + hành vi.", "p": "〜まじ / あるまじき", "s": "V-る + まじ / N にあるまじき + N"}, {"ex": [["生きんがために、彼は働き続けました。", "Để sống, anh ấy làm việc không ngừng."], ["勝たんがために、猛練習しました。", "Để thắng, (đội) luyện tập cật lực."]], "group": "Nghĩa vụ & ý chí N1", "m": "んがため là dạng văn chương cổ của ために: “để (đạt mục đích)…”.", "n": "Động từ đổi: 行く → 行かんがため; chỉ còn gặp trong văn viết, lời văn.", "p": "V + んがため（に）", "s": "V-ない gốc + んがために"}, {"ex": [["努力することなしに、成功は得られません。", "Không nỗ lực thì không thể thành công."], ["彼の協力なしには、この計画は進みません。", "Không có sự hợp tác của anh ấy, kế hoạch này không tiến triển được."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Không có… thì không thể…” — điều kiện tiên quyết ở văn trang trọng.", "n": "なしに/なしには đều dùng được; なしには nhấn mạnh hơn.", "p": "N + なしに（は）", "s": "N / V-ること + なしに（は）、〜ない"}, {"ex": [["こんな調子では、試験に合格できません。", "Cứ đà này thì không đỗ nổi kỳ thi đâu."], ["今のようでは、信頼を失いますよ。", "Cứ như tình trạng bây giờ thì sẽ mất lòng tin đấy."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Cứ tình trạng này thì…” — cảnh báo hậu quả xấu nếu không thay đổi.", "n": "ようでは đứng sau [thể thường]; phần sau là dự đoán tiêu cực.", "p": "〜ようでは", "s": "[Câu thường] + ようでは、〜"}, {"ex": [["健康は、お金で買えるものではありません。大切にするに越したことはありません。", "Sức khỏe không mua được bằng tiền. Chăm sóc nó là tốt nhất, không gì hơn."], ["準備は早いに越したことはありません。", "Chuẩn bị thì càng sớm càng tốt, không gì bằng."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Không gì tốt hơn…” — khẳng định lựa chọn tối ưu trong lời khuyên.", "n": "越したことはない đọc こしたことはない.", "p": "〜に越したことはない", "s": "V-る / A-い / N + に越したことはない"}, {"ex": [["彼に頼んでこそ、分かることです。", "Phải nhờ anh ấy thì mới biết được."], ["努力してこそ、成功が見えてきます。", "Phải nỗ lực rồi mới thấy thành công."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Phải làm X rồi mới…” — X là điều kiện không thể thiếu để hệ quả có ý nghĩa.", "n": "てこそ nhấn giá trị chỉ xuất hiện sau khi hành động được thực hiện.", "p": "V-て こそ", "s": "V-て + こそ、〜"}, {"ex": [["事実でなくてはなりません。", "(Nó) phải là sự thật (mới được)."], ["彼でなくては、この仕事はできません。", "Không phải anh ấy thì không ai làm được việc này."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Nhất định phải là…” — dạng trang trọng của でなければならない cho danh từ.", "n": "でなくては là rút gọn của でなくてはならない trong văn viết.", "p": "N + でなくてはならない", "s": "N + でなくてはならない"}, {"ex": [["彼は死んだも同然です。", "Anh ta coi như đã chết (sống mà như chết)."], ["この機械は壊れたも同然です。", "Cái máy này coi như hỏng rồi."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Coi như/gần như là…” — thực chất khác nhưng trạng thái tương đương.", "n": "も同然 đọc もどうぜん.", "p": "〜も同然だ", "s": "[Câu thường] + も同然だ"}, {"ex": [["この村には店が無いに等しいです。", "Làng này gần như không có cửa hàng nào."], ["合格したに等しい結果でした。", "Đó là kết quả gần như đỗ rồi."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Gần như ngang bằng với…” — mức độ tiệm cận trạng thái được so.", "n": "等しい đọc ひとしい; văn trang trọng.", "p": "〜に等しい", "s": "[Câu thường] + に等しい"}, {"ex": [["彼の文章は読むに堪えません。", "Văn của anh ta đọc không chịu nổi (quá dở)."], ["見るに堪えない光景でした。", "Đó là cảnh tượng không nỡ nhìn."]], "group": "Trạng thái & mức độ cực đoan", "m": "堪える hai nghĩa: (1) không chịu nổi (phủ định); (2) đáng để (khẳng định: 一見に堪える = đáng xem).", "n": "堪える đọc たえる; phủ định dùng cho chất lượng quá tệ hoặc cảnh quá đau lòng.", "p": "V-る + に堪える / 堪えない", "s": "V-る + に堪える / に堪えない"}, {"ex": [["彼の努力は評価に値します。", "Nỗ lực của anh ấy xứng đáng được đánh giá cao."], ["一読に値する本です。", "Đây là cuốn sách đáng đọc một lần."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Xứng đáng để…” — giá trị đủ để nhận hành động đánh giá/trải nghiệm đó.", "n": "値する đọc あたいする.", "p": "〜に値する", "s": "N / V-る + に値する"}, {"ex": [["若い人の失敗は珍しいことざらではありません。", "Người trẻ thất bại không phải chuyện hiếm."], ["遅刻はざらです。", "Anh ta đi muộn là chuyện thường ngày."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Là chuyện thường/thường xuyên xảy ra” — dạng phủ định kép hoặc ざらだ cho việc phổ biến.", "n": "ざら luôn đi với ない hoặc だ ở cuối; văn nói trang trọng.", "p": "〜ざらではない / 〜ざらだ", "s": "[Câu / N] + ざらではない"}, {"ex": [["彼の仕事ぶりは見事です。", "Cách làm việc của anh ấy thật đáng nể."], ["彼女の話しぶりは丁寧です。", "Cách nói chuyện của cô ấy lịch sự."]], "group": "Trạng thái & mức độ cực đoan", "m": "〜ぶり chỉ phong cách/thái độ thể hiện qua hành động: 仕事ぶり、生活ぶり、飲みぶり.", "n": "ぶり cũng chỉ khoảng thời gian xa cách: 三年ぶり (sau 3 năm) — nghĩa khác.", "p": "N + ぶり（様子）", "s": "N(hoạt động) + ぶり"}, {"ex": [["空が春めいてきました。", "Bầu trời bắt đầu mang hơi thở mùa xuân."], ["彼女は神秘めいた雰囲気があります。", "Cô ấy có bầu không khí huyền bí."]], "group": "Trạng thái & mức độ cực đoan", "m": "めく: bắt đầu mang sắc thái/tính chất của danh từ (mùa, cảm xúc, vẻ bí ẩn).", "n": "めく hay dùng: 春めく、秋めく、神秘めいた、皮肉めいた.", "p": "N + めく / めいた", "s": "N + めく / めいた + N"}, {"ex": [["彼の考えは子どもじみています。", "Suy nghĩ của anh ta trẻ con quá."], ["年寄りじみた服装です。", "Trang phục trông già dặn (như người già)."]], "group": "Trạng thái & mức độ cực đoan", "m": "じみる: trông giống/mang vẻ của… — thường mang sắc thái hơi tiêu cực, không đúng tuổi/vai.", "n": "じみた đứng trước danh từ; chỉ dùng cho người/vẻ bề ngoài.", "p": "N + じみた", "s": "N + じみた + N"}, {"ex": [["彼は疲れきっています。", "Anh ta mệt lử (kiệt sức hoàn toàn)."], ["緊張しきった様子でした。", "Anh ấy có vẻ căng thẳng cực độ."]], "group": "Trạng thái & mức độ cực đoan", "m": "きる（きっている）: trạng thái đạt đến cực điểm hoàn toàn (mệt lử, căng thẳng hẳn).", "n": "Khác きる (làm hết) ở nhóm khả năng N2: ở đây chỉ trạng thái tinh thần/thể chất tột độ.", "p": "〜きっている", "s": "V-ます + きっている"}, {"ex": [["贅沢の極みを味わいました。", "Tôi đã nếm trải sự xa xỉ tột đỉnh."], ["愚かの極みです。", "Đúng là ngu xuẩn tột độ."]], "group": "Trạng thái & mức độ cực đoan", "m": "の極み: “tột đỉnh/tột cùng” của một trạng thái trừu tượng (văn trang trọng).", "n": "極み đọc きわみ.", "p": "N の 極み", "s": "N(trừu tượng) + の極み"}, {"ex": [["無礼極まる人です。", "Anh ta là người vô lễ cực độ."], ["残酷極まる事件でした。", "Đó là vụ việc tàn ác tột cùng."]], "group": "Trạng thái & mức độ cực đoan", "m": "極まる đứng sau tính từ -な: “cực kỳ… (đến mức không hơn được)” — phê phán mạnh.", "n": "極まる đọc きわまる; luôn mang sắc thái tiêu cực.", "p": "Aな + 極まる", "s": "Aな + 極まる"}, {"ex": [["お選びいただき、光栄の至りです。", "Được quý vị lựa chọn, chúng tôi vô cùng vinh hạnh."], ["若輩の至りで、申し訳ありません。", "Tôi còn non nớt, xin lỗi (lời khiêm tốn trang trọng)."]], "group": "Trạng thái & mức độ cực đoan", "m": "の至り: đỉnh điểm của cảm xúc trong các mẫu chào trang trọng (vinh hạnh, xấu hổ, mừng rỡ).", "n": "至り đọc いたり; các cụm cố định: 光栄の至り、赤面の至り.", "p": "N の 至り", "s": "N(cảm xúc) + の至りです"}, {"ex": [["専門家ですら、間違えることがあります。", "Ngay cả chuyên gia cũng có lúc sai."], ["彼は名前すら書けません。", "Anh ta ngay cả tên mình cũng không viết được."]], "group": "Nhấn mạnh & tu từ N1", "m": "すら nhấn mạnh cực đoan: “ngay cả (mức tối thiểu/tối đa) cũng…”.", "n": "すら trang trọng hơn さえ; thường đi với phủ định hoặc 'ngay cả X cũng'.", "p": "N + すら", "s": "N + すら（〜ない）"}, {"ex": [["想像だにできません。", "Ngay cả tưởng tượng cũng không nổi."], ["夢だに思わなかったことです。", "Đó là việc ngay trong mơ tôi cũng không nghĩ tới."]], "group": "Nhấn mạnh & tu từ N1", "m": "だに nhấn mạnh mức tối thiểu trong văn trang trọng: “ngay cả… (cũng không)”.", "n": "Các cụm cố định: 想像だに、夢だに、考えだに.", "p": "N + だに", "s": "N + だに + phủ định"}, {"ex": [["一人たりとも、犠牲にはしません。", "Dù chỉ một người, tôi cũng không để hy sinh."], ["一円たりとも、無駄にできません。", "Dù chỉ một yên cũng không thể lãng phí."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Dù chỉ một…” cũng không — phủ định tuyệt đối với đơn vị nhỏ nhất.", "n": "たりとも luôn đi với phủ định và lượng từ + trợ từ lượng.", "p": "〜たりとも〜ない", "s": "[Lượng từ] + たりとも + phủ định"}, {"ex": [["もちろん、行くとも。", "Tất nhiên là đi chứ!"], ["大丈夫とも。心配いりません。", "Ổn chứ. Không cần lo đâu."]], "group": "Nhấn mạnh & tu từ N1", "m": "とも cuối câu khẳng định dứt khoát, đầy tự tin đồng ý với điều hiển nhiên.", "n": "Sắc thái văn nói mạnh; không dùng trong văn trang trọng.", "p": "〜とも（断言）", "s": "[Câu thường] + とも"}, {"ex": [["子どもではあるまいし、泣くのはやめなさい。", "Có phải trẻ con đâu mà khóc, nín đi."], ["初めてではあるまいし、できるはずです。", "Có phải lần đầu đâu, chắc chắn làm được."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Có phải… đâu mà…” — bác bỏ lý do biện minh bằng phủ định hiển nhiên.", "n": "まいし là dạng rút gọn phủ định suy đoán + し (liệt kê lý do).", "p": "〜ではあるまいし", "s": "N + ではあるまいし、〜"}, {"ex": [["彼女は泣かんばかりに喜びました。", "Cô ấy mừng như sắp khóc đến nơi."], ["飛び上がらんばかりの喜びようでした。", "Anh ấy mừng đến mức như sắp nhảy cẫng lên."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Như sắp… đến nơi” — trạng thái cảm xúc đến mức gần như hành động sắp bật ra.", "n": "んばかり là dạng văn chương của ない + ばかり rút gọn.", "p": "V + んばかり", "s": "V-ない gốc + んばかり（に）"}, {"ex": [["彼の忙しさといったら、休む暇もありません。", "Nói đến độ bận của anh ấy thì không có cả thời gian nghỉ."], ["うれしさといったら、言葉にできません。", "Niềm vui đó thì không diễn tả nổi bằng lời."]], "group": "Nhấn mạnh & tu từ N1", "m": "といったら nêu chủ đề để nhấn mạnh mức độ cực đoan ở phần sau.", "n": "といったら luôn đi với danh từ chỉ trạng thái/cảm xúc + kết quả cực đoan.", "p": "N + といったら", "s": "N(trạng thái) + といったら、〜"}, {"ex": [["最近の若者ときたら、挨拶もできません。", "Nói đến giới trẻ dạo này thì, chào hỏi cũng không xong (phê phán)."], ["彼は忙しいときたら、電話にも出ません。", "Anh ta mà bận thì đến điện thoại cũng không nghe."]], "group": "Nhấn mạnh & tu từ N1", "m": "ときたら nêu đối tượng để phàn nàn/phê phán thói quen của họ.", "n": "ときたら mang sắc thái tiêu cực rõ rệt về đối tượng được nêu.", "p": "N + ときたら", "s": "N + ときたら、〜"}, {"ex": [["免許証とやらを見せてください。", "Cho tôi xem cái gọi là bằng lái của anh."], ["何とかとやらいう会社に勤めています。", "Anh ta làm ở một công ty tên gì gì đó (không nhớ rõ)."]], "group": "Nhấn mạnh & tu từ N1", "m": "とやら chỉ sự vật được nhắc tới một cách mơ hồ/xa cách: “cái gọi là…”, “gì đó…”.", "n": "とやら mang sắc thái không chắc chắn hoặc hơi coi nhẹ.", "p": "N + とやら", "s": "N + とやら"}, {"ex": [["彼は来ないのではなかろうか。", "Có lẽ anh ấy sẽ không đến chăng (suy đoán trang trọng)."], ["これは大きな問題ではなかろうかと思います。", "Tôi cho rằng đây có lẽ là vấn đề lớn."]], "group": "Nhấn mạnh & tu từ N1", "m": "Dạng văn trang trọng của のではないだろうか: nêu suy đoán một cách thận trọng.", "n": "なかろうか đọc なかろうか; hay dùng trong bài phát biểu, văn nghị luận.", "p": "〜ではなかろうか", "s": "[Câu thường] + ではなかろうか"}, {"ex": [["二度と行くまいと決めました。", "Tôi quyết không bao giờ đi nữa."], ["彼はその話を知るまい。", "Chắc anh ấy không biết chuyện đó đâu."]], "group": "Nhấn mạnh & tu từ N1", "m": "まい hai nghĩa: (1) ý chí phủ định “quyết không…”; (2) suy đoán phủ định “chắc không… đâu”.", "n": "まい nối động từ nguyên dạng; する → するまい/すまい.", "p": "V-る + まい", "s": "V-る + まい"}, {"ex": [["彼の苦労は想像にかたくありません。", "Nỗi vất vả của anh ấy không khó để hình dung."], ["成功までの道のりは想像にかたくないでしょう。", "Con đường đến thành công chắc không khó tưởng tượng."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Không khó để…” — suy luận dễ dàng về cảm xúc/tình trạng (thường với 想像・理解).", "n": "かたくない đọc かたくない; chỉ dùng với nhóm động từ nhận thức giới hạn.", "p": "V-ます + にかたくない", "s": "V-ます + にかたくない"}];
 function grEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 function openGrammar(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
@@ -2864,7 +2889,7 @@ function tgBuild(lv){
   TG.data[lv] = out; TG.kmap[lv] = kmap;
 }
 function openTango(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
@@ -2933,7 +2958,7 @@ function qzPick(pool, field, correctVal, n){
   return out;
 }
 function openQuiz(lv){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -3050,6 +3075,119 @@ function radShow(i){
   d.style.display = 'flex';
   d.innerHTML = '<div class="rad-big">' + r.char + '</div><div class="rad-dt"><b>Bộ ' + grEsc(r.name) + '</b><div class="rad-meta">Bộ thứ ' + r.i + '/214 · ' + r.strokes + ' nét' + (r.variant ? ' · Biến thể thường gặp: <b>' + grEsc(r.variant) + '</b>' : '') + '</div><div class="rad-m">' + grEsc(r.meaning) + '</div></div>';
   d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+
+/* ===== Thi thử JLPT ===== */
+var JL = { lv: 'N5', qs: [], ans: {}, timer: null, left: 0, used: 0, on: false };
+var JLGRAM = { N5: GRAMMAR5, N4: GRAMMAR4, N3: GRAMMAR3, N2: GRAMMAR2, N1: GRAMMAR1 };
+function jlSet(lv){ JL.lv = lv; jlStopTimer(); jlHome(); jlTabs(); }
+function jlTabs(){ ['N5','N4','N3','N2','N1'].forEach(function(l){ var el = document.getElementById('jtab' + l.slice(1)); if(el) el.classList.toggle('on', l === JL.lv); }); }
+function openJLPT(){
+  if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
+  if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
+  if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
+  if(window.__tOn && typeof closeTango === 'function') closeTango(true);
+  if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  window.__jlOn = true;
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  document.getElementById('jlptbox').style.display = '';
+  document.getElementById('paneltitle').textContent = '📄 Thi thử JLPT';
+  jlTabs(); jlHome();
+}
+function closeJLPT(skip){
+  jlStopTimer();
+  window.__jlOn = false;
+  var el = document.getElementById('jlptbox'); if(el) el.style.display = 'none';
+  if(!skip) selectLevel(window.CURLV || 'N5');
+}
+function jlStopTimer(){ if(JL.timer){ clearInterval(JL.timer); JL.timer = null; } var t = document.getElementById('jltimer'); if(t) t.style.display = 'none'; }
+function jlHome(){
+  JL.on = false;
+  document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">Đề thi thử JLPT ' + JL.lv + '</div><div class="jl-sub">Theo format thi thật: <b>20 câu</b> gồm 10 câu Chữ &amp; Từ vựng （文字・語彙） + 10 câu Ngữ pháp （文法）<br>Thời gian: <b>25 phút</b> (có đồng hồ đếm ngược, hết giờ tự nộp) · Đạt khi đúng từ <b>60%</b><br>Nghe hiểu （聴解） sẽ làm ở giai đoạn sau với giọng đọc chuẩn.</div><button class="qz-next" onclick="jlStart()">▶ Bắt đầu làm bài</button></div>';
+}
+function jlPick(pool, field, correctVal, n, exclude){
+  var out = [], copy = pool.slice(), guard = 0;
+  while(out.length < n && copy.length && guard++ < 600){
+    var c = copy.splice(Math.floor(Math.random() * copy.length), 1)[0];
+    if(exclude && exclude.indexOf(c) >= 0) continue;
+    if(c[field] === correctVal) continue;
+    if(out.some(function(o){ return o[field] === c[field]; })) continue;
+    out.push(c);
+  }
+  return out;
+}
+function jlStart(){
+  var lv = JL.lv;
+  tgBuild(lv);
+  var pool = (TG.data[lv] || []).slice();
+  var gram = (JLGRAM[lv] || []).slice();
+  if(pool.length < 12 || gram.length < 12){ alert('Chưa đủ dữ liệu cho cấp này.'); return; }
+  qzShuffle(pool); qzShuffle(gram);
+  var qs = [];
+  var vpool = pool.slice(0, 10);
+  vpool.forEach(function(v, k){
+    var type = ['read','mean','kanji'][k % 3];
+    var field = type === 'read' ? 'reading' : (type === 'mean' ? 'meaning' : 'word');
+    var opts = jlPick(pool, field, v[field], 3, [v]); opts.push(v); qzShuffle(opts);
+    var qtext = type === 'read' ? ('<ruby>' + grEsc(v.word) + '</ruby> — từ này đọc là gì?') : (type === 'mean' ? (grEsc(v.word) + ' (' + grEsc(v.reading) + ') — nghĩa là gì?') : ('Từ nào có cách đọc 「' + grEsc(v.reading) + '」 và nghĩa "' + grEsc(v.meaning) + '"?'));
+    qs.push({ sec: '文字・語彙', q: qtext, opts: opts.map(function(o){ return o[field]; }), ans: opts.indexOf(v), exp: '<b>' + grEsc(v.word) + '</b> (' + grEsc(v.reading) + ' · ' + grEsc(v.hanViet) + ') — ' + grEsc(v.meaning) });
+  });
+  gram.slice(0, 10).forEach(function(g){
+    var others = jlPick(gram, 'p', g.p, 3, [g]);
+    var opts = others.map(function(o){ return o.ex[0][0]; });
+    opts.push(g.ex[0][0]); qzShuffle(opts);
+    qs.push({ sec: '文法', q: 'Câu nào dùng đúng mẫu ngữ pháp 「' + grEsc(g.p) + '」?', opts: opts, ans: opts.indexOf(g.ex[0][0]), exp: 'Mẫu <b>' + grEsc(g.p) + '</b> — ' + grEsc(g.s) + '<br>' + grEsc(g.m) + '<br>Ví dụ đúng: ' + grEsc(g.ex[0][0]) + ' (' + grEsc(g.ex[0][1]) + ')' });
+  });
+  JL.qs = qs; JL.ans = {}; JL.used = 0; JL.on = true;
+  JL.left = 25 * 60;
+  jlRenderExam();
+  var t = document.getElementById('jltimer'); t.style.display = '';
+  jlTick();
+  JL.timer = setInterval(jlTick, 1000);
+}
+function jlTick(){
+  var t = document.getElementById('jltimer'); if(!t) return;
+  var m = Math.floor(JL.left / 60), s = JL.left % 60;
+  t.textContent = '⏱ ' + m + ':' + (s < 10 ? '0' : '') + s;
+  if(JL.left <= 0){ jlStopTimer(); jlSubmit(true); return; }
+  JL.left--; JL.used++;
+}
+function jlRenderExam(){
+  var html = JL.qs.map(function(q, i){
+    var opts = q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlChoose(' + i + ',' + j + ')">' + (j + 1) + '. ' + grEsc(o) + '</button>'; }).join('');
+    return '<div class="jl-q"><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div></div>';
+  }).join('');
+  html += '<div style="text-align:center;margin-top:16px"><button class="qz-next" onclick="jlSubmit(false)">📩 Nộp bài</button> <span style="font-size:13px;color:#888" id="jlcount"></span></div>';
+  document.getElementById('jlbody').innerHTML = html;
+  jlCount();
+  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
+}
+function jlCount(){ var c = document.getElementById('jlcount'); if(c) c.textContent = 'Đã làm ' + Object.keys(JL.ans).length + '/20 câu'; }
+function jlChoose(i, j){
+  JL.ans[i] = j;
+  JL.qs[i].opts.forEach(function(o, k){ var b = document.getElementById('jlo' + i + '_' + k); if(b) b.classList.toggle('sel', k === j); });
+  jlCount();
+}
+function jlSubmit(auto){
+  if(!JL.on) return;
+  JL.on = false; jlStopTimer();
+  var score = 0;
+  JL.qs.forEach(function(q, i){ if(JL.ans[i] === q.ans) score++; });
+  var pct = Math.round(score / JL.qs.length * 100);
+  var pass = pct >= 60;
+  var mm = Math.floor(JL.used / 60), ss = JL.used % 60;
+  var review = JL.qs.map(function(q, i){
+    var mine = JL.ans[i];
+    var opts = q.opts.map(function(o, j){
+      var cls = j === q.ans ? ' ok' : (j === mine ? ' bad' : '');
+      return '<button class="jl-opt' + cls + '" disabled>' + (j + 1) + '. ' + grEsc(o) + (j === q.ans ? ' ✓' : (j === mine ? ' ✗' : '')) + '</button>';
+    }).join('');
+    return '<div class="jl-q"><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + (mine === q.ans ? ' · ✅ Đúng' : ' · ❌ Sai') + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div><div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
+  }).join('');
+  document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">' + (auto ? '⏰ Hết giờ! ' : '') + 'Kết quả JLPT ' + JL.lv + '</div><div class="qz-score">' + score + '/' + JL.qs.length + ' (' + pct + '%)</div><div class="jl-sub">' + (pass ? '🎉 ĐẠT (từ 60%) — giữ phong độ này tới ngày thi thật.' : 'Chưa đạt (cần từ 60%) — xem lại phần giải thích bên dưới rồi làm đề mới.') + '<br>Thời gian làm bài: ' + mm + ' phút ' + ss + ' giây</div><button class="qz-next" onclick="jlStart()">🔁 Làm đề mới</button> <button class="chipbtn" onclick="jlHome()">Về trang đề thi</button></div>' + review;
+  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
 }
 
 </script>
