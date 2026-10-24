@@ -2816,13 +2816,25 @@ body.gs-l .cell{font-size:35px}
 </div>
         <div class="nores" id="nores">Không tìm thấy Kanji nào khớp. Thử từ khoá khác nhé.</div>
         <div class="lockbox" id="lockbox">📚 <b id="locktext">Nội dung cấp này đang được biên soạn.</b></div>
+        <div id="chatbox" style="margin-top:18px;border-top:1.5px solid #eee;padding-top:14px">
+          <h3 style="margin:0 0 6px;color:#17324a">💬 Phòng chat học viên</h3>
+          <p id="chnote" style="font-size:13.5px;color:#666;margin:0 0 10px;line-height:1.6">Chỉ tài khoản đã đăng nhập mới được nhắn tin. Hãy đăng nhập để tham gia.</p>
+          <div id="chlist" style="background:#f7f9fb;border:1.5px solid #e3e3e3;border-radius:12px;padding:12px;max-height:320px;overflow-y:auto;font-size:14.5px;line-height:1.6">Đang tải tin nhắn...</div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <input id="chinp" type="text" placeholder="Nhắn gì đó với các bạn học..." maxlength="500" style="flex:1;padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:14.5px" onkeydown="if(event.key==='Enter') chSend()">
+            <button id="chsend" class="qz-next" style="margin-top:0" onclick="chSend()">Gửi</button>
+          </div>
+          <div id="cherr" class="au-err"></div>
+          <div id="chlogin" style="margin-top:8px"><button class="chipbtn" onclick="openAuth()">↪ Đăng nhập để chat</button></div>
+          <p style="font-size:12.5px;color:#999;margin-top:8px">Tin nhắn hiển thị tên tài khoản của bạn cho mọi học viên khác thấy. Hãy giữ lịch sự, không chia sẻ thông tin cá nhân.</p>
+        </div>
       </div>
     </div>
   </div>
   <div class="foot">KANJIVN — bản demo · 2.138 Kanji (N5: 118, N4: 206, N3: 284, N2: 272, N1: 1.258) · 8.552 từ vựng · Tên KANJIVN là tên tạm, sẽ đổi thành thương hiệu riêng.</div>
 </div>
 
-<button class="chatbtn" onclick="soon()">💬 Nhắn tin</button>
+<button class="chatbtn" onclick="chScroll()">💬 Nhắn tin</button>
 
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 
@@ -4760,6 +4772,80 @@ function tkSubmit(){
   document.getElementById('tkbody').innerHTML = '<div class="jl-start"><div class="jl-big">Kết quả Tokutei Gino 2 — Bộ luyện tập 1</div><div class="qz-score">' + score + '/' + TK.qs.length + ' (' + pct + '%)</div><div class="jl-sub">Đáp án lấy nguyên văn từ app Tokutei, không đổi. Xem lại giải thích chi tiết và mẹo nhớ ở từng câu bên dưới.</div><button class="qz-next" onclick="tkStart()">🔁 Làm lại bộ này</button> <button class="chipbtn" onclick="tkHome()">Về trang Tokutei</button></div>' + review;
   window.scrollTo({ top: document.getElementById('tokuteibox').offsetTop - 70, behavior: 'smooth' });
 }
+
+</script>
+<script>
+
+/* ===== Phòng chat học viên (Firestore, chỉ tài khoản đã đăng nhập mới được gửi) ===== */
+var CH = { started: false, lastSend: 0, unsub: null };
+function chScroll(){ var el = document.getElementById('chatbox'); if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function chTime(t){
+  try {
+    var d = (t && t.toDate) ? t.toDate() : ((typeof t === 'number') ? new Date(t) : null);
+    if(!d) return '';
+    var hh = d.getHours(), mm = d.getMinutes();
+    return hh + ':' + (mm < 10 ? '0' : '') + mm + ' ' + d.getDate() + '/' + (d.getMonth() + 1);
+  } catch(e){ return ''; }
+}
+function chUpdateAuth(){
+  var logged = !!window.FBUser;
+  var inp = document.getElementById('chinp'); if(inp) inp.disabled = !logged;
+  var btn = document.getElementById('chsend'); if(btn) btn.disabled = !logged;
+  var lg = document.getElementById('chlogin'); if(lg) lg.style.display = logged ? 'none' : '';
+  var note = document.getElementById('chnote');
+  if(note) note.textContent = logged ? ('Đang chat với tên: ' + (window.FBUser.displayName || window.FBUser.email)) : 'Chỉ tài khoản đã đăng nhập mới được nhắn tin. Hãy đăng nhập để tham gia.';
+}
+function chRender(msgs){
+  var el = document.getElementById('chlist'); if(!el) return;
+  if(!msgs.length){ el.textContent = 'Chưa có tin nhắn nào — hãy là người đầu tiên chào mọi người nhé (cần đăng nhập).'; return; }
+  el.innerHTML = msgs.map(function(m){
+    return '<div style="margin-bottom:10px"><b style="color:#17324a">' + grEsc(m.name || 'Học viên') + '</b> <span style="color:#999;font-size:12.5px">' + chTime(m.createdAt) + '</span><div>' + grEsc(m.text || '').replace(/\n/g, '<br>') + '</div></div>';
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+function chStart(){
+  if(CH.started) return;
+  if(!window.FBReady){ setTimeout(chStart, 300); return; }
+  CH.started = true;
+  window.FBReady.then(function(fb){
+    if(!fb){ var el = document.getElementById('chlist'); if(el) el.textContent = 'Chưa kết nối được máy chủ, hãy kiểm tra mạng rồi tải lại trang.'; return; }
+    try {
+      var q = fb.fsMod.query(fb.fsMod.collection(fb.db, 'chat_messages'), fb.fsMod.orderBy('createdAt', 'desc'), fb.fsMod.limit(50));
+      CH.unsub = fb.fsMod.onSnapshot(q, function(snap){
+        var msgs = []; snap.forEach(function(d){ msgs.push(d.data()); }); msgs.reverse(); chRender(msgs);
+      }, function(e){
+        var el = document.getElementById('chlist');
+        if(el) el.innerHTML = '<span style="color:#c62828">Chưa tải được tin nhắn (có thể do Firestore rules chưa mở quyền đọc cho collection chat_messages).</span>';
+      });
+    } catch(e){}
+    chUpdateAuth();
+    try { fb.authMod.onAuthStateChanged(fb.auth, function(u){ window.FBUser = u || null; chUpdateAuth(); }); } catch(e){}
+  });
+}
+async function chSend(){
+  var errEl = document.getElementById('cherr'); if(errEl) errEl.textContent = '';
+  if(!window.FBUser){ chUpdateAuth(); openAuth(); return; }
+  var inp = document.getElementById('chinp'); if(!inp) return;
+  var text = inp.value.trim();
+  if(!text){ if(errEl) errEl.textContent = 'Hãy nhập tin nhắn trước khi gửi.'; return; }
+  if(text.length > 500){ if(errEl) errEl.textContent = 'Tin nhắn tối đa 500 ký tự.'; return; }
+  if(Date.now() - CH.lastSend < 3000){ if(errEl) errEl.textContent = 'Gửi chậm lại 3 giây nhé.'; return; }
+  var fb = await (window.FBReady || Promise.resolve(null));
+  if(!fb || !window.FBUser){ if(errEl) errEl.textContent = 'Chưa kết nối được máy chủ, hãy thử lại.'; return; }
+  try {
+    CH.lastSend = Date.now();
+    await fb.fsMod.addDoc(fb.fsMod.collection(fb.db, 'chat_messages'), {
+      uid: window.FBUser.uid,
+      name: window.FBUser.displayName || window.FBUser.email.split('@')[0],
+      text: text,
+      createdAt: fb.fsMod.serverTimestamp()
+    });
+    inp.value = '';
+  } catch(e){
+    if(errEl) errEl.textContent = 'Chưa gửi được (có thể do Firestore rules chưa mở quyền ghi cho tài khoản đã đăng nhập trên collection chat_messages).';
+  }
+}
+chStart();
 
 </script>
 <script>
