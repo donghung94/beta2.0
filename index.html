@@ -4272,7 +4272,75 @@ stApply();
 
 </script>
 <script>
-/* ===== Đăng nhập (bản test: tài khoản lưu trên máy này) ===== */
+/* ===== Firebase (project chung donghung-3208d, dùng chung với app Tokutei) ===== */
+/* Config web này là cấu hình client công khai của Firebase, giống file firebase.js của app Tokutei. */
+window.FB_CONFIG = {
+  apiKey: "AIzaSyALblbqW_VrZh2r7sPJ8Q6XT2fGbk0dsFg",
+  authDomain: "donghung-3208d.firebaseapp.com",
+  projectId: "donghung-3208d",
+  storageBucket: "donghung-3208d.firebasestorage.app",
+  messagingSenderId: "753379492663",
+  appId: "1:753379492663:web:baff34f2c0bac00e02d0b2"
+};
+window.FB = null; window.FBUser = null; window.FBError = null; window.FBSyncError = null;
+window.FB_KEYS = ['kanjivn_profile_v1', 'kanjivn_log_v1', 'kanjivn_fc_v1', 'kanjivn_records_v1', 'kanjivn_settings_v1'];
+window.fbSnapNow = function(){
+  var snap = {};
+  window.FB_KEYS.forEach(function(k){ try { var v = localStorage.getItem(k); if(v !== null) snap[k] = v; } catch(e){} });
+  return snap;
+};
+window.fbApplySnap = function(snap){
+  if(!snap) return;
+  window.FB_KEYS.forEach(function(k){ try { if(snap[k] !== undefined) localStorage.setItem(k, snap[k]); } catch(e){} });
+};
+window.fbPush = async function(){
+  if(!window.FB || !window.FBUser) return false;
+  try {
+    var snap = window.fbSnapNow(); snap.updatedAt = Date.now();
+    await window.FB.fsMod.setDoc(window.FB.fsMod.doc(window.FB.db, 'kanji_progress', window.FBUser.uid), snap);
+    window.FBSyncError = null; return true;
+  } catch(e) { window.FBSyncError = e; return false; }
+};
+window.fbPull = async function(uid){
+  if(!window.FB) return false;
+  try {
+    var ref = window.FB.fsMod.doc(window.FB.db, 'kanji_progress', uid);
+    var d = await window.FB.fsMod.getDoc(ref);
+    if(d.exists()){
+      var data = d.data(); var has = window.FB_KEYS.some(function(k){ return data[k] !== undefined; });
+      if(has){ window.fbApplySnap(data); window.FBSyncError = null; return true; }
+      return false;
+    }
+    return false;
+  } catch(e) { window.FBSyncError = e; return false; }
+};
+window.FBReady = (async function(){
+  try {
+    var appMod = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js');
+    var authMod = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js');
+    var fsMod = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js');
+    var app = appMod.initializeApp(window.FB_CONFIG);
+    var auth = authMod.getAuth(app);
+    var db = fsMod.getFirestore(app);
+    window.FB = { auth: auth, db: db, authMod: authMod, fsMod: fsMod };
+    authMod.onAuthStateChanged(auth, async function(u){
+      window.FBUser = u || null;
+      if(u){
+        try {
+          var had = await window.fbPull(u.uid);
+          if(!had) await window.fbPush();
+        } catch(e) { window.FBSyncError = e; }
+        try { if(typeof auUpdateHeader === 'function') auUpdateHeader(); } catch(e){}
+      } else {
+        try { if(typeof auUpdateHeader === 'function') auUpdateHeader(); } catch(e){}
+      }
+    });
+    return window.FB;
+  } catch(e) { window.FBError = e; return null; }
+})();
+</script>
+<script>
+/* ===== Đăng nhập (Firebase, đồng bộ máy chủ; bản test trên máy này là dự phòng khi mất mạng) ===== */
 var AU_KEYS = ['kanjivn_profile_v1', 'kanjivn_log_v1', 'kanjivn_fc_v1', 'kanjivn_records_v1', 'kanjivn_settings_v1'];
 function auEsc(s){ s = (s === null || s === undefined) ? '' : String(s); return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function auGetAccounts(){ try { return JSON.parse(localStorage.getItem('kanjivn_accounts_v1') || '[]'); } catch(e){ return []; } }
@@ -4311,6 +4379,10 @@ function auFind(email){
 }
 function auUpdateHeader(){
   var btn = document.getElementById('loginbtn'); if(!btn) return;
+  if(window.FBUser){
+    btn.textContent = '👤 ' + (window.FBUser.displayName || window.FBUser.email.split('@')[0]);
+    return;
+  }
   var sess = auGetSession();
   if(sess && sess.email){
     var acc = auFind(sess.email);
@@ -4324,7 +4396,7 @@ function auOpenModal(html){
   document.getElementById('modal').classList.add('open');
 }
 function auNote(){
-  return '<p class="au-note">Bản test: tài khoản lưu trên máy này, chưa đồng bộ lên máy chủ, nên đăng nhập trên máy khác sẽ chưa thấy tài khoản này. Khi gắn Firebase ở giai đoạn ra mắt, bạn sẽ đăng nhập lại bằng tài khoản máy chủ.</p>';
+  return '<p class="au-note">Tài khoản đăng nhập bằng Firebase của project chung với app Tokutei, tiến độ lưu lên máy chủ ở collection kanji_progress riêng cho web Kanji (không động vào dữ liệu app Tokutei). Tài khoản Tokutei cũ đăng nhập được luôn. Đăng nhập trên máy khác vẫn thấy tiến độ.</p>';
 }
 function auShow(view){
   if(view === 'register') auRenderRegister();
@@ -4334,12 +4406,15 @@ function auShow(view){
   else auRenderLogin();
 }
 function openAuth(){
+  if(window.FBUser) { auRenderAccount(); return; }
   var sess = auGetSession();
   if(sess && sess.email && auFind(sess.email)) auRenderAccount();
   else auRenderLogin();
 }
 function auRenderLogin(){
   auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Đăng nhập</h3>'
+    + '<button class="qz-next" style="background:#fff;color:#17324a;border:1px solid #d5dee7" onclick="auDoGoogle()">G &nbsp;Đăng nhập bằng Google</button>'
+    + '<p style="text-align:center;color:#888;margin:8px 0;font-size:13.5px">— hoặc đăng nhập bằng email —</p>'
     + '<div class="au-tabs"><button class="chipbtn" onclick="auShow(\'login\')">Đăng nhập</button><button class="chipbtn" onclick="auShow(\'register\')">Đăng ký</button></div>'
     + '<label class="au-label">Email<input id="auemail" class="au-inp" type="email" placeholder="vidu@email.com"></label>'
     + '<label class="au-label">Mật khẩu<input id="aupass" class="au-inp" type="password" placeholder="Ít nhất 6 ký tự"></label>'
@@ -4350,6 +4425,8 @@ function auRenderLogin(){
 }
 function auRenderRegister(){
   auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Đăng ký tài khoản</h3>'
+    + '<button class="qz-next" style="background:#fff;color:#17324a;border:1px solid #d5dee7" onclick="auDoGoogle()">G &nbsp;Đăng ký / Đăng nhập bằng Google</button>'
+    + '<p style="text-align:center;color:#888;margin:8px 0;font-size:13.5px">— hoặc đăng ký bằng email —</p>'
     + '<div class="au-tabs"><button class="chipbtn" onclick="auShow(\'login\')">Đăng nhập</button><button class="chipbtn" onclick="auShow(\'register\')">Đăng ký</button></div>'
     + '<label class="au-label">Tên hiển thị<input id="auname" class="au-inp" placeholder="Tên của bạn"></label>'
     + '<label class="au-label">Email<input id="auemail" class="au-inp" type="email" placeholder="vidu@email.com"></label>'
@@ -4362,12 +4439,10 @@ function auRenderRegister(){
 }
 function auRenderForgot(){
   auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Quên mật khẩu</h3>'
-    + '<p style="font-size:13.5px;color:#666">Bản test chưa gửi email xác minh, nên đặt lại ngay trên máy này.</p>'
+    + '<p style="font-size:13.5px;color:#666">Nhập email tài khoản, Firebase sẽ gửi link đặt lại mật khẩu vào email của bạn.</p>'
     + '<label class="au-label">Email<input id="auemail" class="au-inp" type="email"></label>'
-    + '<label class="au-label">Mật khẩu mới<input id="aupass" class="au-inp" type="password" placeholder="Ít nhất 6 ký tự"></label>'
-    + '<label class="au-label">Nhập lại mật khẩu mới<input id="aupass2" class="au-inp" type="password"></label>'
     + '<div id="auerr" class="au-err"></div>'
-    + '<button class="qz-next" style="margin-top:8px" onclick="auDoForgot()">Đặt lại mật khẩu</button>'
+    + '<button class="qz-next" style="margin-top:8px" onclick="auDoForgot()">Gửi email đặt lại mật khẩu</button>'
     + '<p style="font-size:13.5px;margin-top:10px"><a href="javascript:void(0)" onclick="auShow(\'login\')">Quay lại đăng nhập</a></p>');
 }
 function auRenderAccount(){
@@ -4375,7 +4450,7 @@ function auRenderAccount(){
   var acc = auFind(sess.email); if(!acc) { auSetSession(null); auRenderLogin(); return; }
   auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Tài khoản của bạn</h3>'
     + '<p style="font-size:15px;line-height:1.7"><b>' + auEsc(acc.name || acc.email) + '</b><br><span style="color:#666">' + auEsc(acc.email) + '</span></p>'
-    + '<p style="font-size:13.5px;color:#666;line-height:1.6">Tiến độ học (flashcard, điểm hoạt động, kỷ lục, cài đặt) đang lưu vào tài khoản này trên máy này. Đóng trang lại tiến độ vẫn giữ, đăng nhập lại cùng tài khoản là thấy lại.</p>'
+    + '<p style="font-size:13.5px;color:#666;line-height:1.6">Tiến độ học (flashcard, điểm hoạt động, kỷ lục, cài đặt) đang đồng bộ lên máy chủ qua Firebase, vào collection kanji_progress riêng cho web Kanji. Đăng nhập trên máy khác vẫn thấy tiến độ.' + (window.FBSyncError ? '<br><span style="color:#c62828">Lưu ý: lần đồng bộ gần nhất chưa xong (có thể do Firestore rules chưa mở quyền cho collection kanji_progress). Tiến độ vẫn đang giữ trên máy này.</span>' : '') + '</p>'
     + '<button class="chipbtn" onclick="auShow(\'change\')">Đổi mật khẩu</button> '
     + '<button class="chipbtn" onclick="auLogout()">Đăng xuất</button>'
     + auNote());
@@ -4398,7 +4473,7 @@ function auSyncProfileName(name){
     if(!prof.name){ prof.name = name; localStorage.setItem('kanjivn_profile_v1', JSON.stringify(prof)); }
   } catch(e){}
 }
-function auDoLogin(){
+function auDoLoginLocal(){
   var email = document.getElementById('auemail').value.trim().toLowerCase();
   var pass = document.getElementById('aupass').value;
   if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
@@ -4415,7 +4490,7 @@ function auDoLogin(){
     auRenderAccount();
   });
 }
-function auDoRegister(){
+function auDoRegisterLocal(){
   var name = document.getElementById('auname').value.trim();
   var email = document.getElementById('auemail').value.trim().toLowerCase();
   var pass = document.getElementById('aupass').value;
@@ -4435,7 +4510,7 @@ function auDoRegister(){
     auRenderAccount();
   });
 }
-function auDoForgot(){
+function auDoForgotLocal(){
   var email = document.getElementById('auemail').value.trim().toLowerCase();
   var pass = document.getElementById('aupass').value;
   var pass2 = document.getElementById('aupass2').value;
@@ -4452,7 +4527,7 @@ function auDoForgot(){
     var el = document.getElementById('auerr'); if(el) el.textContent = 'Đã đặt lại mật khẩu. Hãy đăng nhập bằng mật khẩu mới.';
   });
 }
-function auDoChange(){
+function auDoChangeLocal(){
   var sess = auGetSession(); if(!sess){ auRenderLogin(); return; }
   var oldp = document.getElementById('auold').value;
   var pass = document.getElementById('aupass').value;
@@ -4470,13 +4545,121 @@ function auDoChange(){
     });
   });
 }
-function auLogout(){
+function auLogoutLocal(){
   auSaveCurrent();
   auSetSession(null);
   auUpdateHeader();
   closeItem();
 }
-window.addEventListener('beforeunload', function(){ try { auSaveCurrent(); } catch(e){} });
+
+function auFbErrMsg(e){
+  var code = (e && e.code) ? e.code : '';
+  if(code === 'auth/email-already-in-use') return 'Email này đã có tài khoản. Hãy đăng nhập.';
+  if(code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') return 'Email hoặc mật khẩu chưa đúng.';
+  if(code === 'auth/invalid-email') return 'Email chưa đúng định dạng.';
+  if(code === 'auth/weak-password') return 'Mật khẩu cần ít nhất 6 ký tự.';
+  if(code === 'auth/too-many-requests') return 'Đăng nhập sai nhiều lần, hãy thử lại sau ít phút.';
+  if(code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return 'Bạn đã đóng cửa sổ Google, chưa đăng nhập.';
+  if(code === 'auth/unauthorized-domain') return 'Google chưa mở được trên link test này vì domain này chưa nằm trong Authorized domains của Firebase. Hãy đăng nhập bằng email, hoặc dùng Google sau khi gắn tên miền chính thức.';
+  if(code === 'auth/operation-not-allowed') return 'Phương thức đăng nhập này chưa được bật trong Firebase Console.';
+  if(code === 'auth/requires-recent-login') return 'Hãy đăng xuất rồi đăng nhập lại, sau đó đổi mật khẩu.';
+  return 'Có lỗi xảy ra, hãy thử lại. (' + (code || 'không rõ') + ')';
+}
+async function auFbReady(){
+  if(window.FB) return window.FB;
+  try { return await window.FBReady; } catch(e){ return null; }
+}
+async function auAfterFbSignIn(user){
+  var email = user.email ? user.email.toLowerCase() : '';
+  var name = user.displayName || (email ? email.split('@')[0] : '');
+  auSetSession({ email: email });
+  auSyncProfileName(name);
+  try {
+    var had = await window.fbPull(user.uid);
+    if(!had) await window.fbPush();
+  } catch(e){}
+  auUpdateHeader();
+  auRenderAccount();
+}
+async function auDoGoogle(){
+  var fb = await auFbReady();
+  if(!fb){ auErr('Chưa kết nối được máy chủ, hãy kiểm tra mạng rồi thử lại.'); return; }
+  try {
+    var prov = new fb.authMod.GoogleAuthProvider();
+    var res = await fb.authMod.signInWithPopup(fb.auth, prov);
+    await auAfterFbSignIn(res.user);
+  } catch(e){ auErr(auFbErrMsg(e)); }
+}
+async function auDoLogin(){
+  var email = document.getElementById('auemail').value.trim().toLowerCase();
+  var pass = document.getElementById('aupass').value;
+  if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
+  if(!pass){ auErr('Hãy nhập mật khẩu.'); return; }
+  var fb = await auFbReady();
+  if(!fb){ auDoLoginLocal(); return; }
+  try {
+    var res = await fb.authMod.signInWithEmailAndPassword(fb.auth, email, pass);
+    await auAfterFbSignIn(res.user);
+  } catch(e){ auErr(auFbErrMsg(e)); }
+}
+async function auDoRegister(){
+  var name = document.getElementById('auname').value.trim();
+  var email = document.getElementById('auemail').value.trim().toLowerCase();
+  var pass = document.getElementById('aupass').value;
+  var pass2 = document.getElementById('aupass2').value;
+  if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
+  if(pass.length < 6){ auErr('Mật khẩu cần ít nhất 6 ký tự.'); return; }
+  if(pass !== pass2){ auErr('Hai mật khẩu nhập lại chưa khớp.'); return; }
+  var fb = await auFbReady();
+  if(!fb){ auDoRegisterLocal(); return; }
+  try {
+    var res = await fb.authMod.createUserWithEmailAndPassword(fb.auth, email, pass);
+    if(name){ try { await fb.authMod.updateProfile(res.user, { displayName: name }); } catch(e){} }
+    await auAfterFbSignIn(res.user);
+  } catch(e){ auErr(auFbErrMsg(e)); }
+}
+async function auDoForgot(){
+  var email = document.getElementById('auemail').value.trim().toLowerCase();
+  if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
+  var fb = await auFbReady();
+  if(!fb){ auErr('Chưa kết nối được máy chủ, hãy kiểm tra mạng rồi thử lại.'); return; }
+  try {
+    await fb.authMod.sendPasswordResetEmail(fb.auth, email);
+    var el = document.getElementById('auerr'); if(el) el.textContent = 'Đã gửi email đặt lại mật khẩu. Hãy kiểm tra hộp thư (kể cả mục spam).';
+  } catch(e){ auErr(auFbErrMsg(e)); }
+}
+async function auDoChange(){
+  var sess = auGetSession(); if(!sess && !window.FBUser){ auRenderLogin(); return; }
+  var oldp = document.getElementById('auold') ? document.getElementById('auold').value : '';
+  var pass = document.getElementById('aupass').value;
+  var pass2 = document.getElementById('aupass2').value;
+  if(pass.length < 6){ auErr('Mật khẩu mới cần ít nhất 6 ký tự.'); return; }
+  if(pass !== pass2){ auErr('Hai mật khẩu nhập lại chưa khớp.'); return; }
+  var fb = await auFbReady();
+  if(!fb || !window.FBUser){ auDoChangeLocal(); return; }
+  try {
+    var isPwdUser = window.FBUser.providerData && window.FBUser.providerData.some(function(pr){ return pr.providerId === 'password'; });
+    if(isPwdUser && oldp){
+      var cred = fb.authMod.EmailAuthProvider.credential(window.FBUser.email, oldp);
+      await fb.authMod.reauthenticateWithCredential(window.FBUser, cred);
+    }
+    await fb.authMod.updatePassword(window.FBUser, pass);
+    auRenderAccount();
+  } catch(e){
+    if(e && e.code === 'auth/invalid-credential') auErr('Mật khẩu cũ chưa đúng.');
+    else auErr(auFbErrMsg(e));
+  }
+}
+async function auLogout(){
+  try { await window.fbPush(); } catch(e){}
+  try { auSaveCurrent(); } catch(e){}
+  var fb = window.FB;
+  auSetSession(null);
+  auUpdateHeader();
+  closeItem();
+  if(fb && window.FBUser){ try { await fb.authMod.signOut(fb.auth); } catch(e){} }
+}
+window.addEventListener('beforeunload', function(){ try { auSaveCurrent(); } catch(e){} try { if(window.fbPush) window.fbPush(); } catch(e){} });
 (function(){
   var sess = auGetSession();
   if(sess && sess.email && !auFind(sess.email)) auSetSession(null);
