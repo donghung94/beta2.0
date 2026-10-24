@@ -271,10 +271,52 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 
 /* ===== Tạo file ===== */
 #exportbox{padding:14px 6px 6px}
-.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:12px}
-.ex-card{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px}
-.ex-card b{color:#17324a;font-size:15px}
-.ex-card p{font-size:13px;color:#666;line-height:1.55;margin:5px 0 10px}
+.ex-pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:7px;margin-top:10px}
+.ex-pickcell{background:#fff;border:1.5px solid #ddd;border-radius:10px;padding:10px 0;text-align:center;font-size:22px;font-weight:800;cursor:pointer;color:#17324a}
+.ex-pickcell.sel{border-color:#c62828;background:#fdecea}
+.ex-tplgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:8px 0 14px}
+.ex-tplcard{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px;cursor:pointer}
+.ex-tplcard:hover{border-color:#c62828}
+.ex-tplcard b{color:#17324a;font-size:15px}
+.ex-tplcard p{font-size:13px;color:#666;line-height:1.55;margin:5px 0 0}
+.ex-studio{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}
+.ex-settings{flex:0 0 280px;background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px;box-sizing:border-box}
+.ex-set{margin-bottom:14px}
+.ex-set b{color:#17324a;font-size:14px}
+.ex-set label{display:block;font-size:13.5px;color:#444;margin-top:7px}
+.ex-inp{padding:7px 10px;border:1.5px solid #ddd;border-radius:9px;font-size:14px;width:100%;box-sizing:border-box;margin-top:4px}
+.ex-check{display:flex;gap:6px;align-items:center}
+.ex-check input{width:auto}
+.ex-btnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.ex-opt{padding:6px 10px;border:1.5px solid #ddd;border-radius:20px;background:#fff;font-size:13px;cursor:pointer}
+.ex-opt.on{border-color:#c62828;background:#fdecea;color:#c62828;font-weight:700}
+.ex-content{font-size:16px;line-height:1.8;word-break:break-all;background:#f7f9fb;border-radius:10px;padding:8px 10px;margin:7px 0;max-height:120px;overflow:auto}
+.ex-previewwrap{flex:1;min-width:300px}
+.ex-page{background:#fff;border:1.5px solid #ddd;border-radius:8px;padding:18px 20px;margin:0 0 14px}
+.ex-pagehead{display:flex;justify-content:space-between;font-size:13px;color:#555;border-bottom:1.5px solid #eee;padding-bottom:8px;margin-bottom:12px}
+.ex-pagetitle{font-size:17px;font-weight:800;color:#c62828;margin-bottom:10px}
+.ex-kblock{border-bottom:1px solid #eee;padding:10px 0}
+.ex-kmain{display:flex;gap:12px;align-items:center}
+.ex-kbig{font-size:36px;font-weight:800;color:#17324a}
+.ex-kmeta{font-size:12.5px;color:#555;line-height:1.5}
+.ex-kmemo{font-size:13px;color:#666;line-height:1.6;margin-top:6px}
+.ex-tracerow{display:flex;gap:4px;margin-top:8px}
+.ex-cell{flex:1;aspect-ratio:1/1;min-width:0;border:1.5px solid var(--gc,#999);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-color:#fff}
+.ex-cell.cross{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}
+.ex-cell.rice{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(-45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}
+.ex-cell.nine{background-image:linear-gradient(var(--gc,#999) 1px,transparent 1px),linear-gradient(90deg,var(--gc,#999) 1px,transparent 1px);background-size:33.333% 33.333%}
+.ex-cell.mid::after{content:'';position:absolute;inset:22%;border:1.5px solid var(--gc,#999);border-radius:2px}
+.ex-faint{line-height:1}
+.ex-biggrid{display:grid;gap:8px}
+.ex-bigcell{border:1.5px solid var(--gc,#999);border-radius:8px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;overflow:hidden}
+.ex-vrow{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #eee;padding:9px 0}
+.ex-vinfo{flex:0 0 210px}
+.ex-vword{font-size:22px;font-weight:800;color:#17324a}
+.ex-vmeta{font-size:12.5px;color:#555;line-height:1.5}
+.ex-vwrite{flex:1}
+.ex-blankgrid{display:grid;gap:4px}
+.ex-line{border-bottom:1.5px solid #bbb;height:34px}
+.ex-passline{font-size:16px;line-height:1.8}
 
 /* ===== Gợi ý nhận diện nét vẽ ===== */
 .padcands{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;min-height:44px}
@@ -437,18 +479,114 @@ body.gs-l .cell{font-size:35px}
   </div>
 </div>
 <div id="exportbox" style="display:none">
-  <div class="fc-top"><span class="t">📄 Tạo file học liệu</span><span class="sp2"></span><button class="chipbtn" onclick="closeExport()">✕ Thoát</button></div>
-  <div class="tg-tabs" style="margin-top:10px">
-    <button class="tg-tab" id="etab5" onclick="exSet('N5')">N5</button><button class="tg-tab" id="etab4" onclick="exSet('N4')">N4</button><button class="tg-tab" id="etab3" onclick="exSet('N3')">N3</button><button class="tg-tab" id="etab2" onclick="exSet('N2')">N2</button><button class="tg-tab" id="etab1" onclick="exSet('N1')">N1</button>
+  <div class="fc-top"><span class="t">📄 Tạo file luyện viết</span><span class="sp2"></span><button class="chipbtn" onclick="closeExport()">✕ Thoát</button></div>
+  <div id="exPick">
+    <div class="tg-tabs" style="margin-top:10px">
+      <button class="tg-tab" id="etab5" onclick="exSet('N5')">N5</button><button class="tg-tab" id="etab4" onclick="exSet('N4')">N4</button><button class="tg-tab" id="etab3" onclick="exSet('N3')">N3</button><button class="tg-tab" id="etab2" onclick="exSet('N2')">N2</button><button class="tg-tab" id="etab1" onclick="exSet('N1')">N1</button>
+    </div>
+    <h4 id="exPickTitle" style="margin:14px 0 4px;color:#17324a">Chọn Kanji N5 để tạo file luyện viết</h4>
+    <p style="font-size:13.5px;color:#666;line-height:1.6;margin:0">Bấm vào từng chữ để chọn / bỏ chọn, hoặc để nguyên cả cấp rồi bấm Tạo file. Không cần đăng nhập.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center">
+      <button class="chipbtn" onclick="exPickAll()">☑ Chọn tất cả</button>
+      <button class="chipbtn" onclick="exPickNone()">☐ Bỏ chọn hết</button>
+      <span id="excount" style="font-size:13.5px;color:#c62828;font-weight:700"></span>
+    </div>
+    <div id="exgrid" class="ex-pickgrid"></div>
+    <div style="margin-top:14px"><button class="qz-next" style="margin-top:0" onclick="exGoLibrary()">Tạo file →</button></div>
   </div>
-  <div class="ex-grid">
-    <div class="ex-card"><b>🗂 Danh sách Kanji (CSV)</b><p id="exkanjinote"></p><button class="qz-next" style="margin-top:0" onclick="exKanjiCsv()">⬇ Tải CSV</button></div>
-    <div class="ex-card"><b>📚 Danh sách Từ vựng (CSV)</b><p id="exvocabnote"></p><button class="qz-next" style="margin-top:0" onclick="exVocabCsv()">⬇ Tải CSV</button></div>
-    <div class="ex-card"><b>📖 Danh sách Ngữ pháp (CSV)</b><p id="exgramnote"></p><button class="qz-next" style="margin-top:0" onclick="exGrammarCsv()">⬇ Tải CSV</button></div>
-    <div class="ex-card"><b>✍️ Phiếu luyện viết (In / PDF)</b><p>Mở trang in: mỗi chữ Kanji kèm ô mẫu mờ + ô trống để tập viết tay. Tối đa 200 chữ đầu của cấp; bấm In hoặc "Lưu thành PDF" trong hộp thoại in.</p><button class="qz-next" style="margin-top:0" onclick="exPrintSheet()">🖨 Mở trang in</button></div>
-    <div class="ex-card"><b>🎴 Bộ thẻ Anki (CSV)</b><p>File CSV 2 cột (Từ / Nghĩa + cách đọc) nhập thẳng vào Anki hoặc Quizlet để tự ôn theo lịch lặp lại.</p><button class="qz-next" style="margin-top:0" onclick="exAnkiCsv()">⬇ Tải CSV</button></div>
+  <div id="exLib" style="display:none">
+    <div style="margin-top:10px"><button class="chipbtn" onclick="exBackPick()">← Chọn lại chữ</button></div>
+    <h4 style="margin:14px 0 4px;color:#17324a">Tạo File luyện viết</h4>
+    <p style="font-size:13.5px;color:#666;line-height:1.6;margin:0">Chọn mẫu in — xem trước trang A4 thật, tuỳ chỉnh ô, màu, kiểu chữ tô rồi in / lưu PDF.</p>
+    <p id="exlibnote" style="font-size:13.5px;color:#c62828;font-weight:700;margin:8px 0 0"></p>
+    <h4 style="margin:16px 0 4px;color:#17324a">✍️ Luyện kanji</h4>
+    <div class="ex-tplgrid">
+      <div class="ex-tplcard" onclick="exOpenTemplate('stroke')"><b>📏 Luyện viết theo thứ tự nét</b><p>Mỗi chữ kèm Hán Việt, nghĩa, câu chuyện chiết tự và hàng chữ mờ để tô theo.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('big')"><b>🔲 Ô chữ lớn</b><p>Chữ lớn trong ô vuông, tô theo chữ mờ rồi tự viết lại.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('sheet')"><b>📄 Phiếu luyện viết (mẫu gốc)</b><p>Thông tin chữ bên trái, ô mẫu mờ + ô trống bên phải.</p></div>
+    </div>
+    <h4 style="margin:16px 0 4px;color:#17324a">📚 Từ vựng</h4>
+    <div class="ex-tplgrid">
+      <div class="ex-tplcard" onclick="exOpenTemplate('vtable')"><b>📋 Bảng từ vựng</b><p>Từ, cách đọc, nghĩa và hàng ô trống để luyện viết từng từ.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('vcard')"><b>🎴 Thẻ từ vựng</b><p>Mỗi từ một thẻ lớn, kèm ô luyện viết bên dưới.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('vwrite')"><b>✍️ Phiếu luyện viết từ vựng</b><p>Thông tin từ bên trái, ô mẫu mờ + ô trống bên phải.</p></div>
+    </div>
+    <h4 style="margin:16px 0 4px;color:#17324a">📝 Đoạn văn &amp; giấy luyện</h4>
+    <div class="ex-tplgrid">
+      <div class="ex-tplcard" onclick="exOpenTemplate('blank')"><b>⬜ Giấy ô trống</b><p>Trang A4 toàn ô luyện viết, tự chọn kiểu ô và màu ô.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('lined')"><b>〰️ Giấy kẻ ngang</b><p>Trang A4 kẻ ngang để luyện viết câu, đoạn văn.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('passage')"><b>📝 Giấy luyện đoạn văn</b><p>Nhập đoạn văn, mỗi dòng văn bản kèm một dòng trống để chép lại.</p></div>
+    </div>
   </div>
-  <div style="font-size:12.5px;color:#999;margin-top:12px">File CSV mở được bằng Excel/Google Sheets (đã chèn BOM nên không lỗi font tiếng Việt). Mọi file được tạo ngay trên trình duyệt từ dữ liệu của cấp đang chọn — không cần đăng nhập.</div>
+  <div id="exStudio" style="display:none">
+    <div class="fc-top"><span class="t" id="extplname"></span><span class="p" id="exstudynote"></span><span class="sp2"></span><button class="chipbtn" onclick="exBackLib()">← Đổi mẫu</button></div>
+    <p style="font-size:12.5px;color:#888;margin:8px 0 0">Đổi mẫu không mất nội dung.</p>
+    <div id="exsame" class="ex-btnrow"></div>
+    <div class="ex-studio">
+      <div class="ex-settings">
+        <div class="ex-set">
+          <b>Kanji / từ cần luyện</b>
+          <div id="excontent" class="ex-content"></div>
+          <button class="chipbtn" onclick="exBackPick()">Đổi chữ</button>
+        </div>
+        <div class="ex-set" id="exsetpassage" style="display:none">
+          <b>Đoạn văn cần luyện</b>
+          <textarea id="expassage" rows="4" class="ex-inp" placeholder="Nhập đoạn văn tiếng Nhật cần luyện chép..." oninput="exRenderPreview()"></textarea>
+        </div>
+        <div class="ex-set">
+          <b>Trang</b>
+          <label>Tiêu đề trang<input id="extitle" class="ex-inp" oninput="exRenderPreview()"></label>
+          <label class="ex-check"><input type="checkbox" id="exhdr" checked onchange="exRenderPreview()"> Dòng tiêu đề + Họ tên / Ngày</label>
+          <label id="exsetpages" style="display:none">Số trang<input id="expages" type="number" min="1" max="10" value="1" class="ex-inp" onchange="exRenderPreview()"></label>
+        </div>
+        <div class="ex-set">
+          <b>Ô luyện</b>
+          <div class="ex-btnrow" id="exgridbtns">
+            <button class="ex-opt" data-v="cross" onclick="exSetGrid('cross')">Chữ thập</button>
+            <button class="ex-opt" data-v="rice" onclick="exSetGrid('rice')">Chữ mễ</button>
+            <button class="ex-opt" data-v="plain" onclick="exSetGrid('plain')">Ô trơn</button>
+            <button class="ex-opt" data-v="mid" onclick="exSetGrid('mid')">Khung giữa</button>
+            <button class="ex-opt" data-v="nine" onclick="exSetGrid('nine')">Ô 9</button>
+          </div>
+          <b style="margin-top:10px;display:block">Màu ô</b>
+          <div class="ex-btnrow" id="excolorbtns">
+            <button class="ex-opt" data-v="green" onclick="exSetColor('green')">Xanh lá</button>
+            <button class="ex-opt" data-v="red" onclick="exSetColor('red')">Đỏ</button>
+            <button class="ex-opt" data-v="blue" onclick="exSetColor('blue')">Xanh dương</button>
+            <button class="ex-opt" data-v="gray" onclick="exSetColor('gray')">Xám</button>
+          </div>
+        </div>
+        <div class="ex-set">
+          <b>Bố cục</b>
+          <label>Số ô mỗi hàng<input id="excols" type="number" min="4" max="12" value="12" class="ex-inp" onchange="exSyncFaintMax();exRenderPreview()"></label>
+          <label>Số hàng tô<input id="extracerows" type="number" min="1" max="3" value="1" class="ex-inp" onchange="exRenderPreview()"></label>
+          <label>Số hàng trống<input id="exblankrows" type="number" min="0" max="3" value="0" class="ex-inp" onchange="exRenderPreview()"></label>
+          <label>Số chữ mờ mỗi hàng<input id="exfaintcount" type="range" min="1" max="12" value="12" style="width:100%" oninput="document.getElementById('exfaintcountlabel').textContent=this.value;exRenderPreview()"> <span id="exfaintcountlabel">12</span></label>
+        </div>
+        <div class="ex-set">
+          <b>Kiểu chữ</b>
+          <div class="ex-btnrow" id="exfontbtns">
+            <button class="ex-opt" data-v="faint" onclick="exSetFont('faint')">Chữ mờ</button>
+            <button class="ex-opt" data-v="outline" onclick="exSetFont('outline')">Chữ rỗng</button>
+            <button class="ex-opt" data-v="dashed" onclick="exSetFont('dashed')">Nét đứt</button>
+          </div>
+          <label>Độ đậm chữ mờ<input id="exfaintop" type="range" min="10" max="80" value="30" style="width:100%" oninput="document.getElementById('exfaintopval').textContent=this.value+'%';exRenderPreview()"> <span id="exfaintopval">30%</span></label>
+          <label>Cỡ chữ trong ô<input id="exfontsize" type="range" min="50" max="100" value="80" style="width:100%" oninput="document.getElementById('exfontsizeval').textContent=this.value+'%';exRenderPreview()"> <span id="exfontsizeval">80%</span></label>
+        </div>
+        <div class="ex-set">
+          <label class="ex-check"><input type="checkbox" id="exshowinfo" checked onchange="exRenderPreview()"> Hiển thị nghĩa + câu chuyện chiết tự</label>
+        </div>
+        <button class="chipbtn" onclick="exRestore()">↺ Khôi phục mặc định</button>
+        <button class="qz-next" onclick="exPrint()">🖨 In / Lưu PDF</button>
+        <p style="font-size:12.5px;color:#888;line-height:1.6;margin:10px 0 0">Mẹo in: khi in chọn khổ A4, lề “Không có”, bật “Đồ hoạ nền” để giữ màu ô.</p>
+      </div>
+      <div class="ex-previewwrap">
+        <div id="expreview"></div>
+        <p id="expreviewnote" style="font-size:12.5px;color:#888"></p>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:12.5px;color:#999;margin-top:12px">File được tạo ngay trên trình duyệt từ dữ liệu của cấp đang chọn — không cần đăng nhập. Bản in đầy đủ mở ra ở tab mới, bấm In hoặc “Lưu thành PDF” trong hộp thoại in.</div>
 </div>
 <div id="personalbox" style="display:none">
   <div class="fc-top"><span class="t">👤 Cá nhân hoá</span><span class="p" id="psstreak"></span><span class="sp2"></span><button class="chipbtn" onclick="closePersonal()">✕ Thoát</button></div>
@@ -3578,15 +3716,62 @@ function psRender(){
 
 
 /* ===== Tạo file ===== */
-var EX = { lv: 'N5' };
-function exSet(lv){ EX.lv = lv; exTabs(); exNotes(); }
+var EX = { lv: 'N5', sel: [], tpl: 'stroke', grid: 'cross', color: 'gray', font: 'faint' };
+var EXCOLORS = { green: '#4caf50', red: '#c62828', blue: '#1976d2', gray: '#999999' };
+var EXTPLS = {
+  stroke: { g: 'kanji', name: 'Luyện viết theo thứ tự nét', cols: 12, trace: 1, blank: 0 },
+  big: { g: 'kanji', name: 'Ô chữ lớn', cols: 4, trace: 1, blank: 0 },
+  sheet: { g: 'kanji', name: 'Phiếu luyện viết (mẫu gốc)', cols: 6, trace: 1, blank: 0 },
+  vtable: { g: 'vocab', name: 'Bảng từ vựng', cols: 6, trace: 1, blank: 0 },
+  vcard: { g: 'vocab', name: 'Thẻ từ vựng', cols: 4, trace: 1, blank: 0 },
+  vwrite: { g: 'vocab', name: 'Phiếu luyện viết từ vựng', cols: 6, trace: 1, blank: 0 },
+  blank: { g: 'paper', name: 'Giấy ô trống', cols: 10, trace: 1, blank: 0 },
+  lined: { g: 'paper', name: 'Giấy kẻ ngang', cols: 10, trace: 1, blank: 0 },
+  passage: { g: 'paper', name: 'Giấy luyện đoạn văn', cols: 10, trace: 1, blank: 0 }
+};
+function exEsc(s){ s = (s === null || s === undefined) ? '' : String(s); return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function exSet(lv){ EX.lv = lv; exTabs(); exRenderPick(); document.getElementById('exPick').style.display = ''; document.getElementById('exLib').style.display = 'none'; document.getElementById('exStudio').style.display = 'none'; }
 function exTabs(){ ['N5','N4','N3','N2','N1'].forEach(function(l){ var el = document.getElementById('etab' + l.slice(1)); if(el) el.classList.toggle('on', l === EX.lv); }); }
-function exNotes(){
-  tgBuild(EX.lv);
-  document.getElementById('exkanjinote').textContent = (FCSETS[EX.lv] || []).length + ' chữ Kanji ' + EX.lv + ': chữ, Hán Việt, On/Kun, số nét, bộ thủ, nghĩa, câu nhớ, từ mẫu.';
-  document.getElementById('exvocabnote').textContent = (TG.data[EX.lv] || []).length + ' từ vựng ' + EX.lv + ' (đã lọc trùng): từ, cách đọc, Hán Việt, nghĩa, chữ gốc.';
-  document.getElementById('exgramnote').textContent = (JLGRAM[EX.lv] || []).length + ' mẫu ngữ pháp ' + EX.lv + ': mẫu, cấu trúc, giải nghĩa, ví dụ, lưu ý.';
+function exRenderPick(){
+  var list = (typeof FCSETS !== 'undefined' ? (FCSETS[EX.lv] || []) : []);
+  EX.sel = list.map(function(_, i){ return i; });
+  document.getElementById('exPickTitle').textContent = 'Chọn Kanji ' + EX.lv + ' để tạo file luyện viết';
+  document.getElementById('exgrid').innerHTML = list.map(function(it, i){ return '<div class="ex-pickcell sel" data-i="' + i + '" title="' + exEsc(it.hanViet) + '" onclick="exTogglePick(' + i + ')">' + exEsc(it.kanji) + '</div>'; }).join('');
+  exCount();
 }
+function exCount(){ document.getElementById('excount').textContent = 'Đã chọn ' + EX.sel.length + ' / ' + ((typeof FCSETS !== 'undefined' ? (FCSETS[EX.lv] || []).length : 0)) + ' chữ ' + EX.lv; }
+function exTogglePick(i){
+  var p = EX.sel.indexOf(i);
+  if(p >= 0) EX.sel.splice(p, 1); else EX.sel.push(i);
+  EX.sel.sort(function(a, b){ return a - b; });
+  var cells = document.querySelectorAll('#exgrid .ex-pickcell');
+  cells.forEach(function(c){ c.classList.toggle('sel', EX.sel.indexOf(parseInt(c.getAttribute('data-i'), 10)) >= 0); });
+  exCount();
+}
+function exPickAll(){ var list = (typeof FCSETS !== 'undefined' ? (FCSETS[EX.lv] || []) : []); EX.sel = list.map(function(_, i){ return i; }); exRenderPickKeep(); }
+function exPickNone(){ EX.sel = []; exRenderPickKeep(); }
+function exRenderPickKeep(){
+  var cells = document.querySelectorAll('#exgrid .ex-pickcell');
+  cells.forEach(function(c){ c.classList.toggle('sel', EX.sel.indexOf(parseInt(c.getAttribute('data-i'), 10)) >= 0); });
+  exCount();
+}
+function exSelItems(){ var list = (typeof FCSETS !== 'undefined' ? (FCSETS[EX.lv] || []) : []); return EX.sel.map(function(i){ return list[i]; }).filter(function(x){ return !!x; }); }
+function exVocabItems(){
+  if(typeof tgBuild === 'function') tgBuild(EX.lv);
+  var pool = (typeof TG !== 'undefined' && TG.data ? (TG.data[EX.lv] || []) : []);
+  var chars = {}; exSelItems().forEach(function(it){ chars[it.kanji] = true; });
+  var f = pool.filter(function(v){ return (v.kanjis || []).some(function(c){ return chars[c]; }); });
+  return f.length ? f : pool;
+}
+function exGoLibrary(){
+  if(!EX.sel.length){ alert('Hãy chọn ít nhất 1 chữ.'); return; }
+  document.getElementById('exPick').style.display = 'none';
+  document.getElementById('exLib').style.display = '';
+  document.getElementById('exStudio').style.display = 'none';
+  document.getElementById('exlibnote').textContent = 'Đã nạp ' + EX.sel.length + ' chữ ' + EX.lv + ' vào bản in.';
+}
+function exBackPick(){ document.getElementById('exPick').style.display = ''; document.getElementById('exLib').style.display = 'none'; document.getElementById('exStudio').style.display = 'none'; exRenderPickKeep(); }
+function exBackLib(){ document.getElementById('exPick').style.display = 'none'; document.getElementById('exLib').style.display = ''; document.getElementById('exStudio').style.display = 'none'; }
 function openExport(){
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
@@ -3597,66 +3782,215 @@ function openExport(){
   if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   if(window.__aOn && typeof closeAccent === 'function') closeAccent(true);
   if(window.__pOn && typeof closePersonal === 'function') closePersonal(true);
+  if(window.__rkOn && typeof closeRank === 'function') closeRank(true);
+  if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   window.__eOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox','personalbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox','personalbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('exportbox').style.display = '';
   document.getElementById('paneltitle').textContent = '📄 Tạo file';
   EX.lv = window.CURLV || 'N5';
-  exTabs(); exNotes();
+  exSet(EX.lv);
 }
 function closeExport(skip){
   window.__eOn = false;
   var el = document.getElementById('exportbox'); if(el) el.style.display = 'none';
   if(!skip) selectLevel(window.CURLV || 'N5');
 }
-function exCsvCell(v){ v = (v === null || v === undefined) ? '' : String(v); return '"' + v.replace(/"/g, '""') + '"'; }
-function exDownload(name, text){
-  var blob = new Blob(['\ufeff' + text], { type: 'text/csv;charset=utf-8' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = name;
-  document.body.appendChild(a); a.click();
-  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+function exMarkBtns(boxId, val){
+  var box = document.getElementById(boxId); if(!box) return;
+  box.querySelectorAll('.ex-opt').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-v') === val); });
 }
-function exKanjiCsv(){
-  var rows = [['Kanji','Hán Việt','On','Kun','Số nét','Bộ thủ','Nghĩa','Câu nhớ','Từ mẫu']];
-  (FCSETS[EX.lv] || []).forEach(function(it){
-    rows.push([it.kanji, it.hanViet, (it.on || []).join('・'), (it.kun || []).join('・'), it.strokes, it.radical, it.meaning, it.mnemonic, (it.vocab || []).map(function(v){ return v.word + ' (' + v.reading + ')'; }).join('; ')]);
-  });
-  exDownload('kanji-' + EX.lv.toLowerCase() + '.csv', rows.map(function(r){ return r.map(exCsvCell).join(','); }).join('\r\n'));
+function exSetGrid(v){ EX.grid = v; exMarkBtns('exgridbtns', v); exRenderPreview(); }
+function exSetColor(v){ EX.color = v; exMarkBtns('excolorbtns', v); exRenderPreview(); }
+function exSetFont(v){ EX.font = v; exMarkBtns('exfontbtns', v); exRenderPreview(); }
+function exOpenTemplate(id){
+  EX.tpl = id;
+  var d = EXTPLS[id];
+  document.getElementById('extitle').value = 'Phiếu luyện viết Kanji ' + EX.lv;
+  document.getElementById('exhdr').checked = true;
+  document.getElementById('exshowinfo').checked = true;
+  document.getElementById('excols').value = d.cols;
+  document.getElementById('extracerows').value = d.trace;
+  document.getElementById('exblankrows').value = d.blank;
+  document.getElementById('exfaintcount').value = d.cols;
+  document.getElementById('exfaintcountlabel').textContent = String(d.cols);
+  document.getElementById('exfaintop').value = 30;
+  document.getElementById('exfaintopval').textContent = '30%';
+  document.getElementById('exfontsize').value = 80;
+  document.getElementById('exfontsizeval').textContent = '80%';
+  document.getElementById('expages').value = 1;
+  EX.grid = 'cross'; EX.color = 'gray'; EX.font = 'faint';
+  exMarkBtns('exgridbtns', 'cross'); exMarkBtns('excolorbtns', 'gray'); exMarkBtns('exfontbtns', 'faint');
+  document.getElementById('exPick').style.display = 'none';
+  document.getElementById('exLib').style.display = 'none';
+  document.getElementById('exStudio').style.display = '';
+  document.getElementById('extplname').textContent = d.name;
+  document.getElementById('exsetpassage').style.display = (id === 'passage') ? '' : 'none';
+  document.getElementById('exsetpages').style.display = (d.g === 'paper') ? '' : 'none';
+  exRenderPreview();
 }
-function exVocabCsv(){
-  tgBuild(EX.lv);
-  var rows = [['Từ','Cách đọc','Hán Việt','Nghĩa','Chữ gốc']];
-  (TG.data[EX.lv] || []).forEach(function(v){ rows.push([v.word, v.reading, v.hanViet, v.meaning, (v.kanjis || []).join(' ')]); });
-  exDownload('tu-vung-' + EX.lv.toLowerCase() + '.csv', rows.map(function(r){ return r.map(exCsvCell).join(','); }).join('\r\n'));
+function exRestore(){ exOpenTemplate(EX.tpl); }
+function exSyncFaintMax(){
+  var cols = parseInt(document.getElementById('excols').value, 10) || 12;
+  var f = document.getElementById('exfaintcount');
+  f.max = cols;
+  if(parseInt(f.value, 10) > cols){ f.value = cols; document.getElementById('exfaintcountlabel').textContent = String(cols); }
 }
-function exGrammarCsv(){
-  var rows = [['Mẫu','Cấu trúc','Giải nghĩa','Ví dụ JP','Ví dụ VN','Lưu ý']];
-  (JLGRAM[EX.lv] || []).forEach(function(g){
-    rows.push([g.p, g.s, g.m, (g.ex || []).map(function(e){ return e[0]; }).join(' / '), (g.ex || []).map(function(e){ return e[1]; }).join(' / '), g.n || '']);
-  });
-  exDownload('ngu-phap-' + EX.lv.toLowerCase() + '.csv', rows.map(function(r){ return r.map(exCsvCell).join(','); }).join('\r\n'));
+function exCfg(){
+  return {
+    title: document.getElementById('extitle').value,
+    hdr: document.getElementById('exhdr').checked,
+    showinfo: document.getElementById('exshowinfo').checked,
+    cols: Math.max(4, Math.min(12, parseInt(document.getElementById('excols').value, 10) || 12)),
+    trace: Math.max(1, Math.min(3, parseInt(document.getElementById('extracerows').value, 10) || 1)),
+    blank: Math.max(0, Math.min(3, parseInt(document.getElementById('exblankrows').value, 10) || 0)),
+    faintcount: Math.max(1, parseInt(document.getElementById('exfaintcount').value, 10) || 12),
+    faintop: parseInt(document.getElementById('exfaintop').value, 10) || 30,
+    fontsize: parseInt(document.getElementById('exfontsize').value, 10) || 80,
+    pages: Math.max(1, Math.min(10, parseInt(document.getElementById('expages').value, 10) || 1)),
+    passage: document.getElementById('expassage').value || ''
+  };
 }
-function exAnkiCsv(){
-  tgBuild(EX.lv);
-  var rows = [];
-  (TG.data[EX.lv] || []).forEach(function(v){ rows.push([v.word + ' (' + v.reading + ')', v.meaning + ' — ' + v.hanViet]); });
-  exDownload('anki-tu-vung-' + EX.lv.toLowerCase() + '.csv', rows.map(function(r){ return r.map(exCsvCell).join(','); }).join('\r\n'));
+function exFaintStyle(cfg){
+  if(EX.font === 'outline') return 'color:transparent;-webkit-text-stroke:1.5px #17324a;';
+  if(EX.font === 'dashed') return 'color:transparent;-webkit-text-stroke:1px rgba(23,50,74,0.7);';
+  return 'color:#17324a;opacity:' + (cfg.faintop / 100) + ';';
 }
-function exPrintSheet(){
-  var list = (FCSETS[EX.lv] || []).slice(0, 200);
-  var cells = list.map(function(it){
-    var boxes = '<div class="bx ghost">' + it.kanji + '</div>' + '<div class="bx"></div>'.repeat(5);
-    return '<div class="krow"><div class="kinfo"><span class="kbig">' + it.kanji + '</span><span class="kmeta">' + grEsc(it.hanViet) + ' · ' + grEsc(it.meaning) + '<br>On: ' + grEsc((it.on || []).join('・')) + ' · Kun: ' + grEsc((it.kun || []).join('・')) + '</span></div><div class="boxes">' + boxes + '</div></div>';
-  }).join('');
-  var html = '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>Phiếu luyện viết Kanji ' + EX.lv + '</title><style>'
-    + 'body{font-family:sans-serif;margin:24px;color:#222}h1{font-size:20px;color:#c62828;margin:0 0 4px}.sub{color:#777;font-size:13px;margin-bottom:16px}'
-    + '.krow{display:flex;gap:14px;align-items:center;padding:8px 0;border-bottom:1px solid #eee;page-break-inside:avoid}'
-    + '.kinfo{width:210px;display:flex;gap:10px;align-items:center}.kbig{font-size:34px;font-weight:800}.kmeta{font-size:12px;color:#555;line-height:1.5}'
-    + '.boxes{display:flex;gap:5px}.bx{width:44px;height:44px;border:1.5px solid #bbb;border-radius:4px;font-size:30px;display:flex;align-items:center;justify-content:center;background-image:linear-gradient(#eee 1px,transparent 1px),linear-gradient(90deg,#eee 1px,transparent 1px);background-size:22px 22px;background-position:center}'
-    + '.bx.ghost{color:#e3b7b7}'
-    + '@media print{body{margin:10px}}'
-    + '</style></head><body><h1>✍️ Phiếu luyện viết Kanji ' + EX.lv + '</h1><div class="sub">' + list.length + ' chữ · Ô đầu tiên là chữ mẫu mờ để đồ theo, các ô sau tự viết từ trí nhớ.</div>' + cells + '</body></html>';
+function exCellHTML(txt, faint, cfg){
+  var gc = EXCOLORS[EX.color] || '#999999';
+  var inner = '';
+  if(faint && txt) inner = '<span class="ex-faint" style="' + exFaintStyle(cfg) + 'font-size:' + cfg.fontsize + '%">' + exEsc(txt) + '</span>';
+  else if(txt) inner = '<span class="ex-faint" style="font-size:' + cfg.fontsize + '%">' + exEsc(txt) + '</span>';
+  return '<div class="ex-cell ' + EX.grid + '" style="--gc:' + gc + '">' + inner + '</div>';
+}
+function exTraceHTML(txt, cfg){
+  var out = '';
+  var i, j;
+  for(i = 0; i < cfg.trace; i++){
+    out += '<div class="ex-tracerow">';
+    for(j = 0; j < cfg.cols; j++) out += exCellHTML(j < cfg.faintcount ? txt : '', j < cfg.faintcount, cfg);
+    out += '</div>';
+  }
+  for(i = 0; i < cfg.blank; i++){
+    out += '<div class="ex-tracerow">';
+    for(j = 0; j < cfg.cols; j++) out += exCellHTML('', false, cfg);
+    out += '</div>';
+  }
+  return out;
+}
+function exPageHTML(cfg, body){
+  var head = '';
+  if(cfg.hdr) head = '<div class="ex-pagehead"><span>Họ tên: ____________________</span><span>Ngày: ____ / ____ / ________</span></div>';
+  var title = cfg.title ? '<div class="ex-pagetitle">' + exEsc(cfg.title) + '</div>' : '';
+  return '<div class="ex-page">' + head + title + body + '</div>';
+}
+function exChunk(arr, n){ var out = []; for(var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n)); return out.length ? out : [[]]; }
+function exBuildPages(cfg, full){
+  var tpl = EXTPLS[EX.tpl];
+  var items = (tpl.g === 'kanji') ? exSelItems() : (tpl.g === 'vocab' ? exVocabItems() : []);
+  var pages = [];
+  var gc = EXCOLORS[EX.color] || '#999999';
+  var i, j, chunk, body;
+  if(EX.tpl === 'stroke'){
+    exChunk(items, 6).forEach(function(c){
+      body = c.map(function(it){
+        var meta = exEsc(it.hanViet) + ' · ' + exEsc(it.meaning) + '<br>On: ' + exEsc((it.on || []).join('・')) + ' · Kun: ' + exEsc((it.kun || []).join('・')) + ' · ' + it.strokes + ' nét · Bộ ' + exEsc(it.radical);
+        var memo = (cfg.showinfo && it.mnemonic) ? '<div class="ex-kmemo">' + exEsc(it.mnemonic) + '</div>' : '';
+        return '<div class="ex-kblock"><div class="ex-kmain"><span class="ex-kbig">' + exEsc(it.kanji) + '</span><span class="ex-kmeta">' + meta + '</span></div>' + memo + exTraceHTML(it.kanji, cfg) + '</div>';
+      }).join('');
+      pages.push(exPageHTML(cfg, body));
+    });
+  } else if(EX.tpl === 'big'){
+    exChunk(items, 8).forEach(function(c){
+      body = '<div class="ex-biggrid" style="grid-template-columns:repeat(' + cfg.cols + ',1fr)">' + c.map(function(it){
+        return '<div class="ex-bigcell" style="--gc:' + gc + '"><span class="ex-faint" style="' + exFaintStyle(cfg) + 'font-size:180%">' + exEsc(it.kanji) + '</span><span style="font-size:12px;color:#555">' + exEsc(it.hanViet) + (cfg.showinfo ? ' · ' + exEsc(it.meaning) : '') + '</span></div>';
+      }).join('') + '</div>';
+      pages.push(exPageHTML(cfg, body));
+    });
+  } else if(EX.tpl === 'sheet'){
+    exChunk(items, 10).forEach(function(c){
+      body = c.map(function(it){
+        var row = '<div class="ex-tracerow">';
+        for(j = 0; j < cfg.cols; j++) row += exCellHTML(j === 0 ? it.kanji : '', j === 0, cfg);
+        row += '</div>';
+        var blankRows = '';
+        for(i = 0; i < cfg.blank; i++){ blankRows += '<div class="ex-tracerow">'; for(j = 0; j < cfg.cols; j++) blankRows += exCellHTML('', false, cfg); blankRows += '</div>'; }
+        return '<div class="ex-kblock"><div class="ex-kmain"><span class="ex-kbig">' + exEsc(it.kanji) + '</span><span class="ex-kmeta">' + exEsc(it.hanViet) + ' · ' + exEsc(it.meaning) + '<br>On: ' + exEsc((it.on || []).join('・')) + ' · Kun: ' + exEsc((it.kun || []).join('・')) + '</span></div>' + row + blankRows + '</div>';
+      }).join('');
+      pages.push(exPageHTML(cfg, body));
+    });
+  } else if(EX.tpl === 'vtable'){
+    exChunk(items, 12).forEach(function(c){
+      body = c.map(function(v){
+        var row = '<div class="ex-tracerow">';
+        for(j = 0; j < cfg.cols; j++) row += exCellHTML(j === 0 ? v.word : '', j === 0, cfg);
+        row += '</div>';
+        return '<div class="ex-vrow"><div class="ex-vinfo"><div class="ex-vword">' + exEsc(v.word) + '</div><div class="ex-vmeta">' + exEsc(v.reading) + ' · ' + exEsc(v.hanViet) + (cfg.showinfo ? '<br>' + exEsc(v.meaning) : '') + '</div></div><div class="ex-vwrite">' + row + '</div></div>';
+      }).join('');
+      pages.push(exPageHTML(cfg, body));
+    });
+  } else if(EX.tpl === 'vcard'){
+    exChunk(items, 8).forEach(function(c){
+      body = '<div class="ex-biggrid" style="grid-template-columns:repeat(2,1fr)">' + c.map(function(v){
+        var row = '<div class="ex-tracerow">';
+        for(j = 0; j < 4; j++) row += exCellHTML(j === 0 ? v.word : '', j === 0, cfg);
+        row += '</div>';
+        return '<div style="border:1.5px solid #ddd;border-radius:12px;padding:12px"><div class="ex-vword">' + exEsc(v.word) + '</div><div class="ex-vmeta">' + exEsc(v.reading) + ' · ' + exEsc(v.hanViet) + (cfg.showinfo ? '<br>' + exEsc(v.meaning) : '') + '</div>' + row + '</div>';
+      }).join('') + '</div>';
+      pages.push(exPageHTML(cfg, body));
+    });
+  } else if(EX.tpl === 'vwrite'){
+    exChunk(items, 10).forEach(function(c){
+      body = c.map(function(v){
+        var row = '<div class="ex-tracerow">';
+        for(j = 0; j < cfg.cols; j++) row += exCellHTML(j === 0 ? v.word : '', j === 0, cfg);
+        row += '</div>';
+        return '<div class="ex-vrow"><div class="ex-vinfo"><div class="ex-vword">' + exEsc(v.word) + '</div><div class="ex-vmeta">' + exEsc(v.reading) + ' · ' + exEsc(v.hanViet) + (cfg.showinfo ? '<br>' + exEsc(v.meaning) : '') + '</div></div><div class="ex-vwrite">' + row + '</div></div>';
+      }).join('');
+      pages.push(exPageHTML(cfg, body));
+    });
+  } else if(EX.tpl === 'blank'){
+    for(i = 0; i < cfg.pages; i++){
+      body = '<div class="ex-blankgrid" style="grid-template-columns:repeat(' + cfg.cols + ',1fr)">';
+      for(j = 0; j < cfg.cols * 18; j++) body += exCellHTML('', false, cfg);
+      body += '</div>';
+      pages.push(exPageHTML(cfg, body));
+    }
+  } else if(EX.tpl === 'lined'){
+    for(i = 0; i < cfg.pages; i++){
+      body = '';
+      for(j = 0; j < 28; j++) body += '<div class="ex-line"></div>';
+      pages.push(exPageHTML(cfg, body));
+    }
+  } else if(EX.tpl === 'passage'){
+    var lines = cfg.passage ? cfg.passage.split('\n').filter(function(x){ return x.trim().length; }) : ['(Nhập đoạn văn ở khung bên trái để in dòng chép lại.)'];
+    exChunk(lines, 12).forEach(function(c){
+      body = c.map(function(ln){ return '<div class="ex-passline">' + exEsc(ln) + '</div><div class="ex-line" style="height:30px"></div>'; }).join('');
+      pages.push(exPageHTML(cfg, body));
+    });
+  }
+  if(!pages.length) pages = [exPageHTML(cfg, '<p style="color:#888">Chưa có nội dung. Hãy quay lại chọn chữ.</p>')];
+  return { pages: pages, total: pages.length, items: items.length };
+}
+function exRenderPreview(){
+  var cfg = exCfg();
+  var tpl = EXTPLS[EX.tpl];
+  var res = exBuildPages(cfg, false);
+  var same = Object.keys(EXTPLS).filter(function(k){ return EXTPLS[k].g === tpl.g; });
+  document.getElementById('exsame').innerHTML = same.map(function(k){ return '<button class="ex-opt' + (k === EX.tpl ? ' on' : '') + '" onclick="exOpenTemplate(\'' + k + '\')">' + EXTPLS[k].name + '</button>'; }).join('');
+  if(tpl.g === 'kanji') document.getElementById('excontent').textContent = exSelItems().map(function(it){ return it.kanji; }).join(' ');
+  else if(tpl.g === 'vocab') document.getElementById('excontent').textContent = exVocabItems().slice(0, 60).map(function(v){ return v.word; }).join(' ') + (exVocabItems().length > 60 ? ' …' : '');
+  else document.getElementById('excontent').textContent = 'Giấy luyện — không dùng danh sách chữ.';
+  document.getElementById('exstudynote').textContent = 'Đã nạp ' + (tpl.g === 'paper' ? cfg.pages + ' trang' : res.items + ' mục') + ' vào bản in';
+  var shown = res.pages.slice(0, 3);
+  document.getElementById('expreview').innerHTML = shown.join('');
+  document.getElementById('expreviewnote').textContent = 'Xem trước ' + shown.length + ' trang đầu · Bản in đầy đủ ' + res.total + ' trang' + (tpl.g === 'paper' ? '' : ' · ' + res.items + ' mục');
+}
+function exPrint(){
+  var cfg = exCfg();
+  var res = exBuildPages(cfg, true);
+  var css = 'body{font-family:sans-serif;margin:0;color:#222}@page{size:A4;margin:0}.ex-page{width:210mm;min-height:297mm;box-sizing:border-box;padding:13mm 12mm;margin:0;page-break-after:always;border:none;border-radius:0}.ex-pagehead{display:flex;justify-content:space-between;font-size:13px;color:#555;border-bottom:1.5px solid #eee;padding-bottom:8px;margin-bottom:12px}.ex-pagetitle{font-size:17px;font-weight:800;color:#c62828;margin-bottom:10px}.ex-kblock{border-bottom:1px solid #eee;padding:10px 0}.ex-kmain{display:flex;gap:12px;align-items:center}.ex-kbig{font-size:36px;font-weight:800;color:#17324a}.ex-kmeta{font-size:12.5px;color:#555;line-height:1.5}.ex-kmemo{font-size:13px;color:#666;line-height:1.6;margin-top:6px}.ex-tracerow{display:flex;gap:4px;margin-top:8px}.ex-cell{flex:1;aspect-ratio:1/1;min-width:0;border:1.5px solid var(--gc,#999);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-color:#fff}.ex-cell.cross{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}.ex-cell.rice{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(-45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}.ex-cell.nine{background-image:linear-gradient(var(--gc,#999) 1px,transparent 1px),linear-gradient(90deg,var(--gc,#999) 1px,transparent 1px);background-size:33.333% 33.333%}.ex-cell.mid::after{content:"";position:absolute;inset:22%;border:1.5px solid var(--gc,#999);border-radius:2px}.ex-faint{line-height:1}.ex-biggrid{display:grid;gap:8px}.ex-bigcell{border:1.5px solid var(--gc,#999);border-radius:8px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;overflow:hidden}.ex-vrow{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #eee;padding:9px 0}.ex-vinfo{flex:0 0 210px}.ex-vword{font-size:22px;font-weight:800;color:#17324a}.ex-vmeta{font-size:12.5px;color:#555;line-height:1.5}.ex-vwrite{flex:1}.ex-blankgrid{display:grid;gap:4px}.ex-line{border-bottom:1.5px solid #bbb;height:34px}.ex-passline{font-size:16px;line-height:1.8}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
+  var html = '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>' + exEsc(cfg.title || 'Phieu luyen viet') + '</title><style>' + css + '</style></head><body>' + res.pages.join('') + '</body></html>';
   var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   window.open(URL.createObjectURL(blob), '_blank');
 }
