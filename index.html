@@ -492,7 +492,7 @@ body.gs-l .cell{font-size:35px}
       <span id="excount" style="font-size:13.5px;color:#c62828;font-weight:700"></span>
     </div>
     <div id="exgrid" class="ex-pickgrid"></div>
-    <div style="margin-top:14px"><button class="qz-next" style="margin-top:0" onclick="exGoLibrary()">Tạo file →</button></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="qz-next" style="margin-top:0" onclick="exGoLibrary()">Tạo file →</button><button class="chipbtn" onclick="exQuickDownload()">⬇ Tải nhanh phiếu luyện viết</button></div><p style="font-size:12.5px;color:#888;margin:6px 0 0">Tải nhanh: tải ngay phiếu mẫu thứ tự nét của các chữ đã chọn, không cần chọn mẫu hay chỉnh ô.</p>
   </div>
   <div id="exLib" style="display:none">
     <div style="margin-top:10px"><button class="chipbtn" onclick="exBackPick()">← Chọn lại chữ</button></div>
@@ -519,11 +519,12 @@ body.gs-l .cell{font-size:35px}
     </div>
   </div>
   <div id="exStudio" style="display:none">
-    <div class="fc-top"><span class="t" id="extplname"></span><span class="p" id="exstudynote"></span><span class="sp2"></span><button class="chipbtn" onclick="exBackLib()">← Đổi mẫu</button></div>
+    <div class="fc-top"><span class="t" id="extplname"></span><span class="p" id="exstudynote"></span><span class="sp2"></span><button class="chipbtn" onclick="exDownload()">⬇ Tải về</button><button class="chipbtn" onclick="exBackLib()">← Đổi mẫu</button></div>
     <p style="font-size:12.5px;color:#888;margin:8px 0 0">Đổi mẫu không mất nội dung.</p>
     <div id="exsame" class="ex-btnrow"></div>
     <div class="ex-studio">
       <div class="ex-settings">
+        <div class="ex-set"><button class="qz-next" style="margin-top:0" onclick="exDownload()">⬇ Tải file về</button><p style="font-size:12.5px;color:#888;line-height:1.6;margin:6px 0 0">Tải file in A4 về máy, mở file ra là in được ngay, hoặc chọn Lưu thành PDF trong hộp thoại in.</p></div>
         <div class="ex-set">
           <b>Kanji / từ cần luyện</b>
           <div id="excontent" class="ex-content"></div>
@@ -3986,13 +3987,35 @@ function exRenderPreview(){
   document.getElementById('expreview').innerHTML = shown.join('');
   document.getElementById('expreviewnote').textContent = 'Xem trước ' + shown.length + ' trang đầu · Bản in đầy đủ ' + res.total + ' trang' + (tpl.g === 'paper' ? '' : ' · ' + res.items + ' mục');
 }
+function exPrintHTML(cfg, res){
+  var css = 'body{font-family:sans-serif;margin:0;color:#222}@page{size:A4;margin:0}.ex-page{width:210mm;min-height:297mm;box-sizing:border-box;padding:13mm 12mm;margin:0;page-break-after:always;border:none;border-radius:0}.ex-pagehead{display:flex;justify-content:space-between;font-size:13px;color:#555;border-bottom:1.5px solid #eee;padding-bottom:8px;margin-bottom:12px}.ex-pagetitle{font-size:17px;font-weight:800;color:#c62828;margin-bottom:10px}.ex-kblock{border-bottom:1px solid #eee;padding:10px 0}.ex-kmain{display:flex;gap:12px;align-items:center}.ex-kbig{font-size:36px;font-weight:800;color:#17324a}.ex-kmeta{font-size:12.5px;color:#555;line-height:1.5}.ex-kmemo{font-size:13px;color:#666;line-height:1.6;margin-top:6px}.ex-tracerow{display:flex;gap:4px;margin-top:8px}.ex-cell{flex:1;aspect-ratio:1/1;min-width:0;border:1.5px solid var(--gc,#999);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-color:#fff}.ex-cell.cross{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}.ex-cell.rice{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(-45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}.ex-cell.nine{background-image:linear-gradient(var(--gc,#999) 1px,transparent 1px),linear-gradient(90deg,var(--gc,#999) 1px,transparent 1px);background-size:33.333% 33.333%}.ex-cell.mid::after{content:"";position:absolute;inset:22%;border:1.5px solid var(--gc,#999);border-radius:2px}.ex-faint{line-height:1}.ex-biggrid{display:grid;gap:8px}.ex-bigcell{border:1.5px solid var(--gc,#999);border-radius:8px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;overflow:hidden}.ex-vrow{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #eee;padding:9px 0}.ex-vinfo{flex:0 0 210px}.ex-vword{font-size:22px;font-weight:800;color:#17324a}.ex-vmeta{font-size:12.5px;color:#555;line-height:1.5}.ex-vwrite{flex:1}.ex-blankgrid{display:grid;gap:4px}.ex-line{border-bottom:1.5px solid #bbb;height:34px}.ex-passline{font-size:16px;line-height:1.8}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
+  return '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>' + exEsc(cfg.title || 'Phieu luyen viet') + '</title><style>' + css + '</style></head><body>' + res.pages.join('') + '</body></html>';
+}
 function exPrint(){
   var cfg = exCfg();
   var res = exBuildPages(cfg, true);
-  var css = 'body{font-family:sans-serif;margin:0;color:#222}@page{size:A4;margin:0}.ex-page{width:210mm;min-height:297mm;box-sizing:border-box;padding:13mm 12mm;margin:0;page-break-after:always;border:none;border-radius:0}.ex-pagehead{display:flex;justify-content:space-between;font-size:13px;color:#555;border-bottom:1.5px solid #eee;padding-bottom:8px;margin-bottom:12px}.ex-pagetitle{font-size:17px;font-weight:800;color:#c62828;margin-bottom:10px}.ex-kblock{border-bottom:1px solid #eee;padding:10px 0}.ex-kmain{display:flex;gap:12px;align-items:center}.ex-kbig{font-size:36px;font-weight:800;color:#17324a}.ex-kmeta{font-size:12.5px;color:#555;line-height:1.5}.ex-kmemo{font-size:13px;color:#666;line-height:1.6;margin-top:6px}.ex-tracerow{display:flex;gap:4px;margin-top:8px}.ex-cell{flex:1;aspect-ratio:1/1;min-width:0;border:1.5px solid var(--gc,#999);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-color:#fff}.ex-cell.cross{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}.ex-cell.rice{background-image:linear-gradient(to bottom,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(to right,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px)),linear-gradient(-45deg,transparent calc(50% - 0.5px),var(--gc,#999) calc(50% - 0.5px),var(--gc,#999) calc(50% + 0.5px),transparent calc(50% + 0.5px))}.ex-cell.nine{background-image:linear-gradient(var(--gc,#999) 1px,transparent 1px),linear-gradient(90deg,var(--gc,#999) 1px,transparent 1px);background-size:33.333% 33.333%}.ex-cell.mid::after{content:"";position:absolute;inset:22%;border:1.5px solid var(--gc,#999);border-radius:2px}.ex-faint{line-height:1}.ex-biggrid{display:grid;gap:8px}.ex-bigcell{border:1.5px solid var(--gc,#999);border-radius:8px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;overflow:hidden}.ex-vrow{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #eee;padding:9px 0}.ex-vinfo{flex:0 0 210px}.ex-vword{font-size:22px;font-weight:800;color:#17324a}.ex-vmeta{font-size:12.5px;color:#555;line-height:1.5}.ex-vwrite{flex:1}.ex-blankgrid{display:grid;gap:4px}.ex-line{border-bottom:1.5px solid #bbb;height:34px}.ex-passline{font-size:16px;line-height:1.8}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
-  var html = '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>' + exEsc(cfg.title || 'Phieu luyen viet') + '</title><style>' + css + '</style></head><body>' + res.pages.join('') + '</body></html>';
-  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var blob = new Blob([exPrintHTML(cfg, res)], { type: 'text/html;charset=utf-8' });
   window.open(URL.createObjectURL(blob), '_blank');
+}
+function exDownloadFile(html, filename){
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+}
+function exDownload(){
+  var cfg = exCfg();
+  var res = exBuildPages(cfg, true);
+  exDownloadFile(exPrintHTML(cfg, res), 'phieu-luyen-viet-' + EX.lv.toLowerCase() + '-' + EX.tpl + '.html');
+}
+function exQuickDownload(){
+  if(!EX.sel.length){ alert('Hãy chọn ít nhất 1 chữ.'); return; }
+  var saved = EX.tpl; EX.tpl = 'stroke';
+  var cfg = { title: 'Phiếu luyện viết Kanji ' + EX.lv, hdr: true, showinfo: true, cols: 12, trace: 1, blank: 0, faintcount: 12, faintop: 30, fontsize: 80, pages: 1, passage: '' };
+  var res = exBuildPages(cfg, true);
+  exDownloadFile(exPrintHTML(cfg, res), 'phieu-luyen-viet-' + EX.lv.toLowerCase() + '-stroke.html');
+  EX.tpl = saved;
 }
 
 </script>
