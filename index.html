@@ -361,6 +361,7 @@ body.gs-l .cell{font-size:35px}
   <button class="sitem" id="sb-tango" onclick="openTango()"><span class="ic">📚</span>Nhai Tango</button>
   <button class="sitem" id="sb-bunpo" onclick="openGrammar()"><span class="ic">📝</span>Nhai Bunpo</button>
   <button class="sitem" id="sb-jlpt" onclick="openJLPT()"><span class="ic">📄</span>NhaiJLPT</button>
+  <button class="sitem" id="sb-tokutei" onclick="openTokutei()"><span class="ic">🏗️</span>Tokutei Gino</button>
   <button class="sitem" id="sb-personal" onclick="openPersonal()"><span class="ic">👤</span>Cá nhân hoá</button>
   <button class="sitem orange" onclick="soon()"><span class="ic">💎</span>Trọn đời</button>
   <button class="sitem" id="sb-accent" onclick="openAccent()"><span class="ic">🎚️</span>Trọng âm</button>
@@ -619,6 +620,10 @@ body.gs-l .cell{font-size:35px}
     <button class="tg-tab" id="jtab5" onclick="jlSet('N5')">N5</button><button class="tg-tab" id="jtab4" onclick="jlSet('N4')">N4</button><button class="tg-tab" id="jtab3" onclick="jlSet('N3')">N3</button><button class="tg-tab" id="jtab2" onclick="jlSet('N2')">N2</button><button class="tg-tab" id="jtab1" onclick="jlSet('N1')">N1</button>
   </div>
   <div id="jlbody"></div>
+</div>
+<div id="tokuteibox" style="display:none">
+  <div class="fc-top"><span class="t">🏗️ Tokutei Gino</span><span class="sp2"></span><button class="chipbtn" onclick="closeTokutei()">✕ Thoát</button></div>
+  <div id="tkbody"></div>
 </div>
 <div id="radicalbox" style="display:none">
   <div class="fc-top"><span class="t">🧩 214 Bộ thủ Khang Hy</span><span class="p" id="radcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeRadicals()">✕ Thoát</button></div>
@@ -2846,7 +2851,7 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input', doSearch);
 function selectLevel(lv){
-  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true); if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true); if(window.__tOn && typeof closeTango === 'function') closeTango(true); if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true); if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true); if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true); if(window.__tOn && typeof closeTango === 'function') closeTango(true); if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true); if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   document.querySelectorAll('.pill[data-lv]').forEach(function(t){ t.classList.toggle('active', t.dataset.lv === lv); });
   document.getElementById('grid').style.display = lv === 'N5' ? '' : 'none';
   document.getElementById('grid4').style.display = lv === 'N4' ? '' : 'none';
@@ -2922,7 +2927,7 @@ function fcLoadKnown(){ try { return JSON.parse(localStorage.getItem('kanjivn_fc
 function fcSaveKnown(m){ try { localStorage.setItem('kanjivn_fc_v1', JSON.stringify(m)); } catch(e){} }
 function fcKnownArr(lv){ var m = fcLoadKnown(); return m[lv] || []; }
 function openFlash(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -3016,7 +3021,7 @@ document.addEventListener('keydown', function(e){
 /* ===== Luyện viết ===== */
 var WR = {lv:'N5', deck:[], idx:0, shuffle:false, ghost:true, strokes:[], cur:null, drawing:false};
 function openWrite(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -3119,7 +3124,7 @@ var GRAMMAR2 = [{"ex": [["開会に先立って、注意事項を説明します
 var GRAMMAR1 = [{"ex": [["ドアが開くや否や、猫が飛び出しました。", "Cửa vừa mở là mèo phóng ra ngay."], ["発表されるや否や、批判が集まりました。", "Vừa công bố là chỉ trích đổ dồn tới."]], "group": "Thời gian & trình tự N1", "m": "“Ngay khi vừa…” — việc sau xảy ra tức thì sau việc trước (văn viết).", "n": "否や đọc いなや; động từ trước や否や dùng nguyên dạng hoặc た.", "p": "〜や否や", "s": "V + や否や、〜"}, {"ex": [["彼は帰るなり、寝てしまいました。", "Anh ta vừa về là ngủ luôn."], ["電話を切るなり、彼女は泣き出しました。", "Vừa cúp máy là cô ấy bật khóc."]], "group": "Thời gian & trình tự N1", "m": "Việc sau xảy ra ngay sau việc trước một cách bất ngờ, thường là hành động của người khác.", "n": "なり dùng cho chuỗi hành động nhanh và bất ngờ; không dùng cho dự định của người nói.", "p": "V-る なり", "s": "V-る + なり、〜"}, {"ex": [["掃除したそばから、子どもが散らかします。", "Vừa dọn xong là trẻ con lại bày bừa ra."], ["覚えたそばから忘れてしまいます。", "Vừa học thuộc là lại quên ngay."]], "group": "Thời gian & trình tự N1", "m": "Vừa làm xong việc trước thì (việc gây phiền) lại lặp lại ngay — sắc thái bất lực.", "n": "そばから luôn kết hợp việc lặp lại gây khó chịu.", "p": "V-た そばから", "s": "V-た + そばから、〜"}, {"ex": [["彼は食べては寝る生活をしています。", "Anh ta sống kiểu ăn rồi lại ngủ, lặp đi lặp lại."], ["書いては消し、消しては書いています。", "Cứ viết rồi xóa, xóa rồi viết."]], "group": "Thời gian & trình tự N1", "m": "ては…ては chỉ chu kỳ hành động lặp lại nhiều lần.", "n": "Mẫu này nhấn tính lặp lại đơn điệu của thói quen.", "p": "V-ては〜、V-ては", "s": "V1-ては V2、V2-ては V1"}, {"ex": [["病気をしてからというもの、健康に気をつけています。", "Kể từ khi bị bệnh, tôi rất chú ý sức khỏe."], ["子どもが生まれてからというもの、生活が一変しました。", "Từ khi có con, cuộc sống thay đổi hẳn."]], "group": "Thời gian & trình tự N1", "m": "“Kể từ khi…” — sau một bước ngoặt, trạng thái thay đổi hoàn toàn và kéo dài đến nay.", "n": "Mạnh hơn て以来: nhấn sự thay đổi triệt để sau sự kiện.", "p": "〜てからというもの", "s": "V-て + からというもの、〜"}, {"ex": [["今日を限りに、たばこをやめます。", "Từ hôm nay trở đi (lấy hôm nay làm mốc cuối), tôi bỏ thuốc."], ["今月を限りに、その雑誌は休刊となります。", "Lấy tháng này làm số cuối, tạp chí đó sẽ tạm ngưng."]], "group": "Thời gian & trình tự N1", "m": "“Lấy… làm lần cuối/mốc kết thúc” — văn trang trọng cho quyết định dứt điểm.", "n": "限りに đọc かぎりに.", "p": "N を限りに", "s": "N + を限りに"}, {"ex": [["その秘密を知るが最後、無事では済みません。", "Một khi biết bí mật đó thì không xong chuyện đâu."], ["彼に任せるが最後、めちゃくちゃになります。", "Một khi giao cho anh ta là rối tung lên."]], "group": "Thời gian & trình tự N1", "m": "“Một khi đã… thì (hệ quả xấu không tránh được)” — cảnh báo kết cục tất yếu.", "n": "が最後 dùng cho hệ quả tiêu cực, không đảo ngược được.", "p": "V-る が 最後", "s": "V-る / V-た + が最後、〜"}, {"ex": [["彼の結婚を境に、生活が変わりました。", "Lấy việc anh ấy kết hôn làm bước ngoặt, cuộc sống đã thay đổi."], ["その事件を境に、世論が変わり始めました。", "Từ vụ việc đó làm mốc, dư luận bắt đầu thay đổi."]], "group": "Thời gian & trình tự N1", "m": "“Lấy… làm ranh giới/bước ngoặt” — trước và sau mốc đó khác hẳn nhau.", "n": "境に đọc さかいに.", "p": "N を境に", "s": "N + を境に、〜"}, {"ex": [["他社に先駆けて、新製品を発表しました。", "Đi trước các công ty khác, chúng tôi công bố sản phẩm mới."], ["春に先駆けて、桜が咲きました。", "Đi trước mùa xuân, hoa anh đào đã nở."]], "group": "Thời gian & trình tự N1", "m": "“Đi tiên phong trước…” — làm trước mọi đối tượng khác (văn trang trọng).", "n": "先駆けて đọc さきがけて.", "p": "〜に先駆けて", "s": "N + に先駆けて"}, {"ex": [["出かけようとした矢先に、雨が降り出しました。", "Đúng lúc định ra ngoài thì trời đổ mưa."], ["忘れようとした矢先に、その曲が流れてきました。", "Đúng lúc cố quên đi thì bài hát đó lại vang lên."]], "group": "Thời gian & trình tự N1", "m": "“Đúng ngay lúc vừa định…” thì việc khác xen vào phá ngang.", "n": "矢先に đọc やさきに.", "p": "〜矢先に", "s": "V-ようとした / V-た + 矢先に"}, {"ex": [["問題が深刻な事態に至って、ようやく対策が取られました。", "Đến khi tình hình trở nên nghiêm trọng, biện pháp mới được đưa ra."], ["病気が悪化するに至って、入院しました。", "Đến mức bệnh nặng hơn, (anh ấy) đã nhập viện."]], "group": "Thời gian & trình tự N1", "m": "“Đến khi/mãi đến mức…” mới xảy ra hệ quả — nhấn quá trình kéo dài đến điểm cực.", "n": "至って đọc いたって; cũng dùng 事態に至る (đi đến tình trạng).", "p": "〜に至って", "s": "N / V-る + に至って"}, {"ex": [["結果いかんでは、計画を変更します。", "Tùy theo kết quả thế nào, chúng tôi sẽ thay đổi kế hoạch."], ["態度いかんでは、許しません。", "Tùy theo thái độ ra sao, tôi sẽ không tha thứ."]], "group": "Thời gian & trình tự N1", "m": "“Tùy vào (diễn biến)…” — dạng trang trọng của 次第で、 nhấn điều kiện chưa xác định.", "n": "いかん đọc いかん; văn viết/thông báo chính thức.", "p": "N + いかんでは", "s": "N + いかんでは、〜"}, {"ex": [["皆さんの協力あっての成功です。", "Thành công này là nhờ có sự hợp tác của mọi người."], ["努力あっての結果です。", "Kết quả này có được là nhờ nỗ lực."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Nhờ có X mới có Y” — Y tồn tại được là nhờ nền tảng X.", "n": "あっての luôn đặt X trước、Y sau: X あっての Y.", "p": "N + あっての + N", "s": "N1 + あっての + N2"}, {"ex": [["知らぬこととて、失礼いたしました。", "Vì tôi không biết nên đã thất lễ, xin thứ lỗi."], ["初めてのこととて、戸惑っております。", "Vì là lần đầu nên tôi còn bỡ ngỡ."]], "group": "Nguyên nhân & hệ quả N1", "m": "Lời xin lỗi/giải thích trang trọng: “vì là… nên (đã lỡ…)”.", "n": "こととて hay dùng trong thư từ, lời xin lỗi kinh doanh.", "p": "〜こととて", "s": "[Câu thường] + こととて、〜"}, {"ex": [["約束した手前、断るわけにはいきません。", "Vì đã hứa (giữ thể diện) nên không thể từ chối."], ["みんなの前で言った手前、引くに引けません。", "Đã nói trước mặt mọi người nên không rút lại được."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Vì thể diện/lập trường đã…” nên buộc phải hành xử tương xứng.", "n": "手前 đọc てまえ; chỉ tâm lý giữ mặt mũi trước người khác.", "p": "〜手前", "s": "V-た + 手前、〜"}, {"ex": [["私に免じて、今回だけは許してください。", "Vì nể tôi, xin tha cho lần này thôi."], ["亡き父に免じて、許してやってください。", "Vì nể người cha đã mất, xin hãy tha cho nó."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Vì nể…” — xin bỏ qua lỗi vì mối quan hệ/tình cảm với người được nêu.", "n": "免じて đọc めんじて; mẫu cầu xin trang trọng, ít gặp hội thoại thường.", "p": "N + に免じて", "s": "N + に免じて、〜"}, {"ex": [["アンケート結果を踏まえて、改善策を決めました。", "Dựa trên kết quả khảo sát, chúng tôi quyết định biện pháp cải thiện."], ["経験を踏まえて、判断してください。", "Hãy phán đoán trên cơ sở kinh nghiệm."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Đứng trên cơ sở…” — lấy kết quả/kinh nghiệm làm nền cho bước tiếp theo.", "n": "踏まえて đọc ふまえて.", "p": "N + を踏まえて", "s": "N + を踏まえて、〜"}, {"ex": [["住民の要望を受けて、市は計画を見直しました。", "Tiếp nhận yêu cầu của cư dân, thành phố đã xem lại kế hoạch."], ["批判を受けて、彼は謝罪しました。", "Nhận chỉ trích, anh ta đã xin lỗi."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Tiếp nhận/chịu tác động của…” rồi hành động đáp lại.", "n": "受けて ở đây là 'tiếp nhận (yêu cầu, chỉ thị, ảnh hưởng)'.", "p": "N + を受けて", "s": "N + を受けて、〜"}, {"ex": [["プロともなると、練習量が違います。", "Đã là dân chuyên nghiệp thì khối lượng luyện tập khác hẳn."], ["四十歳ともなれば、健康が気になります。", "Khi đã 40 tuổi thì sức khỏe thành mối lo."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Khi đã ở mức/vị thế…” thì đương nhiên khác thường.", "n": "ともなると/ともなれば dùng cho cột mốc vị thế, tuổi tác, quy mô.", "p": "〜ともなると / ともなれば", "s": "N + ともなると / ともなれば"}, {"ex": [["年のせいか、最近疲れやすいです。", "Có lẽ vì tuổi tác, dạo này tôi dễ mệt."], ["気のせいか、誰かに見られている気がします。", "Có lẽ do tôi tưởng tượng, cứ thấy như có ai nhìn mình."]], "group": "Nguyên nhân & hệ quả N1", "m": "Đoán nguyên nhân không chắc chắn: “có lẽ vì…”.", "n": "せいか hàm ý 'không rõ có phải vì thế không'.", "p": "〜せいか", "s": "[Câu thường] / N の + せいか"}, {"ex": [["過労に起因する事故が増えています。", "Tai nạn bắt nguồn từ làm việc quá sức đang tăng."], ["この問題は制度に起因しています。", "Vấn đề này bắt nguồn từ chế độ."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Bắt nguồn từ…” — cách nêu nguyên nhân khoa học/trang trọng.", "n": "起因する đọc きいんする; văn báo cáo, tin tức.", "p": "N + に起因する", "s": "N + に起因する / している"}, {"ex": [["この言葉はラテン語に由来します。", "Từ này có nguồn gốc từ tiếng Latin."], ["彼の芸術は故郷の自然に由来しています。", "Nghệ thuật của ông bắt nguồn từ thiên nhiên quê hương."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Có nguồn gốc từ…” — dùng cho từ ngữ, phong tục, tên gọi.", "n": "由来する đọc ゆらいする; khác 起因 (nguyên nhân gây hậu quả xấu là chủ yếu).", "p": "N + に由来する", "s": "N + に由来する / している"}, {"ex": [["油断がもとで、大きな失敗をしました。", "Vì lơ là mà gây ra thất bại lớn."], ["うそがもとで、信用を失いました。", "Vì một lời nói dối mà mất hết uy tín."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Chính… là nguồn cơn” gây ra hậu quả xấu.", "n": "がもとで luôn đi với kết quả tiêu cực.", "p": "N + がもとで", "s": "N + がもとで、〜"}, {"ex": [["命あっての物種です。", "Còn sống là còn tất cả (mạng sống là gốc của mọi thứ)."], ["健康あっての仕事です。", "Có sức khỏe mới làm việc được."]], "group": "Nguyên nhân & hệ quả N1", "m": "“Có X mới có tất cả” — biến thể thành ngữ của あっての, nhấn điều kiện tiên quyết quý giá nhất.", "n": "命あっての物種 là câu thành ngữ cố định, hay được trích dẫn.", "p": "〜あってのことだ", "s": "N + あってのことだ"}, {"ex": [["彼は困難をものともせずに、前進しました。", "Anh ấy tiến lên không nao núng trước khó khăn."], ["周囲の反対をものともせず、計画を実行しました。", "Không để tâm đến phản đối xung quanh, (anh ấy) thực hiện kế hoạch."]], "group": "Nhượng bộ & đối lập N1", "m": "“Không hề nao núng/bận tâm trước…” — vượt qua trở ngại với ý chí mạnh.", "n": "ものともせず là mẫu văn trang trọng, sắc thái ca ngợi.", "p": "N + をものともせず（に）", "s": "N + をものともせず（に）"}, {"ex": [["家族を顧みず、仕事に打ち込みました。", "Không đoái hoài gia đình, anh ta đắm mình vào công việc."], ["危険を顧みず、人を助けました。", "Không màng nguy hiểm, anh ấy cứu người."]], "group": "Nhượng bộ & đối lập N1", "m": "“Không đoái hoài đến…” — bỏ qua điều đáng lẽ phải quan tâm.", "n": "顧みず đọc かえりみず.", "p": "N + を顧みず", "s": "N + を顧みず、〜"}, {"ex": [["冗談にもほどがあります。", "Đùa cũng phải có mức độ chứ!"], ["心配するにもほどがあるでしょう。", "Lo lắng cũng vừa phải thôi chứ."]], "group": "Nhượng bộ & đối lập N1", "m": "“Cái gì cũng có giới hạn!” — trách móc khi việc gì đó vượt quá mức chấp nhận được.", "n": "にもほどがある thường dùng độc lập khi phê phán trực tiếp.", "p": "〜にもほどがある", "s": "N / V-る + にもほどがある"}, {"ex": [["彼は疲れたばかりか、風邪まで引きました。", "Anh ta không chỉ mệt mà còn bị cảm nữa."], ["値段が高いばかりか、品質も悪いです。", "Giá không chỉ cao mà chất lượng còn tệ."]], "group": "Nhượng bộ & đối lập N1", "m": "“Không chỉ… mà còn…” — cộng thêm một yếu tố cùng chiều (thường xấu hơn).", "n": "ばかりか hay đi với まで/も ở vế sau.", "p": "〜ばかりか", "s": "[Câu thường] + ばかりか、〜も/まで"}, {"ex": [["兄が几帳面なのにひきかえ、弟は大雑把です。", "Trái hẳn với anh trai cẩn thận, em trai rất xuề xòa."], ["去年が豊作だったのにひきかえ、今年は不作です。", "Trái với năm ngoái được mùa, năm nay mất mùa."]], "group": "Nhượng bộ & đối lập N1", "m": "“Trái hẳn với…” — đối lập sắc nét giữa hai đối tượng.", "n": "ひきかえ đọc ひきかえ; hai vế phải đối xứng để so sánh.", "p": "〜にひきかえ", "s": "[Câu / N] + にひきかえ、〜"}, {"ex": [["期待とは裏腹に、結果は悪かったです。", "Trái với kỳ vọng, kết quả rất tệ."], ["彼の言葉とは裏腹に、表情は冷たかったです。", "Trái với lời nói, vẻ mặt anh ta lạnh lùng."]], "group": "Nhượng bộ & đối lập N1", "m": "“Trái ngược hoàn toàn với…” — thực tế ngược hẳn điều bề ngoài/kỳ vọng.", "n": "裏腹に đọc うらはらに.", "p": "〜とは裏腹に", "s": "N + とは裏腹に、〜"}, {"ex": [["予想に反して、株価が上がりました。", "Trái với dự đoán, giá cổ phiếu tăng."], ["親の期待に反して、彼は芸術の道を選びました。", "Trái với kỳ vọng của cha mẹ, anh ấy chọn con đường nghệ thuật."]], "group": "Nhượng bộ & đối lập N1", "m": "“Trái với (dự đoán, kỳ vọng, quy tắc)…” thì sự việc diễn ra khác hẳn.", "n": "反して đọc はんして; dạng danh từ: 規則に反する行為.", "p": "N + に反して", "s": "N + に反して、〜"}, {"ex": [["試験は終わったと思いきや、もう一つ残っていました。", "Tưởng thi xong rồi, hóa ra còn một môn nữa."], ["彼は怒ると思いましたが、思いきや笑い出しました。", "Tưởng anh ta sẽ giận, ai ngờ lại bật cười."]], "group": "Nhượng bộ & đối lập N1", "m": "“Tưởng là… ai ngờ…” — thực tế hoàn toàn ngoài dự đoán.", "n": "思いきや chỉ dùng khi kết quả bất ngờ trái hẳn suy nghĩ ban đầu.", "p": "〜と思いきや", "s": "[Câu quá khứ] + と思いきや、〜"}, {"ex": [["会社は倒産を余儀なくされました。", "Công ty bị buộc phải phá sản."], ["悪天候のため、延期を余儀なくされました。", "Vì thời tiết xấu nên buộc phải hoãn."]], "group": "Nhượng bộ & đối lập N1", "m": "“Bị buộc phải…” bởi hoàn cảnh, không còn lựa chọn nào khác.", "n": "余儀なくされる đọc よぎなくされる; mẫu văn trang trọng/báo chí.", "p": "N + を余儀なくされる", "s": "N + を余儀なくされる"}, {"ex": [["彼は事情を知っていながら、何も言いませんでした。", "Biết rõ tình hình vậy mà anh ta không nói gì."], ["悪いと知っていながら、止められませんでした。", "Biết là xấu vậy mà không dừng được."]], "group": "Nhượng bộ & đối lập N1", "m": "“Biết rõ là… vậy mà vẫn…” — sắc thái trách nhẹ hành vi trái với nhận thức.", "n": "ていながら dùng cho trạng thái đang duy trì (知っている、住んでいる…).", "p": "〜ていながら", "s": "V-て いる + ながら、〜"}, {"ex": [["たとえ子どもといえども、礼儀は必要です。", "Dù là trẻ con đi nữa, lễ phép vẫn cần thiết."], ["専門家といえども、間違えることがあります。", "Dù là chuyên gia cũng có lúc sai."]], "group": "Nhượng bộ & đối lập N1", "m": "“Dù cho là…” — dạng văn trang trọng của たとえ〜ても cho danh từ/thân phận.", "n": "といえども đọc といえども.", "p": "N + といえども", "s": "N + といえども、〜"}, {"ex": [["彼は嘘だと知りながら、黙っていました。", "Biết đó là lời nói dối mà vẫn im lặng."], ["危険だと知りながら、彼は進みました。", "Biết là nguy hiểm mà anh ấy vẫn tiến lên."]], "group": "Nhượng bộ & đối lập N1", "m": "“Biết rõ là… mà vẫn…” — cố ý làm bất chấp nhận thức (thường tiêu cực).", "n": "知りながら là dạng cố định hay gặp nhất của mẫu 〜ながら này.", "p": "〜と知りながら", "s": "[Câu] + と知りながら、〜"}, {"ex": [["約束した以上、守らねばなりません。", "Đã hứa thì phải giữ lời (văn trang trọng)."], ["行くと決めたら、行かねばなりません。", "Đã quyết đi thì phải đi."]], "group": "Nghĩa vụ & ý chí N1", "m": "〜ねばならない là dạng trang trọng/văn viết của なければならない.", "n": "ねば nối thể phủ định rút gọn: 行かなければ → 行かねば.", "p": "〜ねばならない", "s": "V-ない（ば形） + ねばならない"}, {"ex": [["先輩に対して失礼なことをしたので、謝らずにはすみません。", "Đã làm điều thất lễ với tiền bối nên không xin lỗi thì không xong."], ["借りたものは返さずにはすみません。", "Đồ mượn thì không trả là không được."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Không làm thì không xong (về mặt đạo lý/xã hội)” — áp lực nghĩa vụ từ bên ngoài.", "n": "すまない ở đây là 'không thể cho qua', khác すみません xin lỗi.", "p": "V + ずにはすまない", "s": "V-ない（ず） + にはすまない"}, {"ex": [["ここにゴミを捨ててはなりません。", "Không được vứt rác ở đây (văn quy định)."], ["関係者以外、入ってはなりません。", "Người không liên quan không được vào."]], "group": "Nghĩa vụ & ý chí N1", "m": "Cấm đoán ở văn quy định/biển báo — dạng trang trọng của てはいけません.", "n": "なりません mạnh và chính thức hơn いけません.", "p": "V-て はならない", "s": "V-て + はならない"}, {"ex": [["真実を知るべく、調査を続けています。", "Để biết sự thật, chúng tôi tiếp tục điều tra."], ["彼に会うべく、駅へ向かいました。", "Để gặp anh ấy, tôi hướng ra ga."]], "group": "Nghĩa vụ & ý chí N1", "m": "〜べく là dạng trang trọng của ために (mục đích) trong văn viết.", "n": "べく đi sau động từ nguyên dạng; する → すべく.", "p": "V-る + べく", "s": "V-る + べく、〜"}, {"ex": [["事故は起こるべくして起こりました。", "Tai nạn xảy ra là điều tất yếu phải xảy ra."], ["二人は出会うべくして出会ったのです。", "Hai người gặp nhau là duyên định sẵn (tất yếu)."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Xảy ra là điều tất yếu (do tích tụ nguyên nhân)” — không phải ngẫu nhiên.", "n": "べくして mang sắc thái triết lý/số phận của sự việc.", "p": "〜べくして", "s": "V-る + べくして + V-た"}, {"ex": [["学生にあるまじき行為です。", "Đó là hành vi không thể chấp nhận ở một học sinh."], ["プロにあるまじきミスをしました。", "Anh ta mắc lỗi không đáng có ở dân chuyên nghiệp."]], "group": "Nghĩa vụ & ý chí N1", "m": "まじ là phủ định ý chí văn cổ: あるまじき = “không được phép có (ở tư cách…)”.", "n": "Dạng cố định hay dùng: N にあるまじき + hành vi.", "p": "〜まじ / あるまじき", "s": "V-る + まじ / N にあるまじき + N"}, {"ex": [["生きんがために、彼は働き続けました。", "Để sống, anh ấy làm việc không ngừng."], ["勝たんがために、猛練習しました。", "Để thắng, (đội) luyện tập cật lực."]], "group": "Nghĩa vụ & ý chí N1", "m": "んがため là dạng văn chương cổ của ために: “để (đạt mục đích)…”.", "n": "Động từ đổi: 行く → 行かんがため; chỉ còn gặp trong văn viết, lời văn.", "p": "V + んがため（に）", "s": "V-ない gốc + んがために"}, {"ex": [["努力することなしに、成功は得られません。", "Không nỗ lực thì không thể thành công."], ["彼の協力なしには、この計画は進みません。", "Không có sự hợp tác của anh ấy, kế hoạch này không tiến triển được."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Không có… thì không thể…” — điều kiện tiên quyết ở văn trang trọng.", "n": "なしに/なしには đều dùng được; なしには nhấn mạnh hơn.", "p": "N + なしに（は）", "s": "N / V-ること + なしに（は）、〜ない"}, {"ex": [["こんな調子では、試験に合格できません。", "Cứ đà này thì không đỗ nổi kỳ thi đâu."], ["今のようでは、信頼を失いますよ。", "Cứ như tình trạng bây giờ thì sẽ mất lòng tin đấy."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Cứ tình trạng này thì…” — cảnh báo hậu quả xấu nếu không thay đổi.", "n": "ようでは đứng sau [thể thường]; phần sau là dự đoán tiêu cực.", "p": "〜ようでは", "s": "[Câu thường] + ようでは、〜"}, {"ex": [["健康は、お金で買えるものではありません。大切にするに越したことはありません。", "Sức khỏe không mua được bằng tiền. Chăm sóc nó là tốt nhất, không gì hơn."], ["準備は早いに越したことはありません。", "Chuẩn bị thì càng sớm càng tốt, không gì bằng."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Không gì tốt hơn…” — khẳng định lựa chọn tối ưu trong lời khuyên.", "n": "越したことはない đọc こしたことはない.", "p": "〜に越したことはない", "s": "V-る / A-い / N + に越したことはない"}, {"ex": [["彼に頼んでこそ、分かることです。", "Phải nhờ anh ấy thì mới biết được."], ["努力してこそ、成功が見えてきます。", "Phải nỗ lực rồi mới thấy thành công."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Phải làm X rồi mới…” — X là điều kiện không thể thiếu để hệ quả có ý nghĩa.", "n": "てこそ nhấn giá trị chỉ xuất hiện sau khi hành động được thực hiện.", "p": "V-て こそ", "s": "V-て + こそ、〜"}, {"ex": [["事実でなくてはなりません。", "(Nó) phải là sự thật (mới được)."], ["彼でなくては、この仕事はできません。", "Không phải anh ấy thì không ai làm được việc này."]], "group": "Nghĩa vụ & ý chí N1", "m": "“Nhất định phải là…” — dạng trang trọng của でなければならない cho danh từ.", "n": "でなくては là rút gọn của でなくてはならない trong văn viết.", "p": "N + でなくてはならない", "s": "N + でなくてはならない"}, {"ex": [["彼は死んだも同然です。", "Anh ta coi như đã chết (sống mà như chết)."], ["この機械は壊れたも同然です。", "Cái máy này coi như hỏng rồi."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Coi như/gần như là…” — thực chất khác nhưng trạng thái tương đương.", "n": "も同然 đọc もどうぜん.", "p": "〜も同然だ", "s": "[Câu thường] + も同然だ"}, {"ex": [["この村には店が無いに等しいです。", "Làng này gần như không có cửa hàng nào."], ["合格したに等しい結果でした。", "Đó là kết quả gần như đỗ rồi."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Gần như ngang bằng với…” — mức độ tiệm cận trạng thái được so.", "n": "等しい đọc ひとしい; văn trang trọng.", "p": "〜に等しい", "s": "[Câu thường] + に等しい"}, {"ex": [["彼の文章は読むに堪えません。", "Văn của anh ta đọc không chịu nổi (quá dở)."], ["見るに堪えない光景でした。", "Đó là cảnh tượng không nỡ nhìn."]], "group": "Trạng thái & mức độ cực đoan", "m": "堪える hai nghĩa: (1) không chịu nổi (phủ định); (2) đáng để (khẳng định: 一見に堪える = đáng xem).", "n": "堪える đọc たえる; phủ định dùng cho chất lượng quá tệ hoặc cảnh quá đau lòng.", "p": "V-る + に堪える / 堪えない", "s": "V-る + に堪える / に堪えない"}, {"ex": [["彼の努力は評価に値します。", "Nỗ lực của anh ấy xứng đáng được đánh giá cao."], ["一読に値する本です。", "Đây là cuốn sách đáng đọc một lần."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Xứng đáng để…” — giá trị đủ để nhận hành động đánh giá/trải nghiệm đó.", "n": "値する đọc あたいする.", "p": "〜に値する", "s": "N / V-る + に値する"}, {"ex": [["若い人の失敗は珍しいことざらではありません。", "Người trẻ thất bại không phải chuyện hiếm."], ["遅刻はざらです。", "Anh ta đi muộn là chuyện thường ngày."]], "group": "Trạng thái & mức độ cực đoan", "m": "“Là chuyện thường/thường xuyên xảy ra” — dạng phủ định kép hoặc ざらだ cho việc phổ biến.", "n": "ざら luôn đi với ない hoặc だ ở cuối; văn nói trang trọng.", "p": "〜ざらではない / 〜ざらだ", "s": "[Câu / N] + ざらではない"}, {"ex": [["彼の仕事ぶりは見事です。", "Cách làm việc của anh ấy thật đáng nể."], ["彼女の話しぶりは丁寧です。", "Cách nói chuyện của cô ấy lịch sự."]], "group": "Trạng thái & mức độ cực đoan", "m": "〜ぶり chỉ phong cách/thái độ thể hiện qua hành động: 仕事ぶり、生活ぶり、飲みぶり.", "n": "ぶり cũng chỉ khoảng thời gian xa cách: 三年ぶり (sau 3 năm) — nghĩa khác.", "p": "N + ぶり（様子）", "s": "N(hoạt động) + ぶり"}, {"ex": [["空が春めいてきました。", "Bầu trời bắt đầu mang hơi thở mùa xuân."], ["彼女は神秘めいた雰囲気があります。", "Cô ấy có bầu không khí huyền bí."]], "group": "Trạng thái & mức độ cực đoan", "m": "めく: bắt đầu mang sắc thái/tính chất của danh từ (mùa, cảm xúc, vẻ bí ẩn).", "n": "めく hay dùng: 春めく、秋めく、神秘めいた、皮肉めいた.", "p": "N + めく / めいた", "s": "N + めく / めいた + N"}, {"ex": [["彼の考えは子どもじみています。", "Suy nghĩ của anh ta trẻ con quá."], ["年寄りじみた服装です。", "Trang phục trông già dặn (như người già)."]], "group": "Trạng thái & mức độ cực đoan", "m": "じみる: trông giống/mang vẻ của… — thường mang sắc thái hơi tiêu cực, không đúng tuổi/vai.", "n": "じみた đứng trước danh từ; chỉ dùng cho người/vẻ bề ngoài.", "p": "N + じみた", "s": "N + じみた + N"}, {"ex": [["彼は疲れきっています。", "Anh ta mệt lử (kiệt sức hoàn toàn)."], ["緊張しきった様子でした。", "Anh ấy có vẻ căng thẳng cực độ."]], "group": "Trạng thái & mức độ cực đoan", "m": "きる（きっている）: trạng thái đạt đến cực điểm hoàn toàn (mệt lử, căng thẳng hẳn).", "n": "Khác きる (làm hết) ở nhóm khả năng N2: ở đây chỉ trạng thái tinh thần/thể chất tột độ.", "p": "〜きっている", "s": "V-ます + きっている"}, {"ex": [["贅沢の極みを味わいました。", "Tôi đã nếm trải sự xa xỉ tột đỉnh."], ["愚かの極みです。", "Đúng là ngu xuẩn tột độ."]], "group": "Trạng thái & mức độ cực đoan", "m": "の極み: “tột đỉnh/tột cùng” của một trạng thái trừu tượng (văn trang trọng).", "n": "極み đọc きわみ.", "p": "N の 極み", "s": "N(trừu tượng) + の極み"}, {"ex": [["無礼極まる人です。", "Anh ta là người vô lễ cực độ."], ["残酷極まる事件でした。", "Đó là vụ việc tàn ác tột cùng."]], "group": "Trạng thái & mức độ cực đoan", "m": "極まる đứng sau tính từ -な: “cực kỳ… (đến mức không hơn được)” — phê phán mạnh.", "n": "極まる đọc きわまる; luôn mang sắc thái tiêu cực.", "p": "Aな + 極まる", "s": "Aな + 極まる"}, {"ex": [["お選びいただき、光栄の至りです。", "Được quý vị lựa chọn, chúng tôi vô cùng vinh hạnh."], ["若輩の至りで、申し訳ありません。", "Tôi còn non nớt, xin lỗi (lời khiêm tốn trang trọng)."]], "group": "Trạng thái & mức độ cực đoan", "m": "の至り: đỉnh điểm của cảm xúc trong các mẫu chào trang trọng (vinh hạnh, xấu hổ, mừng rỡ).", "n": "至り đọc いたり; các cụm cố định: 光栄の至り、赤面の至り.", "p": "N の 至り", "s": "N(cảm xúc) + の至りです"}, {"ex": [["専門家ですら、間違えることがあります。", "Ngay cả chuyên gia cũng có lúc sai."], ["彼は名前すら書けません。", "Anh ta ngay cả tên mình cũng không viết được."]], "group": "Nhấn mạnh & tu từ N1", "m": "すら nhấn mạnh cực đoan: “ngay cả (mức tối thiểu/tối đa) cũng…”.", "n": "すら trang trọng hơn さえ; thường đi với phủ định hoặc 'ngay cả X cũng'.", "p": "N + すら", "s": "N + すら（〜ない）"}, {"ex": [["想像だにできません。", "Ngay cả tưởng tượng cũng không nổi."], ["夢だに思わなかったことです。", "Đó là việc ngay trong mơ tôi cũng không nghĩ tới."]], "group": "Nhấn mạnh & tu từ N1", "m": "だに nhấn mạnh mức tối thiểu trong văn trang trọng: “ngay cả… (cũng không)”.", "n": "Các cụm cố định: 想像だに、夢だに、考えだに.", "p": "N + だに", "s": "N + だに + phủ định"}, {"ex": [["一人たりとも、犠牲にはしません。", "Dù chỉ một người, tôi cũng không để hy sinh."], ["一円たりとも、無駄にできません。", "Dù chỉ một yên cũng không thể lãng phí."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Dù chỉ một…” cũng không — phủ định tuyệt đối với đơn vị nhỏ nhất.", "n": "たりとも luôn đi với phủ định và lượng từ + trợ từ lượng.", "p": "〜たりとも〜ない", "s": "[Lượng từ] + たりとも + phủ định"}, {"ex": [["もちろん、行くとも。", "Tất nhiên là đi chứ!"], ["大丈夫とも。心配いりません。", "Ổn chứ. Không cần lo đâu."]], "group": "Nhấn mạnh & tu từ N1", "m": "とも cuối câu khẳng định dứt khoát, đầy tự tin đồng ý với điều hiển nhiên.", "n": "Sắc thái văn nói mạnh; không dùng trong văn trang trọng.", "p": "〜とも（断言）", "s": "[Câu thường] + とも"}, {"ex": [["子どもではあるまいし、泣くのはやめなさい。", "Có phải trẻ con đâu mà khóc, nín đi."], ["初めてではあるまいし、できるはずです。", "Có phải lần đầu đâu, chắc chắn làm được."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Có phải… đâu mà…” — bác bỏ lý do biện minh bằng phủ định hiển nhiên.", "n": "まいし là dạng rút gọn phủ định suy đoán + し (liệt kê lý do).", "p": "〜ではあるまいし", "s": "N + ではあるまいし、〜"}, {"ex": [["彼女は泣かんばかりに喜びました。", "Cô ấy mừng như sắp khóc đến nơi."], ["飛び上がらんばかりの喜びようでした。", "Anh ấy mừng đến mức như sắp nhảy cẫng lên."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Như sắp… đến nơi” — trạng thái cảm xúc đến mức gần như hành động sắp bật ra.", "n": "んばかり là dạng văn chương của ない + ばかり rút gọn.", "p": "V + んばかり", "s": "V-ない gốc + んばかり（に）"}, {"ex": [["彼の忙しさといったら、休む暇もありません。", "Nói đến độ bận của anh ấy thì không có cả thời gian nghỉ."], ["うれしさといったら、言葉にできません。", "Niềm vui đó thì không diễn tả nổi bằng lời."]], "group": "Nhấn mạnh & tu từ N1", "m": "といったら nêu chủ đề để nhấn mạnh mức độ cực đoan ở phần sau.", "n": "といったら luôn đi với danh từ chỉ trạng thái/cảm xúc + kết quả cực đoan.", "p": "N + といったら", "s": "N(trạng thái) + といったら、〜"}, {"ex": [["最近の若者ときたら、挨拶もできません。", "Nói đến giới trẻ dạo này thì, chào hỏi cũng không xong (phê phán)."], ["彼は忙しいときたら、電話にも出ません。", "Anh ta mà bận thì đến điện thoại cũng không nghe."]], "group": "Nhấn mạnh & tu từ N1", "m": "ときたら nêu đối tượng để phàn nàn/phê phán thói quen của họ.", "n": "ときたら mang sắc thái tiêu cực rõ rệt về đối tượng được nêu.", "p": "N + ときたら", "s": "N + ときたら、〜"}, {"ex": [["免許証とやらを見せてください。", "Cho tôi xem cái gọi là bằng lái của anh."], ["何とかとやらいう会社に勤めています。", "Anh ta làm ở một công ty tên gì gì đó (không nhớ rõ)."]], "group": "Nhấn mạnh & tu từ N1", "m": "とやら chỉ sự vật được nhắc tới một cách mơ hồ/xa cách: “cái gọi là…”, “gì đó…”.", "n": "とやら mang sắc thái không chắc chắn hoặc hơi coi nhẹ.", "p": "N + とやら", "s": "N + とやら"}, {"ex": [["彼は来ないのではなかろうか。", "Có lẽ anh ấy sẽ không đến chăng (suy đoán trang trọng)."], ["これは大きな問題ではなかろうかと思います。", "Tôi cho rằng đây có lẽ là vấn đề lớn."]], "group": "Nhấn mạnh & tu từ N1", "m": "Dạng văn trang trọng của のではないだろうか: nêu suy đoán một cách thận trọng.", "n": "なかろうか đọc なかろうか; hay dùng trong bài phát biểu, văn nghị luận.", "p": "〜ではなかろうか", "s": "[Câu thường] + ではなかろうか"}, {"ex": [["二度と行くまいと決めました。", "Tôi quyết không bao giờ đi nữa."], ["彼はその話を知るまい。", "Chắc anh ấy không biết chuyện đó đâu."]], "group": "Nhấn mạnh & tu từ N1", "m": "まい hai nghĩa: (1) ý chí phủ định “quyết không…”; (2) suy đoán phủ định “chắc không… đâu”.", "n": "まい nối động từ nguyên dạng; する → するまい/すまい.", "p": "V-る + まい", "s": "V-る + まい"}, {"ex": [["彼の苦労は想像にかたくありません。", "Nỗi vất vả của anh ấy không khó để hình dung."], ["成功までの道のりは想像にかたくないでしょう。", "Con đường đến thành công chắc không khó tưởng tượng."]], "group": "Nhấn mạnh & tu từ N1", "m": "“Không khó để…” — suy luận dễ dàng về cảm xúc/tình trạng (thường với 想像・理解).", "n": "かたくない đọc かたくない; chỉ dùng với nhóm động từ nhận thức giới hạn.", "p": "V-ます + にかたくない", "s": "V-ます + にかたくない"}];
 function grEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 function openGrammar(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
@@ -3180,7 +3185,7 @@ function tgBuild(lv){
   TG.data[lv] = out; TG.kmap[lv] = kmap;
 }
 function openTango(){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
@@ -3249,7 +3254,7 @@ function qzPick(pool, field, correctVal, n){
   return out;
 }
 function openQuiz(lv){
-  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -3376,6 +3381,7 @@ var JLGRAM = { N5: GRAMMAR5, N4: GRAMMAR4, N3: GRAMMAR3, N2: GRAMMAR2, N1: GRAMM
 function jlSet(lv){ JL.lv = lv; jlStopTimer(); jlHome(); jlTabs(); }
 function jlTabs(){ ['N5','N4','N3','N2','N1'].forEach(function(l){ var el = document.getElementById('jtab' + l.slice(1)); if(el) el.classList.toggle('on', l === JL.lv); }); }
 function openJLPT(){
+  if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
@@ -3384,14 +3390,14 @@ function openJLPT(){
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
   window.__jlOn = true;
   ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('jlptbox').style.display = '';
+  document.getElementById('jlptbox','tokuteibox').style.display = '';
   document.getElementById('paneltitle').textContent = '📄 Thi thử JLPT';
   jlTabs(); jlHome();
 }
 function closeJLPT(skip){
   jlStopTimer();
   window.__jlOn = false;
-  var el = document.getElementById('jlptbox'); if(el) el.style.display = 'none';
+  var el = document.getElementById('jlptbox','tokuteibox'); if(el) el.style.display = 'none';
   if(!skip) selectLevel(window.CURLV || 'N5');
 }
 function jlStopTimer(){ if(JL.timer){ clearInterval(JL.timer); JL.timer = null; } var t = document.getElementById('jltimer'); if(t) t.style.display = 'none'; }
@@ -3454,7 +3460,7 @@ function jlRenderExam(){
   html += '<div style="text-align:center;margin-top:16px"><button class="qz-next" onclick="jlSubmit(false)">📩 Nộp bài</button> <span style="font-size:13px;color:#888" id="jlcount"></span></div>';
   document.getElementById('jlbody').innerHTML = html;
   jlCount();
-  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
+  window.scrollTo({ top: document.getElementById('jlptbox','tokuteibox').offsetTop - 70, behavior: 'smooth' });
 }
 function jlCount(){ var c = document.getElementById('jlcount'); if(c) c.textContent = 'Đã làm ' + Object.keys(JL.ans).length + '/20 câu'; }
 function jlChoose(i, j){
@@ -3480,7 +3486,7 @@ function jlSubmit(auto){
     return '<div class="jl-q"><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + (mine === q.ans ? ' · ✅ Đúng' : ' · ❌ Sai') + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div><div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
   }).join('');
   document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">' + (auto ? '⏰ Hết giờ! ' : '') + 'Kết quả JLPT ' + JL.lv + '</div><div class="qz-score">' + score + '/' + JL.qs.length + ' (' + pct + '%)</div><div class="jl-sub">' + (pass ? '🎉 ĐẠT (từ 60%) — giữ phong độ này tới ngày thi thật.' : 'Chưa đạt (cần từ 60%) — xem lại phần giải thích bên dưới rồi làm đề mới.') + '<br>Thời gian làm bài: ' + mm + ' phút ' + ss + ' giây</div><button class="qz-next" onclick="jlStart()">🔁 Làm đề mới</button> <button class="chipbtn" onclick="jlHome()">Về trang đề thi</button></div>' + review;
-  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
+  window.scrollTo({ top: document.getElementById('jlptbox','tokuteibox').offsetTop - 70, behavior: 'smooth' });
 }
 
 
@@ -3530,9 +3536,9 @@ function openAccent(){
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
-  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
+  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   window.__aOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('accentbox').style.display = '';
   document.getElementById('paneltitle').textContent = '🎚️ Trọng âm';
   document.getElementById('accprog').textContent = ACC.length + ' từ mẫu · 8 nhóm đồng âm';
@@ -3653,10 +3659,10 @@ function openPersonal(){
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
-  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
+  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   if(window.__aOn && typeof closeAccent === 'function') closeAccent(true);
   window.__pOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox','accentbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('personalbox').style.display = '';
   document.getElementById('paneltitle').textContent = '👤 Cá nhân hoá';
   psRender();
@@ -3785,13 +3791,13 @@ function openExport(){
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
-  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
+  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   if(window.__aOn && typeof closeAccent === 'function') closeAccent(true);
   if(window.__pOn && typeof closePersonal === 'function') closePersonal(true);
   if(window.__rkOn && typeof closeRank === 'function') closeRank(true);
   if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   window.__eOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox','personalbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox','accentbox','personalbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('exportbox').style.display = '';
   document.getElementById('paneltitle').textContent = '📄 Tạo file';
   EX.lv = window.CURLV || 'N5';
@@ -4250,13 +4256,13 @@ function closeAllModes(){
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
-  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
+  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   if(window.__aOn && typeof closeAccent === 'function') closeAccent(true);
   if(window.__pOn && typeof closePersonal === 'function') closePersonal(true);
   if(window.__eOn && typeof closeExport === 'function') closeExport(true);
   if(window.__rkOn && typeof closeRank === 'function') closeRank(true);
   if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox','personalbox','exportbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox','accentbox','personalbox','exportbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
 }
 /* flashcard: áp dụng xáo trộn mặc định từ cài đặt */
 var __openFlashOrig = openFlash;
@@ -4269,6 +4275,491 @@ openFlash = function(){
   } catch(e){}
 };
 stApply();
+
+</script>
+<script>
+// File: practice1.js
+window.PRACTICE_SETS = window.PRACTICE_SETS || {};
+
+window.PRACTICE_SETS["g2_1"] = {
+  "videoUrl": "https://drive.google.com/file/d/1u150UMjUu_YofEHNoCBIyfpHAk0wRyV1/preview", // Link video Youtube
+  "questions": [
+  {
+    q: "問1　単管足場（たんかんあしば）の特徴（とくちょう）について、正（ただ）しいものを選（えら）べ。",
+    options: [
+      "1．ハンマーひとつで組（く）み立（た）てと解体（かいたい）ができる",
+      "2．門型（もんがた）の建枠（たてわく）を中心（ちゅうしん）にジャッキ・筋交（すじか）い・鋼製布板（こうせいぬのいた）などの基本部材（きほんぶざい）を組（く）み立（た）てる",
+      "3．狭（せま）い場所（ばしょ）でも足場（あしば）を組（く）むことができる",
+      "4．マンションなどの骨組（ほねぐ）みを組（く）み立（た）てる"
+    ],
+    answer: 2,
+    vi: "Chọn đặc điểm đúng của giàn giáo ống thép 単管足場（たんかんあしば）.",
+    explain: "Giàn giáo ống đơn (単管足場) được lắp ghép từ các ống thép đơn và kẹp nối (クランプ) nên rất linh hoạt về hình dạng và kích thước, có thể dựng được ngay cả ở những nơi chật hẹp hoặc mặt bằng không vuông vắn. Đây chính là đặc điểm đúng cần chọn. Đáp án 1 (chỉ cần một chiếc búa để lắp và tháo) là đặc điểm của giàn giáo nêm くさび緊結式足場. Đáp án 2 (dùng khung cửa 門型建枠 làm trung tâm cùng các bộ phận cơ bản) là đặc điểm của giàn giáo khung 枠組足場.\n\nTừ vựng:\n単管足場（たんかんあしば）: Giàn giáo ống đơn\n特徴（とくちょう）: Đặc điểm\n狭い（せまい）: Chật hẹp\n場所（ばしょ）: Nơi, địa điểm\n組む（くむ）: Lắp dựng\n枠組足場（わくぐみあしば）: Giàn giáo khung\nくさび緊結式足場（くさびきんけつしきあしば）: Giàn giáo nêm",
+    tip: "💡 Mẹo nhớ: Thấy chữ **単** = “đơn, đơn giản, linh hoạt” → dùng chỗ **hẹp**."
+  },
+
+  {
+    q: "問2　鉄（てつ）にクロムを含有（がんゆう）（11%以上（いじょう））する合金鋼（ごうきんこう）で、表面（ひょうめん）に薄（うす）い保護（ほご）被膜（ひまく）が形成（けいせい）され、さびにくく、美（うつく）しい状態（じょうたい）を維持（いじ）できる鋼板（こうはん）は何（なに）か。",
+    options: [
+      "1．溶融亜鉛（ようゆうあえん）メッキ鋼板（こうはん）",
+      "2．塗装（とそう）溶融亜鉛（ようゆうあえん）メッキ鋼板（こうはん）",
+      "3．ステンレス鋼板（こうはん）",
+      "4．アルミ合金（ごうきん）"
+    ],
+    answer: 2,
+    vi: "Loại thép nào chứa ≥11% Crom, chống gỉ và giữ bề mặt đẹp lâu?",
+    explain: "Loại thép được mô tả chính là thép không gỉ (ステンレス鋼板). Đây là thép hợp kim chứa từ 11% Crom (Cr) trở lên; Crom kết hợp với oxy tạo thành một lớp màng bảo vệ (màng thụ động) rất mỏng trên bề mặt, giúp thép khó bị gỉ và giữ được vẻ đẹp lâu dài. Đáp án 1 và 2 là thép mạ kẽm nhúng nóng — chống gỉ nhờ lớp kẽm phủ bên ngoài chứ không phải nhờ Crom trong thành phần thép. Đáp án 4 là hợp kim nhôm, không phải thép.\n\nTừ vựng:\n含有（がんゆう）: Chứa, hàm chứa\n合金鋼（ごうきんこう）: Thép hợp kim\n表面（ひょうめん）: Bề mặt\n保護被膜（ほごひまく）: Lớp màng bảo vệ\nさび: Gỉ sét\n維持（いじ）: Duy trì\n鋼板（こうはん）: Tấm thép\n溶融亜鉛メッキ（ようゆうあえんメッキ）: Mạ kẽm nhúng nóng",
+    tip: "💡 Mẹo nhớ: **Stainess = không stain (không gỉ)** → đẹp bền lâu."
+  },
+
+  {
+    q: "問3　鋼製（こうせい）下地（したじ）において、間仕切り（まじきり）壁（かべ）の下地（したじ）として、スタッドを垂直（すいちょく）に立てるためのレールは何（なに）か。【123】",
+    options: [
+      "1．つりボルト",
+      "2．野縁（のぶち）",
+      "3．スタッド",
+      "4．ランナー"
+    ],
+    answer: 3,
+    vi: "Trong hệ khung kim loại làm vách ngăn, thanh ray để cố định stud thẳng đứng gọi là gì?",
+    explain: "Trong hệ khung thép nhẹ làm vách ngăn, thanh ray nằm ngang gắn ở sàn và trần, dùng để cắm và cố định các thanh đứng スタッド, được gọi là ランナー (runner, lựa chọn 4). スタッド (lựa chọn 3) chính là thanh đứng được ray này giữ. つりボルト là bu lông treo trần, 野縁 là thanh ngang thuộc hệ khung trần — đều không phải thanh ray giữ stud của vách ngăn.\n\nTừ vựng:\n下地（したじ）: Khung nền, lớp nền\n間仕切り壁（まじきりかべ）: Vách ngăn\n垂直（すいちょく）: Thẳng đứng, vuông góc\nスタッド: Thanh đứng (stud)\nランナー: Thanh ray ngang (runner)\n野縁（のぶち）: Thanh đỡ trần",
+    tip: "💡 Mẹo nhớ: **Runner** chạy dưới đất (sàn) & trên trần → stud đứng trên runner."
+  },
+
+  {
+    q: "問4　石工事（いしこうじ）について、該当（がいとう）しないものを選（えら）べ。【176】",
+    options: [
+      "1．石材（せきざい）の加工（かこう）、石積（いしづみ）による工作物（こうさくぶつ）の築造（ちくぞう）、工作物（こうさくぶつ）に石材（せきざい）の取（と）り付（つ）け工事（こうじ）",
+      "2．乾式工法（かんしきこうほう）と湿式工法（しっしきこうほう）がある",
+      "3．乾式工法（かんしきこうほう）は、湿式工法（しっしきこうほう）に比べ、施工後（せこうご）に不具合（ふぐあい）が発生（はっせい）しやすい",
+      "4．粉じん（ふんじん）の飛散対策（ひさんたいさく）として、防護（ぼうご）メガネやマスクを着用（ちゃくよう）する"
+    ],
+    answer: 2,
+    vi: "Về công tác đá, hãy chọn đáp án **không đúng**.",
+    explain: "Đáp án cần chọn là phát biểu sai ở lựa chọn 3. Công pháp khô (乾式工法) dùng liên kết cơ khí (bu lông, khung thép) để gắn đá nên thi công sạch, ít phụ thuộc thời tiết và ít phát sinh sự cố sau thi công hơn công pháp ướt (湿式工法) dùng vữa. Phát biểu 'công pháp khô dễ phát sinh lỗi hơn công pháp ướt' là ngược sự thật. Các lựa chọn còn lại đều đúng với công tác đá: gồm gia công đá, xây bằng đá, gắn đá lên công trình, và phải đeo kính bảo hộ, mặt nạ để chống bụi.\n\nTừ vựng:\n石工事（いしこうじ）: Công tác đá\n該当（がいとう）: Tương ứng, thuộc về\n乾式工法（かんしきこうほう）: Công pháp khô\n湿式工法（しっしきこうほう）: Công pháp ướt\n不具合（ふぐあい）: Sự cố, khuyết tật\n粉じん（ふんじん）: Bụi\n飛散（ひさん）: Bay tán, phát tán\n着用（ちゃくよう）: Đeo, mang (trang bị bảo hộ)",
+    tip: "💡 Mẹo nhớ: Khô (乾) = sạch, ít rắc rối → **khô ít lỗi hơn ướt**."
+  },
+  {
+  q: "問5　以下（いか）の写真（しゃしん）の青（あお）いところは何（なん）か。【123】",
+  img: "images/2849.png", 
+  options: [
+    "1．ランナー",
+    "2．野縁（のぶち）受け",
+    "3．クリップ",
+    "4．野縁（のぶち）"
+  ],
+  answer: 0,
+  vi: "Trong ảnh, phần màu xanh là gì?",
+  explain: "Phần màu xanh trong ảnh là ランナー — thanh ray thép nằm ngang được gắn ở phía sàn và trần của hệ khung vách ngăn. Các thanh đứng スタッド được cắm vào rãnh của runner này để đứng thẳng và cố định vị trí. 野縁受け và 野縁 là các thanh thuộc hệ khung trần, còn クリップ là phụ kiện kẹp nối — không phải thanh ray ở vị trí trong ảnh.\n\nTừ vựng:\nランナー: Thanh ray ngang\n野縁（のぶち）: Thanh đỡ trần\n野縁受け（のぶちうけ）: Thanh đỡ phụ của trần\nクリップ: Kẹp nối, phụ kiện kẹp\n部材（ぶざい）: Cấu kiện, vật liệu",
+  tip: "💡 Nhớ: Runner = chạy dọc sàn/trần → giữ Stud thẳng đứng."
+},
+ {
+  q: "問6　コンクリートの表面(ひょうめん)から鉄筋(てっきん)までの距離(きょり)は何(なん)というか。【153】",
+  options: [
+    "1．かぶり",
+    "2．スタッド",
+    "3．スペーサー",
+    "4．シャックル"
+  ],
+  answer: 0,
+  vi: "Khoảng cách từ bề mặt bê tông đến thép gọi là gì?",
+  explain: "Khoảng cách từ bề mặt bê tông đến bề mặt ngoài của cốt thép gần nhất được gọi là かぶり (chiều dày lớp bê tông bảo vệ). Lớp bảo vệ này giúp chống gỉ cho cốt thép, đảm bảo độ bền và khả năng chống cháy cho kết cấu. スペーサー là con kê dùng để giữ đúng khoảng cách かぶり khi đổ bê tông — đó là dụng cụ, không phải tên gọi của khoảng cách này.\n\nTừ vựng:\n表面（ひょうめん）: Bề mặt\n鉄筋（てっきん）: Cốt thép\n距離（きょり）: Khoảng cách\nかぶり: Lớp bê tông bảo vệ (chiều dày)\nスペーサー: Con kê (đệm định vị cốt thép)",
+  tip: "💡 Nhớ: かぶり = lớp bê tông ‘che phủ’ thép để chống gỉ."
+},
+
+ {
+  q: "問7　溶接(ようせつ)の時(とき)の________を吸(す)い込(こ)むと頭痛(ずつう)·発熱(はつねつ)·寒気(さむけ)·筋肉痛(きんにくつう)·のどの渇(かわ)き·疲労(ひろう)などの症状(しょうじょう)が起(お)こる。________に記入(きにゅう)をしなさい。【157】",
+  options: [
+    "1．ヒューム",
+    "2．アセチレン",
+    "3．酸素(さんそ)",
+    "4．排気(はいき)"
+  ],
+  answer: 0,
+  vi: "Hít phải ________ khi hàn sẽ gây đau đầu, sốt, ớn lạnh, đau cơ, khô họng, mệt mỏi… Hãy điền vào chỗ trống.",
+  explain: "Khi hàn, kim loại nóng chảy bốc hơi và ngưng tụ thành các hạt khói kim loại cực mịn gọi là ヒューム (khói hàn). Hít phải khói hàn có thể gây hội chứng sốt khói kim loại với các triệu chứng đúng như đề bài: đau đầu, sốt, ớn lạnh, đau cơ, khô họng, mệt mỏi. Vì vậy khi hàn phải đảm bảo thông gió tốt và đeo mặt nạ chống bụi chuyên dụng.\n\nTừ vựng:\n溶接（ようせつ）: Hàn\nヒューム: Khói hàn (khói kim loại)\n吸い込む（すいこむ）: Hít vào\n頭痛（ずつう）: Đau đầu\n発熱（はつねつ）: Sốt\n寒気（さむけ）: Ớn lạnh\n筋肉痛（きんにくつう）: Đau cơ\n疲労（ひろう）: Mệt mỏi",
+  tip: "💡 Nhớ: Hàn = tạo ra khói trắng mịn → gọi là フューム (fume)."
+},
+
+ {
+  q: "問8. ボックスレンチは何(なに)に使(つか)うか。【138】",
+  options: [
+    "1. ボルトやナットを回(まわ)すソケット部(ぶ)と、ハンドル部(ぶ)が一体(いったい)になった工具(こうぐ)",
+    "2. 六角形(ろっかくけい)の穴(あな)がついたボルトを回(まわ)す工具(こうぐ)",
+    "3. 頭部(とうぶ)のソケットを交換(こうかん)することで、さまざまなサイズのボルトやナットに対応(たいおう)できる工具(こうぐ)",
+    "4. ネジを回(まわ)すための工具(こうぐ)"
+  ],
+  answer: 0,
+  vi: "Công dụng của box wrench là gì?",
+  explain: "ボックスレンチ (cờ lê hộp) là dụng cụ có phần đầu ổ ôm trọn bu lông/đai ốc và phần tay cầm liền thành một khối, dùng để vặn bu lông, đai ốc. Vì đầu cờ lê bao kín các cạnh của đai ốc nên truyền lực đều, khó làm tròn cạnh. Lựa chọn 2 mô tả cờ lê lục giác dùng cho bu lông có lỗ lục giác; lựa chọn 3 mô tả loại cờ lê có đầu socket thay được — không phải box wrench.\n\nTừ vựng:\n工具（こうぐ）: Dụng cụ\n一体（いったい）: Liền một khối\n回す（まわす）: Vặn, xoay\n六角形（ろっかくけい）: Hình lục giác\n交換（こうかん）: Thay thế, thay đổi\n対応（たいおう）: Tương ứng, đáp ứng",
+  tip: "💡 Nhớ: Box = đầu kín bao quanh ốc → siết mạnh, an toàn."
+
+  },
+ {
+  q: "問9. 土台(どだい)、梁(はり)、たけなどの水平(すいへい)部材(ぶざい)と、垂直(すいちょく)部材(ぶざい)の柱(はしら)を組(く)み合(あ)わせる工法(こうほう)は何(なに)か。【163】",
+  options: [
+    "1. ツーバイフォー",
+    "2. 枠組(わくぐ)み壁(かべ)工法(こうほう)",
+    "3. 軸組(じくぐ)み工法(こうほう)",
+    "4. 圧張(あっぱく)り工法(こうほう)"
+  ],
+  answer: 2,
+  vi: "Phương pháp kết hợp các cấu kiện ngang với cột đứng gọi là gì?",
+  explain: "Công pháp kết hợp các cấu kiện ngang như 土台 (đà kiềng), 梁 (dầm) với cấu kiện đứng là 柱 (cột) để tạo thành bộ khung chịu lực được gọi là 軸組み工法 — công pháp khung trục truyền thống của nhà gỗ Nhật Bản. ツーバイフォー và 枠組み壁工法 đều là công pháp tường khung gỗ (dùng các tấm khung gỗ làm tường chịu lực), khác với cách dựng khung cột–dầm của 軸組み工法.\n\nTừ vựng:\n土台（どだい）: Đà kiềng, cấu kiện chân tường\n梁（はり）: Dầm\n水平部材（すいへいぶざい）: Cấu kiện ngang\n垂直部材（すいちょくぶざい）: Cấu kiện đứng\n柱（はしら）: Cột\n軸組み工法（じくぐみこうほう）: Công pháp khung trục (cột–dầm)\n枠組み壁工法（わくぐみかべこうほう）: Công pháp tường khung",
+  tip: "💡 Nhớ: 軸 = trục, khung trục → cột + dầm ghép lại."
+},
+
+ {
+  q: "問10.幅(はば)の広(ひろ)い面(めん)の塗装(とそう)を効率(こうりつ)よく塗(ぬ)る道具(どうぐ)は何(なに)か。",
+  options: [
+    "1. スクレーパー",
+    "2. 皮(かわ)スキ",
+    "3. ウールローラー",
+    "4. 手ぐわ"
+  ],
+  answer: 2,
+  vi: "Dụng cụ nào dùng để sơn hiệu quả các bề mặt rộng?",
+  explain: "Để sơn các bề mặt rộng một cách hiệu quả, người ta dùng ウールローラー (con lăn len). Con lăn có bề mặt lông len giữ được nhiều sơn và lăn đều trên diện tích lớn, nhanh hơn nhiều so với dùng chổi quét. スクレーパー là dao cạo dùng để bóc lớp sơn cũ hoặc chất bẩn, 皮スキ là dụng cụ nạo thuộc da — không dùng để sơn diện rộng.\n\nTừ vựng:\n幅（はば）: Chiều rộng\n塗装（とそう）: Sơn, công tác sơn\n効率（こうりつ）: Hiệu quả, hiệu suất\n道具（どうぐ）: Dụng cụ\nウールローラー: Con lăn len (để sơn)\nスクレーパー: Dao cạo, dụng cụ bóc tách",
+  tip: "💡 Nhớ: ローラー (Roller) = Con lăn. Dùng để sơn (lăn) các mảng tường hoặc sàn rộng."
+},
+ {
+  q: "問11.建築(けんちく)板金(ばんきん)工事(こうじ)について、不適切(ふてきせつ)なものを選(えら)べ",
+  options: [
+    "1. 鉄板(てっぱん)の加(か)工(こう)に必要(ひつよう)な作業(さぎょう)は、ケガキ、切断(せつだん)、曲(ま)がえ、溶接(ようせつ)",
+    "2. 板金(ばんきん)溶接(ようせつ)で、一番(いちばん)利用(りよう)されるのは、アーク溶接(ようせつ)",
+    "3. 切断面(せつだんめん)は、金属製(きんぞくせい)やすりで滑(なめ)らかに仕上(しあ)げする",
+    "4. 薄(うす)い金属板(きんぞくばん)を切断(せつだん)、曲(ま)がえ、打(う)ち出(だ)し、溶接(ようせつ)などの加(か)工(こう)をする"
+  ],
+  answer: 1,
+  vi: "Hãy chọn phát biểu không phù hợp về công việc gia công tấm kim loại trong kiến trúc.",
+  explain: "Phát biểu không phù hợp là lựa chọn 2. Tấm kim loại kiến trúc rất mỏng nên nếu dùng hàn hồ quang (アーク溶接) — vốn có nhiệt lượng lớn, dùng cho thép dày — sẽ dễ làm cháy thủng và biến dạng tấm. Trong gia công 板金, người ta chủ yếu dùng các cách liên kết như gấp mép, tán đinh, hàn điểm. Các lựa chọn còn lại đều đúng: gia công tấm gồm các công đoạn kẻ vạch (ケガキ), cắt, uốn, hàn; mặt cắt được giũa nhẵn bằng giũa kim loại.\n\nTừ vựng:\n板金（ばんきん）: Tấm kim loại, gia công kim loại tấm\n不適切（ふてきせつ）: Không phù hợp\n切断（せつだん）: Cắt\n曲げる（まげる）: Uốn, bẻ cong\n溶接（ようせつ）: Hàn\nアーク溶接（ようせつ）: Hàn hồ quang\n仕上げ（しあげ）: Hoàn thiện\n薄い（うすい）: Mỏng",
+  tip: "💡 Nhớ:.建築(けんちく)板金(ばんきん) (tấm kim loại kiến trúc) thường rất mỏng. アーク溶接(ようせつ) (Hàn hồ quang) thì rất mạnh, dùng cho thép kết cấu dày. Chúng không phù hợp với nhau."
+},
+{
+  q: "問12.三大災害(さんだいさいがい)の中(なか)に含(ふく)まれないものを選(えら)べ。",
+  options: [
+    "1. 墜落(ついらく)·転落(てんらく)",
+    "2. 機械(きかい)などでの災害(さがい)",
+    "3. 交通事故(こうつう じこ)",
+    "4. 転倒(てんとう)·崩壊(ほうかい)"
+  ],
+  answer: 2,
+  vi: "Hãy chọn thứ không nằm trong 'Ba thảm họa/tai nạn lớn' (trong ngành xây dựng).",
+  explain: "Ba tai nạn lớn (三大災害) trong ngành xây dựng Nhật Bản gồm: (1) ngã từ trên cao 墜落・転落, (2) tai nạn do máy móc, thiết bị 機械などでの災害, (3) sập đổ, vật rơi 転倒・崩壊. Tai nạn giao thông (交通事故) tuy vẫn có thể xảy ra khi di chuyển nhưng không nằm trong nhóm ba tai nạn lớn của công trường, nên đây là đáp án cần chọn.\n\nTừ vựng:\n災害（さいがい）: Tai nạn, thảm họa\n含まれる（ふくまれる）: Được bao gồm\n墜落（ついらく）: Rơi, ngã từ trên cao\n転落（てんらく）: Ngã xuống\n交通事故（こうつうじこ）: Tai nạn giao thông\n転倒（てんとう）: Đổ ngã\n崩壊（ほうかい）: Sụp đổ",
+  tip: "💡 Nhớ: Ba thảm họa lớn trong xây dựng = NGÃ CAO, MÁY MÓC, SẬP ĐỔ."
+},
+{
+  q: "問13.下地(したじ)に塗(ぬ)った張(は)り付(つ)け用(よう)のモルタルにタイルを押(お)し付(つ)けて張(は)る工法(こうほう)は何(なん)というか。【168】",
+  options: [
+    "1. 改良(かいりょう)圧着(あっちゃく)張(ば)り工法(こうほう)",
+    "2. 密着(みっちゃく)張(ば)り工法(こうほう)",
+    "3. 圧着(あっちゃく)張(ば)り工法(こうほう)",
+    "4. 二重(にじゅう)張(ば)り工法(こうほう)"
+  ],
+  answer: 2,
+  vi: "Phương pháp ốp lát gạch bằng cách ấn mạnh gạch lên lớp vữa (mortar) đã trát sẵn trên bề mặt nền được gọi là gì?",
+  explain: "Phương pháp trát vữa dán lên bề mặt nền rồi ấn mạnh gạch vào lớp vữa đó được gọi là 圧着張り工法 (ốp dán ép). Đặc trưng là dùng bay răng cưa trát vữa dày khoảng 5mm lên nền, sau đó ấn từng viên gạch xuống để vữa bám đều vào mặt sau gạch. 改良圧着張り là biến thể có phết thêm vữa lên cả mặt sau gạch; 密着張り dùng thiết bị rung để ép gạch sát vào nền — khác với động tác ấn vào lớp vữa đã trát của đề bài.\n\nTừ vựng:\n下地（したじ）: Bề mặt nền\n張り付け（はりつけ）: Dán, ốp\nモルタル: Vữa\n押し付ける（おしつける）: Ấn mạnh vào\n圧着（あっちゃく）: Ép dính, dán ép\n密着（みっちゃく）: Bám dính khít",
+  tip: "💡 Nhớ: 圧着 (あっ**ちゃく**) = Áp lực dán/dính. Dùng lực ấn để dán gạch vào lớp vữa đã trát sẵn."
+},
+{
+  q: "問14.タイル張(ば)り工事(こうじ)として、タイルがはがれることは何(なん)というか。【168} ",
+  options: [
+    "1. はく離(り)",
+    "2. はく落(らく)",
+    "3. はく崩(ほう)",
+    "4. はく飛(ひ)"
+  ],
+  answer: 0,
+  vi: "Hiện tượng gạch/tile bị **bong ra (はがれる)** khỏi bề mặt dán được gọi là gì?",
+  explain: "Hiện tượng lớp gạch ốp bị tách, bong ra khỏi bề mặt nền được gọi là はく離 (bóc tách). Đây là thuật ngữ kỹ thuật chỉ sự mất liên kết giữa vật liệu ốp và lớp nền (vữa/keo), thường do nền yếu, thi công sai hoặc rung động lâu ngày. Các lựa chọn còn lại (はく落・はく崩・はく飛) không phải thuật ngữ đúng cho hiện tượng này.\n\nTừ vựng:\nはがれる: Bong ra, tróc ra\nはく離（はくり）: Bóc tách, bong tróc (thuật ngữ)\n張り（ばり）: Lớp ốp, việc ốp dán\n材料（ざいりょう）: Vật liệu",
+  tip: "💡 Nhớ: タイルが **はがれる** (Gạch/Tile bong ra) → **はく離(り)** (Bóc tách) là thuật ngữ chỉ sự tách rời."
+},
+{
+  q: "問15　どんな部材（ぶざい）か。【111】",
+  img: "images/2021.png",
+  options: [
+    "1．単管（たんかん）パイプ",
+    "2．Pコン",
+    "3．丸セパレーター",
+    "4．フォームタイ"
+  ],
+  answer: 3,
+  vi: "Đây là loại vật liệu nào trong công trình xây dựng?",
+  explain: "Cấu kiện trong ảnh là フォームタイ (thanh giằng cốp pha). Nó được lắp xuyên qua hai tấm cốp pha đối diện và siết chặt, giữ cho khoảng cách giữa hai mặt cốp pha không bị phình ra khi đổ bê tông. Pコン là nón nhựa gắn ở đầu thanh セパレーター, 丸セパレーター là thanh phân cách tròn — đều là các phụ kiện khác trong hệ cốp pha.\n\nTừ vựng:\n部材（ぶざい）: Cấu kiện\nフォームタイ: Thanh giằng cốp pha (form tie)\n単管パイプ（たんかんパイプ）: Ống thép đơn\nセパレーター: Thanh phân cách (separator)\n型枠（かたわく）: Cốp pha, ván khuôn",
+  tip: "💡 Nhớ: フォーム＝Cốp pha, タイ＝Buộc → Thanh buộc cốp pha = フォームタイ."
+},
+{
+  q: "問16.梁底(はりそこ)型枠(かたわく)の単管(たんかん)パイプを受(うけ)て、パイプサポートを立(た)てる際(さい)に使用(しよう)する木材(もくざい)は何(なん)というか【112】",
+  options: [
+    "1. パイプサポート",
+    "2. 端太角(ばたかく)",
+    "3. トンボ端太(とんぼ ばた)",
+    "4. 筋交(すじか)い"
+  ],
+  answer: 2,
+  vi: "Gỗ được sử dụng để đỡ ống thép đơn (tankan pipe) của khuôn ván đáy dầm và dựng cột chống (pipe support) được gọi là gì?",
+  explain: "Khi dựng cột chống (パイプサポート) đỡ ống đơn của cốp pha đáy dầm, thanh gỗ đặt ngang để nhận ống và định vị vị trí dựng cột được gọi là トンボ端太. Nó giúp các cột chống đứng đúng vị trí, thẳng hàng và ổn định. 端太角 (lựa chọn 2) là thanh gỗ vuông nói chung dùng để lót, đệm; còn 筋交い là thanh giằng chéo chống xô lệch — không phải thanh gỗ định vị trong tình huống này.\n\nTừ vựng:\n梁底（はりそこ）: Đáy dầm\n型枠（かたわく）: Cốp pha\n受ける（うける）: Đỡ, nhận lực\n木材（もくざい）: Gỗ, vật liệu gỗ\n端太角（ばたかく）: Thanh gỗ vuông lót đệm\nトンボ端太（とんぼばた）: Thanh gỗ định vị cột chống\n筋交い（すじかい）: Thanh giằng chéo",
+  tip: "💡 Nhớ: トンボ (Tonbo) thường ám chỉ các bộ phận định vị/cố định tạm thời."
+},
+{
+  q: "問17.出隅(ですみ)を仕上(しあ)げるときに使(つか)うこては何(なに)か。【117】",
+  options: [
+    "1. 面引(めんび)きごて",
+    "2. 切(き)り付(つ)けごて",
+    "3. ブロックごて",
+    "4. くし目(め)ごて"
+  ],
+  answer: 0,
+  vi: "Cái bay (cái trát) được sử dụng khi hoàn thiện góc ngoài (góc lồi) là gì?",
+  explain: "Khi hoàn thiện góc ngoài lồi (出隅), người thợ dùng 面引きごて — loại bay chuyên dụng để vuốt và bo tròn góc vữa, giúp góc không bị sắc cạnh, đỡ sứt mẻ và đẹp hơn. 切り付けごて dùng để cắt, tách mối nối; くし目ごて tạo vân răng cưa trên bề mặt vữa — đều không dùng cho góc lồi.\n\nTừ vựng:\n出隅（ですみ）: Góc ngoài, góc lồi\n仕上げ（しあげ）: Hoàn thiện\nこて: Cái bay (bay trát)\n面引きごて（めんびきごて）: Bay bo góc\n切り付けごて（きりつけごて）: Bay cắt mối\nくし目ごて（くしめごて）: Bay răng cưa",
+  tip: "💡 Nhớ: 面引(めんびき) = Dẫn góc/Bo góc. Dùng để tạo góc tròn/vát (không phải góc vuông sắc nét)."
+},
+{
+  q: "問18　型枠（かたわく）の設置（せっち）時に使用する道具（どうぐ）は何か。【116】",
+  img: "images/4729.png",
+  options: [
+    "1．スパナ",
+    "2．ボルシン",
+    "3．手のこ",
+    "4．シノ"
+  ],
+  answer: 2,
+  vi: "Khi lắp đặt ván khuôn, dụng cụ nào dưới đây được sử dụng?",
+  explain: "Dụng cụ trong ảnh là 手のこ (cưa tay). Khi lắp đặt cốp pha, thợ dùng cưa tay để cắt gỗ, ván ép theo đúng kích thước, đặc biệt ở các vị trí hẹp hoặc cần cắt tỉ mỉ. スパナ là cờ lê dùng để vặn bu lông, シノ là thanh nạy nhỏ thường dùng khi tháo cốp pha — không phải dụng cụ cắt trong ảnh.\n\nTừ vựng:\n型枠（かたわく）: Cốp pha\n設置（せっち）: Lắp đặt\n道具（どうぐ）: Dụng cụ\n手のこ: Cưa tay\nスパナ: Cờ lê\nシノ: Thanh nạy, đòn bẩy nhỏ",
+  tip: "💡 Nhớ: 手＝tay → 手のこ＝cưa tay → dùng khi lắp ván khuôn."
+},
+{
+  q: "問19　布（ぬの）や紙（かみ）などの柔( や わ )らかいものに穴 (あな) をあける道具 (どうぐ) は何 (な に) か。【124】",
+  options: [
+    "1．千枚 (せんまい) 通 (どお) し",
+    "2．コンパス",
+    "3．きり",
+    "4．ディバイダ"
+  ],
+  answer: 0,
+  vi: "Dụng cụ nào dùng để đục lỗ trên vật liệu mềm như vải hoặc giấy?",
+  explain:"Dụng cụ dùng để đục lỗ trên vật liệu mềm như vải, giấy, da là 千枚通し — một loại dùi nhọn có tay cầm gỗ và đầu kim thép sắc. Tên gọi với ý nghĩa 'xuyên qua nghìn lớp' nói lên khả năng đâm xuyên nhiều lớp vật liệu mềm xếp chồng lên nhau. コンパス và ディバイダ là dụng cụ vẽ, đo khoảng cách; きり là mũi khoan, dùi nói chung — không chuyên dụng cho vải, giấy như 千枚通し.\n\nTừ vựng:\n布（ぬの）: Vải\n柔らかい（やわらかい）: Mềm\n穴（あな）: Lỗ\n千枚通し（せんまいどおし）: Dùi nhọn đục lỗ\nきり: Mũi khoan, dùi\nコンパス: Com-pa",
+  tip: "💡 Nhớ: 千枚 (せんまい) 通 (どお) し = 'xuyên qua nghìn tấm' → dùi nhọn chuyên dùng để đục lỗ vật liệu mềm."
+},
+{
+  q: "問20.セパレーターの先端(せんたん)に取(と)り付(つ)けるPコンの材料(ざいりょう)は何(なに)か?",
+  options: [
+    "1. ウレタンフォーム",
+    "2. 木材(もくざい)",
+    "3. プラスチック",
+    "4. ゴム"
+  ],
+  answer: 2,
+  vi: "Vật liệu làm P-cone (nắp chóp) được gắn vào đầu thanh Separator là gì?",
+  explain: "Pコン (P-cone) gắn ở đầu thanh セパレーター được làm bằng プラスチック (nhựa). Nhờ chất liệu nhựa, Pコン nhẹ, rẻ, không gỉ và dễ tháo ra khỏi bê tông sau khi tháo cốp pha, để lại một lỗ lõm hình nón đều đẹp trên bề mặt, sau đó được trét vữa lấp lại. Nếu làm bằng gỗ hay cao su sẽ khó tháo và độ chính xác kém hơn.\n\nTừ vựng:\n先端（せんたん）: Đầu mút, phần đầu\n取り付ける（とりつける）: Gắn vào, lắp vào\n材料（ざいりょう）: Vật liệu\nPコン: Nón nhựa chụp đầu thanh separator\nプラスチック: Nhựa\nセパレーター: Thanh phân cách cốp pha",
+  tip: "💡 Nhớ: Pコン (P-cone) = Nhựa (Plastic) để tạo lỗ lõm sau khi tháo khuôn."
+},
+{
+  q: "問21.芯材(しんざい)の石膏(せっこう)の両面(りょうめん)と側面(そくめん)をボード用(よう)の原紙(げんし)で包(つつ)んだ建築用(けんちくよう)の板材(いたざい)は何(なん)と言(い)うか。【122】",
+  options: [
+    "1. 断熱材(だんねつざい)",
+    "2. クロス張り(ばり)",
+    "3. 石膏(せっこう)ボード",
+    "4. ボードやすり"
+  ],
+  answer: 2,
+  vi: "Tấm vật liệu xây dựng có lõi thạch cao được bọc kín bằng giấy chuyên dụng ở cả hai mặt và các cạnh được gọi là gì?",
+  explain: "Tấm vật liệu có lõi là thạch cao, được bọc kín cả hai mặt và các cạnh bằng giấy chuyên dụng cho tấm (ボード用原紙) chính là 石膏ボード (tấm thạch cao). Loại tấm này nhẹ, thi công nhanh, cách âm và chống cháy tốt nên được dùng rất phổ biến cho tường và trần nội thất. 断熱材 là vật liệu cách nhiệt dạng xốp hoặc sợi, không phải tấm có lõi thạch cao bọc giấy.\n\nTừ vựng:\n芯材（しんざい）: Vật liệu lõi\n石膏（せっこう）: Thạch cao\n両面（りょうめん）: Hai mặt\n側面（そくめん）: Mặt cạnh, mặt bên\n原紙（げんし）: Giấy gốc, giấy chuyên dụng\n包む（つつむ）: Bọc, bao gói\n板材（いたざい）: Vật liệu tấm",
+  tip: "💡 Nhớ: 石膏 (せっこう) = Thạch cao. ボード (Board) = Tấm. Ghép lại là Tấm Thạch Cao."
+},
+{
+  q: "問22.接着工法(せっちゃくこうほう)について、不適切(ふてきせつ)なものを選(えら)べ。【175】",
+  options: [
+    "1. 専用(せんよう)の接着剤(せっちゃくざい)を下地(したじ)に塗(ぬ)り、シートを接着(せっちゃく)して固定(こてい)する",
+    "2. 下地(したじ)をごみがある状態(じょうたい)でもシートを完全(かんぜん)に密着(みっちゃく)できる",
+    "3. シートの重(かさ)ね部分(ぶぶん)は、シーリング材(ざい)を挿入(そうにゅう)し、全体(ぜんたい)をよく転圧(てんあつ)する。"
+  ],
+  answer: 1,
+  vi: "Chọn phát biểu không phù hợp về phương pháp thi công bằng keo dán (Adhesive construction method).",
+  explain: "Phát biểu không phù hợp là lựa chọn 2. Trong công pháp dán (接着工法), độ bám dính phụ thuộc hoàn toàn vào bề mặt nền: nền phải được làm sạch bụi, rác và khô ráo thì keo mới bám chắc và tấmシート mới dính khít hoàn toàn. Nếu nền còn rác, bụi, keo sẽ không bám, gây phồng rộp và bong tróc. Các lựa chọn còn lại đều đúng quy trình: bôi keo chuyên dụng lên nền rồi dán tấm cố định; phần chồng mép được chèn vật liệu trám kín và lăn ép kỹ toàn bộ.\n\nTừ vựng:\n接着工法（せっちゃくこうほう）: Công pháp dán keo\n不適切（ふてきせつ）: Không phù hợp\n接着剤（せっちゃくざい）: Keo dán\n下地（したじ）: Bề mặt nền\n密着（みっちゃく）: Bám dính khít\n重ね（かさね）: Phần chồng mép\n転圧（てんあつ）: Lăn ép",
+  tip: "💡 Nhớ: Dán 接着工法(せっちゃくこうほう) = Nền phải **sạch sẽ và khô ráo**. 'Có rác/bụi' (ごみがある) là sai."
+},
+{
+  q: "問23　ビニル床（ゆか）シートたビニルタイルのつなぎ目（め）を処理（しょり）するための工具（こうぐ）は何か。【124】",
+  img: "images/75317.png",
+  options: [
+    "1．カッター",
+    "2．コンパス",
+    "3．溶接機（ようせつき）",
+    "4．ディバイダ"
+  ],
+  answer: 2,
+  vi: "Dụng cụ nào dùng để xử lý mối nối của sàn nhựa vinyl?",
+  explain: "Dụng cụ đúng là 溶接機 (máy hàn nhiệt dùng cho sàn vinyl). Khi thi công sàn nhựa dạng tấm hoặc cuộn, các mối nối được xử lý bằng máy hàn nhiệt: khí nóng làm chảy dây hàn vinyl chuyên dụng, lấp kín khe nối giúp sàn liền mạch, chống thấm và chống bong mép. カッター chỉ dùng để cắt tấm, コンパス là dụng cụ vẽ vòng tròn — không xử lý được mối nối.\n\nTừ vựng:\nつなぎ目（つなぎめ）: Mối nối\n処理（しょり）: Xử lý\n工具（こうぐ）: Dụng cụ\n溶接機（ようせつき）: Máy hàn (nhiệt)\n床シート（ゆかシート）: Tấm trải sàn\nカッター: Dao cắt",
+  tip: "💡 Nhớ: 溶接（ようせつ） = hàn, 機 き = máy → 溶接機 = máy hàn nhiệt cho sàn nhựa."
+},
+{
+  q: "問24.首(くび)の部分(ぶぶん)が枝(えだ)と平(ひら)たい面(めん)の根元(ねもと)についてる。細(こま)かい部分(ぶぶん)の作業(さぎょう)に適(てき)しています。そのこては、何(なん)か。【117】",
+  options: [
+    "1. 中塗(なかぬ)りごて",
+    "2. 柳刃(やなぎば)ごて",
+    "3. 目地(めじ)ごて",
+    "4. 角(かど)ごて"
+  ],
+  answer: 1,
+  vi: "Cái bay (cái trát) có phần cổ nối với cán và mặt phẳng ở gốc/đáy. Nó phù hợp cho các công việc chi tiết. Đó là loại bay nào?",
+  explain: "Loại bay được mô tả là 柳刃ごて (bay lưỡi liễu). Nó có lưỡi dài, mỏng và hẹp như lá liễu, rất phù hợp để trát và hoàn thiện những vị trí hẹp, chi tiết nhỏ mà bay thường không vào được. 目地ごて là bay nhỏ chuyên trét mạch gạch, 角ごて dùng cho góc tường — hình dáng và công dụng khác với mô tả 'lưỡi liễu, làm việc chi tiết' trong đề bài.\n\nTừ vựng:\n柳刃ごて（やなぎばごて）: Bay lưỡi liễu\n中塗りごて（なかぬりごて）: Bay trát lớp giữa\n目地ごて（めじごて）: Bay trét mạch\n角ごて（かどごて）: Bay góc\n細かい（こまかい）: Nhỏ, chi tiết, tỉ mỉ\n適する（てきする）: Phù hợp",
+  tip: "💡 Nhớ: 柳刃 (Yanagiba) = Lưỡi liễu. Dùng cho việc trát/hoàn thiện chi tiết, nhỏ hẹp."
+},
+{
+  q: "問25.ハンマーでたたいて金属(きんぞく)の表面(ひょうめん)に小(ちい)さなくぼみを作(つく)ったり、布(ぬの)や皮(かわ)などに丸(まる)い穴(あな)をあける道具(どうぐ)は何(なに)か。",
+  options: [
+    "1. たがね",
+    "2. レーキ",
+    "3. タンバー",
+    "4. ポンチ"
+  ],
+  answer: 3,
+  vi: "Dụng cụ dùng búa gõ để tạo vết lõm nhỏ trên bề mặt kim loại, hoặc dùng để đục lỗ tròn trên vải hoặc da, là gì?",
+  explain: "Dụng cụ đó là ポンチ (đột, dùi đột). Khi dùng búa gõ lên ポンチ, đầu nhọn của nó tạo một vết lõm nhỏ trên bề mặt kim loại để định tâm trước khi khoan, hoặc đục lỗ tròn gọn trên vải, da. たがね là đục thép dùng để cắt, phá kim loại và bê tông; レーキ là cái cào — không tạo được vết lõm hay lỗ tròn chính xác như ポンチ.\n\nTừ vựng:\n表面（ひょうめん）: Bề mặt\nくぼみ: Vết lõm\n穴（あな）: Lỗ\nポンチ: Dụng cụ đột, dùi đột (punch)\nたがね: Đục thép\n皮（かわ）: Da (vật liệu)",
+  tip: "💡 Nhớ: ポンチ (Punch) = Đục/Đột, dùng để tạo dấu hoặc đục lỗ."
+},
+{
+  q: "問26.コンクリートを切断(せつだん)するための電動(でんどう)工具(こうぐ)は何(なに)と言(い)うか。【130】",
+  options: [
+    "1. くぎ打ち機(くぎうちき)",
+    "2. 電工(でんこう)ドラム",
+    "3. ディスクグラインダー",
+    "4. 電動(でんどう)ブロックカッター"
+  ],
+  answer: 3,
+  vi: "Dụng cụ điện (dụng cụ điện động) dùng để cắt bê tông được gọi là gì?",
+  explain: "Dụng cụ điện chuyên dùng để cắt bê tông, gạch block là 電動ブロックカッター (máy cắt block chạy điện). Máy được trang bị lưỡi cắt kim cương, thường có cấp nước làm mát, giúp cắt các khối bê tông, gạch chính xác và ít bụi. ディスクグラインダー (máy mài góc) chủ yếu để mài, chỉ cắt được vật mỏng hoặc rãnh nông — không phải máy cắt block chuyên dụng. くぎ打ち機 là máy bắn đinh, 電工ドラム là cuộn dây điện kéo dài.\n\nTừ vựng:\n切断（せつだん）: Cắt đứt\n電動（でんどう）: Chạy điện\n工具（こうぐ）: Dụng cụ\n電動ブロックカッター: Máy cắt block bê tông điện\nディスクグラインダー: Máy mài góc (đĩa)\nくぎ打ち機（くぎうちき）: Máy bắn đinh",
+  tip: "💡 Nhớ: ブロックカッター (Block Cutter) = Máy cắt **chuyên dụng** cho khối bê tông/gạch."
+},
+{
+  q: "問27.土(つち)やアスファルトなどをすくって運(はこ)ぶための道具(どうぐ)は何(なに)か。【130} ",
+  options: [
+    "1. 剣(けん)スコップ",
+    "2. 角(かく)スコップ",
+    "3. ダブルスコップ",
+    "4. つるはし"
+  ],
+  answer: 1,
+  vi: "Dụng cụ dùng để **xúc (すくう)** và **vận chuyển (はこぶ)** đất hoặc nhựa đường là gì?",
+  explain: "Dụng cụ phù hợp là 角スコップ (xẻng vuông). Xẻng vuông có lưỡi rộng, phẳng và đáy bằng nên xúc được nhiều vật liệu rời như đất, cát, nhựa đường vụn trong một lần và vận chuyển dễ dàng. Ngược lại, 剣スコップ (xẻng nhọn, lựa chọn 1) có mũi nhọn chuyên để đào, xắn đất cứng; つるはし là cuốc chim dùng để phá đất đá — đều không tối ưu cho việc xúc và chở như đề bài.\n\nTừ vựng:\nすくう: Xúc, múc\n運ぶ（はこぶ）: Vận chuyển, mang đi\n角スコップ（かくスコップ）: Xẻng vuông\n剣スコップ（けんスコップ）: Xẻng nhọn (đầu như kiếm)\nつるはし: Cuốc chim\n道具（どうぐ）: Dụng cụ",
+  tip: "💡 Nhớ: **すくって運(はこ)ぶ** (Xúc và vận chuyển) → **角(かく)スコップ** (Xẻng vuông)."
+},
+{
+  q: "問28.始業前点検(しぎょうまえ てんけん)にない作業(さぎょう)は何(なに)か。【148】",
+  options: [
+    "1. 作業手順書(さぎょうてじゅんしょ)を確認(かくにん)する",
+    "2. 器具(きぐ)·工具(こうぐ)·道具(どうぐ)が、点検(てんけん)·整備(せいび)されていることを確認(かくにん)する",
+    "3. 機械(きかい)の点検(てんけん)·整備(せいび)されていることを確認(かくにん)する",
+    "4. 作業日報(さぎょうにっぽう)を報告(ほうこく)する"
+  ],
+  answer: 3,
+  vi: "Công việc nào không có trong phần kiểm tra trước khi bắt đầu công việc (**始業前点検(しぎょうまえてんけん)**)?",
+  explain: "Việc không thuộc kiểm tra trước giờ làm là 'báo cáo nhật ký công việc' (作業日報の報告). Nhật ký công việc được ghi và báo cáo sau khi kết thúc ngày làm việc, ghi lại nội dung và tiến độ đã thực hiện — không thể có ở thời điểm trước khi bắt đầu. Ba hạng mục còn lại đều thuộc 始業前点検: kiểm tra quy trình công việc, kiểm tra tình trạng dụng cụ, thiết bị và kiểm tra máy móc trước khi vận hành.\n\nTừ vựng:\n始業前点検（しぎょうまえ てんけん）: Kiểm tra trước giờ làm\n作業手順書（さぎょうてじゅんしょ）: Bản quy trình công việc\n器具（きぐ）: Dụng cụ, thiết bị nhỏ\n整備（せいび）: Bảo dưỡng, chuẩn bị\n作業日報（さぎょうにっぽう）: Nhật ký công việc ngày\n報告（ほうこく）: Báo cáo",
+  tip: "💡 Nhớ: **始業前(しぎょうまえ)** (TRƯỚC khi bắt đầu) ≠ **日報報告(にっぽうほうこく)** (Báo cáo CUỐI ngày)."
+},
+{
+  q: "問29.建築(けんちく)現場(げんば)での死亡(しぼう)災害(さいがい)で最(もっと)も多(おお)いのは何か。【179】",
+  options: [
+    "1. 転倒(てんとう)",
+    "2. 激突(げきとつ)",
+    "3. 墜落(ついらく)",
+    "4. 倒壊(とうかい)"
+  ],
+  answer: 2,
+  vi: "Nguyên nhân phổ biến nhất gây tai nạn tử vong (**死亡災害(しぼうさいがい)**) tại công trường xây dựng (**建築現場(けんちくげんば)**) là gì?",
+  explain: "Nguyên nhân gây tử vong nhiều nhất tại công trường xây dựng Nhật Bản là 墜落・転落 (ngã từ trên cao), chiếm tỷ lệ cao vượt trội trong thống kê nhiều năm. Vì đặc thù xây dựng phải làm việc trên giàn giáo, mái, mép sàn nên chỉ một sơ suất nhỏ hoặc không đeo dây an toàn cũng có thể dẫn đến tai nạn chết người. Đây là lý do công trường luôn nhấn mạnh việc lắp lan can, lưới an toàn và đeo dây bảo hộ khi làm việc trên cao.\n\nTừ vựng:\n現場（げんば）: Công trường, hiện trường\n死亡災害（しぼうさいがい）: Tai nạn lao động chết người\n墜落（ついらく）: Ngã từ trên cao\n転倒（てんとう）: Vấp ngã (trên cùng mặt phẳng)\n激突（げきとつ）: Va đập mạnh\n倒壊（とうかい）: Sụp đổ",
+  tip: "💡 Nhớ: **死亡災害(しぼうさいがい)** (Tai nạn chết người) tại công trường thường là do **墜落(ついらく)** (Ngã cao)."
+},
+{
+  q: "問30.安全(あんぜん)施工(せこう)サイクルは何ですか。不適切(ふてきせつ)な物(もの)は何ですか。【185·186】",
+  options: [
+    "1. 作業前(さぎょうまえ)の安全(あんぜん)朝礼(ちょうれい)",
+    "2. 作業(さぎょう)開始前(かいしまえ)点検(てんけん)",
+    "3. 安全(あんぜん)パトロール",
+    "4. 安全(あんぜん)靴(ぐつ)"
+  ],
+  answer: 3,
+  vi: "Đâu là hạng mục không phù hợp với **Chu trình Thi công An toàn (**安全施工(あんぜんせこう)サイクル**)**?",
+  explain: "Hạng mục không phù hợp là 安全靴 (giày bảo hộ). 安全施工サイクル là chu trình hoạt động quản lý an toàn lặp lại mỗi ngày tại công trường, gồm các hoạt động như: họp an toàn đầu giờ (安全朝礼), kiểm tra trước khi bắt đầu công việc (作業開始前点検), tuần tra an toàn (安全パトロール). Giày bảo hộ là trang bị bảo hộ cá nhân (PPE) mà người lao động mang, không phải một hoạt động trong chu trình quản lý này.\n\nTừ vựng:\n安全施工サイクル（あんぜんせこうサイクル）: Chu trình thi công an toàn\n不適切（ふてきせつ）: Không phù hợp\n朝礼（ちょうれい）: Họp đầu giờ\n点検（てんけん）: Kiểm tra\n安全パトロール: Tuần tra an toàn\n安全靴（あんぜんぐつ）: Giày bảo hộ",
+  tip: "💡 Nhớ: **サイクル (Cycle)** là chu trình/bước đi. **靴(ぐつ)** (Giày) là vật dụng, không phải là bước đi."
+}
+
+]
+};
+
+
+var TK = { qs: null, ans: {}, on: false };
+function openTokutei(){
+  if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
+  if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
+  if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
+  if(window.__tOn && typeof closeTango === 'function') closeTango(true);
+  if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
+  if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
+  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
+  if(window.__aOn && typeof closeAccent === 'function') closeAccent(true);
+  if(window.__pOn && typeof closePersonal === 'function') closePersonal(true);
+  if(window.__eOn && typeof closeExport === 'function') closeExport(true);
+  if(window.__rkOn && typeof closeRank === 'function') closeRank(true);
+  if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
+  window.__tkOn = true;
+  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox','personalbox','exportbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  document.getElementById('tokuteibox').style.display = '';
+  document.getElementById('paneltitle').textContent = '🏗️ Tokutei Gino';
+  tkHome();
+}
+function closeTokutei(skip){
+  window.__tkOn = false;
+  var el = document.getElementById('tokuteibox'); if(el) el.style.display = 'none';
+  if(!skip) selectLevel(window.CURLV || 'N5');
+}
+function tkHome(){
+  TK.on = false;
+  document.getElementById('tkbody').innerHTML = '<div class="jl-start"><div class="jl-big">Tokutei Gino 2 — Xây dựng</div><div class="jl-sub">Bộ luyện tập 1 (g2_1) — <b>30 câu</b>, lấy nguyên văn từ app Tokutei, đáp án không đổi.<br>Mỗi câu có dịch tiếng Việt, giải thích chi tiết và mẹo nhớ sau khi nộp bài.</div><button class="qz-next" onclick="tkStart()">▶ Bắt đầu làm bài</button> <a class="chipbtn" href="https://drive.google.com/file/d/1u150UMjUu_YofEHNoCBIyfpHAk0wRyV1/preview" target="_blank" rel="noopener">🎥 Video bài giảng</a><p style="font-size:13.5px;color:#666;line-height:1.6;margin-top:12px">Các bộ đề còn lại sẽ được đưa vào tiếp theo cùng mẫu này.<br>Lưu ý: 4 câu 5, 15, 18, 23 trong app gốc có hình minh họa, bản tích hợp này chưa kèm hình nên 4 câu đó sẽ khó làm — sẽ bổ sung hình ở bước tiếp theo.</p></div>';
+}
+function tkStart(){
+  var set = window.PRACTICE_SETS && window.PRACTICE_SETS["g2_1"];
+  if(!set || !set.questions || !set.questions.length){ alert('Chưa tải được bộ đề Tokutei.'); return; }
+  TK.qs = set.questions; TK.ans = {}; TK.on = true;
+  tkRender();
+}
+function tkRender(){
+  var html = TK.qs.map(function(q, i){
+    var opts = q.options.map(function(o, j){ return '<button class="jl-opt" id="tko' + i + '_' + j + '" onclick="tkChoose(' + i + ',' + j + ')">' + grEsc(o) + '</button>'; }).join('');
+    var imgNote = q.img ? '<div style="font-size:13.5px;color:#c62828;margin-top:6px">⚠️ Câu này trong app gốc có hình minh họa, bản tích hợp này chưa kèm hình.</div>' : '';
+    return '<div class="jl-q"><span class="jl-tag">Tokutei Gino 2 · Câu ' + (i + 1) + '</span><div class="jl-qt">' + grEsc(q.q) + '</div><div style="font-size:14px;color:#555;margin-top:6px">' + grEsc(q.vi || '') + '</div>' + imgNote + '<div class="jl-opts">' + opts + '</div></div>';
+  }).join('');
+  html += '<div style="text-align:center;margin-top:16px"><button class="qz-next" onclick="tkSubmit()">📩 Nộp bài</button> <span style="font-size:13px;color:#888" id="tkcount"></span></div>';
+  document.getElementById('tkbody').innerHTML = html; tkCount();
+  window.scrollTo({ top: document.getElementById('tokuteibox').offsetTop - 70, behavior: 'smooth' });
+}
+function tkCount(){ var c = document.getElementById('tkcount'); if(c) c.textContent = 'Đã làm ' + Object.keys(TK.ans).length + '/' + TK.qs.length + ' câu'; }
+function tkChoose(i, j){
+  TK.ans[i] = j;
+  TK.qs[i].options.forEach(function(o, k){ var b = document.getElementById('tko' + i + '_' + k); if(b) b.classList.toggle('sel', k === j); });
+  tkCount();
+}
+function tkSubmit(){
+  if(!TK.on) return; TK.on = false;
+  if(typeof psLog === 'function') psLog('exam');
+  var score = 0;
+  TK.qs.forEach(function(q, i){ if(TK.ans[i] === q.answer) score++; });
+  var pct = Math.round(score / TK.qs.length * 100);
+  var review = TK.qs.map(function(q, i){
+    var mine = TK.ans[i];
+    var opts = q.options.map(function(o, j){
+      var cls = j === q.answer ? ' ok' : (j === mine ? ' bad' : '');
+      return '<button class="jl-opt' + cls + '" disabled>' + grEsc(o) + (j === q.answer ? ' ✓' : (j === mine ? ' ✗' : '')) + '</button>';
+    }).join('');
+    var exp = grEsc(q.explain || '').replace(/\n/g, '<br>');
+    var tip = q.tip ? '<div style="margin-top:8px">' + grEsc(q.tip) + '</div>' : '';
+    var imgNote = q.img ? '<div style="font-size:13.5px;color:#c62828;margin-top:6px">⚠️ Câu này trong app gốc có hình minh họa, bản tích hợp này chưa kèm hình.</div>' : '';
+    return '<div class="jl-q"><span class="jl-tag">Tokutei Gino 2 · Câu ' + (i + 1) + (mine === q.answer ? ' · ✅ Đúng' : ' · ❌ Sai') + '</span><div class="jl-qt">' + grEsc(q.q) + '</div><div style="font-size:14px;color:#555;margin-top:6px">' + grEsc(q.vi || '') + '</div>' + imgNote + '<div class="jl-opts">' + opts + '</div><div class="jl-exp" style="display:block">' + exp + tip + '</div></div>';
+  }).join('');
+  document.getElementById('tkbody').innerHTML = '<div class="jl-start"><div class="jl-big">Kết quả Tokutei Gino 2 — Bộ luyện tập 1</div><div class="qz-score">' + score + '/' + TK.qs.length + ' (' + pct + '%)</div><div class="jl-sub">Đáp án lấy nguyên văn từ app Tokutei, không đổi. Xem lại giải thích chi tiết và mẹo nhớ ở từng câu bên dưới.</div><button class="qz-next" onclick="tkStart()">🔁 Làm lại bộ này</button> <button class="chipbtn" onclick="tkHome()">Về trang Tokutei</button></div>' + review;
+  window.scrollTo({ top: document.getElementById('tokuteibox').offsetTop - 70, behavior: 'smooth' });
+}
 
 </script>
 <script>
