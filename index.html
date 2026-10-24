@@ -340,6 +340,11 @@ body.gs-l .cell{font-size:35px}
 .st-row:last-child{border-bottom:0}
 .st-row .st-k{flex:1;font-size:14.5px;color:#333}
 .st-row .st-k small{display:block;color:#888;font-size:12.5px}
+.au-inp{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:14.5px;box-sizing:border-box;margin-top:6px}
+.au-label{font-size:13.5px;color:#444;display:block;margin-top:10px}
+.au-err{color:#c62828;font-size:13.5px;margin-top:8px;min-height:18px}
+.au-note{font-size:12.5px;color:#888;line-height:1.6;margin-top:12px}
+.au-tabs{display:flex;gap:8px;margin:10px 0 4px}
 </style>
 </head>
 <body>
@@ -348,7 +353,7 @@ body.gs-l .cell{font-size:35px}
   <div class="logomark">漢字</div>
   <div class="logotext">Kanji<b>VN</b></div>
   <div class="sp"></div>
-  <button class="loginbtn" onclick="soon()">↪ Đăng nhập</button>
+  <button class="loginbtn" id="loginbtn" onclick="openAuth()">↪ Đăng nhập</button>
 </header>
 
 <aside class="sidebar">
@@ -4265,6 +4270,218 @@ openFlash = function(){
 };
 stApply();
 
+</script>
+<script>
+/* ===== Đăng nhập (bản test: tài khoản lưu trên máy này) ===== */
+var AU_KEYS = ['kanjivn_profile_v1', 'kanjivn_log_v1', 'kanjivn_fc_v1', 'kanjivn_records_v1', 'kanjivn_settings_v1'];
+function auEsc(s){ s = (s === null || s === undefined) ? '' : String(s); return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function auGetAccounts(){ try { return JSON.parse(localStorage.getItem('kanjivn_accounts_v1') || '[]'); } catch(e){ return []; } }
+function auSetAccounts(a){ try { localStorage.setItem('kanjivn_accounts_v1', JSON.stringify(a)); } catch(e){} }
+function auGetSession(){ try { return JSON.parse(localStorage.getItem('kanjivn_session_v1') || 'null'); } catch(e){ return null; } }
+function auSetSession(s){ try { if(s) localStorage.setItem('kanjivn_session_v1', JSON.stringify(s)); else localStorage.removeItem('kanjivn_session_v1'); } catch(e){} }
+function auGetUserdata(){ try { return JSON.parse(localStorage.getItem('kanjivn_userdata_v1') || '{}'); } catch(e){ return {}; } }
+function auSetUserdata(d){ try { localStorage.setItem('kanjivn_userdata_v1', JSON.stringify(d)); } catch(e){} }
+function auSaveCurrent(){
+  var sess = auGetSession(); if(!sess || !sess.email) return;
+  var data = auGetUserdata(); var snap = {};
+  AU_KEYS.forEach(function(k){ var v = null; try { v = localStorage.getItem(k); } catch(e){} if(v !== null) snap[k] = v; });
+  data[sess.email] = snap; auSetUserdata(data);
+}
+function auLoadFor(email){
+  var data = auGetUserdata(); var snap = data[email];
+  if(!snap) { auSaveCurrent(); return; }
+  AU_KEYS.forEach(function(k){ try { if(snap[k] !== undefined) localStorage.setItem(k, snap[k]); } catch(e){} });
+}
+function auHash(email, pass){
+  var input = String(email).toLowerCase() + '|' + String(pass);
+  if(window.crypto && window.crypto.subtle && window.TextEncoder){
+    return window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(input)).then(function(buf){
+      var arr = Array.prototype.slice.call(new Uint8Array(buf));
+      return arr.map(function(b){ return ('00' + b.toString(16)).slice(-2); }).join('');
+    });
+  }
+  var h = 0; for(var i = 0; i < input.length; i++){ h = ((h << 5) - h + input.charCodeAt(i)) | 0; }
+  return Promise.resolve('simple-' + (h >>> 0).toString(16));
+}
+function auFind(email){
+  email = String(email || '').trim().toLowerCase();
+  var list = auGetAccounts();
+  for(var i = 0; i < list.length; i++){ if(list[i].email === email) return list[i]; }
+  return null;
+}
+function auUpdateHeader(){
+  var btn = document.getElementById('loginbtn'); if(!btn) return;
+  var sess = auGetSession();
+  if(sess && sess.email){
+    var acc = auFind(sess.email);
+    btn.textContent = '👤 ' + (acc && acc.name ? acc.name : sess.email.split('@')[0]);
+  } else {
+    btn.textContent = '↪ Đăng nhập';
+  }
+}
+function auOpenModal(html){
+  document.getElementById('sheet').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+function auNote(){
+  return '<p class="au-note">Bản test: tài khoản lưu trên máy này, chưa đồng bộ lên máy chủ, nên đăng nhập trên máy khác sẽ chưa thấy tài khoản này. Khi gắn Firebase ở giai đoạn ra mắt, bạn sẽ đăng nhập lại bằng tài khoản máy chủ.</p>';
+}
+function auShow(view){
+  if(view === 'register') auRenderRegister();
+  else if(view === 'forgot') auRenderForgot();
+  else if(view === 'change') auRenderChange();
+  else if(view === 'account') auRenderAccount();
+  else auRenderLogin();
+}
+function openAuth(){
+  var sess = auGetSession();
+  if(sess && sess.email && auFind(sess.email)) auRenderAccount();
+  else auRenderLogin();
+}
+function auRenderLogin(){
+  auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Đăng nhập</h3>'
+    + '<div class="au-tabs"><button class="chipbtn" onclick="auShow(\'login\')">Đăng nhập</button><button class="chipbtn" onclick="auShow(\'register\')">Đăng ký</button></div>'
+    + '<label class="au-label">Email<input id="auemail" class="au-inp" type="email" placeholder="vidu@email.com"></label>'
+    + '<label class="au-label">Mật khẩu<input id="aupass" class="au-inp" type="password" placeholder="Ít nhất 6 ký tự"></label>'
+    + '<div id="auerr" class="au-err"></div>'
+    + '<button class="qz-next" style="margin-top:8px" onclick="auDoLogin()">Đăng nhập</button>'
+    + '<p style="font-size:13.5px;margin-top:10px"><a href="javascript:void(0)" onclick="auShow(\'forgot\')">Quên mật khẩu?</a> · Chưa có tài khoản? <a href="javascript:void(0)" onclick="auShow(\'register\')">Đăng ký</a></p>'
+    + auNote());
+}
+function auRenderRegister(){
+  auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Đăng ký tài khoản</h3>'
+    + '<div class="au-tabs"><button class="chipbtn" onclick="auShow(\'login\')">Đăng nhập</button><button class="chipbtn" onclick="auShow(\'register\')">Đăng ký</button></div>'
+    + '<label class="au-label">Tên hiển thị<input id="auname" class="au-inp" placeholder="Tên của bạn"></label>'
+    + '<label class="au-label">Email<input id="auemail" class="au-inp" type="email" placeholder="vidu@email.com"></label>'
+    + '<label class="au-label">Mật khẩu<input id="aupass" class="au-inp" type="password" placeholder="Ít nhất 6 ký tự"></label>'
+    + '<label class="au-label">Nhập lại mật khẩu<input id="aupass2" class="au-inp" type="password"></label>'
+    + '<div id="auerr" class="au-err"></div>'
+    + '<button class="qz-next" style="margin-top:8px" onclick="auDoRegister()">Đăng ký</button>'
+    + '<p style="font-size:13.5px;margin-top:10px">Đã có tài khoản? <a href="javascript:void(0)" onclick="auShow(\'login\')">Đăng nhập</a></p>'
+    + auNote());
+}
+function auRenderForgot(){
+  auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Quên mật khẩu</h3>'
+    + '<p style="font-size:13.5px;color:#666">Bản test chưa gửi email xác minh, nên đặt lại ngay trên máy này.</p>'
+    + '<label class="au-label">Email<input id="auemail" class="au-inp" type="email"></label>'
+    + '<label class="au-label">Mật khẩu mới<input id="aupass" class="au-inp" type="password" placeholder="Ít nhất 6 ký tự"></label>'
+    + '<label class="au-label">Nhập lại mật khẩu mới<input id="aupass2" class="au-inp" type="password"></label>'
+    + '<div id="auerr" class="au-err"></div>'
+    + '<button class="qz-next" style="margin-top:8px" onclick="auDoForgot()">Đặt lại mật khẩu</button>'
+    + '<p style="font-size:13.5px;margin-top:10px"><a href="javascript:void(0)" onclick="auShow(\'login\')">Quay lại đăng nhập</a></p>');
+}
+function auRenderAccount(){
+  var sess = auGetSession(); if(!sess) { auRenderLogin(); return; }
+  var acc = auFind(sess.email); if(!acc) { auSetSession(null); auRenderLogin(); return; }
+  auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Tài khoản của bạn</h3>'
+    + '<p style="font-size:15px;line-height:1.7"><b>' + auEsc(acc.name || acc.email) + '</b><br><span style="color:#666">' + auEsc(acc.email) + '</span></p>'
+    + '<p style="font-size:13.5px;color:#666;line-height:1.6">Tiến độ học (flashcard, điểm hoạt động, kỷ lục, cài đặt) đang lưu vào tài khoản này trên máy này. Đóng trang lại tiến độ vẫn giữ, đăng nhập lại cùng tài khoản là thấy lại.</p>'
+    + '<button class="chipbtn" onclick="auShow(\'change\')">Đổi mật khẩu</button> '
+    + '<button class="chipbtn" onclick="auLogout()">Đăng xuất</button>'
+    + auNote());
+}
+function auRenderChange(){
+  auOpenModal('<button class="close" onclick="closeItem()">✕</button><h3 style="margin:0 0 4px;color:#17324a">Đổi mật khẩu</h3>'
+    + '<label class="au-label">Mật khẩu cũ<input id="auold" class="au-inp" type="password"></label>'
+    + '<label class="au-label">Mật khẩu mới<input id="aupass" class="au-inp" type="password" placeholder="Ít nhất 6 ký tự"></label>'
+    + '<label class="au-label">Nhập lại mật khẩu mới<input id="aupass2" class="au-inp" type="password"></label>'
+    + '<div id="auerr" class="au-err"></div>'
+    + '<button class="qz-next" style="margin-top:8px" onclick="auDoChange()">Đổi mật khẩu</button>'
+    + '<p style="font-size:13.5px;margin-top:10px"><a href="javascript:void(0)" onclick="auShow(\'account\')">Quay lại tài khoản</a></p>');
+}
+function auErr(msg){ var el = document.getElementById('auerr'); if(el) el.textContent = msg; }
+function auValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function auSyncProfileName(name){
+  if(!name) return;
+  try {
+    var prof = JSON.parse(localStorage.getItem('kanjivn_profile_v1') || '{}');
+    if(!prof.name){ prof.name = name; localStorage.setItem('kanjivn_profile_v1', JSON.stringify(prof)); }
+  } catch(e){}
+}
+function auDoLogin(){
+  var email = document.getElementById('auemail').value.trim().toLowerCase();
+  var pass = document.getElementById('aupass').value;
+  if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
+  if(!pass){ auErr('Hãy nhập mật khẩu.'); return; }
+  var acc = auFind(email);
+  if(!acc){ auErr('Email hoặc mật khẩu chưa đúng.'); return; }
+  auHash(email, pass).then(function(h){
+    if(h !== acc.pass){ auErr('Email hoặc mật khẩu chưa đúng.'); return; }
+    auSaveCurrent();
+    auSetSession({ email: email });
+    auLoadFor(email);
+    auSyncProfileName(acc.name);
+    auUpdateHeader();
+    auRenderAccount();
+  });
+}
+function auDoRegister(){
+  var name = document.getElementById('auname').value.trim();
+  var email = document.getElementById('auemail').value.trim().toLowerCase();
+  var pass = document.getElementById('aupass').value;
+  var pass2 = document.getElementById('aupass2').value;
+  if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
+  if(pass.length < 6){ auErr('Mật khẩu cần ít nhất 6 ký tự.'); return; }
+  if(pass !== pass2){ auErr('Hai mật khẩu nhập lại chưa khớp.'); return; }
+  if(auFind(email)){ auErr('Email này đã có tài khoản. Hãy đăng nhập.'); return; }
+  auHash(email, pass).then(function(h){
+    var list = auGetAccounts();
+    list.push({ email: email, name: name || email.split('@')[0], pass: h, created: Date.now() });
+    auSetAccounts(list);
+    auSetSession({ email: email });
+    auSaveCurrent();
+    auSyncProfileName(name);
+    auUpdateHeader();
+    auRenderAccount();
+  });
+}
+function auDoForgot(){
+  var email = document.getElementById('auemail').value.trim().toLowerCase();
+  var pass = document.getElementById('aupass').value;
+  var pass2 = document.getElementById('aupass2').value;
+  if(!auValidEmail(email)){ auErr('Email chưa đúng định dạng.'); return; }
+  if(pass.length < 6){ auErr('Mật khẩu mới cần ít nhất 6 ký tự.'); return; }
+  if(pass !== pass2){ auErr('Hai mật khẩu nhập lại chưa khớp.'); return; }
+  var acc = auFind(email);
+  if(!acc){ auErr('Không tìm thấy tài khoản với email này.'); return; }
+  auHash(email, pass).then(function(h){
+    var list = auGetAccounts();
+    list.forEach(function(a){ if(a.email === email) a.pass = h; });
+    auSetAccounts(list);
+    auRenderLogin();
+    var el = document.getElementById('auerr'); if(el) el.textContent = 'Đã đặt lại mật khẩu. Hãy đăng nhập bằng mật khẩu mới.';
+  });
+}
+function auDoChange(){
+  var sess = auGetSession(); if(!sess){ auRenderLogin(); return; }
+  var oldp = document.getElementById('auold').value;
+  var pass = document.getElementById('aupass').value;
+  var pass2 = document.getElementById('aupass2').value;
+  if(pass.length < 6){ auErr('Mật khẩu mới cần ít nhất 6 ký tự.'); return; }
+  if(pass !== pass2){ auErr('Hai mật khẩu nhập lại chưa khớp.'); return; }
+  var acc = auFind(sess.email); if(!acc){ auRenderLogin(); return; }
+  auHash(sess.email, oldp).then(function(h){
+    if(h !== acc.pass){ auErr('Mật khẩu cũ chưa đúng.'); return; }
+    return auHash(sess.email, pass).then(function(h2){
+      var list = auGetAccounts();
+      list.forEach(function(a){ if(a.email === sess.email) a.pass = h2; });
+      auSetAccounts(list);
+      auRenderAccount();
+    });
+  });
+}
+function auLogout(){
+  auSaveCurrent();
+  auSetSession(null);
+  auUpdateHeader();
+  closeItem();
+}
+window.addEventListener('beforeunload', function(){ try { auSaveCurrent(); } catch(e){} });
+(function(){
+  var sess = auGetSession();
+  if(sess && sess.email && !auFind(sess.email)) auSetSession(null);
+  auUpdateHeader();
+})();
 </script>
 </body>
 </html>
