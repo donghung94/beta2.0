@@ -3802,12 +3802,15 @@ function showPage(boxId){
   var h = document.getElementById('homecols'); if(h) h.style.display = 'none';
   var pv = document.getElementById('pageview'); if(pv) pv.style.display = '';
   PAGEBOXES.forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = (id === boxId) ? '' : 'none'; });
+  var SB = {grammarbox:'sb-bunpo', tangobox:'sb-tango', jlptbox:'sb-jlpt', tokuteibox:'sb-tokutei', personalbox:'sb-personal', accentbox:'sb-accent', rankbox:'sb-rank', settingsbox:'sb-settings'};
+  if(SB[boxId]) document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === SB[boxId]); });
   window.scrollTo(0,0);
 }
 function showHome(){
   var pv = document.getElementById('pageview'); if(pv) pv.style.display = 'none';
   PAGEBOXES.forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
   var h = document.getElementById('homecols'); if(h) h.style.display = '';
+  document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-kanji'); });
   selectLevel(window.CURLV || 'N5');
 }
 function openTango(){
@@ -3833,6 +3836,7 @@ function closeTango(skip){
 function goHome(){
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
+  if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true);
   showHome();
 }
 function tgFlyout(e){
