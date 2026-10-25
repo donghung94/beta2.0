@@ -59,6 +59,7 @@ h2.sec{font-size:26px;margin:2px 0 16px;color:#17324a}
 .pill.active{background:#fde8e8;color:#c62828}
 .pill.plain{background:#eef2f6;color:#5b7186;font-weight:600}
 .panel{margin-top:18px;background:rgba(255,255,255,.62);border-radius:16px;padding:18px}
+#pageview{max-width:1480px;margin:0 auto;background:rgba(255,255,255,.62);border-radius:16px;padding:18px}
 .panelhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .panelhead .pic{width:40px;height:40px;border-radius:10px;background:#c62828;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px}
 .panelhead .pt{font-size:19px;font-weight:800;color:#17324a}
@@ -162,11 +163,6 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 
 /* ===== Từ vựng (Tango) ===== */
 #tangobox{padding:14px 6px 6px}
-.tg-fly{position:fixed;z-index:70;background:#fff;border:1.5px solid #dbe5ee;border-radius:14px;box-shadow:0 8px 24px rgba(23,50,74,.18);padding:8px;min-width:220px}
-.tg-fly button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border:0;background:#fff;border-radius:10px;font-size:14.5px;font-weight:700;color:#17324a;cursor:pointer;text-align:left}
-.tg-fly button:hover{background:#f4f7fa}
-.tg-fly button .ic{font-size:19px}
-.tg-fly button small{display:block;font-size:11.5px;color:#888;font-weight:600}
 .tg-hero{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:18px 20px;margin-top:12px}
 .tg-hero h2{margin:0;font-size:23px;color:#17324a}
 .tg-hero p{margin:6px 0 0;color:#666;font-size:14.5px;line-height:1.55}
@@ -434,7 +430,7 @@ body.gs-l .cell{font-size:35px}
 
 <aside class="sidebar">
   <button class="sitem active" id="sb-kanji" onclick="goHome()"><span class="ic">🏯</span>Nhai Kanji</button>
-  <button class="sitem" id="sb-tango" onclick="tgFlyout(event)"><span class="ic">📚</span>Nhai Tango</button>
+  <button class="sitem" id="sb-tango" onclick="openTango()"><span class="ic">📚</span>Nhai Tango</button>
   <button class="sitem" id="sb-bunpo" onclick="openGrammar()"><span class="ic">📝</span>Nhai Bunpo</button>
   <button class="sitem" id="sb-jlpt" onclick="openJLPT()"><span class="ic">📄</span>NhaiJLPT</button>
   <button class="sitem" id="sb-tokutei" onclick="openTokutei()"><span class="ic">🏗️</span>Tokutei Gino</button>
@@ -444,14 +440,10 @@ body.gs-l .cell{font-size:35px}
   <button class="sitem" id="sb-rank" onclick="openRank()"><span class="ic">🏆</span>Xếp hạng</button>
   <button class="sitem orange" onclick="soon()"><span class="ic">✨</span>Nâng cấp</button>
   <button class="sitem bottom" id="sb-settings" onclick="openSettings()"><span class="ic">⚙️</span>Cài đặt</button>
-<div id="tgfly" class="tg-fly" style="display:none">
-  <button onclick="tgFlyGo('courses')"><span class="ic">📖</span><span>Giáo trình<small>Học từ vựng theo bài</small></span></button>
-  <button onclick="tgFlyGo('alphabet')"><span class="ic">🔤</span><span>Bảng chữ cái<small>Hiragana · Katakana</small></span></button>
-</div>
 </aside>
 
 <div class="main">
-  <div class="cols">
+  <div class="cols" id="homecols">
     <!-- COT TRAI -->
     <div>
       <div class="card appbanner">
@@ -517,245 +509,6 @@ body.gs-l .cell{font-size:35px}
           <div class="sp"></div>
           <button class="createfile" onclick="openExport()">📄 Tạo file</button>
         </div>
-        <div id="writebox" style="display:none">
-  <div class="fc-top"><span class="t" id="wrtitle">✍ Luyện viết</span><span class="p" id="wrprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeWrite()">✕ Thoát</button></div>
-  <div class="fc-modes">
-    <label class="fc-shuf"><input type="checkbox" id="wrshuffle" onchange="wrToggleShuffle()"> 🔀 Xáo trộn thứ tự chữ</label>
-    <span style="font-size:13px;color:#777">Mẹo: ẩn chữ mẫu để tự viết từ trí nhớ, xong hiện lên đối chiếu.</span>
-  </div>
-  <div class="wr-wrap">
-    <div class="wr-left">
-      <canvas id="wrcanvas" class="wr-canvas" width="680" height="680"></canvas>
-      <div class="wr-tools">
-        <button class="chipbtn" id="wrghostbtn" onclick="wrToggleGhost()">🙈 Ẩn chữ mẫu</button>
-        <button class="chipbtn" onclick="wrUndo()">↩ Hoàn tác nét</button>
-        <button class="chipbtn" onclick="wrClear()">🗑 Xoá hết</button>
-      </div>
-    </div>
-    <div class="wr-right">
-      <div class="wr-big" id="wrbig"></div>
-      <div class="wr-hv" id="wrhv"></div>
-      <div class="wr-mean" id="wrmean"></div>
-      <div class="wr-meta" id="wrmeta"></div>
-      <div class="wr-meta" id="wrmeta2"></div>
-      <div class="wr-mnem" id="wrmnem"></div>
-      <div class="wr-nav">
-        <button class="chipbtn" onclick="wrNav(-1)">⬅ Chữ trước</button>
-        <button class="chipbtn" onclick="wrSpeak()">🔊 Nghe từ mẫu</button>
-        <button class="chipbtn" onclick="wrNav(1)">Chữ tiếp ➡</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="rankbox" style="display:none">
-  <div class="fc-top"><span class="t">🏆 Xếp hạng</span><span class="sp2"></span><button class="chipbtn" onclick="closeRank()">✕ Thoát</button></div>
-  <div id="rkbody"></div>
-  <div style="font-size:12.5px;color:#999;margin-top:12px">Đây là bảng thành tích cá nhân tính từ dữ liệu học trên thiết bị này. Bảng xếp hạng chung giữa các học viên sẽ được bật ở giai đoạn ra mắt, khi có tài khoản đăng nhập.</div>
-</div>
-<div id="settingsbox" style="display:none">
-  <div class="fc-top"><span class="t">⚙️ Cài đặt</span><span class="sp2"></span><button class="chipbtn" onclick="closeSettings()">✕ Thoát</button></div>
-  <div class="ps-card">
-    <h4>🔊 Âm thanh phát âm</h4>
-    <div class="st-row"><div class="st-k">Bật giọng đọc (nút 🔊)<small>Tắt thì mọi nút phát âm sẽ im lặng</small></div><input type="checkbox" id="stSound" onchange="stSave()"></div>
-    <div class="st-row"><div class="st-k">Tốc độ đọc</div><select class="ps-inp" id="stRate" onchange="stSave()"><option value="0.8">Chậm 0.8×</option><option value="1">Thường 1×</option><option value="1.2">Nhanh 1.2×</option></select></div>
-    <div class="st-row"><div class="st-k">Giọng đọc tiếng Nhật<small>Tuỳ thuộc giọng có sẵn trên thiết bị của bạn</small></div><select class="ps-inp" id="stVoice" onchange="stSave()" style="max-width:220px"><option value="">Mặc định của máy</option></select></div>
-  </div>
-  <div class="ps-card">
-    <h4>🖥️ Hiển thị &amp; học tập</h4>
-    <div class="st-row"><div class="st-k">Cỡ chữ Kanji trong lưới</div><select class="ps-inp" id="stGrid" onchange="stSave()"><option value="s">Nhỏ</option><option value="m">Vừa</option><option value="l">Lớn</option></select></div>
-    <div class="st-row"><div class="st-k">Tự nhận diện khi vẽ Kanji<small>Tắt thì chỉ nhận diện khi bấm nút 🔍 Nhận diện</small></div><input type="checkbox" id="stAutoRecog" onchange="stSave()"></div>
-    <div class="st-row"><div class="st-k">Flashcard: xáo trộn mặc định<small>Áp dụng mỗi lần mở Flashcard</small></div><input type="checkbox" id="stFcShuffle" onchange="stSave()"></div>
-  </div>
-  <div class="ps-card">
-    <h4>💾 Dữ liệu học tập (trên thiết bị này)</h4>
-    <div class="st-row"><div class="st-k">Sao lưu dữ liệu<small>Tải xuống 1 file JSON chứa tiến độ, điểm số, cài đặt</small></div><button class="chipbtn" onclick="stExport()">⬇ Sao lưu</button></div>
-    <div class="st-row"><div class="st-k">Khôi phục dữ liệu<small>Chọn file sao lưu đã tải trước đó</small></div><label class="chipbtn" style="cursor:pointer">⬆ Khôi phục<input type="file" accept=".json,application/json" style="display:none" onchange="stImport(this)"></label></div>
-    <div class="st-row"><div class="st-k">Xoá toàn bộ dữ liệu học<small>Xoá tiến độ, điểm, hồ sơ và cài đặt — không khôi phục được</small></div><button class="chipbtn" onclick="stWipe()">🗑 Xoá hết</button></div>
-  </div>
-  <div class="ps-card">
-    <h4>ℹ️ Thông tin</h4>
-    <div style="font-size:13.5px;color:#666;line-height:1.7">Phiên bản bản test · 2.138 Kanji / 8.552 từ vựng / 315 mẫu ngữ pháp / 214 bộ thủ<br>Nội dung dựa trên tài liệu học chuẩn, ưu tiên Minna no Nihongo.</div>
-  </div>
-</div>
-<div id="exportbox" style="display:none">
-  <div class="fc-top"><span class="t">📄 Tạo file luyện viết</span><span class="sp2"></span><button class="chipbtn" onclick="closeExport()">✕ Thoát</button></div>
-  <div id="exPick">
-    <div class="tg-tabs" style="margin-top:10px">
-      <button class="tg-tab" id="etab5" onclick="exSet('N5')">N5</button><button class="tg-tab" id="etab4" onclick="exSet('N4')">N4</button><button class="tg-tab" id="etab3" onclick="exSet('N3')">N3</button><button class="tg-tab" id="etab2" onclick="exSet('N2')">N2</button><button class="tg-tab" id="etab1" onclick="exSet('N1')">N1</button>
-    </div>
-    <h4 id="exPickTitle" style="margin:14px 0 4px;color:#17324a">Chọn Kanji N5 để tạo file luyện viết</h4>
-    <p style="font-size:13.5px;color:#666;line-height:1.6;margin:0">Bấm vào từng chữ để chọn / bỏ chọn, hoặc để nguyên cả cấp rồi bấm Tạo file. Không cần đăng nhập.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center">
-      <button class="chipbtn" onclick="exPickAll()">☑ Chọn tất cả</button>
-      <button class="chipbtn" onclick="exPickNone()">☐ Bỏ chọn hết</button>
-      <span id="excount" style="font-size:13.5px;color:#c62828;font-weight:700"></span>
-    </div>
-    <div id="exgrid" class="ex-pickgrid"></div>
-    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="qz-next" style="margin-top:0" onclick="exGoLibrary()">Tạo file →</button><button class="chipbtn" onclick="exQuickDownload()">⬇ Tải nhanh phiếu luyện viết</button></div><p style="font-size:12.5px;color:#888;margin:6px 0 0">Tải nhanh: tải ngay phiếu mẫu thứ tự nét của các chữ đã chọn, không cần chọn mẫu hay chỉnh ô.</p>
-  </div>
-  <div id="exLib" style="display:none">
-    <div style="margin-top:10px"><button class="chipbtn" onclick="exBackPick()">← Chọn lại chữ</button></div>
-    <h4 style="margin:14px 0 4px;color:#17324a">Tạo File luyện viết</h4>
-    <p style="font-size:13.5px;color:#666;line-height:1.6;margin:0">Chọn mẫu in — xem trước trang A4 thật, tuỳ chỉnh ô, màu, kiểu chữ tô rồi in / lưu PDF.</p>
-    <p id="exlibnote" style="font-size:13.5px;color:#c62828;font-weight:700;margin:8px 0 0"></p>
-    <h4 style="margin:16px 0 4px;color:#17324a">✍️ Luyện kanji</h4>
-    <div class="ex-tplgrid">
-      <div class="ex-tplcard" onclick="exOpenTemplate('stroke')"><b>📏 Luyện viết theo thứ tự nét</b><p>Mỗi chữ kèm Hán Việt, nghĩa, câu chuyện chiết tự và hàng chữ mờ để tô theo.</p></div>
-      <div class="ex-tplcard" onclick="exOpenTemplate('big')"><b>🔲 Ô chữ lớn</b><p>Chữ lớn trong ô vuông, tô theo chữ mờ rồi tự viết lại.</p></div>
-      <div class="ex-tplcard" onclick="exOpenTemplate('sheet')"><b>📄 Phiếu luyện viết (mẫu gốc)</b><p>Thông tin chữ bên trái, ô mẫu mờ + ô trống bên phải.</p></div>
-    </div>
-    <h4 style="margin:16px 0 4px;color:#17324a">📚 Từ vựng</h4>
-    <div class="ex-tplgrid">
-      <div class="ex-tplcard" onclick="exOpenTemplate('vtable')"><b>📋 Bảng từ vựng</b><p>Từ, cách đọc, nghĩa và hàng ô trống để luyện viết từng từ.</p></div>
-      <div class="ex-tplcard" onclick="exOpenTemplate('vcard')"><b>🎴 Thẻ từ vựng</b><p>Mỗi từ một thẻ lớn, kèm ô luyện viết bên dưới.</p></div>
-      <div class="ex-tplcard" onclick="exOpenTemplate('vwrite')"><b>✍️ Phiếu luyện viết từ vựng</b><p>Thông tin từ bên trái, ô mẫu mờ + ô trống bên phải.</p></div>
-    </div>
-    <h4 style="margin:16px 0 4px;color:#17324a">📝 Đoạn văn &amp; giấy luyện</h4>
-    <div class="ex-tplgrid">
-      <div class="ex-tplcard" onclick="exOpenTemplate('blank')"><b>⬜ Giấy ô trống</b><p>Trang A4 toàn ô luyện viết, tự chọn kiểu ô và màu ô.</p></div>
-      <div class="ex-tplcard" onclick="exOpenTemplate('lined')"><b>〰️ Giấy kẻ ngang</b><p>Trang A4 kẻ ngang để luyện viết câu, đoạn văn.</p></div>
-      <div class="ex-tplcard" onclick="exOpenTemplate('passage')"><b>📝 Giấy luyện đoạn văn</b><p>Nhập đoạn văn, mỗi dòng văn bản kèm một dòng trống để chép lại.</p></div>
-    </div>
-  </div>
-  <div id="exStudio" style="display:none">
-    <div class="fc-top"><span class="t" id="extplname"></span><span class="p" id="exstudynote"></span><span class="sp2"></span><button class="chipbtn" onclick="exDownload()">⬇ Tải về</button><button class="chipbtn" onclick="exBackLib()">← Đổi mẫu</button></div>
-    <p style="font-size:12.5px;color:#888;margin:8px 0 0">Đổi mẫu không mất nội dung.</p>
-    <div id="exsame" class="ex-btnrow"></div>
-    <div class="ex-studio">
-      <div class="ex-settings">
-        <div class="ex-set"><button class="qz-next" style="margin-top:0" onclick="exDownload()">⬇ Tải file về</button><p style="font-size:12.5px;color:#888;line-height:1.6;margin:6px 0 0">Tải file in A4 về máy. Nếu trình duyệt mở file ra thay vì tải, bấm In ngay ở đầu file để in, hoặc chọn Lưu thành PDF trong hộp thoại in.</p></div>
-        <div class="ex-set">
-          <b>Kanji / từ cần luyện</b>
-          <div id="excontent" class="ex-content"></div>
-          <button class="chipbtn" onclick="exBackPick()">Đổi chữ</button>
-        </div>
-        <div class="ex-set" id="exsetpassage" style="display:none">
-          <b>Đoạn văn cần luyện</b>
-          <textarea id="expassage" rows="4" class="ex-inp" placeholder="Nhập đoạn văn tiếng Nhật cần luyện chép..." oninput="exRenderPreview()"></textarea>
-        </div>
-        <div class="ex-set">
-          <b>Trang</b>
-          <label>Tiêu đề trang<input id="extitle" class="ex-inp" oninput="exRenderPreview()"></label>
-          <label class="ex-check"><input type="checkbox" id="exhdr" checked onchange="exRenderPreview()"> Dòng tiêu đề + Họ tên / Ngày</label>
-          <label id="exsetpages" style="display:none">Số trang<input id="expages" type="number" min="1" max="10" value="1" class="ex-inp" onchange="exRenderPreview()"></label>
-        </div>
-        <div class="ex-set">
-          <b>Ô luyện</b>
-          <div class="ex-btnrow" id="exgridbtns">
-            <button class="ex-opt" data-v="cross" onclick="exSetGrid('cross')">Chữ thập</button>
-            <button class="ex-opt" data-v="rice" onclick="exSetGrid('rice')">Chữ mễ</button>
-            <button class="ex-opt" data-v="plain" onclick="exSetGrid('plain')">Ô trơn</button>
-            <button class="ex-opt" data-v="mid" onclick="exSetGrid('mid')">Khung giữa</button>
-            <button class="ex-opt" data-v="nine" onclick="exSetGrid('nine')">Ô 9</button>
-          </div>
-          <b style="margin-top:10px;display:block">Màu ô</b>
-          <div class="ex-btnrow" id="excolorbtns">
-            <button class="ex-opt" data-v="green" onclick="exSetColor('green')">Xanh lá</button>
-            <button class="ex-opt" data-v="red" onclick="exSetColor('red')">Đỏ</button>
-            <button class="ex-opt" data-v="blue" onclick="exSetColor('blue')">Xanh dương</button>
-            <button class="ex-opt" data-v="gray" onclick="exSetColor('gray')">Xám</button>
-          </div>
-        </div>
-        <div class="ex-set">
-          <b>Bố cục</b>
-          <label>Số ô mỗi hàng<input id="excols" type="number" min="4" max="12" value="12" class="ex-inp" onchange="exSyncFaintMax();exRenderPreview()"></label>
-          <label>Số hàng tô<input id="extracerows" type="number" min="1" max="3" value="1" class="ex-inp" onchange="exRenderPreview()"></label>
-          <label>Số hàng trống<input id="exblankrows" type="number" min="0" max="3" value="0" class="ex-inp" onchange="exRenderPreview()"></label>
-          <label>Số chữ mờ mỗi hàng<input id="exfaintcount" type="range" min="1" max="12" value="12" style="width:100%" oninput="document.getElementById('exfaintcountlabel').textContent=this.value;exRenderPreview()"> <span id="exfaintcountlabel">12</span></label>
-        </div>
-        <div class="ex-set">
-          <b>Kiểu chữ</b>
-          <div class="ex-btnrow" id="exfontbtns">
-            <button class="ex-opt" data-v="faint" onclick="exSetFont('faint')">Chữ mờ</button>
-            <button class="ex-opt" data-v="outline" onclick="exSetFont('outline')">Chữ rỗng</button>
-            <button class="ex-opt" data-v="dashed" onclick="exSetFont('dashed')">Nét đứt</button>
-          </div>
-          <label>Độ đậm chữ mờ<input id="exfaintop" type="range" min="10" max="80" value="30" style="width:100%" oninput="document.getElementById('exfaintopval').textContent=this.value+'%';exRenderPreview()"> <span id="exfaintopval">30%</span></label>
-          <label>Cỡ chữ trong ô<input id="exfontsize" type="range" min="50" max="100" value="80" style="width:100%" oninput="document.getElementById('exfontsizeval').textContent=this.value+'%';exRenderPreview()"> <span id="exfontsizeval">80%</span></label>
-        </div>
-        <div class="ex-set">
-          <label class="ex-check"><input type="checkbox" id="exshowinfo" checked onchange="exRenderPreview()"> Hiển thị nghĩa + câu chuyện chiết tự</label>
-        </div>
-        <button class="chipbtn" onclick="exRestore()">↺ Khôi phục mặc định</button>
-        <button class="qz-next" onclick="exPrint()">🖨 In / Lưu PDF</button>
-        <p style="font-size:12.5px;color:#888;line-height:1.6;margin:10px 0 0">Mẹo in: khi in chọn khổ A4, lề “Không có”, bật “Đồ hoạ nền” để giữ màu ô.</p>
-      </div>
-      <div class="ex-previewwrap">
-        <div id="expreview"></div>
-        <p id="expreviewnote" style="font-size:12.5px;color:#888"></p>
-      </div>
-    </div>
-  </div>
-  <div style="font-size:12.5px;color:#999;margin-top:12px">File được tạo ngay trên trình duyệt từ dữ liệu của cấp đang chọn — không cần đăng nhập. Bản in đầy đủ mở ra ở tab mới, bấm In hoặc “Lưu thành PDF” trong hộp thoại in.</div>
-</div>
-<div id="personalbox" style="display:none">
-  <div class="fc-top"><span class="t">👤 Cá nhân hoá</span><span class="p" id="psstreak"></span><span class="sp2"></span><button class="chipbtn" onclick="closePersonal()">✕ Thoát</button></div>
-  <div id="psbody"></div>
-  <div style="font-size:12.5px;color:#999;margin-top:12px">Dữ liệu học tập hiện lưu ngay trên thiết bị này (trình duyệt). Khi có đăng nhập ở giai đoạn ra mắt, tiến độ sẽ đồng bộ giữa các thiết bị.</div>
-</div>
-<div id="accentbox" style="display:none">
-  <div class="fc-top"><span class="t">🎚️ Trọng âm (アクセント)</span><span class="p" id="accprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeAccent()">✕ Thoát</button></div>
-  <div class="ac-theory">
-    <h4>Trọng âm cao độ Tokyo — đọc số trọng âm trong từ điển</h4>
-    <p>Tiếng Nhật phân biệt từ bằng <b>cao độ (pitch)</b>: mỗi từ có một "hạt nhân trọng âm" — âm tiết (mora) mà sau nó cao độ <b>rơi xuống</b>. Từ điển ghi bằng số: <b>[0]</b> = không rơi (phẳng), <b>[1]</b> = rơi ngay sau mora 1, <b>[2]</b> = rơi sau mora 2... Quy tắc đường cao độ: mora đầu thấp (trừ khi trọng âm ở 1), các mora sau cao dần cho tới điểm rơi, sau điểm rơi thì thấp hẳn — kể cả trợ từ đi kèm (が/を...).</p>
-    <div class="ac-pat" id="acpat"></div>
-    <p style="margin-top:10px">4 kiểu: <b>平板型 [0]</b> phẳng — trợ từ vẫn cao · <b>頭高型 [1]</b> cao ở đầu · <b>中高型 [n]</b> cao ở giữa · <b>尾高型</b> rơi ở cuối từ nhưng trợ từ xuống thấp. Khác nhau chỉ một điểm rơi là khác hẳn từ: 橋[2] / 箸[1] / 端[0] đều đọc はし.</p>
-  </div>
-  <div class="fc-top" style="margin-top:16px"><span class="t" style="font-size:16px">📚 Từ mẫu &amp; cặp từ tối thiểu</span><span class="sp2"></span><button class="chipbtn" onclick="acQuizStart()">🎧 Luyện tập 10 câu</button></div>
-  <div class="ac-detail" id="acdetail" style="display:none"></div>
-  <div class="ac-grid" id="acgrid"></div>
-  <div id="acquiz"></div>
-  <div style="font-size:12.5px;color:#999;margin-top:12px">Số trọng âm theo từ điển trọng âm chuẩn Tokyo (NHK). Bộ từ mẫu 47 từ — gồm 8 nhóm từ đồng âm khác trọng âm kinh điển; sẽ mở rộng dần theo kho từ vựng.</div>
-</div>
-<div id="jlptbox" style="display:none">
-  <div class="fc-top"><span class="t">📄 Thi thử JLPT</span><span class="jl-timer" id="jltimer" style="display:none"></span><span class="sp2"></span><button class="chipbtn" onclick="closeJLPT()">✕ Thoát</button></div>
-  <div class="tg-tabs" style="margin-top:10px">
-    <button class="tg-tab" id="jtab5" onclick="jlSet('N5')">N5</button><button class="tg-tab" id="jtab4" onclick="jlSet('N4')">N4</button><button class="tg-tab" id="jtab3" onclick="jlSet('N3')">N3</button><button class="tg-tab" id="jtab2" onclick="jlSet('N2')">N2</button><button class="tg-tab" id="jtab1" onclick="jlSet('N1')">N1</button>
-  </div>
-  <div id="jlbody"></div>
-</div>
-<div id="tokuteibox" style="display:none">
-  <div class="fc-top"><span class="t">🏗️ Tokutei Gino</span><span class="sp2"></span><button class="chipbtn" onclick="closeTokutei()">✕ Thoát</button></div>
-  <div id="tkbody"></div>
-</div>
-<div id="radicalbox" style="display:none">
-  <div class="fc-top"><span class="t">🧩 214 Bộ thủ Khang Hy</span><span class="p" id="radcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeRadicals()">✕ Thoát</button></div>
-  <input id="radsearch" type="text" placeholder="🔍 Tìm bộ thủ theo chữ, tên bộ hoặc ý nghĩa... (vd: 水, Thủy, nước)" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:12px;font-size:14.5px;margin-top:10px" oninput="renderRad()">
-  <div class="rad-detail" id="raddetail" style="display:none"></div>
-  <div id="radgroups"></div>
-  <div style="font-size:12.5px;color:#999;margin-top:14px">214 bộ thủ Khang Hy sắp theo số nét — nền tảng để chiết tự và tra cứu mọi chữ Kanji. Bấm vào một bộ để xem chi tiết và biến thể thường gặp trong tiếng Nhật.</div>
-</div>
-<div id="quizbox" style="display:none">
-  <div class="fc-top"><span class="t" id="qztitle">📝 Trắc nghiệm</span><span class="p" id="qzprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeQuiz()">✕ Thoát</button></div>
-  <div id="qzbody"></div>
-</div>
-<div id="tangobox" style="display:none">
-  <div id="tgview"></div>
-</div>
-<div id="grammarbox" style="display:none">
-  <div class="fc-top"><span class="t" id="grtitle">📝 Ngữ pháp N5</span><span class="p" id="grcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeGrammar()">✕ Thoát</button></div>
-  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="grsearch" class="gr-search" placeholder="🔍 Tìm mẫu ngữ pháp… (vd: ます、 て、 quá khứ)" oninput="renderGrammar()"><span class="gr-tabs"><button id="grtab5" class="grtab on" onclick="grSet('N5')">N5</button><button id="grtab4" class="grtab" onclick="grSet('N4')">N4</button><button id="grtab3" class="grtab" onclick="grSet('N3')">N3</button><button id="grtab2" class="grtab" onclick="grSet('N2')">N2</button><button id="grtab1" class="grtab" onclick="grSet('N1')">N1</button></span><span style="font-size:12.5px;color:#888;align-self:center">Theo Minna no Nihongo + khung JLPT chuẩn · Đủ ngữ pháp 5 cấp N5–N1</span></div>
-  <div id="grlist"></div>
-</div>
-<div id="flashbox" style="display:none">
-  <div class="fc-top"><span class="t" id="fctitle">🗂 Flashcard</span><span class="p" id="fcprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeFlash()">✕ Thoát</button></div>
-  <div class="fc-modes">
-    <button id="fcmodeall" class="chipbtn active" onclick="fcSetMode('all')">Tất cả các thẻ</button>
-    <button id="fcmodeunk" class="chipbtn" onclick="fcSetMode('unknown')">Ôn thẻ chưa thuộc</button>
-    <label class="fc-shuf"><input type="checkbox" id="fcshuffle" onchange="fcToggleShuffle()"> 🔀 Xáo trộn</label>
-  </div>
-  <div id="fccard" class="fc-card" onclick="fcFlip()"></div>
-  <div class="fc-nav">
-    <button class="chipbtn" onclick="fcNav(-1)">⬅ Trước</button>
-    <button class="chipbtn" onclick="fcSpeakCur()">🔊 Nghe từ mẫu</button>
-    <button class="chipbtn" onclick="fcNav(1)">Tiếp ➡</button>
-  </div>
-  <div class="fc-mark">
-    <button class="fc-no" onclick="fcMark(false)">✗ Chưa thuộc</button>
-    <button class="fc-yes" onclick="fcMark(true)">✓ Đã thuộc</button>
-  </div>
-  <div id="fcnote" class="fc-note"></div>
-</div>
 <div class="grid" id="grid">
 <div class="cell" data-i="0" title="NHẤT" onclick="openItem(0)">一</div>
 <div class="cell" data-i="1" title="NHỊ" onclick="openItem(1)">二</div>
@@ -2910,6 +2663,247 @@ body.gs-l .cell{font-size:35px}
       </div>
     </div>
   </div>
+<div id="pageview" style="display:none">
+        <div id="writebox" style="display:none">
+  <div class="fc-top"><span class="t" id="wrtitle">✍ Luyện viết</span><span class="p" id="wrprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeWrite()">✕ Thoát</button></div>
+  <div class="fc-modes">
+    <label class="fc-shuf"><input type="checkbox" id="wrshuffle" onchange="wrToggleShuffle()"> 🔀 Xáo trộn thứ tự chữ</label>
+    <span style="font-size:13px;color:#777">Mẹo: ẩn chữ mẫu để tự viết từ trí nhớ, xong hiện lên đối chiếu.</span>
+  </div>
+  <div class="wr-wrap">
+    <div class="wr-left">
+      <canvas id="wrcanvas" class="wr-canvas" width="680" height="680"></canvas>
+      <div class="wr-tools">
+        <button class="chipbtn" id="wrghostbtn" onclick="wrToggleGhost()">🙈 Ẩn chữ mẫu</button>
+        <button class="chipbtn" onclick="wrUndo()">↩ Hoàn tác nét</button>
+        <button class="chipbtn" onclick="wrClear()">🗑 Xoá hết</button>
+      </div>
+    </div>
+    <div class="wr-right">
+      <div class="wr-big" id="wrbig"></div>
+      <div class="wr-hv" id="wrhv"></div>
+      <div class="wr-mean" id="wrmean"></div>
+      <div class="wr-meta" id="wrmeta"></div>
+      <div class="wr-meta" id="wrmeta2"></div>
+      <div class="wr-mnem" id="wrmnem"></div>
+      <div class="wr-nav">
+        <button class="chipbtn" onclick="wrNav(-1)">⬅ Chữ trước</button>
+        <button class="chipbtn" onclick="wrSpeak()">🔊 Nghe từ mẫu</button>
+        <button class="chipbtn" onclick="wrNav(1)">Chữ tiếp ➡</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="rankbox" style="display:none">
+  <div class="fc-top"><span class="t">🏆 Xếp hạng</span><span class="sp2"></span><button class="chipbtn" onclick="closeRank()">✕ Thoát</button></div>
+  <div id="rkbody"></div>
+  <div style="font-size:12.5px;color:#999;margin-top:12px">Đây là bảng thành tích cá nhân tính từ dữ liệu học trên thiết bị này. Bảng xếp hạng chung giữa các học viên sẽ được bật ở giai đoạn ra mắt, khi có tài khoản đăng nhập.</div>
+</div>
+<div id="settingsbox" style="display:none">
+  <div class="fc-top"><span class="t">⚙️ Cài đặt</span><span class="sp2"></span><button class="chipbtn" onclick="closeSettings()">✕ Thoát</button></div>
+  <div class="ps-card">
+    <h4>🔊 Âm thanh phát âm</h4>
+    <div class="st-row"><div class="st-k">Bật giọng đọc (nút 🔊)<small>Tắt thì mọi nút phát âm sẽ im lặng</small></div><input type="checkbox" id="stSound" onchange="stSave()"></div>
+    <div class="st-row"><div class="st-k">Tốc độ đọc</div><select class="ps-inp" id="stRate" onchange="stSave()"><option value="0.8">Chậm 0.8×</option><option value="1">Thường 1×</option><option value="1.2">Nhanh 1.2×</option></select></div>
+    <div class="st-row"><div class="st-k">Giọng đọc tiếng Nhật<small>Tuỳ thuộc giọng có sẵn trên thiết bị của bạn</small></div><select class="ps-inp" id="stVoice" onchange="stSave()" style="max-width:220px"><option value="">Mặc định của máy</option></select></div>
+  </div>
+  <div class="ps-card">
+    <h4>🖥️ Hiển thị &amp; học tập</h4>
+    <div class="st-row"><div class="st-k">Cỡ chữ Kanji trong lưới</div><select class="ps-inp" id="stGrid" onchange="stSave()"><option value="s">Nhỏ</option><option value="m">Vừa</option><option value="l">Lớn</option></select></div>
+    <div class="st-row"><div class="st-k">Tự nhận diện khi vẽ Kanji<small>Tắt thì chỉ nhận diện khi bấm nút 🔍 Nhận diện</small></div><input type="checkbox" id="stAutoRecog" onchange="stSave()"></div>
+    <div class="st-row"><div class="st-k">Flashcard: xáo trộn mặc định<small>Áp dụng mỗi lần mở Flashcard</small></div><input type="checkbox" id="stFcShuffle" onchange="stSave()"></div>
+  </div>
+  <div class="ps-card">
+    <h4>💾 Dữ liệu học tập (trên thiết bị này)</h4>
+    <div class="st-row"><div class="st-k">Sao lưu dữ liệu<small>Tải xuống 1 file JSON chứa tiến độ, điểm số, cài đặt</small></div><button class="chipbtn" onclick="stExport()">⬇ Sao lưu</button></div>
+    <div class="st-row"><div class="st-k">Khôi phục dữ liệu<small>Chọn file sao lưu đã tải trước đó</small></div><label class="chipbtn" style="cursor:pointer">⬆ Khôi phục<input type="file" accept=".json,application/json" style="display:none" onchange="stImport(this)"></label></div>
+    <div class="st-row"><div class="st-k">Xoá toàn bộ dữ liệu học<small>Xoá tiến độ, điểm, hồ sơ và cài đặt — không khôi phục được</small></div><button class="chipbtn" onclick="stWipe()">🗑 Xoá hết</button></div>
+  </div>
+  <div class="ps-card">
+    <h4>ℹ️ Thông tin</h4>
+    <div style="font-size:13.5px;color:#666;line-height:1.7">Phiên bản bản test · 2.138 Kanji / 8.552 từ vựng / 315 mẫu ngữ pháp / 214 bộ thủ<br>Nội dung dựa trên tài liệu học chuẩn, ưu tiên Minna no Nihongo.</div>
+  </div>
+</div>
+<div id="exportbox" style="display:none">
+  <div class="fc-top"><span class="t">📄 Tạo file luyện viết</span><span class="sp2"></span><button class="chipbtn" onclick="closeExport()">✕ Thoát</button></div>
+  <div id="exPick">
+    <div class="tg-tabs" style="margin-top:10px">
+      <button class="tg-tab" id="etab5" onclick="exSet('N5')">N5</button><button class="tg-tab" id="etab4" onclick="exSet('N4')">N4</button><button class="tg-tab" id="etab3" onclick="exSet('N3')">N3</button><button class="tg-tab" id="etab2" onclick="exSet('N2')">N2</button><button class="tg-tab" id="etab1" onclick="exSet('N1')">N1</button>
+    </div>
+    <h4 id="exPickTitle" style="margin:14px 0 4px;color:#17324a">Chọn Kanji N5 để tạo file luyện viết</h4>
+    <p style="font-size:13.5px;color:#666;line-height:1.6;margin:0">Bấm vào từng chữ để chọn / bỏ chọn, hoặc để nguyên cả cấp rồi bấm Tạo file. Không cần đăng nhập.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center">
+      <button class="chipbtn" onclick="exPickAll()">☑ Chọn tất cả</button>
+      <button class="chipbtn" onclick="exPickNone()">☐ Bỏ chọn hết</button>
+      <span id="excount" style="font-size:13.5px;color:#c62828;font-weight:700"></span>
+    </div>
+    <div id="exgrid" class="ex-pickgrid"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="qz-next" style="margin-top:0" onclick="exGoLibrary()">Tạo file →</button><button class="chipbtn" onclick="exQuickDownload()">⬇ Tải nhanh phiếu luyện viết</button></div><p style="font-size:12.5px;color:#888;margin:6px 0 0">Tải nhanh: tải ngay phiếu mẫu thứ tự nét của các chữ đã chọn, không cần chọn mẫu hay chỉnh ô.</p>
+  </div>
+  <div id="exLib" style="display:none">
+    <div style="margin-top:10px"><button class="chipbtn" onclick="exBackPick()">← Chọn lại chữ</button></div>
+    <h4 style="margin:14px 0 4px;color:#17324a">Tạo File luyện viết</h4>
+    <p style="font-size:13.5px;color:#666;line-height:1.6;margin:0">Chọn mẫu in — xem trước trang A4 thật, tuỳ chỉnh ô, màu, kiểu chữ tô rồi in / lưu PDF.</p>
+    <p id="exlibnote" style="font-size:13.5px;color:#c62828;font-weight:700;margin:8px 0 0"></p>
+    <h4 style="margin:16px 0 4px;color:#17324a">✍️ Luyện kanji</h4>
+    <div class="ex-tplgrid">
+      <div class="ex-tplcard" onclick="exOpenTemplate('stroke')"><b>📏 Luyện viết theo thứ tự nét</b><p>Mỗi chữ kèm Hán Việt, nghĩa, câu chuyện chiết tự và hàng chữ mờ để tô theo.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('big')"><b>🔲 Ô chữ lớn</b><p>Chữ lớn trong ô vuông, tô theo chữ mờ rồi tự viết lại.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('sheet')"><b>📄 Phiếu luyện viết (mẫu gốc)</b><p>Thông tin chữ bên trái, ô mẫu mờ + ô trống bên phải.</p></div>
+    </div>
+    <h4 style="margin:16px 0 4px;color:#17324a">📚 Từ vựng</h4>
+    <div class="ex-tplgrid">
+      <div class="ex-tplcard" onclick="exOpenTemplate('vtable')"><b>📋 Bảng từ vựng</b><p>Từ, cách đọc, nghĩa và hàng ô trống để luyện viết từng từ.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('vcard')"><b>🎴 Thẻ từ vựng</b><p>Mỗi từ một thẻ lớn, kèm ô luyện viết bên dưới.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('vwrite')"><b>✍️ Phiếu luyện viết từ vựng</b><p>Thông tin từ bên trái, ô mẫu mờ + ô trống bên phải.</p></div>
+    </div>
+    <h4 style="margin:16px 0 4px;color:#17324a">📝 Đoạn văn &amp; giấy luyện</h4>
+    <div class="ex-tplgrid">
+      <div class="ex-tplcard" onclick="exOpenTemplate('blank')"><b>⬜ Giấy ô trống</b><p>Trang A4 toàn ô luyện viết, tự chọn kiểu ô và màu ô.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('lined')"><b>〰️ Giấy kẻ ngang</b><p>Trang A4 kẻ ngang để luyện viết câu, đoạn văn.</p></div>
+      <div class="ex-tplcard" onclick="exOpenTemplate('passage')"><b>📝 Giấy luyện đoạn văn</b><p>Nhập đoạn văn, mỗi dòng văn bản kèm một dòng trống để chép lại.</p></div>
+    </div>
+  </div>
+  <div id="exStudio" style="display:none">
+    <div class="fc-top"><span class="t" id="extplname"></span><span class="p" id="exstudynote"></span><span class="sp2"></span><button class="chipbtn" onclick="exDownload()">⬇ Tải về</button><button class="chipbtn" onclick="exBackLib()">← Đổi mẫu</button></div>
+    <p style="font-size:12.5px;color:#888;margin:8px 0 0">Đổi mẫu không mất nội dung.</p>
+    <div id="exsame" class="ex-btnrow"></div>
+    <div class="ex-studio">
+      <div class="ex-settings">
+        <div class="ex-set"><button class="qz-next" style="margin-top:0" onclick="exDownload()">⬇ Tải file về</button><p style="font-size:12.5px;color:#888;line-height:1.6;margin:6px 0 0">Tải file in A4 về máy. Nếu trình duyệt mở file ra thay vì tải, bấm In ngay ở đầu file để in, hoặc chọn Lưu thành PDF trong hộp thoại in.</p></div>
+        <div class="ex-set">
+          <b>Kanji / từ cần luyện</b>
+          <div id="excontent" class="ex-content"></div>
+          <button class="chipbtn" onclick="exBackPick()">Đổi chữ</button>
+        </div>
+        <div class="ex-set" id="exsetpassage" style="display:none">
+          <b>Đoạn văn cần luyện</b>
+          <textarea id="expassage" rows="4" class="ex-inp" placeholder="Nhập đoạn văn tiếng Nhật cần luyện chép..." oninput="exRenderPreview()"></textarea>
+        </div>
+        <div class="ex-set">
+          <b>Trang</b>
+          <label>Tiêu đề trang<input id="extitle" class="ex-inp" oninput="exRenderPreview()"></label>
+          <label class="ex-check"><input type="checkbox" id="exhdr" checked onchange="exRenderPreview()"> Dòng tiêu đề + Họ tên / Ngày</label>
+          <label id="exsetpages" style="display:none">Số trang<input id="expages" type="number" min="1" max="10" value="1" class="ex-inp" onchange="exRenderPreview()"></label>
+        </div>
+        <div class="ex-set">
+          <b>Ô luyện</b>
+          <div class="ex-btnrow" id="exgridbtns">
+            <button class="ex-opt" data-v="cross" onclick="exSetGrid('cross')">Chữ thập</button>
+            <button class="ex-opt" data-v="rice" onclick="exSetGrid('rice')">Chữ mễ</button>
+            <button class="ex-opt" data-v="plain" onclick="exSetGrid('plain')">Ô trơn</button>
+            <button class="ex-opt" data-v="mid" onclick="exSetGrid('mid')">Khung giữa</button>
+            <button class="ex-opt" data-v="nine" onclick="exSetGrid('nine')">Ô 9</button>
+          </div>
+          <b style="margin-top:10px;display:block">Màu ô</b>
+          <div class="ex-btnrow" id="excolorbtns">
+            <button class="ex-opt" data-v="green" onclick="exSetColor('green')">Xanh lá</button>
+            <button class="ex-opt" data-v="red" onclick="exSetColor('red')">Đỏ</button>
+            <button class="ex-opt" data-v="blue" onclick="exSetColor('blue')">Xanh dương</button>
+            <button class="ex-opt" data-v="gray" onclick="exSetColor('gray')">Xám</button>
+          </div>
+        </div>
+        <div class="ex-set">
+          <b>Bố cục</b>
+          <label>Số ô mỗi hàng<input id="excols" type="number" min="4" max="12" value="12" class="ex-inp" onchange="exSyncFaintMax();exRenderPreview()"></label>
+          <label>Số hàng tô<input id="extracerows" type="number" min="1" max="3" value="1" class="ex-inp" onchange="exRenderPreview()"></label>
+          <label>Số hàng trống<input id="exblankrows" type="number" min="0" max="3" value="0" class="ex-inp" onchange="exRenderPreview()"></label>
+          <label>Số chữ mờ mỗi hàng<input id="exfaintcount" type="range" min="1" max="12" value="12" style="width:100%" oninput="document.getElementById('exfaintcountlabel').textContent=this.value;exRenderPreview()"> <span id="exfaintcountlabel">12</span></label>
+        </div>
+        <div class="ex-set">
+          <b>Kiểu chữ</b>
+          <div class="ex-btnrow" id="exfontbtns">
+            <button class="ex-opt" data-v="faint" onclick="exSetFont('faint')">Chữ mờ</button>
+            <button class="ex-opt" data-v="outline" onclick="exSetFont('outline')">Chữ rỗng</button>
+            <button class="ex-opt" data-v="dashed" onclick="exSetFont('dashed')">Nét đứt</button>
+          </div>
+          <label>Độ đậm chữ mờ<input id="exfaintop" type="range" min="10" max="80" value="30" style="width:100%" oninput="document.getElementById('exfaintopval').textContent=this.value+'%';exRenderPreview()"> <span id="exfaintopval">30%</span></label>
+          <label>Cỡ chữ trong ô<input id="exfontsize" type="range" min="50" max="100" value="80" style="width:100%" oninput="document.getElementById('exfontsizeval').textContent=this.value+'%';exRenderPreview()"> <span id="exfontsizeval">80%</span></label>
+        </div>
+        <div class="ex-set">
+          <label class="ex-check"><input type="checkbox" id="exshowinfo" checked onchange="exRenderPreview()"> Hiển thị nghĩa + câu chuyện chiết tự</label>
+        </div>
+        <button class="chipbtn" onclick="exRestore()">↺ Khôi phục mặc định</button>
+        <button class="qz-next" onclick="exPrint()">🖨 In / Lưu PDF</button>
+        <p style="font-size:12.5px;color:#888;line-height:1.6;margin:10px 0 0">Mẹo in: khi in chọn khổ A4, lề “Không có”, bật “Đồ hoạ nền” để giữ màu ô.</p>
+      </div>
+      <div class="ex-previewwrap">
+        <div id="expreview"></div>
+        <p id="expreviewnote" style="font-size:12.5px;color:#888"></p>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:12.5px;color:#999;margin-top:12px">File được tạo ngay trên trình duyệt từ dữ liệu của cấp đang chọn — không cần đăng nhập. Bản in đầy đủ mở ra ở tab mới, bấm In hoặc “Lưu thành PDF” trong hộp thoại in.</div>
+</div>
+<div id="personalbox" style="display:none">
+  <div class="fc-top"><span class="t">👤 Cá nhân hoá</span><span class="p" id="psstreak"></span><span class="sp2"></span><button class="chipbtn" onclick="closePersonal()">✕ Thoát</button></div>
+  <div id="psbody"></div>
+  <div style="font-size:12.5px;color:#999;margin-top:12px">Dữ liệu học tập hiện lưu ngay trên thiết bị này (trình duyệt). Khi có đăng nhập ở giai đoạn ra mắt, tiến độ sẽ đồng bộ giữa các thiết bị.</div>
+</div>
+<div id="accentbox" style="display:none">
+  <div class="fc-top"><span class="t">🎚️ Trọng âm (アクセント)</span><span class="p" id="accprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeAccent()">✕ Thoát</button></div>
+  <div class="ac-theory">
+    <h4>Trọng âm cao độ Tokyo — đọc số trọng âm trong từ điển</h4>
+    <p>Tiếng Nhật phân biệt từ bằng <b>cao độ (pitch)</b>: mỗi từ có một "hạt nhân trọng âm" — âm tiết (mora) mà sau nó cao độ <b>rơi xuống</b>. Từ điển ghi bằng số: <b>[0]</b> = không rơi (phẳng), <b>[1]</b> = rơi ngay sau mora 1, <b>[2]</b> = rơi sau mora 2... Quy tắc đường cao độ: mora đầu thấp (trừ khi trọng âm ở 1), các mora sau cao dần cho tới điểm rơi, sau điểm rơi thì thấp hẳn — kể cả trợ từ đi kèm (が/を...).</p>
+    <div class="ac-pat" id="acpat"></div>
+    <p style="margin-top:10px">4 kiểu: <b>平板型 [0]</b> phẳng — trợ từ vẫn cao · <b>頭高型 [1]</b> cao ở đầu · <b>中高型 [n]</b> cao ở giữa · <b>尾高型</b> rơi ở cuối từ nhưng trợ từ xuống thấp. Khác nhau chỉ một điểm rơi là khác hẳn từ: 橋[2] / 箸[1] / 端[0] đều đọc はし.</p>
+  </div>
+  <div class="fc-top" style="margin-top:16px"><span class="t" style="font-size:16px">📚 Từ mẫu &amp; cặp từ tối thiểu</span><span class="sp2"></span><button class="chipbtn" onclick="acQuizStart()">🎧 Luyện tập 10 câu</button></div>
+  <div class="ac-detail" id="acdetail" style="display:none"></div>
+  <div class="ac-grid" id="acgrid"></div>
+  <div id="acquiz"></div>
+  <div style="font-size:12.5px;color:#999;margin-top:12px">Số trọng âm theo từ điển trọng âm chuẩn Tokyo (NHK). Bộ từ mẫu 47 từ — gồm 8 nhóm từ đồng âm khác trọng âm kinh điển; sẽ mở rộng dần theo kho từ vựng.</div>
+</div>
+<div id="jlptbox" style="display:none">
+  <div class="fc-top"><span class="t">📄 Thi thử JLPT</span><span class="jl-timer" id="jltimer" style="display:none"></span><span class="sp2"></span><button class="chipbtn" onclick="closeJLPT()">✕ Thoát</button></div>
+  <div class="tg-tabs" style="margin-top:10px">
+    <button class="tg-tab" id="jtab5" onclick="jlSet('N5')">N5</button><button class="tg-tab" id="jtab4" onclick="jlSet('N4')">N4</button><button class="tg-tab" id="jtab3" onclick="jlSet('N3')">N3</button><button class="tg-tab" id="jtab2" onclick="jlSet('N2')">N2</button><button class="tg-tab" id="jtab1" onclick="jlSet('N1')">N1</button>
+  </div>
+  <div id="jlbody"></div>
+</div>
+<div id="tokuteibox" style="display:none">
+  <div class="fc-top"><span class="t">🏗️ Tokutei Gino</span><span class="sp2"></span><button class="chipbtn" onclick="closeTokutei()">✕ Thoát</button></div>
+  <div id="tkbody"></div>
+</div>
+<div id="radicalbox" style="display:none">
+  <div class="fc-top"><span class="t">🧩 214 Bộ thủ Khang Hy</span><span class="p" id="radcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeRadicals()">✕ Thoát</button></div>
+  <input id="radsearch" type="text" placeholder="🔍 Tìm bộ thủ theo chữ, tên bộ hoặc ý nghĩa... (vd: 水, Thủy, nước)" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:12px;font-size:14.5px;margin-top:10px" oninput="renderRad()">
+  <div class="rad-detail" id="raddetail" style="display:none"></div>
+  <div id="radgroups"></div>
+  <div style="font-size:12.5px;color:#999;margin-top:14px">214 bộ thủ Khang Hy sắp theo số nét — nền tảng để chiết tự và tra cứu mọi chữ Kanji. Bấm vào một bộ để xem chi tiết và biến thể thường gặp trong tiếng Nhật.</div>
+</div>
+<div id="quizbox" style="display:none">
+  <div class="fc-top"><span class="t" id="qztitle">📝 Trắc nghiệm</span><span class="p" id="qzprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeQuiz()">✕ Thoát</button></div>
+  <div id="qzbody"></div>
+</div>
+<div id="tangobox" style="display:none">
+  <div id="tgview"></div>
+</div>
+<div id="grammarbox" style="display:none">
+  <div class="fc-top"><span class="t" id="grtitle">📝 Ngữ pháp N5</span><span class="p" id="grcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeGrammar()">✕ Thoát</button></div>
+  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="grsearch" class="gr-search" placeholder="🔍 Tìm mẫu ngữ pháp… (vd: ます、 て、 quá khứ)" oninput="renderGrammar()"><span class="gr-tabs"><button id="grtab5" class="grtab on" onclick="grSet('N5')">N5</button><button id="grtab4" class="grtab" onclick="grSet('N4')">N4</button><button id="grtab3" class="grtab" onclick="grSet('N3')">N3</button><button id="grtab2" class="grtab" onclick="grSet('N2')">N2</button><button id="grtab1" class="grtab" onclick="grSet('N1')">N1</button></span><span style="font-size:12.5px;color:#888;align-self:center">Theo Minna no Nihongo + khung JLPT chuẩn · Đủ ngữ pháp 5 cấp N5–N1</span></div>
+  <div id="grlist"></div>
+</div>
+<div id="flashbox" style="display:none">
+  <div class="fc-top"><span class="t" id="fctitle">🗂 Flashcard</span><span class="p" id="fcprog"></span><span class="sp2"></span><button class="chipbtn" onclick="closeFlash()">✕ Thoát</button></div>
+  <div class="fc-modes">
+    <button id="fcmodeall" class="chipbtn active" onclick="fcSetMode('all')">Tất cả các thẻ</button>
+    <button id="fcmodeunk" class="chipbtn" onclick="fcSetMode('unknown')">Ôn thẻ chưa thuộc</button>
+    <label class="fc-shuf"><input type="checkbox" id="fcshuffle" onchange="fcToggleShuffle()"> 🔀 Xáo trộn</label>
+  </div>
+  <div id="fccard" class="fc-card" onclick="fcFlip()"></div>
+  <div class="fc-nav">
+    <button class="chipbtn" onclick="fcNav(-1)">⬅ Trước</button>
+    <button class="chipbtn" onclick="fcSpeakCur()">🔊 Nghe từ mẫu</button>
+    <button class="chipbtn" onclick="fcNav(1)">Tiếp ➡</button>
+  </div>
+  <div class="fc-mark">
+    <button class="fc-no" onclick="fcMark(false)">✗ Chưa thuộc</button>
+    <button class="fc-yes" onclick="fcMark(true)">✓ Đã thuộc</button>
+  </div>
+  <div id="fcnote" class="fc-note"></div>
+</div>
+</div>
   <div class="foot">KANJIVN — bản demo · 2.138 Kanji (N5: 118, N4: 206, N3: 284, N2: 272, N1: 1.258) · 8.552 từ vựng · Tên KANJIVN là tên tạm, sẽ đổi thành thương hiệu riêng.</div>
 </div>
 
@@ -2942,6 +2936,8 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input', doSearch);
 function selectLevel(lv){
+  var __h = document.getElementById('homecols'); if(__h) __h.style.display = '';
+  var __pv = document.getElementById('pageview'); if(__pv) __pv.style.display = 'none';
   window.CURLV = lv; if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true); if(window.__wOn && typeof closeWrite === 'function') closeWrite(true); if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true); if(window.__tOn && typeof closeTango === 'function') closeTango(true); if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true); if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   document.querySelectorAll('.pill[data-lv]').forEach(function(t){ t.classList.toggle('active', t.dataset.lv === lv); });
   document.getElementById('grid').style.display = lv === 'N5' ? '' : 'none';
@@ -3025,8 +3021,7 @@ function openFlash(){
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   FC.lv = window.CURLV || 'N5';
   window.__fcOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('flashbox').style.display = '';
+  showPage('flashbox');
   document.getElementById('fctitle').textContent = '\uD83D\uDDC2 Flashcard — Kanji ' + FC.lv;
   FC.mode = 'all'; FC.shuffle = false;
   var cb = document.getElementById('fcshuffle'); if(cb) cb.checked = false;
@@ -3035,7 +3030,7 @@ function openFlash(){
 function closeFlash(skip){
   window.__fcOn = false;
   document.getElementById('flashbox').style.display = 'none';
-  if(!skip) selectLevel(FC.lv);
+  if(!skip) showHome();
 }
 function fcBuild(){
   var all = (FCSETS[FC.lv] || []).slice();
@@ -3119,8 +3114,7 @@ function openWrite(){
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   WR.lv = window.CURLV || 'N5';
   window.__wOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('writebox').style.display = '';
+  showPage('writebox');
   document.getElementById('wrtitle').textContent = '✍ Luyện viết — Kanji ' + WR.lv;
   WR.shuffle = false; WR.ghost = true;
   var cb = document.getElementById('wrshuffle'); if(cb) cb.checked = false;
@@ -3130,7 +3124,7 @@ function openWrite(){
 function closeWrite(skip){
   window.__wOn = false;
   document.getElementById('writebox').style.display = 'none';
-  if(!skip) selectLevel(WR.lv);
+  if(!skip) showHome();
 }
 function wrBuild(){
   var all = (FCSETS[WR.lv] || []).slice();
@@ -3221,8 +3215,7 @@ function openGrammar(){
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   window.__gOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('grammarbox').style.display = '';
+  showPage('grammarbox');
   document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-bunpo'); });
   renderGrammar();
 }
@@ -3230,7 +3223,7 @@ function closeGrammar(skip){
   window.__gOn = false;
   document.getElementById('grammarbox').style.display = 'none';
   document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-kanji'); });
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function grSpeak(e, i, j){ e.stopPropagation(); speak(grList()[i].ex[j][0]); }
 function grToggle(i){ var el = document.getElementById('grc' + i); if(el) el.classList.toggle('open'); }
@@ -3361,6 +3354,20 @@ var TGF = { words: [], idx: 0, flipped: false, dir: 'jp', shuffle: false, mode: 
 var LQ = { qs: [], i: 0, score: 0, locked: false };
 var LS = { qs: [], i: 0, score: 0, locked: false };
 function tgStopAuto(){ if(TGF.auto){ clearTimeout(TGF.auto); TGF.auto = null; } }
+/* Trang riêng: trang chủ Kanji (#homecols) và các mục con (#pageview) */
+var PAGEBOXES = ['writebox','rankbox','settingsbox','exportbox','personalbox','accentbox','jlptbox','tokuteibox','radicalbox','quizbox','tangobox','grammarbox','flashbox'];
+function showPage(boxId){
+  var h = document.getElementById('homecols'); if(h) h.style.display = 'none';
+  var pv = document.getElementById('pageview'); if(pv) pv.style.display = '';
+  PAGEBOXES.forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = (id === boxId) ? '' : 'none'; });
+  window.scrollTo(0,0);
+}
+function showHome(){
+  var pv = document.getElementById('pageview'); if(pv) pv.style.display = 'none';
+  PAGEBOXES.forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
+  var h = document.getElementById('homecols'); if(h) h.style.display = '';
+  selectLevel(window.CURLV || 'N5');
+}
 function openTango(){
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
@@ -3368,47 +3375,22 @@ function openTango(){
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
   window.__tOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('tangobox').style.display = '';
+  showPage('tangobox');
   document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-tango'); });
   tgShowCourses();
 }
 function closeTango(skip){
   window.__tOn = false;
   tgStopAuto();
-  var f = document.getElementById('tgfly'); if(f) f.style.display = 'none';
   document.getElementById('tangobox').style.display = 'none';
   document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-kanji'); });
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function goHome(){
   if(window.__gOn && typeof closeGrammar === 'function') closeGrammar(true);
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
-  selectLevel(window.CURLV || 'N5');
+  showHome();
 }
-function tgFlyout(e){
-  if(e) e.stopPropagation();
-  var f = document.getElementById('tgfly');
-  if(!f) return;
-  if(f.style.display !== 'none'){ f.style.display = 'none'; return; }
-  var b = document.getElementById('sb-tango');
-  var r = b.getBoundingClientRect();
-  f.style.left = Math.min(window.innerWidth - 240, r.right + 8) + 'px';
-  f.style.top = Math.max(64, r.top) + 'px';
-  f.style.display = '';
-}
-function tgFlyGo(v){
-  var f = document.getElementById('tgfly'); if(f) f.style.display = 'none';
-  openTango();
-  if(v === 'alphabet') tgShowAlphabet();
-}
-document.addEventListener('click', function(e){
-  var f = document.getElementById('tgfly');
-  if(f && f.style.display !== 'none'){
-    var b = document.getElementById('sb-tango');
-    if(e.target !== f && !f.contains(e.target) && e.target !== b && !b.contains(e.target)) f.style.display = 'none';
-  }
-});
 document.addEventListener('keydown', function(e){
   if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
   if(window.__tOn && TGV.view === 'lesson' && (TGF.mode === 'flash' || TGF.mode === 'cram')){
@@ -3433,7 +3415,7 @@ function tgShowCourses(){
     var n = (TG.data[lv] || []).length;
     html += '<button class="tg-course" onclick="tgShowCourse(\'' + lv + '\')"><span class="nm">Nhai Từ Vựng ' + lv + '</span><span class="lv">' + lv + '</span><span class="ct">' + n + ' từ · đã lọc trùng</span><span class="ds">' + TG_COURSE_DESC[lv] + '</span></button>';
   });
-  html += '</div><div class="tg-note">Bấm vào một thẻ cấp độ để xem các bài học của cấp đó. Mọi cấp độ đều mở, không cần đăng nhập.</div>';
+  html += '</div><button class="tg-review" style="margin-top:12px" onclick="tgShowAlphabet()">🔤 Bảng chữ cái — Hiragana · Katakana</button><div class="tg-note">Bấm vào một thẻ cấp độ để xem các bài học của cấp đó. Mọi cấp độ đều mở, không cần đăng nhập.</div>';
   document.getElementById('tgview').innerHTML = html;
 }
 function tgShowCourse(lv){
@@ -3909,6 +3891,10 @@ function qzPick(pool, field, correctVal, n){
   return out;
 }
 function openQuiz(lv){
+  if(window.__tOn) window.__qReturn = 'tangobox';
+  else if(window.__jlOn) window.__qReturn = 'jlptbox';
+  else if(window.__tkOn) window.__qReturn = 'tokuteibox';
+  else if(!window.__qOn) window.__qReturn = null;
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__fcOn && typeof closeFlash === 'function') closeFlash(true);
   if(window.__wOn && typeof closeWrite === 'function') closeWrite(true);
@@ -3918,8 +3904,7 @@ function openQuiz(lv){
   var pool = TG.data[lv] || [];
   if(pool.length < 10){ alert('Chưa đủ dữ liệu từ vựng cho cấp này.'); return; }
   window.__qOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('quizbox').style.display = '';
+  showPage('quizbox');
   QZ.lv = lv; QZ.i = 0; QZ.score = 0;
   var sample = qzShuffle(pool.slice()).slice(0, 10);
   QZ.qs = sample.map(function(v, idx){
@@ -3935,7 +3920,12 @@ function openQuiz(lv){
 function closeQuiz(skip){
   window.__qOn = false;
   document.getElementById('quizbox').style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(skip) return;
+  var ret = window.__qReturn; window.__qReturn = null;
+  if(ret === 'tangobox'){ window.__tOn = true; showPage('tangobox'); document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-tango'); }); }
+  else if(ret === 'jlptbox'){ window.__jlOn = true; showPage('jlptbox'); }
+  else if(ret === 'tokuteibox'){ window.__tkOn = true; showPage('tokuteibox'); }
+  else showHome();
 }
 function qzSpeakCur(){ var q = QZ.qs[QZ.i]; if(q) speak(q.v.word); }
 function qzRender(){
@@ -3988,15 +3978,14 @@ function openRadicals(){
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   window.__rOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('radicalbox').style.display = '';
+  showPage('radicalbox');
   document.getElementById('paneltitle').textContent = '🧩 214 Bộ thủ';
   renderRad();
 }
 function closeRadicals(skip){
   window.__rOn = false;
   var el = document.getElementById('radicalbox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function renderRad(){
   var q = (document.getElementById('radsearch').value || '').trim().toLowerCase();
@@ -4044,8 +4033,7 @@ function openJLPT(){
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
   window.__jlOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('jlptbox','tokuteibox').style.display = '';
+  showPage('jlptbox');
   document.getElementById('paneltitle').textContent = '📄 Thi thử JLPT';
   jlTabs(); jlHome();
 }
@@ -4053,7 +4041,7 @@ function closeJLPT(skip){
   jlStopTimer();
   window.__jlOn = false;
   var el = document.getElementById('jlptbox','tokuteibox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function jlStopTimer(){ if(JL.timer){ clearInterval(JL.timer); JL.timer = null; } var t = document.getElementById('jltimer'); if(t) t.style.display = 'none'; }
 function jlHome(){
@@ -4193,8 +4181,7 @@ function openAccent(){
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true);
   if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   window.__aOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('accentbox').style.display = '';
+  showPage('accentbox');
   document.getElementById('paneltitle').textContent = '🎚️ Trọng âm';
   document.getElementById('accprog').textContent = ACC.length + ' từ mẫu · 8 nhóm đồng âm';
   acRenderTheory(); acRenderGrid();
@@ -4203,7 +4190,7 @@ function closeAccent(skip){
   window.__aOn = false;
   var el = document.getElementById('accentbox'); if(el) el.style.display = 'none';
   var q = document.getElementById('acquiz'); if(q) q.innerHTML = '';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function acRenderTheory(){
   var demos = [
@@ -4317,15 +4304,14 @@ function openPersonal(){
   if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true);
   if(window.__aOn && typeof closeAccent === 'function') closeAccent(true);
   window.__pOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox','accentbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('personalbox').style.display = '';
+  showPage('personalbox');
   document.getElementById('paneltitle').textContent = '👤 Cá nhân hoá';
   psRender();
 }
 function closePersonal(skip){
   window.__pOn = false;
   var el = document.getElementById('personalbox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function psSaveProfile(){
   var name = document.getElementById('psname').value.trim();
@@ -4452,8 +4438,7 @@ function openExport(){
   if(window.__rkOn && typeof closeRank === 'function') closeRank(true);
   if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   window.__eOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','tokuteibox','accentbox','personalbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('exportbox').style.display = '';
+  showPage('exportbox');
   document.getElementById('paneltitle').textContent = '📄 Tạo file';
   EX.lv = window.CURLV || 'N5';
   exSet(EX.lv);
@@ -4461,7 +4446,7 @@ function openExport(){
 function closeExport(skip){
   window.__eOn = false;
   var el = document.getElementById('exportbox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function exMarkBtns(boxId, val){
   var box = document.getElementById(boxId); if(!box) return;
@@ -4778,14 +4763,14 @@ function rkLongestStreak(log){
 function openRank(){
   closeAllModes();
   window.__rkOn = true;
-  document.getElementById('rankbox').style.display = '';
+  showPage('rankbox');
   document.getElementById('paneltitle').textContent = '🏆 Xếp hạng';
   rkRender();
 }
 function closeRank(skip){
   window.__rkOn = false;
   var el = document.getElementById('rankbox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function rkRender(){
   var log = psLoadLog(), rec = psLoadRecords();
@@ -4836,7 +4821,7 @@ function stApply(){
 function openSettings(){
   closeAllModes();
   window.__sOn = true;
-  document.getElementById('settingsbox').style.display = '';
+  showPage('settingsbox');
   document.getElementById('paneltitle').textContent = '⚙️ Cài đặt';
   var st = stLoad();
   document.getElementById('stSound').checked = st.sound !== false;
@@ -4849,7 +4834,7 @@ function openSettings(){
 function closeSettings(skip){
   window.__sOn = false;
   var el = document.getElementById('settingsbox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function stFillVoices(){
   var sel = document.getElementById('stVoice');
@@ -13417,15 +13402,14 @@ function openTokutei(){
   if(window.__rkOn && typeof closeRank === 'function') closeRank(true);
   if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   window.__tkOn = true;
-  ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox','tangobox','quizbox','radicalbox','jlptbox','accentbox','personalbox','exportbox','rankbox','settingsbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('tokuteibox').style.display = '';
+  showPage('tokuteibox');
   document.getElementById('paneltitle').textContent = '🏗️ Tokutei Gino 2 — Xây dựng';
   tkHome();
 }
 function closeTokutei(skip){
   window.__tkOn = false;
   var el = document.getElementById('tokuteibox'); if(el) el.style.display = 'none';
-  if(!skip) selectLevel(window.CURLV || 'N5');
+  if(!skip) showHome();
 }
 function tkHome(){
   TK.on = false; tkStopTimer(); TK.mode = 'normal';
@@ -13563,7 +13547,7 @@ function tkProSubmit(){
 /* ===== Phòng chat học viên (Firestore, chỉ tài khoản đã đăng nhập mới được gửi) ===== */
 var CH = { started: false, lastSend: 0, unsub: null, expanded: false, msgs: [] };
 function chToggleMore(){ CH.expanded = !CH.expanded; chRender(CH.msgs || []); }
-function chScroll(){ var el = document.getElementById('chatbox'); if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function chScroll(){ var h = document.getElementById('homecols'); if(h && h.style.display === 'none' && typeof showHome === 'function'){ showHome(); } var el = document.getElementById('chatbox'); if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function chTime(t){
   try {
     var d = (t && t.toDate) ? t.toDate() : ((typeof t === 'number') ? new Date(t) : null);
