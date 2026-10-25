@@ -398,6 +398,19 @@ body.gs-l .cell{font-size:35px}
         <button class="btn btn-red" onclick="recognizePad()">🔍 Nhận diện</button>
       </div>
       <div class="padcands" id="padcands"><span class="pc-hint">✍️ Vẽ một chữ Kanji lên ô trên — chữ gợi ý sẽ hiện ở đây, bấm vào chữ để xem chi tiết.</span></div>
+              <div id="chatbox" style="margin-top:18px;border-top:1.5px solid #eee;padding-top:14px">
+          <h3 style="margin:0 0 6px;color:#17324a">💬 Phòng chat học viên</h3>
+          <p id="chnote" style="font-size:13.5px;color:#666;margin:0 0 10px;line-height:1.6">Chỉ tài khoản đã đăng nhập mới được nhắn tin. Hãy đăng nhập để tham gia.</p>
+          <div id="chlist" style="background:#f7f9fb;border:1.5px solid #e3e3e3;border-radius:12px;padding:12px;max-height:320px;overflow-y:auto;font-size:14.5px;line-height:1.6">Đang tải tin nhắn...</div>
+          <div style="margin-top:8px"><button id="chmore" class="chipbtn" style="display:none" onclick="chToggleMore()">Hiển thị thêm</button></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <input id="chinp" type="text" placeholder="Nhắn gì đó với các bạn học..." maxlength="500" style="flex:1;padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:14.5px" onkeydown="if(event.key==='Enter') chSend()">
+            <button id="chsend" class="qz-next" style="margin-top:0" onclick="chSend()">Gửi</button>
+          </div>
+          <div id="cherr" class="au-err"></div>
+          <div id="chlogin" style="margin-top:8px"><button class="chipbtn" onclick="openAuth()">↪ Đăng nhập để chat</button></div>
+          <p style="font-size:12.5px;color:#999;margin-top:8px">Tin nhắn hiển thị tên tài khoản của bạn cho mọi học viên khác thấy. Hãy giữ lịch sự, không chia sẻ thông tin cá nhân.</p>
+        </div>
     </div>
 
     <!-- COT PHAI -->
@@ -2816,18 +2829,7 @@ body.gs-l .cell{font-size:35px}
 </div>
         <div class="nores" id="nores">Không tìm thấy Kanji nào khớp. Thử từ khoá khác nhé.</div>
         <div class="lockbox" id="lockbox">📚 <b id="locktext">Nội dung cấp này đang được biên soạn.</b></div>
-        <div id="chatbox" style="margin-top:18px;border-top:1.5px solid #eee;padding-top:14px">
-          <h3 style="margin:0 0 6px;color:#17324a">💬 Phòng chat học viên</h3>
-          <p id="chnote" style="font-size:13.5px;color:#666;margin:0 0 10px;line-height:1.6">Chỉ tài khoản đã đăng nhập mới được nhắn tin. Hãy đăng nhập để tham gia.</p>
-          <div id="chlist" style="background:#f7f9fb;border:1.5px solid #e3e3e3;border-radius:12px;padding:12px;max-height:320px;overflow-y:auto;font-size:14.5px;line-height:1.6">Đang tải tin nhắn...</div>
-          <div style="display:flex;gap:8px;margin-top:10px">
-            <input id="chinp" type="text" placeholder="Nhắn gì đó với các bạn học..." maxlength="500" style="flex:1;padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:14.5px" onkeydown="if(event.key==='Enter') chSend()">
-            <button id="chsend" class="qz-next" style="margin-top:0" onclick="chSend()">Gửi</button>
-          </div>
-          <div id="cherr" class="au-err"></div>
-          <div id="chlogin" style="margin-top:8px"><button class="chipbtn" onclick="openAuth()">↪ Đăng nhập để chat</button></div>
-          <p style="font-size:12.5px;color:#999;margin-top:8px">Tin nhắn hiển thị tên tài khoản của bạn cho mọi học viên khác thấy. Hãy giữ lịch sự, không chia sẻ thông tin cá nhân.</p>
-        </div>
+
       </div>
     </div>
   </div>
@@ -12918,7 +12920,8 @@ function tkProSubmit(){
 <script>
 
 /* ===== Phòng chat học viên (Firestore, chỉ tài khoản đã đăng nhập mới được gửi) ===== */
-var CH = { started: false, lastSend: 0, unsub: null };
+var CH = { started: false, lastSend: 0, unsub: null, expanded: false, msgs: [] };
+function chToggleMore(){ CH.expanded = !CH.expanded; chRender(CH.msgs || []); }
 function chScroll(){ var el = document.getElementById('chatbox'); if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function chTime(t){
   try {
@@ -12938,11 +12941,19 @@ function chUpdateAuth(){
 }
 function chRender(msgs){
   var el = document.getElementById('chlist'); if(!el) return;
-  if(!msgs.length){ el.textContent = 'Chưa có tin nhắn nào — hãy là người đầu tiên chào mọi người nhé (cần đăng nhập).'; return; }
-  el.innerHTML = msgs.map(function(m){
+  CH.msgs = msgs;
+  var moreBtn = document.getElementById('chmore');
+  if(!msgs.length){ el.textContent = 'Chưa có tin nhắn nào — hãy là người đầu tiên chào mọi người nhé (cần đăng nhập).'; if(moreBtn) moreBtn.style.display = 'none'; return; }
+  var show = CH.expanded ? msgs : msgs.slice(-5);
+  el.innerHTML = show.map(function(m){
     return '<div style="margin-bottom:10px"><b style="color:#17324a">' + grEsc(m.name || 'Học viên') + '</b> <span style="color:#999;font-size:12.5px">' + chTime(m.createdAt) + '</span><div>' + grEsc(m.text || '').replace(/\n/g, '<br>') + '</div></div>';
   }).join('');
   el.scrollTop = el.scrollHeight;
+  if(moreBtn){
+    if(msgs.length > 5 && !CH.expanded){ moreBtn.style.display = ''; moreBtn.textContent = 'Hiển thị thêm (' + (msgs.length - 5) + ' tin nhắn nữa)'; }
+    else if(msgs.length > 5 && CH.expanded){ moreBtn.style.display = ''; moreBtn.textContent = 'Thu gọn'; }
+    else moreBtn.style.display = 'none';
+  }
 }
 function chStart(){
   if(CH.started) return;
