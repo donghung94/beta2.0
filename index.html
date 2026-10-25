@@ -162,17 +162,93 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 
 /* ===== Từ vựng (Tango) ===== */
 #tangobox{padding:14px 6px 6px}
-.tg-row{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #eee;border-radius:12px;padding:9px 14px;margin-top:8px}
-.tg-w{font-size:19px;font-weight:800;color:#17324a;min-width:110px}
-.tg-mid{flex:1;min-width:120px}
-.tg-r{font-size:13.5px;color:#3c6fb5;font-weight:700}
-.tg-hv{background:#fdecea;color:#c62828;border-radius:8px;padding:0 6px;font-size:12px;font-weight:800}
-.tg-mean{font-size:14px;color:#444}
-.tg-k{display:flex;gap:4px;flex-wrap:wrap}
-.tg-chip{border:1.5px solid #c62828;color:#c62828;background:#fff;border-radius:8px;padding:2px 8px;font-size:15px;font-weight:700;cursor:pointer}
-.tg-chip:hover{background:#c62828;color:#fff}
-.tg-more{display:block;margin:14px auto 6px;padding:9px 26px;border-radius:20px;border:1.5px solid #c62828;background:#fff;color:#c62828;font-weight:800;cursor:pointer}
-.tg-more:hover{background:#c62828;color:#fff}
+.tg-fly{position:fixed;z-index:70;background:#fff;border:1.5px solid #dbe5ee;border-radius:14px;box-shadow:0 8px 24px rgba(23,50,74,.18);padding:8px;min-width:220px}
+.tg-fly button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border:0;background:#fff;border-radius:10px;font-size:14.5px;font-weight:700;color:#17324a;cursor:pointer;text-align:left}
+.tg-fly button:hover{background:#f4f7fa}
+.tg-fly button .ic{font-size:19px}
+.tg-fly button small{display:block;font-size:11.5px;color:#888;font-weight:600}
+.tg-hero{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:18px 20px;margin-top:12px}
+.tg-hero h2{margin:0;font-size:23px;color:#17324a}
+.tg-hero p{margin:6px 0 0;color:#666;font-size:14.5px;line-height:1.55}
+.tg-courses{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:640px){.tg-courses{grid-template-columns:1fr}}
+.tg-course{background:#fff;border:2px solid #eee;border-radius:16px;padding:16px 18px;cursor:pointer;text-align:left}
+.tg-course:hover{border-color:#c62828}
+.tg-course .nm{font-size:13px;font-weight:800;color:#c62828}
+.tg-course .lv{font-size:44px;font-weight:800;color:#17324a;line-height:1.05}
+.tg-course .ct{font-size:13.5px;color:#666;margin-top:4px}
+.tg-course .ds{font-size:13px;color:#999;margin-top:2px}
+.tg-prog{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px 16px;margin-top:12px}
+.tg-prog .t{font-weight:800;color:#17324a;font-size:15px}
+.tg-bar{height:10px;background:#eee;border-radius:6px;margin-top:8px;overflow:hidden}
+.tg-bar i{display:block;height:100%;background:#2e7d32;border-radius:6px}
+.tg-lessons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media(max-width:640px){.tg-lessons{grid-template-columns:1fr}}
+.tg-lesson{background:#fff;border:1.5px solid #eee;border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left}
+.tg-lesson:hover{border-color:#c62828}
+.tg-lesson.done{border-color:#2e7d32;background:#f1f8f1}
+.tg-lesson .b{font-weight:800;color:#17324a;font-size:15px}
+.tg-lesson .tp{font-size:13px;color:#888}
+.tg-lesson .n{margin-left:auto;font-size:13.5px;font-weight:800;color:#3c6fb5;white-space:nowrap}
+.tg-review{display:block;width:100%;margin-top:14px;padding:12px;border-radius:12px;border:2px dashed #3c6fb5;background:#fff;color:#3c6fb5;font-weight:800;font-size:15px;cursor:pointer}
+.tg-wrap{display:flex;gap:14px;margin-top:12px;align-items:flex-start}
+.tg-main{flex:1;min-width:0}
+.tg-toc{width:230px;flex:none;background:#fff;border:1.5px solid #eee;border-radius:14px;padding:12px;position:sticky;top:70px}
+.tg-toc h4{margin:0 0 8px;font-size:14px;color:#17324a}
+.tg-tocgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tg-toccell{border:1.5px solid #eee;border-radius:9px;padding:6px 8px;cursor:pointer;font-size:12px;background:#fff;text-align:left}
+.tg-toccell:hover{border-color:#c62828}
+.tg-toccell.cur{border-color:#c62828;background:#fdecea;font-weight:800}
+.tg-toccell .tt{display:block;font-weight:700;color:#17324a}
+.tg-toccell .nn{display:block;color:#888}
+@media(max-width:900px){.tg-wrap{flex-direction:column}.tg-toc{width:100%;position:static}}
+.tg-modes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tg-modebtn{padding:8px 16px;border-radius:18px;border:1.5px solid #c62828;background:#fff;color:#c62828;font-weight:800;cursor:pointer;font-size:13.5px}
+.tg-modebtn.on{background:#c62828;color:#fff}
+.tg-fc{background:#17324a;border-radius:18px;padding:26px 18px 18px;text-align:center;color:#fff;cursor:pointer;min-height:200px;margin-top:12px;position:relative}
+.tg-fc-word{font-size:50px;font-weight:800;line-height:1.2;word-break:break-all}
+.tg-fc-read{font-size:30px;font-weight:800;margin-top:6px}
+.tg-fc-hv{color:#81c784;font-size:19px;font-weight:800;letter-spacing:1px;margin-top:4px}
+.tg-fc-mean{font-size:21px;font-weight:800;margin-top:6px}
+.tg-fc-hint{font-size:12.5px;color:#9db2c6;margin-top:14px}
+.tg-fc-spk{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:50%;width:46px;height:46px;font-size:21px;cursor:pointer;margin-top:10px}
+.tg-fcctl{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.tg-fcctl .cnt{font-weight:800;color:#17324a;min-width:64px;text-align:center}
+.tg-no{background:#c62828;color:#fff;border:0;border-radius:18px;padding:9px 16px;font-weight:800;cursor:pointer}
+.tg-yes{background:#2e7d32;color:#fff;border:0;border-radius:18px;padding:9px 16px;font-weight:800;cursor:pointer}
+.tg-ctl{border:1.5px solid #ddd;background:#fff;border-radius:18px;padding:8px 13px;font-weight:700;cursor:pointer}
+.tg-ctl.on{border-color:#c62828;color:#c62828}
+.tg-wrow{background:#17324a;border-radius:14px;padding:13px 16px;margin-top:10px;color:#fff}
+.tg-wrow .top{display:flex;gap:10px;align-items:flex-start}
+.tg-wrow .num{color:#9db2c6;font-weight:800;font-size:14px;padding-top:4px}
+.tg-wrow .w{font-size:21px;font-weight:800}
+.tg-wrow .r{font-size:14px;color:#bcd3e6;margin-top:2px}
+.tg-wrow .r b{color:#81c784;letter-spacing:.5px}
+.tg-wrow .m{font-size:15px;font-weight:700;margin-top:2px}
+.tg-wrow .acts{margin-left:auto;display:flex;gap:2px;flex:none}
+.tg-wrow .acts button{background:transparent;border:0;color:#fff;font-size:17px;cursor:pointer;padding:4px}
+.tg-wrow .acts button.star-on{color:#ffd54f}
+.tg-kchips{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.tg-chip{border:1.5px solid #81c784;color:#81c784;background:transparent;border-radius:8px;padding:2px 8px;font-size:15px;font-weight:700;cursor:pointer}
+.tg-chip:hover{background:#81c784;color:#17324a}
+.tg-sec{font-weight:800;color:#17324a;font-size:16px;margin:20px 0 2px}
+.tg-note{font-size:12.5px;color:#888;margin-top:10px}
+.tg-alp-tabs{display:flex;gap:8px;margin-top:12px}
+.tg-alp-grp{font-weight:800;color:#17324a;margin:18px 0 2px;font-size:15px}
+.tg-alp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px;margin-top:8px}
+.tg-kana{background:#fff;border:1.5px solid #e3e3e3;border-radius:12px;padding:10px 2px 8px;cursor:pointer;text-align:center}
+.tg-kana:hover{border-color:#c62828}
+.tg-kana.sel{border-color:#c62828;background:#fdecea}
+.tg-kana .k{display:block;font-size:26px;font-weight:800;color:#17324a;line-height:1.15}
+.tg-kana .r{display:block;font-size:12px;color:#3c6fb5;font-weight:700}
+.tg-alp-big{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:16px;text-align:center;margin-top:12px}
+.tg-alp-big .bk{font-size:64px;font-weight:800;color:#17324a;line-height:1.1}
+.tg-alp-big .br{font-size:16px;color:#3c6fb5;font-weight:800}
+.tg-alp-box{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px;margin-top:12px;text-align:center}
+.tg-alp-box canvas{border:1.5px dashed #d9e2ec;border-radius:12px;touch-action:none;background:#fff;max-width:100%}
+
+.tg-course span{display:block}
+.tg-lesson .b,.tg-lesson .tp{display:block}
 
 /* ===== Trắc nghiệm ===== */
 #quizbox{padding:14px 6px 6px}
@@ -358,7 +434,7 @@ body.gs-l .cell{font-size:35px}
 
 <aside class="sidebar">
   <button class="sitem active" id="sb-kanji" onclick="goHome()"><span class="ic">🏯</span>Nhai Kanji</button>
-  <button class="sitem" id="sb-tango" onclick="openTango()"><span class="ic">📚</span>Nhai Tango</button>
+  <button class="sitem" id="sb-tango" onclick="tgFlyout(event)"><span class="ic">📚</span>Nhai Tango</button>
   <button class="sitem" id="sb-bunpo" onclick="openGrammar()"><span class="ic">📝</span>Nhai Bunpo</button>
   <button class="sitem" id="sb-jlpt" onclick="openJLPT()"><span class="ic">📄</span>NhaiJLPT</button>
   <button class="sitem" id="sb-tokutei" onclick="openTokutei()"><span class="ic">🏗️</span>Tokutei Gino</button>
@@ -368,6 +444,10 @@ body.gs-l .cell{font-size:35px}
   <button class="sitem" id="sb-rank" onclick="openRank()"><span class="ic">🏆</span>Xếp hạng</button>
   <button class="sitem orange" onclick="soon()"><span class="ic">✨</span>Nâng cấp</button>
   <button class="sitem bottom" id="sb-settings" onclick="openSettings()"><span class="ic">⚙️</span>Cài đặt</button>
+<div id="tgfly" class="tg-fly" style="display:none">
+  <button onclick="tgFlyGo('courses')"><span class="ic">📖</span><span>Giáo trình<small>Học từ vựng theo bài</small></span></button>
+  <button onclick="tgFlyGo('alphabet')"><span class="ic">🔤</span><span>Bảng chữ cái<small>Hiragana · Katakana</small></span></button>
+</div>
 </aside>
 
 <div class="main">
@@ -650,10 +730,7 @@ body.gs-l .cell{font-size:35px}
   <div id="qzbody"></div>
 </div>
 <div id="tangobox" style="display:none">
-  <div class="fc-top"><span class="t" id="tgtitle">📚 Từ vựng N5</span><span class="p" id="tgcount"></span><span class="sp2"></span><button class="chipbtn" onclick="openQuiz(TG.lv)">📝 Trắc nghiệm 10 câu</button><button class="chipbtn" onclick="closeTango()">✕ Thoát</button></div>
-  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="tgsearch" class="gr-search" placeholder="🔍 Tìm từ… (tiếng Nhật / cách đọc / Hán Việt / nghĩa Việt)" oninput="renderTg(true)"><span class="gr-tabs"><button id="tgtab5" class="grtab on" onclick="tgSet('N5')">N5</button><button id="tgtab4" class="grtab" onclick="tgSet('N4')">N4</button><button id="tgtab3" class="grtab" onclick="tgSet('N3')">N3</button><button id="tgtab2" class="grtab" onclick="tgSet('N2')">N2</button><button id="tgtab1" class="grtab" onclick="tgSet('N1')">N1</button></span></div>
-  <div id="tglist"></div>
-  <button id="tgmore" class="tg-more" style="display:none" onclick="tgMore()">Xem thêm</button>
+  <div id="tgview"></div>
 </div>
 <div id="grammarbox" style="display:none">
   <div class="fc-top"><span class="t" id="grtitle">📝 Ngữ pháp N5</span><span class="p" id="grcount"></span><span class="sp2"></span><button class="chipbtn" onclick="closeGrammar()">✕ Thoát</button></div>
@@ -3181,8 +3258,10 @@ function renderGrammar(){
 
 
 /* ===== Từ vựng (Tango) ===== */
-var TG = { lv: 'N5', built: {}, data: {}, kmap: {}, list: [], shown: 0 };
-var TG_PAGE = 100;
+var TG = { lv: 'N5', built: {}, data: {}, kmap: {}, lessons: {} };
+var TG_PROG_KEY = 'kanjivn_tango_prog_v1';
+var TG_KNOWN_KEY = 'kanjivn_tango_known_v1';
+var TG_STAR_KEY = 'kanjivn_tango_star_v1';
 function tgBuild(lv){
   if(TG.built[lv]) return;
   TG.built[lv] = true;
@@ -3198,6 +3277,90 @@ function tgBuild(lv){
   });
   TG.data[lv] = out; TG.kmap[lv] = kmap;
 }
+function tgOpenKanji(ch){
+  var e = TG.kmap[TG.lv][ch];
+  if(e) openItemData(e);
+}
+function tgNorm(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd'); }
+var TG_N5_TOPICS = [
+  { t: 'Nghề nghiệp & xưng hô', k: ['giao vien','bac si','ky su','cong nhan','nhan vien','sinh vien','hoc sinh','giam doc','canh sat','y ta','dau bep','lai xe','nong dan','dien vien','ca si','nha van','nha bao','luat su','ke toan','thu ky','truong phong','quan ly','nghe nghiep','quoc tich','co giao','anh trai','chi gai','em trai','em gai','ban be','ban than','hang xom','nguoi nhat','nguoi viet','dan ong','dan ba','tre em','nguoi lon'] },
+  { t: 'Đồ dùng văn phòng & học tập', k: ['but chi','but muc','but','sach','cai ban','ban hoc','ban lam viec','ghe','may tinh','dien thoai','cap sach','giay','thuoc','keo','ban phim','man hinh','den ban','quat','dong ho','buu thiep','phong bi','cuc tay','bang','phan','kinh','cua so','usb','tai nghe','may in','tai lieu','ho so','balo'] },
+  { t: 'Địa điểm & mua sắm', k: ['cua hang','sieu thi','truong hoc','benh vien','ngan hang','buu dien','nha ga','san bay','khach san','nha hang','thu vien','bao tang','cong vien','rap chieu phim','nha sach','hieu sach','ben xe','tram','truong dai hoc','van phong','cong ty','nha may','thanh pho','thi tran','nong thon','mua sam','khach hang','hoa don','thanh toan','pho','nga tu','nga ba','dia chi','ban do'] },
+  { t: 'Thời gian & sinh hoạt', k: ['bay gio','hom nay','hom qua','ngay mai','tuan truoc','tuan sau','thang truoc','nam nay','dung gio','thuc day','di ngu','an sang','an trua','an toi','rua mat','danh rang','thay quan ao','tan lam','cuoi tuan','ngay le','ky nghi','mua xuan','mua he','mua thu','mua dong','thoi tiet','nhiet do','thoi gian','dong ho bao thuc','am lich','duong lich','ngu','tam','som','muon','sang','trua','chieu','toi','dem','gio','phut','ngay','tuan','thang','nam'] },
+  { t: 'Phương tiện & lịch trình', k: ['tau dien','tau hoa','xe buyt','xe dap','xe may','o to','taxi','thuyen','ca no','xe lua','may bay','ve tau','ve xe','cho ngoi','chuyen bay','khoi hanh','lich trinh','thoi gian bieu','chuyen di','hanh ly','lac duong','duong cao toc','duong sat','di bo','qua duong'] },
+  { t: 'Ăn uống & giải trí', k: ['com','pho','banh mi','banh','thit','trai cay','sua','trung','nuoc ep','kem','mon an','bua an','thuc don','goi mon','nau an','gia vi','muoi','dau an','tuong','nuoc mam','dua','tao','cam','chuoi','nho','xoai','dua hau','chanh','ca chua','khoai','bap','ngo','hanh','toi','ot','gung','am nhac','bai hat','phim','xem phim','the thao','bong da','bong chuyen','bong ro','chay bo','dap xe','tap the duc','doc sach','nghe nhac','xem tivi','cau ca','cam trai','leo nui','tam bien','tra','ca phe','bia','ruou'] },
+  { t: 'Đồ dùng & tặng quà', k: ['qua tang','hop qua','goi qua','giay goi','ruy bang','do luu niem','do choi','gau bong','bup be','tui xach','day chuyen','bong tai','nuoc hoa','my pham','chuc mung','hen gap lai','qua','tang','hoa'] },
+  { t: 'Tính từ mô tả', k: ['dep','xau','cao','thap','dai','ngan','rong','hep','day','mong','nang','nhe','manh','yeu','nhanh','cham','moi','cu','tot','vui','buon','sang','yen tinh','vang','xanh','trang','hong','tim','nau','xam','thom','hoi','mem','cung','tron','vuong','thang','cong','kho','uoc','de thuong','quen','la','on ao','thich','ghet','so','ngai','xau ho','ngac nhien','that vong','hai long','met','khoe','om','dau','benh','chan','kho khan','de dang','quan trong','can thiet','tien loi','bat tien','an toan','nguy hiem','yen tam','lo lang','binh tinh','nong gian','vui ve','co don','dong vui','nhon nhip','tram lang'] },
+  { t: 'Sở thích & nghệ thuật', k: ['so thich','nhac cu','piano','guitar','violin','dien anh','hoa si','tieu thuyet','chup anh','may anh','nhay','bieu dien','san khau','nghe thuat','van hoc','triet hoc','khoa hoc','ngoai ngu','tieng anh','tieng nhat','tieng viet','co vua','co tuong','game','tham quan','di choi','di dao','nghi ngoi','thu gian','giai tri','thu vi','nham chan','hap dan','tuyet voi'] },
+  { t: 'Đồ gia dụng & vị trí', k: ['phong khach','phong ngu','phong bep','phong tam','nha ve sinh','toilet','cau thang','ban cong','vuon','be boi','gara','nha kho','tu lanh','tu quan ao','tu sach','giuong','dem','rem','man','dieu hoa','may giat','may say','bep ga','bep dien','noi','chao','dia','dua','thia','dao','coc','ly','binh','am','tivi','loa','tham','bong den','o cam','cong tac','khoa cua','tren','duoi','trai','phai','truoc','sau','trong','ngoai','giua','ben canh','doi dien','o giua','o tren','o duoi','ben trong','ben ngoai','phia tren','phia duoi','phia truoc','phia sau','phia trai','phia phai','goc','trung tam','xung quanh','ke ben','vi tri','huong'] },
+  { t: 'Từ đếm & gia đình', k: ['mot','hai','bon','bay','tam','chin','muoi','tram','nghin','van','ty','so luong','so thu tu','thu nhat','thu hai','thu ba','noi','ngoai','anh re','chi dau','em re','em dau','con trai','con gai','con re','con dau','chau trai','chau gai','bo vo','me vo','bo chong','me chong','anh em','chi em','nguoi than','hon nhan','ket hon','ly hon','cuoi hoi','nuoi','cham soc','truong thanh','em be','so sinh','thanh nien','trung nien','nguoi gia','cu gia','do tuoi','que huong','dong ho','ho ten','biet danh','gia dinh'] },
+  { t: 'Thời tiết & ẩm thực Nhật', k: ['bao tuyet','bao mua','dong dat','cau vong','suong mu','am u','quang may','bau troi','mat troi','mat trang','du bao','sushi','sashimi','ramen','udon','soba','tempura','miso','tofu','dau phu','rong bien','ca song','ca hoi','ca ngu','ca thu','com nam','com cuon','tra xanh','ruou sake','dac san','am thuc','wasabi','bao','set','suong','troi'] },
+  { t: 'Hoạt động & sự kiện', k: ['hoat dong','su kien','dam cuoi','le cuoi','le tot nghiep','le khai giang','cuoc hop','hoi nghi','hoi thao','trien lam','buoi bieu dien','buoi hoa nhac','phat song','tham gia','khai mac','be mac','bat dau','ket thuc','dien ra','xay ra','gap go','hen','tham','du tiec','du le','an mung','tieu tien','thi cu','ky thi','bai thi','bai kiem tra','bai tap','bai tap ve nha','bai giang','lop hoc','khoa hoc','chuong trinh','du an','muc tieu','thoi khoa bieu','sap xep','chuan bi','hop tac','giup do','ho tro','ung ho','khuyen khich','dong vien','khen','che','phe binh','danh gia','nhan xet','y kien','de xuat','de nghi','yeu cau','dat hang','dat truoc','huy','thay doi','sua','bo sung','tang','giam','mo rong','thu hep','cai thien','phat trien','hien dai','co dien','hien tai','qua khu','tuong lai','van hoa','phong tuc','tap quan','ton giao','tin nguong','le hoi','ngay nghi'] },
+  { t: 'Nhà cửa & chỉ đường', k: ['can ho','chung cu','biet thu','nha tro','phong tro','thue nha','mua nha','ban nha','xay nha','sua nha','chuyen nha','doi nha','so nha','ten duong','duong ham','duong di','duong ve','duong den','chi duong','hoi duong','chi dan','tim duong','di thang','re trai','re phai','quay lai','quay dau','sang duong','ben kia duong','gan day','o gan','o xa','o day','o kia','o do','o dang truoc','o dang sau','o ben trai','o ben phai','o tren cao','o duoi thap','tim kiem','tim thay','hoi tham','xin hoi','xin chi','lam on','xin phep','xin chao','gap lai','hen gap','hen ho','hen nhau','gap nhau','gap mat','nha','duong'] },
+  { t: 'Công việc & đời sống', k: ['lam viec','tan lam','nghi phep','nghi om','nghi thai san','nghi huu','huu tri','lam them','lam ban thoi gian','lam toan thoi gian','ca lam','ca ngay','ca dem','ca sang','ca chieu','ca toi','tien luong','phu cap','tro cap','bao hiem','bao hiem y te','bao hiem xa hoi','thue thu nhap','hop dong','hop dong lao dong','tuyen dung','phong van','xin viec','tim viec','nop ho so','so yeu ly lich','bang cap','chung chi','kinh nghiem','ky nang','kha nang','chuyen mon','chuc vu','bo phan','phong ban','phong nhan su','phong ke toan','phong kinh doanh','phong ky thuat','phong san xuat','phong kho','dong nghiep','doi tac','doanh nghiep','xi nghiep','cong xuong','co quan','hiep hoi','tap doan','kinh doanh','buon ban','mua ban','xuat khau','nhap khau','thi truong','nha cung cap','nha phan phoi','dai ly','trung tam thuong mai','trung tam mua sam'] },
+  { t: 'Giao thông & cơ thể người', k: ['co the','than the','mat','mui','mieng','co','vai','chan','ngon tay','ngon chan','long ban tay','long ban chan','canh tay','canh chan','bap tay','bap chan','dau goi','khuyu tay','co tay','co chan','nguc','bung','lung','mong','eo','hong','dui','bap dui','got chan','ban chan','ban tay','mu ban tay','mu ban chan','mong tay','mong chan','long toc','long mi','long may','luoi','moi','cam','ma','tran','thai duong','xuong','khop','co bap','mau','phoi','gan','than','da day','ruot','nao','than kinh','mach mau','ho hap','tieu hoa','bai tiet','mien dich','noi tiet','sinh duc','sinh san','mang thai','sinh con','giao thong','xe','tau','may bay','thuyen'] },
+  { t: 'Sức khỏe & công việc', k: ['suc khoe','tap the duc','yoga','chay bo','boi loi','van dong','giam can','tang can','an kieng','che do an','giac ngu','mat ngu','kho ngu','stress','ap luc','met moi','cam','cum','sot','ho','so mui','di ung','hen','tieu duong','huyet ap cao','huyet ap thap','tim mach','ung thu','benh tat','phong benh','don thuoc','lieu luong','tac dung phu','kham dinh ky','suc khoe tam than','tam ly','cam xuc','lo au','tram cam','cang thang','lac quan','tieu cuc','tich cuc','dong luc','thoi quen','sinh hoat','doi song','cuoc song','su nghiep','thanh cong','that bai','co gang','no luc','kien tri','cham chi','luoi','sieng','can cu','thong minh','kheo','gioi','kem','don gian','phuc tap','ro rang','mo ho','chinh xac','sai','dung','trung thuc','that tha','dang tin','tin tuong','nghi ngo','chac chan','nen','phai','can','muon','hanh phuc','may man','xui xeo','rui ro','bao dam','dam bao','uy tin','danh tieng','danh gia','phan hoi','gop y','an ui','chia buon','chia vui','cam on','xin loi'] },
+  { t: 'Kỹ năng & âm nhạc', k: ['ky nang','am nhac','nhac','hat','nhac si','ca hat','nhay mua','dan','piano','guitar','trong','sao','ken','bai hat','giai dieu','nhip','cao do','am thanh','tieng','tieng dong','tieng on','tieng hat','giong','giong hat','giong noi','noi','ke','ke chuyen','doc','viet','ve','ve tranh','chup','chup anh','quay','quay phim','thu','thu am','nghe','xem','choi','luyen','luyen tap','luyen thanh','luyen nghe','luyen noi','luyen doc','luyen viet','ky thuat','cong nghe','may moc','thiet bi','dung cu','cong cu','vat lieu','nguyen lieu','san pham','dich vu','he thong','mang','phan mem','phan cung','ung dung','chuong trinh','tro choi','game','van dong','the luc','suc manh','suc ben','toc do','tai nang','nang khieu','so truong','diem manh','diem yeu','uu diem','nhuoc diem','thuan loi','kho khan','thach thuc','co hoi','nguy co','moi nguy','bao ve','phong ngua'] },
+  { t: 'Du lịch & việc nhà', k: ['du lich','di du lich','chuyen du lich','di tham','di choi','di dao','viec nha','lam viec nha','don dep','don nha','quet nha','lau nha','giat','giat quan ao','phoi','phoi quan ao','u','nau','nau an','nau com','rua','rua bat','rua chen','rua tay','tam','ve sinh','don ve sinh','sap xep','khach san','nha nghi','thue phong','dat phong','dat ve','dat cho','dat ban','dat lich','dat hen','dat truoc','huy dat','doi lich','doi ve','doi cho','doi phong','huy'] },
+  { t: 'Ngôn ngữ & xưng hô thân mật', k: ['ngon ngu','tieng viet','tieng anh','tieng nhat','tieng trung','tieng han','tieng phap','tieng duc','tieng nga','ngu phap','tu vung','kanji','hiragana','katakana','romaji','furigana','dich','dich thuat','bien dich','phien dich','hoi thoai','giao tiep','tro chuyen','noi chuyen','tan gau','tam su','chia se','xung ho','than mat','than thiet','than quen','xa la','quen biet','quen thuoc','tieng','nghe','noi','doc','viet'] },
+  { t: 'Giao thông & truyền thông', k: ['giao thong','truyen thong','truyen hinh','truyen thanh','bao chi','tap chi','tin tuc','thoi su','tin nong','tin hot','tin moi','tin vui','tin buon','tin xau','tin tot','tin hay','tin that','tin gia','tin don','mang','mang luoi','mang xa hoi','facebook','zalo','line','instagram','twitter','youtube','tiktok','google','email','thu dien tu','tin nhan','goi dien','nhan tin','goi video','chat','dien thoai','di dong','smartphone','may tinh bang','laptop','internet','wifi','mang 3g','mang 4g','mang 5g','xe','tau','thuyen','ben','ga','tram','ben xe','ben tau'] },
+  { t: 'Trang phục & nhà ở', k: ['trang phuc','quan ao','ao dai','ao so mi','ao thun','ao khoac','ao len','ao da','ao mua','ao choang','ao ngu','ao tam','ao boi','ao the thao','ao dong phuc','ao vest','ao blazer','ao cardigan','ao hoodie','vay','dam','quan dai','quan ngan','quan sort','quan jean','quan kaki','quan tay','quan au','quan the thao','quan boi','quan ngu','quan lot','giay','dep','giay the thao','giay da','giay cao got','giay bet','giay sandal','giay boot','giay luoi','mu','non','khan','khan quang co','khan tay','khan tam','khan mat','gang tay','that lung','ca vat','kinh','kinh mat','kinh can','kinh ram','dong ho','dong ho deo tay','dong ho bao thuc','nhan','vong','son','son moi','kem','kem duong da','kem chong nang','nha o','nha cua','phong','phong khach','phong ngu','phong bep','phong tam','phong lam viec','phong hoc','phong doc','phong choi','phong an','phong tiep khach','phong hop','phong thay do','phong giat','phong kho','phong tap','phong gym','phong yoga'] },
+  { t: 'Đường phố & chỉ đường', k: ['duong pho','duong','pho','nga tu','nga ba','den giao thong','vi he','cau','cau vuot','ham','duong ham','duong cao toc','duong sat','duong bo','duong di','duong ve','duong den','chi duong','hoi duong','chi dan','ban do','lac duong','tim duong','di thang','re trai','re phai','quay lai','quay dau','dung lai','qua duong','sang duong','ben kia duong','gan','xa','cach','gan day','o gan','o xa','o day','o kia','o do','o dang truoc','o dang sau','o ben trai','o ben phai','o giua','o tren','o duoi','o trong','o ngoai','o tren cao','o duoi thap','o phia truoc','o phia sau','o phia tren','o phia duoi','o phia dong','o phia tay','o phia nam','o phia bac','dong','tay','nam','bac','dong nam','tay bac','dong bac','tay nam','tim kiem','tim thay','hoi tham','nho','nho giup','xin','xin hoi','xin chi','lam on','xin phep','xin chao','tam biet','hen gap lai','gap lai','hen gap','hen ho','hen nhau','gap nhau','gap mat','gap go','gap','hen'] },
+  { t: 'Gia đình & chuyển nhà', k: ['gia dinh','chuyen nha','doi nha','thue nha','mua nha','ban nha','xay nha','sua nha','bo','me','cha','anh','chi','em','ong','ba','noi','ngoai','co','chu','bac','di','cau','mo','anh re','chi dau','em re','em dau','con trai','con gai','con re','con dau','chau','chau trai','chau gai','vo','chong','bo vo','me vo','bo chong','me chong','anh em','chi em','ho hang','nguoi than','hon nhan','ket hon','ly hon','cuoi','cuoi hoi','sinh','de','nuoi','cham soc','truong thanh','em be','so sinh','thanh nien','trung nien','nguoi gia','cu gia','do tuoi','que huong','ho','dong ho','ho ten','biet danh','can ho','chung cu','biet thu','nha tro','phong tro','dia chi','so nha','ten duong','do dac','do dung','do gia dung','dong goi','dong thung','thung','hop','tui','bao','vali','hanh ly','chuyen','chuyen do','chuyen phong'] },
+  { t: 'Tương lai & chia tay', k: ['tuong lai','chia tay','tam biet','hen gap lai','gap lai','hen gap','hen ho','hen nhau','gap nhau','gap mat','gap go','du dinh','ke hoach','muc tieu','uoc mo','uoc muon','hy vong','mong muon','mong doi','cho doi','hi vong','tin tuong','se','se lam','se hoc','se di','se ve','se den','se gap','se hen','se tam biet','se chia tay','se ket hon','se sinh','se nuoi','se cham soc','se truong thanh','se gia','se tre','se lon','se nho','se cao','se thap','se dai','se ngan','se rong','se hep','se day','se mong','se nang','se nhe','se manh','se yeu','se nhanh','se cham','se moi','se cu','se tot','se xau','se vui','se buon','se sang','se toi','se on','se yen tinh','se vang','se do','se xanh','se trang','se den','se hong','se tim','se nau','se cam','se xam','se sach','se ban','se thom','se hoi','se ngot','se chua','se cay','se man','se nhat','se mem','se cung','se tron','se vuong','se thang','se cong','se kho','se u','se uoc','se de thuong','se de','se kho','se quen','se la','se gan','se xa','se rong rai','se chat hep','se on ao','se thich','se ghet','se yeu','se so','se ngai','se xau ho','se ngac nhien','se that vong','se hai long','se met','se khoe','se om','se dau','se benh','se chan','se kho khan','se de dang','se quan trong','se can thiet','se tien loi','se bat tien','se an toan','se nguy hiem','se yen tam','se lo lang','se binh tinh','se nong gian','se vui ve','se co don','se dong vui','se nhon nhip','se tram lang','se tuoi tre'] }
+];
+function tgChunk(arr, n){ var out = []; for(var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n)); return out; }
+function tgChunkEven(arr, count){ var out = [], n = arr.length, base = Math.floor(n / count), rem = n % count, at = 0; for(var i = 0; i < count; i++){ var sz = base + (i < rem ? 1 : 0); out.push(arr.slice(at, at + sz)); at += sz; } return out; }
+function tgLessons(lv){
+  if(TG.lessons[lv]) return TG.lessons[lv];
+  tgBuild(lv);
+  var pool = TG.data[lv] || [], out = [];
+  if(lv === 'N5'){
+    var buckets = TG_N5_TOPICS.map(function(tp, i){ return { name: 'Bài ' + (i + 1), topic: tp.t, words: [] }; });
+    var rest = [];
+    pool.forEach(function(w){
+      var m = ' ' + tgNorm(w.meaning) + ' ';
+      var placed = -1;
+      for(var i = 0; i < TG_N5_TOPICS.length; i++){
+        var ks = TG_N5_TOPICS[i].k;
+        for(var j = 0; j < ks.length; j++){ if(m.indexOf(' ' + ks[j] + ' ') >= 0){ placed = i; break; } }
+        if(placed >= 0) break;
+      }
+      if(placed >= 0) buckets[placed].words.push(w); else rest.push(w);
+    });
+    buckets.forEach(function(b){
+      if(b.words.length > 25){ rest = rest.concat(b.words.slice(25)); b.words = b.words.slice(0, 25); }
+    });
+    rest.forEach(function(w){
+      var bi = 0;
+      for(var i = 1; i < buckets.length; i++){ if(buckets[i].words.length < buckets[bi].words.length) bi = i; }
+      buckets[bi].words.push(w);
+    });
+    out = buckets;
+  } else if(lv === 'N4'){
+    tgChunkEven(pool, 25).forEach(function(p, i){ out.push({ name: 'Bài ' + (26 + i), topic: 'Minna no Nihongo Sơ cấp 2', words: p }); });
+  } else if(lv === 'N3' || lv === 'N2'){
+    tgChunk(pool, 50).forEach(function(p, i){ out.push({ name: 'Bài ' + (i + 1), topic: 'Từ vựng ' + lv, words: p }); });
+  } else {
+    tgChunk(pool, 100).forEach(function(p, i){ out.push({ name: 'Bài ' + (i + 1), topic: 'Từ vựng ' + lv, words: p }); });
+  }
+  TG.lessons[lv] = out;
+  return out;
+}
+function tgSetLoad(key){ try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){ return {}; } }
+function tgSetSave(key, m){ try { localStorage.setItem(key, JSON.stringify(m)); } catch(e){} }
+function tgProgDone(lv, li){ return !!tgSetLoad(TG_PROG_KEY)[lv + '-' + li]; }
+function tgProgMark(lv, li){ var m = tgSetLoad(TG_PROG_KEY); m[lv + '-' + li] = 1; tgSetSave(TG_PROG_KEY, m); }
+function tgWordKey(w){ return w.word + '|' + w.reading; }
+function tgIsKnown(lv, w){ var m = tgSetLoad(TG_KNOWN_KEY); return !!(m[lv] && m[lv][tgWordKey(w)]); }
+function tgSetKnown(lv, w, val){ var m = tgSetLoad(TG_KNOWN_KEY); if(!m[lv]) m[lv] = {}; if(val) m[lv][tgWordKey(w)] = 1; else delete m[lv][tgWordKey(w)]; tgSetSave(TG_KNOWN_KEY, m); }
+function tgIsStar(lv, w){ var m = tgSetLoad(TG_STAR_KEY); return !!(m[lv] && m[lv][tgWordKey(w)]); }
+function tgToggleStarKey(lv, w){ var m = tgSetLoad(TG_STAR_KEY); if(!m[lv]) m[lv] = {}; var k = tgWordKey(w); if(m[lv][k]) delete m[lv][k]; else m[lv][k] = 1; tgSetSave(TG_STAR_KEY, m); }
+var TGV = { view: 'courses', lv: 'N5', li: 0 };
+var TGF = { words: [], idx: 0, flipped: false, dir: 'jp', shuffle: false, mode: 'flash', auto: null, done: false };
+var LQ = { qs: [], i: 0, score: 0, locked: false };
+var LS = { qs: [], i: 0, score: 0, locked: false };
+function tgStopAuto(){ if(TGF.auto){ clearTimeout(TGF.auto); TGF.auto = null; } }
 function openTango(){
   if(window.__rOn && typeof closeRadicals === 'function') closeRadicals(true); if(window.__jlOn && typeof closeJLPT === 'function') closeJLPT(true); if(window.__tkOn && typeof closeTokutei === 'function') closeTokutei(true); if(window.__aOn && typeof closeAccent === 'function') closeAccent(true); if(window.__pOn && typeof closePersonal === 'function') closePersonal(true); if(window.__eOn && typeof closeExport === 'function') closeExport(true); if(window.__rkOn && typeof closeRank === 'function') closeRank(true); if(window.__sOn && typeof closeSettings === 'function') closeSettings(true);
   if(window.__qOn && typeof closeQuiz === 'function') closeQuiz(true);
@@ -3208,10 +3371,12 @@ function openTango(){
   ['grid','grid4','grid3','grid2','grid1','lockbox','nores','grammarbox'].forEach(function(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('tangobox').style.display = '';
   document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-tango'); });
-  tgSet(TG.lv);
+  tgShowCourses();
 }
 function closeTango(skip){
   window.__tOn = false;
+  tgStopAuto();
+  var f = document.getElementById('tgfly'); if(f) f.style.display = 'none';
   document.getElementById('tangobox').style.display = 'none';
   document.querySelectorAll('.sitem').forEach(function(b){ b.classList.toggle('active', b.id === 'sb-kanji'); });
   if(!skip) selectLevel(window.CURLV || 'N5');
@@ -3221,36 +3386,512 @@ function goHome(){
   if(window.__tOn && typeof closeTango === 'function') closeTango(true);
   selectLevel(window.CURLV || 'N5');
 }
-function tgSet(lv){
-  TG.lv = lv; tgBuild(lv);
-  ['N5','N4','N3','N2','N1'].forEach(function(x){ document.getElementById('tgtab' + x.slice(1)).className = 'grtab' + (lv === x ? ' on' : ''); });
-  document.getElementById('tgtitle').textContent = '📚 Từ vựng ' + lv;
-  document.getElementById('tgsearch').value = '';
-  renderTg(true);
+function tgFlyout(e){
+  if(e) e.stopPropagation();
+  var f = document.getElementById('tgfly');
+  if(!f) return;
+  if(f.style.display !== 'none'){ f.style.display = 'none'; return; }
+  var b = document.getElementById('sb-tango');
+  var r = b.getBoundingClientRect();
+  f.style.left = Math.min(window.innerWidth - 240, r.right + 8) + 'px';
+  f.style.top = Math.max(64, r.top) + 'px';
+  f.style.display = '';
 }
-function tgSpeak(i){ speak(TG.list[i].word); }
-function tgOpenKanji(ch){
-  var e = TG.kmap[TG.lv][ch];
-  if(e) openItemData(e);
+function tgFlyGo(v){
+  var f = document.getElementById('tgfly'); if(f) f.style.display = 'none';
+  openTango();
+  if(v === 'alphabet') tgShowAlphabet();
 }
-function renderTg(reset){
-  if(reset) TG.shown = 0;
-  var q = (document.getElementById('tgsearch').value || '').toLowerCase();
-  var all = TG.data[TG.lv] || [];
-  TG.list = q ? all.filter(function(v){ return (v.word + ' ' + v.reading + ' ' + v.hanViet + ' ' + v.meaning).toLowerCase().indexOf(q) >= 0; }) : all;
-  TG.shown = Math.min(TG.shown + TG_PAGE, TG.list.length);
-  var html = '';
-  for(var i = 0; i < TG.shown; i++){
-    var v = TG.list[i];
-    var chips = v.kanjis.map(function(ch){ return '<button class="tg-chip" title="Xem chữ ' + grEsc(ch) + '" onclick="tgOpenKanji(\'' + ch + '\')">' + grEsc(ch) + '</button>'; }).join('');
-    html += '<div class="tg-row"><div class="tg-w">' + grEsc(v.word) + '</div><div class="tg-mid"><div class="tg-r">' + grEsc(v.reading) + ' <span class="tg-hv">' + grEsc(v.hanViet) + '</span></div><div class="tg-mean">' + grEsc(v.meaning) + '</div></div><div class="tg-k">' + chips + '</div><button class="audio" onclick="tgSpeak(' + i + ')">🔊</button></div>';
+document.addEventListener('click', function(e){
+  var f = document.getElementById('tgfly');
+  if(f && f.style.display !== 'none'){
+    var b = document.getElementById('sb-tango');
+    if(e.target !== f && !f.contains(e.target) && e.target !== b && !b.contains(e.target)) f.style.display = 'none';
   }
-  document.getElementById('tglist').innerHTML = html || '<div style="padding:18px;color:#777">Không tìm thấy từ nào khớp.</div>';
-  document.getElementById('tgmore').style.display = TG.shown < TG.list.length ? '' : 'none';
-  document.getElementById('tgmore').textContent = 'Xem thêm (' + (TG.list.length - TG.shown) + ' từ nữa)';
-  document.getElementById('tgcount').textContent = TG.list.length + ' từ' + (q ? ' khớp tìm kiếm' : ' (đã lọc trùng)') + ' · cấp ' + TG.lv;
+});
+document.addEventListener('keydown', function(e){
+  if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  if(window.__tOn && TGV.view === 'lesson' && (TGF.mode === 'flash' || TGF.mode === 'cram')){
+    if(e.key === ' '){ e.preventDefault(); tgFlip(); }
+    else if(e.key === 'ArrowRight'){ tgNav(1); }
+    else if(e.key === 'ArrowLeft'){ tgNav(-1); }
+  } else if(window.__tOn && TGV.view === 'alphabet' && ALP.fc){
+    if(e.key === ' '){ e.preventDefault(); tgAlpFcFlip(); }
+    else if(e.key === 'ArrowRight'){ tgAlpFcNav(1); }
+    else if(e.key === 'ArrowLeft'){ tgAlpFcNav(-1); }
+  }
+});
+var TG_COURSE_DESC = { N5: 'Tiếng Nhật sơ cấp 1 · Minna no Nihongo', N4: 'Tiếng Nhật sơ cấp 2 · Minna no Nihongo', N3: 'Trình độ trung cấp', N2: 'Trình độ cao cấp', N1: 'Trình độ siêu cấp' };
+function tgShowCourses(){
+  tgStopAuto();
+  TGV.view = 'courses';
+  ['N5','N4','N3','N2','N1'].forEach(function(lv){ tgBuild(lv); });
+  var html = '<div class="fc-top"><span class="t">📚 Nhai Tango</span><span class="sp2"></span><button class="chipbtn" onclick="closeTango()">✕ Thoát</button></div>' +
+    '<div class="tg-hero"><h2>Học Bản Chất – Không Học Vẹt</h2><p>Không chỉ là nghĩa của từ mà là cách dùng đúng của từ. Học từ vựng qua flashcard, trắc nghiệm và nghe đuổi — nắm Kanji, âm Hán Việt và nghĩa tiếng Việt của từng từ, ghi nhớ lâu bằng cách ôn lại.</p></div>' +
+    '<div class="tg-courses">';
+  ['N5','N4','N3','N2','N1'].forEach(function(lv){
+    var n = (TG.data[lv] || []).length;
+    html += '<button class="tg-course" onclick="tgShowCourse(\'' + lv + '\')"><span class="nm">Nhai Từ Vựng ' + lv + '</span><span class="lv">' + lv + '</span><span class="ct">' + n + ' từ · đã lọc trùng</span><span class="ds">' + TG_COURSE_DESC[lv] + '</span></button>';
+  });
+  html += '</div><div class="tg-note">Bấm vào một thẻ cấp độ để xem các bài học của cấp đó. Mọi cấp độ đều mở, không cần đăng nhập.</div>';
+  document.getElementById('tgview').innerHTML = html;
 }
-function tgMore(){ renderTg(false); }
+function tgShowCourse(lv){
+  tgStopAuto();
+  TGV.view = 'course'; TGV.lv = lv;
+  var lessons = tgLessons(lv);
+  var prog = tgSetLoad(TG_PROG_KEY);
+  var done = 0;
+  lessons.forEach(function(L, i){ if(prog[lv + '-' + i]) done++; });
+  var pct = lessons.length ? Math.round(done / lessons.length * 100) : 0;
+  var total = (TG.data[lv] || []).length;
+  var html = '<div class="fc-top"><span class="t">📚 Nhai Từ Vựng ' + lv + '</span><span class="p">' + total + ' từ · ' + lessons.length + ' bài</span><span class="sp2"></span><button class="chipbtn" onclick="tgShowCourses()">← Quay lại</button><button class="chipbtn" onclick="closeTango()">✕ Thoát</button></div>' +
+    '<div class="tg-prog"><div class="t">Tiến độ học: ' + done + '/' + lessons.length + ' bài · ' + pct + '% hoàn thành</div><div class="tg-bar"><i style="width:' + pct + '%"></i></div></div>' +
+    '<div class="tg-lessons">';
+  lessons.forEach(function(L, i){
+    html += '<button class="tg-lesson' + (prog[lv + '-' + i] ? ' done' : '') + '" onclick="tgShowLesson(\'' + lv + '\',' + i + ')"><span><span class="b">' + grEsc(L.name) + (prog[lv + '-' + i] ? ' ✓' : '') + '</span><span class="tp">' + grEsc(L.topic) + '</span></span><span class="n">' + L.words.length + ' từ</span></button>';
+  });
+  html += '</div><button class="tg-review" onclick="openQuiz(\'' + lv + '\')">📝 Review — Trắc nghiệm 10 câu trên toàn bộ từ của ' + lv + '</button>';
+  document.getElementById('tgview').innerHTML = html;
+}
+function tgTocHtml(lv, cur){
+  var lessons = tgLessons(lv);
+  var prog = tgSetLoad(TG_PROG_KEY);
+  var html = '';
+  lessons.forEach(function(L, i){
+    html += '<button class="tg-toccell' + (i === cur ? ' cur' : '') + '" onclick="tgShowLesson(\'' + lv + '\',' + i + ')"><span class="tt">' + grEsc(L.name) + (prog[lv + '-' + i] ? ' ✓' : '') + '</span><span class="nn">' + L.words.length + ' từ</span></button>';
+  });
+  return html;
+}
+function tgShowLesson(lv, li){
+  tgStopAuto();
+  TGV.view = 'lesson'; TGV.lv = lv; TGV.li = li;
+  var L = tgLessons(lv)[li];
+  TGF.words = L.words.slice();
+  TGF.idx = 0; TGF.flipped = false; TGF.dir = 'jp'; TGF.shuffle = false; TGF.mode = 'flash'; TGF.done = false;
+  var html = '<div class="fc-top"><span class="t">📚 Nhai Từ Vựng ' + lv + ' - ' + grEsc(L.name) + '</span><span class="p">' + L.words.length + ' từ · ' + grEsc(L.topic) + '</span><span class="sp2"></span><button class="chipbtn" onclick="openExport()">📄 Tạo file luyện viết</button><button class="chipbtn" onclick="tgShowCourse(\'' + lv + '\')">← Quay lại</button><button class="chipbtn" onclick="closeTango()">✕ Thoát</button></div>' +
+    '<div class="tg-wrap"><div class="tg-main">' +
+    '<div class="tg-modes">' +
+    '<button class="tg-modebtn on" id="tgm-flash" onclick="tgSetMode(\'flash\')">🗂 Flashcard</button>' +
+    '<button class="tg-modebtn" id="tgm-quiz" onclick="tgSetMode(\'quiz\')">📝 Trắc nghiệm</button>' +
+    '<button class="tg-modebtn" id="tgm-cram" onclick="tgSetMode(\'cram\')">📚 Nhồi nhét</button>' +
+    '<button class="tg-modebtn" id="tgm-listen" onclick="tgSetMode(\'listen\')">👂 Nghe đuổi</button>' +
+    '</div>' +
+    '<div id="tgmode"></div>' +
+    '<div class="tg-sec">Thuật ngữ trong bài này (' + L.words.length + ')</div>' +
+    '<div id="tgwords"></div>' +
+    '</div>' +
+    '<div class="tg-toc"><h4>Mục lục · Nhai Từ Vựng ' + lv + '</h4><div class="tg-tocgrid">' + tgTocHtml(lv, li) + '</div></div>' +
+    '</div>';
+  document.getElementById('tgview').innerHTML = html;
+  tgRenderMode();
+  tgRenderWords();
+}
+function tgSetMode(m){
+  tgStopAuto();
+  TGF.mode = m;
+  ['flash','quiz','cram','listen'].forEach(function(x){ var b = document.getElementById('tgm-' + x); if(b) b.classList.toggle('on', x === m); });
+  if(m === 'quiz') tgQuizStart();
+  else if(m === 'listen') tgListenStart();
+  else { TGF.idx = 0; TGF.flipped = false; tgRenderMode(); if(m === 'cram'){ tgAutoStart(); tgRenderMode(); } }
+}
+function tgRenderMode(){
+  var el = document.getElementById('tgmode'); if(!el) return;
+  if(TGF.mode === 'flash' || TGF.mode === 'cram') el.innerHTML = tgFlashHtml();
+}
+function tgFlashHtml(){
+  var w = TGF.words[TGF.idx];
+  if(!w) return '<div style="padding:18px;color:#777">Bài này chưa có từ nào.</div>';
+  var known = tgIsKnown(TGV.lv, w);
+  var body;
+  if(TGF.dir === 'jp'){
+    body = TGF.flipped
+      ? '<div class="tg-fc-read">' + grEsc(w.reading) + '</div><div class="tg-fc-hv">' + grEsc(w.hanViet) + '</div><div class="tg-fc-mean">' + grEsc(w.meaning) + '</div><button class="tg-fc-spk" onclick="event.stopPropagation();tgSpeakWord()">🔊</button>'
+      : '<div class="tg-fc-word">' + grEsc(w.word) + '</div><button class="tg-fc-spk" onclick="event.stopPropagation();tgSpeakWord()">🔊</button>';
+  } else {
+    body = TGF.flipped
+      ? '<div class="tg-fc-word">' + grEsc(w.word) + '</div><div class="tg-fc-read">' + grEsc(w.reading) + '</div><div class="tg-fc-hv">' + grEsc(w.hanViet) + '</div><button class="tg-fc-spk" onclick="event.stopPropagation();tgSpeakWord()">🔊</button>'
+      : '<div class="tg-fc-mean" style="font-size:28px">' + grEsc(w.meaning) + '</div><div class="tg-fc-hint">Nghĩa tiếng Việt — bấm để xem từ</div>';
+  }
+  var html = '<div class="tg-fc" onclick="tgFlip()">' + (known ? '<div style="position:absolute;top:10px;right:14px;color:#81c784;font-weight:800">✓ Đã biết</div>' : '') + body +
+    '<div class="tg-fc-hint">Bấm vào thẻ để lật · Space: lật · ←/→: chuyển từ</div></div>' +
+    '<div class="tg-fcctl">' +
+    '<button class="tg-no" onclick="tgMark(false)">✕ Chưa biết</button>' +
+    '<span class="cnt">' + (TGF.idx + 1) + '/' + TGF.words.length + '</span>' +
+    '<button class="tg-yes" onclick="tgMark(true)">✓ Đã biết</button>' +
+    '<button class="tg-ctl' + (TGF.shuffle ? ' on' : '') + '" onclick="tgToggleShuffle()">🔀 Xáo trộn</button>' +
+    '<button class="tg-ctl" onclick="tgAutoToggle()">' + (TGF.auto ? '⏸ Dừng' : '▶ Tự động') + '</button>' +
+    '<button class="tg-ctl" onclick="tgToggleDir()">⇄ ' + (TGF.dir === 'jp' ? 'JP→VI' : 'VI→JP') + '</button>' +
+    '</div>';
+  if(TGF.mode === 'cram') html += '<div class="tg-note">Chế độ Nhồi nhét: thẻ tự lật và tự chuyển. Bấm ⏸ Dừng để học theo nhịp của bạn.</div>';
+  return html;
+}
+function tgSpeakWord(){ var w = TGF.words[TGF.idx]; if(w) speak(w.word); }
+function tgFlip(){ TGF.flipped = !TGF.flipped; tgRenderMode(); }
+function tgNav(d){
+  tgStopAuto();
+  var n = TGF.words.length; if(!n) return;
+  TGF.idx = (TGF.idx + d + n) % n; TGF.flipped = false; tgRenderMode();
+}
+function tgMark(known){
+  var w = TGF.words[TGF.idx]; if(!w) return;
+  tgSetKnown(TGV.lv, w, known);
+  if(TGF.idx === TGF.words.length - 1){
+    tgProgMark(TGV.lv, TGV.li);
+    TGF.done = true;
+    document.getElementById('tgmode').innerHTML = '<div class="qz-card"><div class="qz-q">Đã học xong bài này 🎉</div><div class="qz-score" style="font-size:26px">✓ ' + TGF.words.length + '/' + TGF.words.length + ' từ</div><div class="qz-exp">Bài đã được đánh dấu hoàn thành trong tiến độ khóa học.</div><button class="qz-next" onclick="tgSetMode(\'quiz\')">📝 Làm trắc nghiệm bài này</button> <button class="chipbtn" onclick="tgShowLesson(TGV.lv,TGV.li)">🔁 Học lại từ đầu</button></div>';
+    return;
+  }
+  TGF.idx++; TGF.flipped = false; tgRenderMode();
+}
+function tgToggleShuffle(){
+  TGF.shuffle = !TGF.shuffle;
+  var arr;
+  if(TGF.shuffle){
+    arr = TGF.words.slice();
+    for(var i = arr.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+  } else {
+    arr = tgLessons(TGV.lv)[TGV.li].words.slice();
+  }
+  TGF.words = arr; TGF.idx = 0; TGF.flipped = false; tgRenderMode();
+}
+function tgToggleDir(){ TGF.dir = TGF.dir === 'jp' ? 'vi' : 'jp'; TGF.flipped = false; tgRenderMode(); }
+function tgAutoStart(){
+  tgStopAuto();
+  TGF.auto = setTimeout(function(){
+    if(TGF.mode !== 'flash' && TGF.mode !== 'cram'){ TGF.auto = null; return; }
+    if(!TGF.flipped){ TGF.flipped = true; tgRenderMode(); }
+    else { TGF.idx = (TGF.idx + 1) % TGF.words.length; TGF.flipped = false; tgRenderMode(); }
+    tgAutoStart();
+  }, TGF.flipped ? 2200 : 1400);
+}
+function tgAutoToggle(){ if(TGF.auto) tgStopAuto(); else tgAutoStart(); tgRenderMode(); }
+function tgQuizPool(){
+  var words = TGF.words.slice();
+  if(words.length < 10){
+    var pool = (TG.data[TGV.lv] || []).filter(function(x){ return words.indexOf(x) < 0; });
+    var extra = qzShuffle(pool.slice()).slice(0, 10 - words.length);
+    words = words.concat(extra);
+  }
+  return words;
+}
+function tgQuizStart(){
+  tgStopAuto();
+  var pool = tgQuizPool();
+  var sample = qzShuffle(pool.slice()).slice(0, 10);
+  LQ.qs = sample.map(function(v, idx){
+    var type = idx % 3;
+    var field = type === 0 ? 'meaning' : (type === 1 ? 'reading' : 'word');
+    var opts = qzPick(pool.filter(function(x){ return x !== v; }), field, v[field], 3);
+    opts.push(v); qzShuffle(opts);
+    return { v: v, type: type, opts: opts, ans: opts.indexOf(v) };
+  });
+  LQ.i = 0; LQ.score = 0; LQ.locked = false;
+  tgQuizRender();
+}
+function tgQuizRender(){
+  LQ.locked = false;
+  var q = LQ.qs[LQ.i];
+  var field = q.type === 0 ? 'meaning' : (q.type === 1 ? 'reading' : 'word');
+  var head = '';
+  if(q.type === 0) head = '<div class="qz-q">Từ này có nghĩa là gì?</div><div class="qz-word">' + grEsc(q.v.word) + '</div><div class="qz-sub">' + grEsc(q.v.reading) + ' · ' + grEsc(q.v.hanViet) + '</div>';
+  else if(q.type === 1) head = '<div class="qz-q">Từ này đọc là gì?</div><div class="qz-word">' + grEsc(q.v.word) + '</div><div class="qz-sub">' + grEsc(q.v.hanViet) + ' · ' + grEsc(q.v.meaning) + '</div>';
+  else head = '<div class="qz-q">Nghe và chọn từ đúng:</div><div class="qz-word"><button class="audio" style="font-size:26px;padding:10px 18px" onclick="tgQuizSpeak()">🔊 Nghe</button></div><div class="qz-sub">Bấm để nghe lại</div>';
+  var opts = q.opts.map(function(o, i){ return '<button class="qz-opt" id="lqzo' + i + '" onclick="tgQuizAnswer(' + i + ')">' + grEsc(o[field]) + '</button>'; }).join('');
+  document.getElementById('tgmode').innerHTML = '<div class="qz-card">' + head + '<div class="qz-opts">' + opts + '</div><div class="qz-exp" id="lqzexp"></div><div id="lqznext"></div><div style="margin-top:10px;font-size:13px;color:#999">Câu ' + (LQ.i + 1) + '/10 · Điểm: ' + LQ.score + '</div></div>';
+  if(q.type === 2) setTimeout(tgQuizSpeak, 250);
+}
+function tgQuizSpeak(){ var q = LQ.qs[LQ.i]; if(q) speak(q.v.word); }
+function tgQuizAnswer(i){
+  if(LQ.locked) return;
+  LQ.locked = true;
+  var q = LQ.qs[LQ.i];
+  q.opts.forEach(function(o, j){
+    var b = document.getElementById('lqzo' + j);
+    b.disabled = true;
+    if(j === q.ans) b.classList.add('ok');
+    else if(j === i) b.classList.add('bad');
+  });
+  var right = i === q.ans;
+  if(right) LQ.score++;
+  document.getElementById('lqzexp').innerHTML = (right ? '✅ Đúng! ' : '❌ Sai. Đáp án đúng được tô xanh. ') + '<b>' + grEsc(q.v.word) + '</b> (' + grEsc(q.v.reading) + ' · ' + grEsc(q.v.hanViet) + ') — ' + grEsc(q.v.meaning) + ' <button class="audio" onclick="tgQuizSpeak()">🔊</button>';
+  document.getElementById('lqznext').innerHTML = '<button class="qz-next" onclick="tgQuizNext()">' + (LQ.i < 9 ? 'Câu tiếp theo ➜' : 'Xem kết quả 🏁') + '</button>';
+}
+function tgQuizNext(){
+  LQ.i++;
+  if(LQ.i < 10){ tgQuizRender(); return; }
+  tgProgMark(TGV.lv, TGV.li);
+  if(typeof psLog === 'function') psLog('quiz');
+  if(typeof psRecord === 'function') psRecord('quiz', LQ.score);
+  var msg = LQ.score >= 9 ? 'Xuất sắc! Bạn nắm rất chắc từ vựng bài này.' : (LQ.score >= 7 ? 'Khá tốt! Ôn thêm một chút nữa là chắc.' : (LQ.score >= 5 ? 'Tạm ổn — nên ôn lại các từ sai bằng Flashcard.' : 'Cần ôn thêm: hãy dùng Flashcard để học lại bài này.'));
+  document.getElementById('tgmode').innerHTML = '<div class="qz-card"><div class="qz-q">Kết quả trắc nghiệm bài này</div><div class="qz-score">' + LQ.score + '/10</div><div class="qz-exp">' + msg + '</div><button class="qz-next" onclick="tgQuizStart()">🔁 Làm lại 10 câu mới</button> <button class="chipbtn" onclick="tgSetMode(\'flash\')">🗂 Về Flashcard</button></div>';
+}
+function tgListenStart(){
+  tgStopAuto();
+  var pool = tgQuizPool();
+  var sample = qzShuffle(pool.slice()).slice(0, 10);
+  LS.qs = sample.map(function(v){
+    var opts = qzPick(pool.filter(function(x){ return x !== v; }), 'word', v.word, 3);
+    opts.push(v); qzShuffle(opts);
+    return { v: v, opts: opts, ans: opts.indexOf(v) };
+  });
+  LS.i = 0; LS.score = 0; LS.locked = false;
+  tgListenRender();
+}
+function tgListenRender(){
+  LS.locked = false;
+  var q = LS.qs[LS.i];
+  var opts = q.opts.map(function(o, i){ return '<button class="qz-opt" id="lszo' + i + '" onclick="tgListenAnswer(' + i + ')">' + grEsc(o.word) + '</button>'; }).join('');
+  document.getElementById('tgmode').innerHTML = '<div class="qz-card"><div class="qz-q">Nghe và chọn từ đúng:</div><div class="qz-word"><button class="audio" style="font-size:26px;padding:10px 18px" onclick="tgListenSpeak()">🔊 Nghe</button></div><div class="qz-sub">Bấm để nghe lại · Câu ' + (LS.i + 1) + '/10 · Điểm: ' + LS.score + '</div><div class="qz-opts">' + opts + '</div><div class="qz-exp" id="lszexp"></div><div id="lsznext"></div></div>';
+  setTimeout(tgListenSpeak, 250);
+}
+function tgListenSpeak(){ var q = LS.qs[LS.i]; if(q) speak(q.v.word); }
+function tgListenAnswer(i){
+  if(LS.locked) return;
+  LS.locked = true;
+  var q = LS.qs[LS.i];
+  q.opts.forEach(function(o, j){
+    var b = document.getElementById('lszo' + j);
+    b.disabled = true;
+    if(j === q.ans) b.classList.add('ok');
+    else if(j === i) b.classList.add('bad');
+  });
+  var right = i === q.ans;
+  if(right) LS.score++;
+  document.getElementById('lszexp').innerHTML = (right ? '✅ Đúng! ' : '❌ Sai. Đáp án đúng được tô xanh. ') + '<b>' + grEsc(q.v.word) + '</b> (' + grEsc(q.v.reading) + ' · ' + grEsc(q.v.hanViet) + ') — ' + grEsc(q.v.meaning) + ' <button class="audio" onclick="tgListenSpeak()">🔊</button>';
+  document.getElementById('lsznext').innerHTML = '<button class="qz-next" onclick="tgListenNext()">' + (LS.i < 9 ? 'Câu tiếp theo ➜' : 'Xem kết quả 🏁') + '</button>';
+}
+function tgListenNext(){
+  LS.i++;
+  if(LS.i < 10){ tgListenRender(); return; }
+  tgProgMark(TGV.lv, TGV.li);
+  document.getElementById('tgmode').innerHTML = '<div class="qz-card"><div class="qz-q">Kết quả Nghe đuổi</div><div class="qz-score">' + LS.score + '/10</div><div class="qz-exp">' + (LS.score >= 8 ? 'Nghe rất tốt!' : 'Nghe lại vài lần nữa sẽ quen tai hơn.') + '</div><button class="qz-next" onclick="tgListenStart()">🔁 Nghe lại 10 từ mới</button> <button class="chipbtn" onclick="tgSetMode(\'flash\')">🗂 Về Flashcard</button></div>';
+}
+function tgRenderWords(){
+  var el = document.getElementById('tgwords'); if(!el) return;
+  var L = tgLessons(TGV.lv)[TGV.li];
+  var html = '';
+  L.words.forEach(function(w, i){
+    var chips = (w.kanjis || []).map(function(ch){ return '<button class="tg-chip" title="Xem chữ ' + grEsc(ch) + '" onclick="tgOpenKanji(\'' + ch + '\')">' + grEsc(ch) + '</button>'; }).join('');
+    var starred = tgIsStar(TGV.lv, w);
+    html += '<div class="tg-wrow"><div class="top"><span class="num">' + (i + 1) + '.</span><div><div class="w">' + grEsc(w.word) + '</div><div class="r">' + grEsc(w.reading) + ' · <b>' + grEsc(w.hanViet) + '</b></div><div class="m">' + grEsc(w.meaning) + '</div>' + (chips ? '<div class="tg-kchips">' + chips + '</div>' : '') + '</div><span class="acts"><button title="Đánh dấu" class="' + (starred ? 'star-on' : '') + '" onclick="tgStar(' + i + ',this)">★</button><button title="Nghe" onclick="tgWordSpeak(' + i + ')">🔊</button></span></div></div>';
+  });
+  el.innerHTML = html || '<div style="padding:18px;color:#777">Bài này chưa có từ nào.</div>';
+}
+function tgWordSpeak(i){ var w = tgLessons(TGV.lv)[TGV.li].words[i]; if(w) speak(w.word); }
+function tgStar(i, btn){
+  var w = tgLessons(TGV.lv)[TGV.li].words[i];
+  tgToggleStarKey(TGV.lv, w);
+  if(btn) btn.classList.toggle('star-on');
+}
+/* ===== Bảng chữ cái (Kana) ===== */
+var AL_HIRA_SEION = ['あ','い','う','え','お','か','き','く','け','こ','さ','し','す','せ','そ','た','ち','つ','て','と','な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ','ま','み','む','め','も','や','ゆ','よ','ら','り','る','れ','ろ','わ','を','ん'];
+var AL_ROMA_SEION = ['a','i','u','e','o','ka','ki','ku','ke','ko','sa','shi','su','se','so','ta','chi','tsu','te','to','na','ni','nu','ne','no','ha','hi','fu','he','ho','ma','mi','mu','me','mo','ya','yu','yo','ra','ri','ru','re','ro','wa','wo','n'];
+var AL_KATA_SEION = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン'];
+var AL_HIRA_DAKU = ['が','ぎ','ぐ','げ','ご','ざ','じ','ず','ぜ','ぞ','だ','ぢ','づ','で','ど','ば','び','ぶ','べ','ぼ','ぱ','ぴ','ぷ','ぺ','ぽ'];
+var AL_ROMA_DAKU = ['ga','gi','gu','ge','go','za','ji','zu','ze','zo','da','ji','zu','de','do','ba','bi','bu','be','bo','pa','pi','pu','pe','po'];
+var AL_KATA_DAKU = ['ガ','ギ','グ','ゲ','ゴ','ザ','ジ','ズ','ゼ','ゾ','ダ','ヂ','ヅ','デ','ド','バ','ビ','ブ','ベ','ボ','パ','ピ','プ','ペ','ポ'];
+var AL_HIRA_YOON = ['きゃ','きゅ','きょ','しゃ','しゅ','しょ','ちゃ','ちゅ','ちょ','にゃ','にゅ','にょ','ひゃ','ひゅ','ひょ','みゃ','みゅ','みょ','りゃ','りゅ','りょ','ぎゃ','ぎゅ','ぎょ','じゃ','じゅ','じょ','びゃ','びゅ','びょ','ぴゃ','ぴゅ','ぴょ'];
+var AL_ROMA_YOON = ['kya','kyu','kyo','sha','shu','sho','cha','chu','cho','nya','nyu','nyo','hya','hyu','hyo','mya','myu','myo','rya','ryu','ryo','gya','gyu','gyo','ja','ju','jo','bya','byu','byo','pya','pyu','pyo'];
+var AL_KATA_YOON = ['キャ','キュ','キョ','シャ','シュ','ショ','チャ','チュ','チョ','ニャ','ニュ','ニョ','ヒャ','ヒュ','ヒョ','ミャ','ミュ','ミョ','リャ','リュ','リョ','ギャ','ギュ','ギョ','ジャ','ジュ','ジョ','ビャ','ビュ','ビョ','ピャ','ピュ','ピョ'];
+var ALP = { tab: 'hira', sel: null, fc: null, wr: null };
+var ALS_KEY = 'kanjivn_alpha_listen_v1';
+var ALS = { table: 'hira', deck: [], idx: 0, score: 0, cur: null, locked: false, active: false };
+function tgKanaList(tab){
+  var h = tab === 'hira';
+  var groups = [
+    ['ÂM TRONG (SEION)', h ? AL_HIRA_SEION : AL_KATA_SEION, AL_ROMA_SEION],
+    ['ÂM ĐỤC・BÁN ĐỤC (DAKUON・HANDAKUON)', h ? AL_HIRA_DAKU : AL_KATA_DAKU, AL_ROMA_DAKU],
+    ['ÂM GHÉP (YŌON)', h ? AL_HIRA_YOON : AL_KATA_YOON, AL_ROMA_YOON]
+  ];
+  var all = [];
+  groups.forEach(function(g){ g[1].forEach(function(k, i){ all.push({ k: k, r: g[2][i], g: g[0] }); }); });
+  return { groups: groups, all: all };
+}
+function tgShowAlphabet(){
+  tgStopAuto();
+  TGV.view = 'alphabet';
+  ALP.fc = null; ALP.wr = null;
+  var html = '<div class="fc-top"><span class="t">🔤 Bảng chữ cái tiếng Nhật</span><span class="sp2"></span><button class="chipbtn" onclick="tgShowCourses()">← Quay lại</button><button class="chipbtn" onclick="closeTango()">✕ Thoát</button></div>' +
+    '<div style="font-size:13.5px;color:#888;margin-top:8px">Bấm vào một chữ để xem lớn và nghe âm đọc. Học theo nhóm: âm trong, âm đục・bán đục, âm ghép.</div>' +
+    '<div class="tg-alp-tabs"><button class="grtab' + (ALP.tab === 'hira' ? ' on' : '') + '" id="alptab-hira" onclick="tgAlpTab(\'hira\')">あ Hiragana</button><button class="grtab' + (ALP.tab === 'kata' ? ' on' : '') + '" id="alptab-kata" onclick="tgAlpTab(\'kata\')">ア Katakana</button></div>' +
+    '<div id="alpbig"></div>' +
+    '<div id="alpgrid"></div>' +
+    '<div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="chipbtn" onclick="tgAlpFlash()">🗂 Flashcard</button><button class="chipbtn" onclick="tgAlpWrite()">✍ Luyện viết</button></div>' +
+    '<div id="alpbox"></div>' +
+    '<div class="tg-sec">Bài tập nghe chọn chữ</div>' +
+    '<div style="font-size:13.5px;color:#666">Mỗi vòng nghe âm đọc rồi chọn chữ cái đúng. Bấm đáp án là chấm ngay, tiến độ tự lưu — thoát ra vào lại làm tiếp.</div>' +
+    '<div class="tg-modes"><span style="align-self:center;font-weight:700;color:#17324a">Bảng chữ:</span>' +
+    '<button class="tg-modebtn" id="alsel-hira" onclick="tgAlpListenTable(\'hira\')">Hiragana</button>' +
+    '<button class="tg-modebtn" id="alsel-kata" onclick="tgAlpListenTable(\'kata\')">Katakana</button>' +
+    '<button class="tg-modebtn" id="alsel-both" onclick="tgAlpListenTable(\'both\')">Cả hai</button>' +
+    '<button class="qz-next" style="margin-top:0" onclick="tgAlpListenStart()">▶ Bắt đầu</button></div>' +
+    '<div id="alsbox"></div>';
+  document.getElementById('tgview').innerHTML = html;
+  tgAlpRenderGrid();
+  tgAlpListenSyncBtns();
+}
+function tgAlpTab(tab){
+  ALP.tab = tab; ALP.sel = null; ALP.fc = null; ALP.wr = null;
+  var b = document.getElementById('alpbox'); if(b) b.innerHTML = '';
+  document.getElementById('alptab-hira').className = 'grtab' + (tab === 'hira' ? ' on' : '');
+  document.getElementById('alptab-kata').className = 'grtab' + (tab === 'kata' ? ' on' : '');
+  tgAlpRenderGrid();
+}
+function tgAlpRenderGrid(){
+  var d = tgKanaList(ALP.tab);
+  var html = '';
+  d.groups.forEach(function(g){
+    html += '<div class="tg-alp-grp">' + g[0] + ' · ' + g[1].length + ' chữ</div><div class="tg-alp-grid">';
+    g[1].forEach(function(k, i){
+      var sel = ALP.sel && ALP.sel.k === k;
+      html += '<button class="tg-kana' + (sel ? ' sel' : '') + '" onclick="tgAlpPick(\'' + k + '\',\'' + g[2][i] + '\')"><span class="k">' + k + '</span><span class="r">' + g[2][i] + '</span></button>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('alpgrid').innerHTML = html;
+  var big = document.getElementById('alpbig');
+  if(ALP.sel) big.innerHTML = '<div class="tg-alp-big"><div class="bk">' + ALP.sel.k + '</div><div class="br">' + ALP.sel.r + '</div><button class="audio" style="margin-top:8px" onclick="speak(\'' + ALP.sel.k + '\')">🔊 Nghe</button></div>';
+  else big.innerHTML = '';
+}
+function tgAlpPick(k, r){ ALP.sel = { k: k, r: r }; speak(k); tgAlpRenderGrid(); }
+function tgAlpFlash(){
+  var d = tgKanaList(ALP.tab);
+  ALP.fc = { deck: d.all.slice(), idx: 0, flipped: false };
+  ALP.wr = null;
+  tgAlpFlashRender();
+}
+function tgAlpFlashRender(){
+  var fc = ALP.fc; if(!fc) return;
+  var it = fc.deck[fc.idx];
+  var body = fc.flipped
+    ? '<div class="tg-fc-read">' + it.r + '</div><div class="tg-fc-hint">Romaji · nhóm ' + it.g + '</div><button class="tg-fc-spk" onclick="event.stopPropagation();speak(\'' + it.k + '\')">🔊</button>'
+    : '<div class="tg-fc-word">' + it.k + '</div><button class="tg-fc-spk" onclick="event.stopPropagation();speak(\'' + it.k + '\')">🔊</button>';
+  document.getElementById('alpbox').innerHTML = '<div class="tg-fc" onclick="tgAlpFcFlip()">' + body + '<div class="tg-fc-hint">Bấm vào thẻ để lật · Space: lật · ←/→: chuyển chữ</div></div>' +
+    '<div class="tg-fcctl"><button class="tg-ctl" onclick="tgAlpFcNav(-1)">⬅ Trước</button><span class="cnt">' + (fc.idx + 1) + '/' + fc.deck.length + '</span><button class="tg-ctl" onclick="tgAlpFcNav(1)">Tiếp ➡</button><button class="tg-ctl" onclick="tgAlpFcShuffle()">🔀 Xáo trộn</button></div>';
+}
+function tgAlpFcFlip(){ if(ALP.fc){ ALP.fc.flipped = !ALP.fc.flipped; tgAlpFlashRender(); } }
+function tgAlpFcNav(d){ if(!ALP.fc) return; var n = ALP.fc.deck.length; ALP.fc.idx = (ALP.fc.idx + d + n) % n; ALP.fc.flipped = false; tgAlpFlashRender(); }
+function tgAlpFcShuffle(){ if(!ALP.fc) return; var a = ALP.fc.deck; for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } ALP.fc.idx = 0; ALP.fc.flipped = false; tgAlpFlashRender(); }
+function tgAlpWrite(){
+  ALP.fc = null;
+  var d = tgKanaList(ALP.tab);
+  ALP.wr = { list: d.all, idx: 0, drawing: false, pts: [] };
+  tgAlpWriteRender();
+}
+function tgAlpWriteRender(){
+  var wr = ALP.wr; if(!wr) return;
+  var it = wr.list[wr.idx];
+  document.getElementById('alpbox').innerHTML = '<div class="tg-alp-box"><div style="font-weight:800;color:#17324a;font-size:16px">Luyện viết: <span style="font-size:26px">' + it.k + '</span> · ' + it.r + '</div>' +
+    '<div style="font-size:13px;color:#888;margin:4px 0 10px">Viết theo chữ mẫu mờ trên khung, bấm Xóa để viết lại.</div>' +
+    '<canvas id="alpcanvas" width="340" height="340" style="width:340px;height:340px"></canvas>' +
+    '<div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="tg-ctl" onclick="tgAlpWrNav(-1)">⬅ Chữ trước</button><button class="tg-ctl" onclick="tgAlpWrClear()">🧹 Xóa</button><button class="tg-ctl" onclick="speak(\'' + it.k + '\')">🔊 Nghe</button><button class="tg-ctl" onclick="tgAlpWrNav(1)">Chữ sau ➡</button></div></div>';
+  tgAlpWrDraw();
+  var cv = document.getElementById('alpcanvas');
+  cv.addEventListener('pointerdown', tgAlpWrStart);
+  cv.addEventListener('pointermove', tgAlpWrMove);
+  cv.addEventListener('pointerup', tgAlpWrEnd);
+  cv.addEventListener('pointerleave', tgAlpWrEnd);
+}
+function tgAlpWrDraw(){
+  var cv = document.getElementById('alpcanvas'); if(!cv) return;
+  var c = cv.getContext('2d');
+  c.clearRect(0, 0, cv.width, cv.height);
+  var it = ALP.wr.list[ALP.wr.idx];
+  c.font = '260px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillStyle = '#eef2f6'; c.fillText(it.k, cv.width / 2, cv.height / 2 + 10);
+  c.strokeStyle = '#d9e2ec'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(cv.width / 2, 0); c.lineTo(cv.width / 2, cv.height); c.moveTo(0, cv.height / 2); c.lineTo(cv.width, cv.height / 2); c.stroke();
+  (ALP.wr.pts || []).forEach(function(st){
+    c.beginPath(); c.strokeStyle = '#17324a'; c.lineWidth = 7; c.lineCap = 'round';
+    for(var i = 0; i < st.length; i++){ if(i === 0) c.moveTo(st[i].x, st[i].y); else c.lineTo(st[i].x, st[i].y); }
+    c.stroke();
+  });
+}
+function tgAlpWrPos(e){ var cv = document.getElementById('alpcanvas'); var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; }
+function tgAlpWrStart(e){ if(!ALP.wr) return; e.preventDefault(); ALP.wr.drawing = true; ALP.wr.pts.push([tgAlpWrPos(e)]); }
+function tgAlpWrMove(e){ if(!ALP.wr || !ALP.wr.drawing) return; e.preventDefault(); ALP.wr.pts[ALP.wr.pts.length - 1].push(tgAlpWrPos(e)); tgAlpWrDraw(); }
+function tgAlpWrEnd(){ if(ALP.wr) ALP.wr.drawing = false; }
+function tgAlpWrClear(){ if(ALP.wr){ ALP.wr.pts = []; tgAlpWrDraw(); } }
+function tgAlpWrNav(d){ if(!ALP.wr) return; var n = ALP.wr.list.length; ALP.wr.idx = (ALP.wr.idx + d + n) % n; ALP.wr.pts = []; tgAlpWriteRender(); }
+function tgAlpListenTable(t){ ALS.table = t; tgAlpListenSyncBtns(); }
+function tgAlpListenSyncBtns(){
+  ['hira','kata','both'].forEach(function(t){ var b = document.getElementById('alsel-' + t); if(b) b.classList.toggle('on', ALS.table === t); });
+}
+function tgAlpListenDeck(t){
+  var h = tgKanaList('hira').all, k = tgKanaList('kata').all;
+  var deck = t === 'hira' ? h.slice() : (t === 'kata' ? k.slice() : h.concat(k));
+  for(var i = deck.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var x = deck[i]; deck[i] = deck[j]; deck[j] = x; }
+  return deck.map(function(it){ var c = it.k.charCodeAt(0); return { k: it.k, r: it.r, tab: (c >= 0x3040 && c <= 0x309F) ? 'hira' : 'kata' }; });
+}
+function tgAlpListenSave(){
+  try { localStorage.setItem(ALS_KEY, JSON.stringify({ table: ALS.table, idx: ALS.idx, score: ALS.score, deck: ALS.deck })); } catch(e){}
+}
+function tgAlpListenLoad(){
+  try { var s = JSON.parse(localStorage.getItem(ALS_KEY) || 'null'); return s; } catch(e){ return null; }
+}
+function tgAlpListenStart(){
+  var saved = tgAlpListenLoad();
+  if(saved && saved.table === ALS.table && saved.deck && saved.deck.length && saved.idx < saved.deck.length){
+    ALS.deck = saved.deck; ALS.idx = saved.idx; ALS.score = saved.score;
+  } else {
+    ALS.deck = tgAlpListenDeck(ALS.table); ALS.idx = 0; ALS.score = 0;
+  }
+  ALS.active = true;
+  tgAlpListenSave();
+  tgAlpListenRender();
+}
+function tgAlpListenRender(){
+  var box = document.getElementById('alsbox'); if(!box) return;
+  if(!ALS.active || ALS.idx >= ALS.deck.length){
+    box.innerHTML = ALS.active ? '<div class="qz-card"><div class="qz-q">Đã nghe hết vòng này 🎉</div><div class="qz-score">' + ALS.score + '/' + ALS.deck.length + '</div><div class="qz-exp">Bấm Bắt đầu để làm vòng mới (xáo thứ tự khác).</div></div>' : '';
+    return;
+  }
+  var cur = ALS.deck[ALS.idx];
+  var sameTab = tgKanaList(cur.tab).all;
+  var opts = [cur];
+  var guard = 0;
+  while(opts.length < 4 && guard++ < 500){
+    var c = sameTab[Math.floor(Math.random() * sameTab.length)];
+    if(opts.some(function(o){ return o.r === c.r; })) continue;
+    opts.push({ k: c.k, r: c.r, tab: cur.tab });
+  }
+  for(var i = opts.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = opts[i]; opts[i] = opts[j]; opts[j] = t; }
+  ALS.cur = { ans: opts.indexOf(cur), opts: opts, item: cur };
+  ALS.locked = false;
+  var ob = opts.map(function(o, i){ return '<button class="qz-opt" id="alzo' + i + '" onclick="tgAlpListenAnswer(' + i + ')">' + o.k + '</button>'; }).join('');
+  box.innerHTML = '<div class="qz-card"><div class="qz-q">Nghe âm rồi chọn chữ đúng:</div><div class="qz-word"><button class="audio" style="font-size:26px;padding:10px 18px" onclick="tgAlpListenSpeak()">🔊 Nghe</button></div><div class="qz-sub">Chữ ' + (ALS.idx + 1) + '/' + ALS.deck.length + ' · Đúng: ' + ALS.score + ' · Bảng: ' + (ALS.table === 'hira' ? 'Hiragana' : (ALS.table === 'kata' ? 'Katakana' : 'Cả hai')) + '</div><div class="qz-opts">' + ob + '</div><div class="qz-exp" id="alzexp"></div><div id="alznext"></div></div>';
+  setTimeout(tgAlpListenSpeak, 250);
+}
+function tgAlpListenSpeak(){ if(ALS.cur) speak(ALS.cur.item.k); }
+function tgAlpListenAnswer(i){
+  if(ALS.locked || !ALS.cur) return;
+  ALS.locked = true;
+  var cur = ALS.cur;
+  cur.opts.forEach(function(o, j){
+    var b = document.getElementById('alzo' + j);
+    b.disabled = true;
+    if(j === cur.ans) b.classList.add('ok');
+    else if(j === i) b.classList.add('bad');
+  });
+  var right = i === cur.ans;
+  if(right) ALS.score++;
+  document.getElementById('alzexp').innerHTML = (right ? '✅ Đúng! ' : '❌ Sai. Đáp án đúng được tô xanh. ') + '<b>' + cur.item.k + '</b> — ' + cur.item.r;
+  document.getElementById('alznext').innerHTML = '<button class="qz-next" onclick="tgAlpListenNext()">Chữ tiếp theo ➜</button>';
+  tgAlpListenSave();
+}
+function tgAlpListenNext(){
+  ALS.idx++;
+  if(ALS.idx >= ALS.deck.length){
+    ALS.active = false;
+    try { localStorage.removeItem(ALS_KEY); } catch(e){}
+    var box = document.getElementById('alsbox');
+    if(box) box.innerHTML = '<div class="qz-card"><div class="qz-q">Đã nghe hết vòng này 🎉</div><div class="qz-score">' + ALS.score + '/' + ALS.deck.length + '</div><div class="qz-exp">Bấm Bắt đầu để làm vòng mới (xáo thứ tự khác).</div></div>';
+    return;
+  }
+  tgAlpListenSave();
+  tgAlpListenRender();
+}
 
 
 /* ===== Trắc nghiệm ===== */
