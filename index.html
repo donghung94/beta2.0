@@ -316,6 +316,28 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 .jl-opt.bad{border-color:#c62828;background:#fdecea}
 .jl-opt:disabled{cursor:default}
 .jl-exp{margin-top:9px;font-size:13.5px;color:#555;line-height:1.5;display:none}
+/* ===== Thi thử JLPT đầy đủ ===== */
+.jl-sec{font-size:12px;color:#888;margin-top:10px}
+.jl-grid{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+.jl-gbtn{width:30px;height:30px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:12.5px;cursor:pointer}
+.jl-gbtn.on{background:#c62828;color:#fff;border-color:#c62828}
+.jl-mode{display:grid;gap:10px;margin:14px 0}
+.jl-modeb{border:2px solid #e2e2e2;border-radius:14px;padding:14px;background:#fff;cursor:pointer;text-align:left}
+.jl-modeb:hover{border-color:#c62828}
+.jl-modeb b{font-size:16px;color:#17324a}
+.jl-modeb span{display:block;color:#666;font-size:13.5px;margin-top:4px;line-height:1.5}
+.jl-sample{margin-top:18px;text-align:left;background:#f6f8fb;border:1px solid #e2e2e2;border-radius:14px;padding:14px}
+.jl-sample h3{margin:0 0 6px;font-size:15px;color:#17324a}
+.jl-sample a{color:#c62828}
+.jl-star-slots{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.jl-slot{min-width:64px;padding:9px 10px;border:2px dashed #c62828;border-radius:10px;background:#fff;font-size:15px;cursor:pointer}
+.jl-slot.star{border-style:solid;background:#fdecea}
+.jl-chunk{padding:9px 12px;border:2px solid #e2e2e2;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;margin:0 6px 6px 0}
+.jl-chunk.used{opacity:.35}
+.jl-res-tbl{width:100%;border-collapse:collapse;margin:12px 0;text-align:left;font-size:14px}
+.jl-res-tbl th,.jl-res-tbl td{border-bottom:1px solid #eee;padding:8px 6px}
+.jl-note{font-size:12.5px;color:#888;line-height:1.6;margin-top:10px}
+
 .jl-start{text-align:center;padding:26px 10px}
 .jl-big{font-size:19px;font-weight:800;color:#17324a}
 .jl-sub{color:#666;font-size:14px;margin-top:6px;line-height:1.6}
@@ -4491,8 +4513,9 @@ function radShow(i){
 
 
 /* ===== Thi thử JLPT ===== */
-var JL = { lv: 'N5', qs: [], ans: {}, timer: null, left: 0, used: 0, on: false };
+var JL = { lv: 'N5', mode: 'quick', sess: 0, qs: [], ans: {}, allAns: {}, allQs: [], s1: null, s2: null, s1res: null, s2res: null, timer: null, left: 0, used: 0, on: false };
 var JLGRAM = { N5: GRAMMAR5, N4: GRAMMAR4, N3: GRAMMAR3, N2: GRAMMAR2, N1: GRAMMAR1 };
+
 function jlSet(lv){ JL.lv = lv; jlStopTimer(); jlHome(); jlTabs(); }
 function jlTabs(){ ['N5','N4','N3','N2','N1'].forEach(function(l){ var el = document.getElementById('jtab' + l.slice(1)); if(el) el.classList.toggle('on', l === JL.lv); }); }
 function openJLPT(){
@@ -4515,10 +4538,6 @@ function closeJLPT(skip){
   if(!skip) showHome();
 }
 function jlStopTimer(){ if(JL.timer){ clearInterval(JL.timer); JL.timer = null; } var t = document.getElementById('jltimer'); if(t) t.style.display = 'none'; }
-function jlHome(){
-  JL.on = false;
-  document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">Đề thi thử JLPT ' + JL.lv + '</div><div class="jl-sub">Theo format thi thật: <b>20 câu</b> gồm 10 câu Chữ &amp; Từ vựng （文字・語彙） + 10 câu Ngữ pháp （文法）<br>Thời gian: <b>25 phút</b> (có đồng hồ đếm ngược, hết giờ tự nộp) · Đạt khi đúng từ <b>60%</b><br>Nghe hiểu （聴解） sẽ làm ở giai đoạn sau với giọng đọc chuẩn.</div><button class="qz-next" onclick="jlStart()">▶ Bắt đầu làm bài</button></div>';
-}
 function jlPick(pool, field, correctVal, n, exclude){
   var out = [], copy = pool.slice(), guard = 0;
   while(out.length < n && copy.length && guard++ < 600){
@@ -4530,7 +4549,10 @@ function jlPick(pool, field, correctVal, n, exclude){
   }
   return out;
 }
+function jlHome(){ jlFHome(); }
+
 function jlStart(){
+  JL.mode = 'quick';
   var lv = JL.lv;
   tgBuild(lv);
   var pool = (TG.data[lv] || []).slice();
@@ -4563,9 +4585,10 @@ function jlTick(){
   var t = document.getElementById('jltimer'); if(!t) return;
   var m = Math.floor(JL.left / 60), s = JL.left % 60;
   t.textContent = '⏱ ' + m + ':' + (s < 10 ? '0' : '') + s;
-  if(JL.left <= 0){ jlStopTimer(); jlSubmit(true); return; }
+  if(JL.left <= 0){ jlStopTimer(); if(JL.mode === 'full') jlFSessionSubmit(true); else jlSubmit(true); return; }
   JL.left--; JL.used++;
 }
+
 function jlRenderExam(){
   var html = JL.qs.map(function(q, i){
     var opts = q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlChoose(' + i + ',' + j + ')">' + (j + 1) + '. ' + grEsc(o) + '</button>'; }).join('');
@@ -4602,7 +4625,481 @@ function jlSubmit(auto){
   document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">' + (auto ? '⏰ Hết giờ! ' : '') + 'Kết quả JLPT ' + JL.lv + '</div><div class="qz-score">' + score + '/' + JL.qs.length + ' (' + pct + '%)</div><div class="jl-sub">' + (pass ? '🎉 ĐẠT (từ 60%) — giữ phong độ này tới ngày thi thật.' : 'Chưa đạt (cần từ 60%) — xem lại phần giải thích bên dưới rồi làm đề mới.') + '<br>Thời gian làm bài: ' + mm + ' phút ' + ss + ' giây</div><button class="qz-next" onclick="jlStart()">🔁 Làm đề mới</button> <button class="chipbtn" onclick="jlHome()">Về trang đề thi</button></div>' + review;
   window.scrollTo({ top: document.getElementById('jlptbox','tokuteibox').offsetTop - 70, behavior: 'smooth' });
 }
+/* ===== Thi thử JLPT — bản đầy đủ như thi thật (phần Viết) ===== */
+var JLCFG = {
+  N5:{total:67, pass:44.4, s1:{n:35,min:20}, s2:{n:32,min:40}, secs:[{id:'w',name:'Phần Viết (gộp)'}]},
+  N4:{total:70, pass:50, s1:{n:35,min:25}, s2:{n:35,min:55}, secs:[{id:'w',name:'Phần Viết (gộp)'}]},
+  N3:{total:74, pass:52.8, s1:{n:35,min:30}, s2:{n:39,min:70}, secs:[{id:'lang',name:'言語知識 (Từ vựng + Ngữ pháp)'},{id:'read',name:'読解'}]},
+  N2:{total:75, pass:50, s1:null, min:105, secs:[{id:'lang',name:'言語知識 (Từ vựng + Ngữ pháp)'},{id:'read',name:'読解'}]},
+  N1:{total:71, pass:55.6, s1:null, min:110, secs:[{id:'lang',name:'言語知識 (Từ vựng + Ngữ pháp)'},{id:'read',name:'読解'}]}
+};
+var JLQSPEC = {
+  N5:{kanji:12, hyoki:8, ctx:10, syn:5, youhou:0, kotoba:0, g1:16, g1sub:5, star:5, info:1, ctxRead:5},
+  N4:{kanji:9, hyoki:6, ctx:10, syn:5, youhou:5, kotoba:0, g1:15, g1sub:5, star:5, info:2, ctxRead:8},
+  N3:{kanji:8, hyoki:6, ctx:11, syn:5, youhou:5, kotoba:0, g1:13, g1sub:5, star:5, info:2, ctxRead:14},
+  N2:{kanji:5, hyoki:5, ctx:7, syn:5, youhou:5, kotoba:5, g1:12, g1sub:5, star:5, info:2, ctxRead:19},
+  N1:{kanji:6, hyoki:0, ctx:7, syn:6, youhou:6, kotoba:0, g1:10, g1sub:5, star:5, info:2, ctxRead:24}
+};
+var JLINFO = [
+  {tpl:'<b>にほんご教室の時間割</b><br>月曜日：9:00〜10:30　N5クラス<br>火曜日：13:00〜14:30　N4クラス<br>水曜日：18:00〜19:30　N3クラス<br>木曜日：10:00〜11:30　N5クラス<br>金曜日：休み', q:'N5クラスは何曜日にありますか。', opts:['月曜日と木曜日','火曜日と木曜日','月曜日と水曜日','水曜日と金曜日'], ans:0, exp:'時間割によると、N5クラスは月曜日（9:00〜）と木曜日（10:00〜）にあります。'},
+  {tpl:'<b>にほんご教室の時間割</b><br>月曜日：9:00〜10:30　N5クラス<br>火曜日：13:00〜14:30　N4クラス<br>水曜日：18:00〜19:30　N3クラス<br>木曜日：10:00〜11:30　N5クラス<br>金曜日：休み', q:'N3クラスは何時に始まりますか。', opts:['9:00','13:00','18:00','10:00'], ans:2, exp:'時間割によると、N3クラスは水曜日18:00〜19:30です。'},
+  {tpl:'<b>お知らせ</b><br>来週の土曜日、日本語のスピーチ大会があります。<br>時間：午後2時〜4時<br>場所：3階の大きい教室<br>参加費：無料<br>申し込みは金曜日までです。', q:'スピーチ大会はいつありますか。', opts:['来週の土曜日','今週の土曜日','来週の金曜日','今週の金曜日'], ans:0, exp:'お知らせに「来週の土曜日」と書いてあります。'},
+  {tpl:'<b>お知らせ</b><br>来週の土曜日、日本語のスピーチ大会があります。<br>時間：午後2時〜4時<br>場所：3階の大きい教室<br>参加費：無料<br>申し込みは金曜日までです。', q:'参加費はいくらですか。', opts:['500円','1000円','無料','2000円'], ans:2, exp:'お知らせに「参加費：無料」と書いてあります。'},
+  {tpl:'<b>夏祭り</b><br>8月15日（土）　午後5時〜9時<br>場所：中央公園<br>屋台：たこ焼き、かき氷、ジュース<br>花火は8時からです。雨の日は中止です。', q:'夏祭りは何月何日ですか。', opts:['8月15日','8月5日','7月15日','9月15日'], ans:0, exp:'チラシに「8月15日（土）」と書いてあります。'},
+  {tpl:'<b>夏祭り</b><br>8月15日（土）　午後5時〜9時<br>場所：中央公園<br>屋台：たこ焼き、かき氷、ジュース<br>花火は8時からです。雨の日は中止です。', q:'花火は何時からですか。', opts:['5時','7時','8時','9時'], ans:2, exp:'チラシに「花火は8時からです」と書いてあります。'}
+];
+function jlFPatChunk(g){
+  var p = String((g && g.p) || '');
+  var toks = p.split(/[～〜\[\]・、\s]+/).join(' ').split(' ').filter(function(t){ return t.length > 0; });
+  var cands = [];
+  toks.forEach(function(t){
+    var lit = t.replace(/^[NVA１２３４]+/, '').replace(/[NVA１２３４]+$/, '');
+    if(lit.length > 0 && /[\u3040-\u30ff\u4e00-\u9faf]/.test(lit)) cands.push(lit);
+  });
+  cands.sort(function(a, b){ return b.length - a.length; });
+  return cands;
+}
+function jlFFindIn(jp, wordList){
+  for(var i = 0; i < wordList.length; i++){ if(jp.indexOf(wordList[i]) >= 0) return wordList[i]; }
+  return null;
+}
+function jlFBuild(lv){
+  var spec = JLQSPEC[lv];
+  if(!spec) return null;
+  ['N5','N4','N3','N2','N1'].forEach(function(l){ tgBuild(l); });
+  var pool = (TG.data[lv] || []).slice();
+  var gram = (JLGRAM[lv] || []).slice();
+  if(pool.length < 50 || gram.length < 10) return null;
+  var lvlWords = pool.filter(function(w){ return /[\u4e00-\u9faf]/.test(w.word); }).map(function(w){ return w.word; });
+  lvlWords.sort(function(a, b){ return b.length - a.length; });
+  var allWMap = {};
+  pool.forEach(function(w){ if(/[\u4e00-\u9faf]/.test(w.word) && !allWMap[w.word]) allWMap[w.word] = w; });
+  ['N5','N4','N3','N2','N1'].forEach(function(l){ (TG.data[l] || []).forEach(function(w){ if(/[\u4e00-\u9faf]/.test(w.word) && !allWMap[w.word]) allWMap[w.word] = w; }); });
+  var allWords = Object.keys(allWMap).sort(function(a, b){ return b.length - a.length; });
+  var usedEx = {}, usedWord = {};
+  function markWord(w){ if(w) usedWord[w.word] = 1; }
+  function freshWord(w){ return w && !usedWord[w.word]; }
+  function pickWords(n, pred){
+    var cands = qzShuffle(pool.filter(function(w){ return freshWord(w) && (!pred || pred(w)); }));
+    var out = cands.slice(0, n);
+    out.forEach(markWord);
+    return out;
+  }
+  /* --- example-sentence pool --- */
+  var exs = [];
+  gram.forEach(function(g, gi){
+    (g.ex || []).forEach(function(e, ei){
+      var jp = e[0], vi = e[1];
+      var chunks = jlFPatChunk(g), chunk = null;
+      for(var k = 0; k < chunks.length; k++){
+        var c = chunks[k];
+        if(c.length >= 2 && jp.indexOf(c) >= 0){ chunk = c; break; }
+        if(c.length === 1 && jp.split(c).length - 1 === 1){ chunk = c; break; }
+      }
+      var cw = jlFFindIn(jp, lvlWords);
+      var cwAll = cw || jlFFindIn(jp, allWords);
+      exs.push({jp:jp, vi:vi, gi:gi, ei:ei, p:g.p, s:g.s, m:g.m, chunk:chunk, cw:cw, cwAll:cwAll});
+    });
+  });
+  qzShuffle(exs);
+  function takeEx(pred, n){
+    var out = [];
+    for(var i = 0; i < exs.length && out.length < n; i++){
+      var e = exs[i];
+      if(usedEx[e.gi + '_' + e.ei]) continue;
+      if(pred && !pred(e)) continue;
+      usedEx[e.gi + '_' + e.ei] = 1;
+      out.push(e);
+    }
+    return out;
+  }
+  /* --- đặt trước câu ngữ cảnh (tránh hết câu do g1/star lấy trước) --- */
+  var ctxNeed = spec.ctx + spec.youhou + spec.kotoba + spec.ctxRead + spec.syn; /* +syn: dự phòng bù cho 言い換え類義 thiếu cặp đồng nghĩa */
+  var ctxEx = takeEx(function(e){ return !!e.cw; }, ctxNeed + 3);
+  if(ctxEx.length < ctxNeed + 3){
+    var more = takeEx(function(e){ return !e.cw && !!e.cwAll; }, ctxNeed + 3 - ctxEx.length);
+    ctxEx = ctxEx.concat(more);
+  }
+  /* --- chunk distractor pool (grammar patterns) --- */
+  var chunkPool = {};
+  gram.forEach(function(g){
+    jlFPatChunk(g).forEach(function(c){ if(c.length >= 1) chunkPool[c] = 1; });
+  });
+  var chunkList = Object.keys(chunkPool);
+  function chunkOpts(correct, n){
+    var same = qzShuffle(chunkList.filter(function(c){ return c !== correct && Math.abs(c.length - correct.length) <= 1; }));
+    var rest = qzShuffle(chunkList.filter(function(c){ return c !== correct && Math.abs(c.length - correct.length) > 1; }));
+    var out = same.concat(rest).slice(0, n);
+    return out;
+  }
+  /* --- synonym groups (raw meaning, diacritics kept) --- */
+  var byMean = {};
+  pool.forEach(function(w){ var k = String(w.meaning || '').trim().toLowerCase(); if(k) (byMean[k] = byMean[k] || []).push(w); });
+  var synPairs = [];
+  Object.keys(byMean).forEach(function(k){
+    var ws = {}, arr = [];
+    byMean[k].forEach(function(w){ if(!ws[w.word + '|' + w.reading]){ ws[w.word + '|' + w.reading] = 1; arr.push(w); } });
+    for(var i = 0; i < arr.length; i++) for(var j = 0; j < arr.length; j++){
+      if(i !== j) synPairs.push({a:arr[i], b:arr[j]});
+    }
+  });
+  qzShuffle(synPairs);
+  var qs = [];
+  function pushQ(q){ qs.push(q); }
+  function mkOpts(correct, distracts){
+    var opts = distracts.slice(0, 3); opts.push(correct); qzShuffle(opts);
+    return {opts:opts, ans:opts.indexOf(correct)};
+  }
+  /* 1. 漢字読み */
+  pickWords(spec.kanji, function(){ return true; }).forEach(function(v){
+    var d = jlPick(pool, 'reading', v.reading, 3, [v]).map(function(o){ return o.reading; });
+    var o = mkOpts(v.reading, d);
+    pushQ({sec:'vocab', kind:'漢字読み', q:'「<b>' + grEsc(v.word) + '</b>」の読み方はどれですか。<br><span style="font-size:13px;color:#888">nghĩa: ' + grEsc(v.meaning) + '</span>', opts:o.opts, ans:o.ans, exp:'<b>' + grEsc(v.word) + '</b>（' + grEsc(v.reading) + ' · ' + grEsc(v.hanViet) + '）— ' + grEsc(v.meaning)});
+  });
+  /* 2. 表記 */
+  pickWords(spec.hyoki, function(){ return true; }).forEach(function(v){
+    var homo = qzShuffle(pool.filter(function(w){ return w.reading === v.reading && w.word !== v.word; })).slice(0, 3);
+    var d = homo.map(function(w){ return w.word; });
+    if(d.length < 3){
+      var extra = jlPick(pool, 'word', v.word, 3 - d.length, [v].concat(homo));
+      extra.forEach(function(w){ d.push(w.word); });
+    }
+    var o = mkOpts(v.word, d);
+    pushQ({sec:'vocab', kind:'表記', q:'読み方が「<b>' + grEsc(v.reading) + '</b>」、意味が「' + grEsc(v.meaning) + '」の漢字はどれですか。', opts:o.opts, ans:o.ans, exp:'<b>' + grEsc(v.word) + '</b>（' + grEsc(v.reading) + ' · ' + grEsc(v.hanViet) + '）— ' + grEsc(v.meaning)});
+  });
+  /* 3. 文の文法1 (+ thay cho 文章の文法） — fill-in trước, rồi chọn câu */
+  var g1need = spec.g1 + spec.g1sub;
+  var g1fill = takeEx(function(e){ return !!e.chunk; }, g1need);
+  var g1made = 0;
+  g1fill.forEach(function(e){
+    var d = chunkOpts(e.chunk, 3);
+    var o = mkOpts(e.chunk, d);
+    var qtext = grEsc(e.jp).split(grEsc(e.chunk)).join('（　）');
+    if(qtext.indexOf('（　）') < 0) qtext = e.jp.replace(e.chunk, '（　）');
+    pushQ({key:e.gi+'_'+e.ei, sec:'grammar', kind:'文の文法1', sub: g1made >= spec.g1 ? 'Dạng luyện tương đương — thay cho 文章の文法' : '', q:'（　）に入るものはどれですか。<br><b>' + qtext + '</b><br><span style="font-size:13px;color:#888">' + grEsc(e.vi) + '</span>', opts:o.opts, ans:o.ans, exp:'Mẫu <b>' + grEsc(e.p) + '</b> — ' + grEsc(e.s) + '<br>' + grEsc(e.m) + '<br>Câu đầy đủ: ' + grEsc(e.jp) + '（' + grEsc(e.vi) + '）'});
+    g1made++;
+  });
+  if(g1made < g1need){
+    var rest = takeEx(null, g1need - g1made);
+    rest.forEach(function(e){
+      var others = [];
+      for(var i = 0; i < exs.length && others.length < 3; i++){
+        var x = exs[i];
+        if(x.gi !== e.gi && !usedEx[x.gi + '_' + x.ei] && others.indexOf(x.jp) < 0) others.push(x.jp);
+      }
+      if(others.length < 3) return;
+      var o = mkOpts(e.jp, others);
+      pushQ({key:e.gi+'_'+e.ei, sec:'grammar', kind:'文の文法1', sub: g1made >= spec.g1 ? 'Dạng luyện tương đương — thay cho 文章の文法' : '', q:'次の文のうち、文法「<b>' + grEsc(e.p) + '</b>」を正しく使っているのはどれですか。', opts:o.opts, ans:o.ans, exp:'Mẫu <b>' + grEsc(e.p) + '</b> — ' + grEsc(e.s) + '<br>' + grEsc(e.m) + '<br>Câu đúng: ' + grEsc(e.jp) + '（' + grEsc(e.vi) + '）'});
+      g1made++;
+    });
+  }
+  /* 4. 文の文法2 (★ sắp xếp) */
+  var starEx = takeEx(null, spec.star);
+  starEx.forEach(function(e){
+    var chunks = grSplitSentence(e.jp);
+    if(!chunks || chunks.length !== 4) return;
+    var shuf = qzShuffle([0, 1, 2, 3]);
+    pushQ({key:e.gi+'_'+e.ei, jp:e.jp, sec:'grammar', kind:'文の文法2', q:'4つの部分を並べて正しい文にしてください。（3番目の部分が ★ の位置です）<br><span style="font-size:13px;color:#888">Nghĩa: ' + grEsc(e.vi) + '</span>', star:true, chunks:chunks, shuf:shuf, ans:[0, 1, 2, 3], exp:'Câu đúng: <b>' + grEsc(e.jp) + '</b>（' + grEsc(e.vi) + '）· Mẫu: <b>' + grEsc(e.p) + '</b>'});
+  });
+  /* 5. 文脈規定 (+ thay cho 用法 / 言葉の構成 / 読解) */
+  function ctxQ(e, kindLabel, subNote){
+    var w = null, wordStr = null;
+    if(e.cw){ wordStr = e.cw; w = allWMap[wordStr] || null; }
+    if(!w && e.cwAll){ wordStr = e.cwAll; w = allWMap[wordStr] || null; }
+    if(!w || !wordStr){ return false; }
+    var d = qzShuffle(pool.filter(function(x){ return x.word !== wordStr && Math.abs(x.word.length - wordStr.length) <= 2; })).slice(0, 3).map(function(x){ return x.word; });
+    if(d.length < 3){
+      var extra = jlPick(pool, 'word', wordStr, 3 - d.length, pool.filter(function(x){ return d.indexOf(x.word) >= 0; }));
+      extra.forEach(function(x){ d.push(x.word); });
+    }
+    if(d.length < 3){ return false; }
+    markWord(w);
+    var o = mkOpts(wordStr, d);
+    var qtext = e.jp.replace(wordStr, '（　）');
+    pushQ({key:e.gi+'_'+e.ei, sec: kindLabel === '読解' ? 'reading' : 'vocab', kind: kindLabel, sub: subNote || '', q:'（　）に入る言葉はどれですか。<br><b>' + grEsc(qtext) + '</b><br><span style="font-size:13px;color:#888">' + grEsc(e.vi) + '</span>', opts:o.opts, ans:o.ans, exp:'Đáp án: <b>' + grEsc(wordStr) + '</b>（' + grEsc(w.reading) + ' · ' + grEsc(w.hanViet) + '）— ' + grEsc(w.meaning) + '<br>Câu đầy đủ: ' + grEsc(e.jp) + '（' + grEsc(e.vi) + '）'});
+    return true;
+  }
 
+  var ctxMade = 0, ctxIdx = 0;
+  function nextCtx(kindLabel, subNote){
+    while(ctxIdx < ctxEx.length){
+      var e = ctxEx[ctxIdx++];
+      if(ctxQ(e, kindLabel, subNote)){ ctxMade++; return true; }
+    }
+    return false;
+  }
+  var i;
+  for(i = 0; i < spec.ctx; i++) nextCtx('文脈規定', '');
+  for(i = 0; i < spec.youhou; i++) nextCtx('文脈規定', 'Dạng luyện tương đương — thay cho 用法');
+  for(i = 0; i < spec.kotoba; i++) nextCtx('文脈規定', 'Dạng luyện tương đương — thay cho 言葉の構成');
+  for(i = 0; i < spec.ctxRead; i++) nextCtx('読解', 'Dạng luyện tương đương — phần Đọc hiểu đầy đủ sẽ có ở giai đoạn sau');
+  /* 6. 言い換え類義 (cặp đồng nghĩa thật; thiếu thì bù bằng 文脈規定) */
+  var synNeed = spec.syn, synMade = 0;
+  var usedSyn = {};
+  for(i = 0; i < synPairs.length && synMade < synNeed; i++){
+    var pr = synPairs[i];
+    if(usedSyn[pr.a.word] || usedSyn[pr.b.word]) continue;
+    if(!freshWord(pr.a) || !freshWord(pr.b)) continue;
+    usedSyn[pr.a.word] = 1; usedSyn[pr.b.word] = 1;
+    markWord(pr.a); markWord(pr.b);
+    var d = jlPick(pool, 'word', pr.b.word, 3, [pr.a, pr.b]).map(function(x){ return x.word; });
+    if(d.length < 3) continue;
+    var o = mkOpts(pr.b.word, d);
+    pushQ({sec:'vocab', kind:'言い換え類義', q:'「<b>' + grEsc(pr.a.word) + '</b>（' + grEsc(pr.a.reading) + '）」と意味が一番近い言葉はどれですか。<br><span style="font-size:13px;color:#888">nghĩa: ' + grEsc(pr.a.meaning) + '</span>', opts:o.opts, ans:o.ans, exp:'<b>' + grEsc(pr.a.word) + '</b> ≈ <b>' + grEsc(pr.b.word) + '</b>（' + grEsc(pr.b.reading) + '）— ' + grEsc(pr.b.meaning)});
+    synMade++;
+  }
+  for(i = synMade; i < synNeed; i++) nextCtx('文脈規定', 'Dạng luyện tương đương — thay cho 言い換え類義');
+  /* 7. 情報検索 (template cố định) */
+  var infoIdx = {N5:[0], N4:[0, 1], N3:[2, 3], N2:[4, 5], N1:[3, 5]}[lv] || [0];
+  infoIdx.slice(0, spec.info).forEach(function(ix){
+    var t = JLINFO[ix];
+    pushQ({sec:'reading', kind:'情報検索', q:'<div style="background:#f6f8fb;border:1px solid #e2e2e2;border-radius:10px;padding:10px 12px;font-weight:400">' + t.tpl + '</div><div style="margin-top:8px">' + grEsc(t.q) + '</div>', opts:t.opts.slice(), ans:t.ans, exp:grEsc(t.exp)});
+  });
+  /* --- kiểm tra số lượng --- */
+  var cfg = JLCFG[lv];
+  if(qs.length !== cfg.total) return {error:'count', got:qs.length, want:cfg.total};
+  /* --- đánh số 問題 theo dạng --- */
+  var probMap = {}, probN = 0;
+  qs.forEach(function(q){
+    if(!probMap[q.kind]) probMap[q.kind] = ++probN;
+    q.prob = '問題' + probMap[q.kind];
+  });
+  qs.forEach(function(q, i){ q.gi = i; }); /* vị trí toàn cục — buổi 1/2 không liên tục trong mảng all */
+  /* --- chia buổi --- */
+  var s1 = null, s2 = null, all = qs;
+  if(cfg.s1){
+    s1 = qs.filter(function(q){ return q.sec === 'vocab'; });
+    s2 = qs.filter(function(q){ return q.sec !== 'vocab'; });
+    if(s1.length !== cfg.s1.n || s2.length !== cfg.s2.n) return {error:'session', s1:s1.length, s2:s2.length};
+  }
+  return {s1:s1, s2:s2, all:all};
+}
+
+/* ===== Thi thử đầy đủ — giao diện & luồng thi ===== */
+function jlFHome(){
+  JL.on = false;
+  var cfg = JLCFG[JL.lv], lv = JL.lv;
+  var sInfo = cfg.s1
+    ? 'Buổi 1: <b>文字・語彙 ' + cfg.s1.n + ' câu / ' + cfg.s1.min + ' phút</b> · Buổi 2: <b>文法・読解 ' + cfg.s2.n + ' câu / ' + cfg.s2.min + ' phút</b> — nộp Buổi 1 xong mới sang Buổi 2, không quay lại.'
+    : 'Một buổi viết chung: <b>' + cfg.total + ' câu / ' + cfg.min + ' phút</b>.';
+  var html = '<div class="jl-start"><div class="jl-big">Đề thi thử JLPT ' + lv + '</div>'
+    + '<div class="jl-sub">Phần Viết như đề thi thật: <b>' + cfg.total + ' câu</b> — ' + sInfo
+    + '<br>Đậu khi đạt <b>' + cfg.pass + '%</b> tổng và <b>≥31,7%</b> từng phần (trượt 1 phần là trượt cả bài, giống luật thật). Điểm hiển thị là <b>ước lượng</b> từ % câu đúng.'
+    + '<br>Nghe hiểu （聴解） sẽ làm ở giai đoạn sau với giọng đọc chuẩn.</div>'
+    + '<div class="jl-mode">'
+    + '<button class="jl-modeb" onclick="jlFStart()"><b>📝 Thi thử đầy đủ — ' + cfg.total + ' câu</b><span>' + sInfo + '<br>Chia đúng buổi thi như thật, đồng hồ riêng từng buổi, chấm theo thang thật (tối đa 120 điểm phần Viết).</span></button>'
+    + '<button class="jl-modeb" onclick="jlStart()"><b>⚡ Luyện nhanh — 20 câu / 25 phút</b><span>Đề ngắn như bản cũ: 10 câu Từ vựng + 10 câu Ngữ pháp, làm nhanh hằng ngày.</span></button>'
+    + '</div>'
+    + '<div class="jl-sample"><h3>📖 Đề mẫu chính thức JLPT (jlpt.jp)</h3>'
+    + '<div style="font-size:13.5px;color:#555;line-height:1.7">Đề mẫu do JLPT công bố miễn phí để luyện thi — mở PDF gốc trên trang chính thức (mở tab mới):<br>'
+    + '📄 <a href="https://www.jlpt.jp/e/samples/pdf/' + lv + '-mondai.pdf" target="_blank" rel="noopener">Đề mẫu ' + lv + ' (PDF)</a> · '
+    + '✅ <a href="https://www.jlpt.jp/e/samples/pdf/' + lv + '-seikai.pdf" target="_blank" rel="noopener">Đáp án ' + lv + ' (PDF)</a> · '
+    + '🎧 <a href="https://www.jlpt.jp/e/samples/pdf/' + lv + '-script.pdf" target="_blank" rel="noopener">Lời thoại nghe ' + lv + ' (PDF)</a><br>'
+    + '🔗 <a href="https://www.jlpt.jp/e/samples/sample09.html" target="_blank" rel="noopener">Trang đề mẫu chính thức (đủ 5 cấp)</a><br>'
+    + '<span style="color:#888">Đề mẫu dùng font đặc biệt nên web không trích xuất câu hỏi vào đây được — bấm link để xem PDF gốc. Web không sao chép đề thi thật có bản quyền.</span><br>'
+    + 'Luyện thêm theo đúng định dạng (trang ngoài): <a href="https://nihongo-quiz.jp/" target="_blank" rel="noopener">nihongo-quiz.jp</a> · <a href="https://rikee.jp/en/exams/" target="_blank" rel="noopener">rikee.jp</a></div></div>'
+    + '</div>';
+  document.getElementById('jlbody').innerHTML = html;
+}
+function jlFStart(){
+  var lv = JL.lv;
+  tgBuild(lv);
+  var b = jlFBuild(lv);
+  if(!b || b.error){ alert('Chưa đủ dữ liệu để tạo đề ' + lv + '. Thử lại hoặc chọn cấp khác.'); return; }
+  JL.mode = 'full'; JL.s1 = b.s1; JL.s2 = b.s2; JL.allQs = b.all;
+  JL.ans = {}; JL.allAns = {}; JL.on = true; JL.used = 0; JL.s1res = null; JL.s2res = null;
+  JL.sess = b.s2 ? 1 : 0;
+  JL.qs = b.s2 ? b.s1 : b.all;
+  JL.left = (b.s2 ? JLCFG[lv].s1.min : JLCFG[lv].min) * 60;
+  jlFRenderExam();
+  var t = document.getElementById('jltimer'); t.style.display = '';
+  jlTick();
+  JL.timer = setInterval(jlTick, 1000);
+}
+function jlFStartSession2(){
+  JL.sess = 2;
+  JL.qs = JL.s2;
+  JL.ans = {}; JL.used = 0; JL.on = true;
+  JL.left = JLCFG[JL.lv].s2.min * 60;
+  jlFRenderExam();
+  var t = document.getElementById('jltimer'); t.style.display = '';
+  jlTick();
+  JL.timer = setInterval(jlTick, 1000);
+}
+function jlFSessLabel(){
+  if(JL.mode !== 'full') return '';
+  if(JL.sess === 1) return 'Buổi 1 · 文字・語彙';
+  if(JL.sess === 2) return 'Buổi 2 · 文法・読解';
+  return 'Thi thử đầy đủ · ' + JL.lv;
+}
+function jlFIsCorrect(q, a){
+  if(a === undefined || a === null) return false;
+  if(q.star) return Array.isArray(a) && a.length === 4 && a[0] === 0 && a[1] === 1 && a[2] === 2 && a[3] === 3;
+  return a === q.ans;
+}
+function jlFRenderExam(){
+  var grid = JL.qs.map(function(q, i){
+    var a = JL.ans[i], done = q.star ? (Array.isArray(a) && a.length === 4) : (a !== undefined && a !== null);
+    return '<button class="jl-gbtn' + (done ? ' on' : '') + '" id="jlg' + i + '" onclick="document.getElementById(\'jlq' + i + '\').scrollIntoView({behavior:\'smooth\',block:\'center\'})">' + (q.gi + 1) + '</button>';
+  }).join('');
+  var html = '<div class="jl-start" style="padding:10px 4px 4px"><div class="jl-big">' + jlFSessLabel() + ' — JLPT ' + JL.lv + '</div>'
+    + '<div class="jl-sub">Làm lần lượt từ trên xuống. Câu sắp xếp ★: bấm các mảnh theo đúng thứ tự (mảnh thứ 3 là vị trí ★).</div>'
+    + '<div class="jl-grid">' + grid + '</div>'
+    + '<div style="font-size:13px;color:#888"><span id="jlcount"></span></div></div>';
+  html += JL.qs.map(function(q, i){
+    var tag = '<span class="jl-tag">' + q.prob + ' · ' + q.kind + (q.sub ? ' · ' + q.sub : '') + ' · Câu ' + (q.gi + 1) + '</span>';
+    var body;
+    if(q.star){
+      body = '<div class="jl-star" id="jls' + i + '"></div>';
+    } else {
+      body = '<div class="jl-opts">' + q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlFChoose(' + i + ',' + j + ')">' + (j + 1) + '. ' + grEsc(o) + '</button>'; }).join('') + '</div>';
+    }
+    return '<div class="jl-q" id="jlq' + i + '">' + tag + '<div class="jl-qt">' + q.q + '</div>' + body + '</div>';
+  }).join('');
+  html += '<div style="text-align:center;margin-top:16px"><button class="qz-next" onclick="jlFSessionSubmit(false)">' + (JL.sess === 1 && JL.s2 ? '📩 Nộp Buổi 1' : '📩 Nộp bài') + '</button> <span style="font-size:13px;color:#888" id="jlcount2"></span></div>';
+  document.getElementById('jlbody').innerHTML = html;
+  JL.qs.forEach(function(q, i){ if(q.star) jlFStarRender(i); if(!q.star && JL.ans[i] !== undefined) jlFMarkOpt(i, JL.ans[i]); });
+  jlFCount();
+  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
+}
+function jlFMarkOpt(i, j){
+  JL.qs[i].opts.forEach(function(o, k){ var b = document.getElementById('jlo' + i + '_' + k); if(b) b.classList.toggle('sel', k === j); });
+}
+function jlFChoose(i, j){
+  JL.ans[i] = j;
+  jlFMarkOpt(i, j);
+  jlFCount();
+}
+function jlFStarRender(i){
+  var q = JL.qs[i], box = document.getElementById('jls' + i);
+  if(!box) return;
+  var a = JL.ans[i] || [];
+  var slots = '';
+  for(var s = 0; s < 4; s++){
+    var v = a[s];
+    slots += '<button class="jl-slot' + (s === 2 ? ' star' : '') + '" onclick="jlFStarRemove(' + i + ',' + s + ')">' + (v === undefined || v === null ? '—' : grEsc(q.chunks[v])) + (s === 2 ? ' ★' : '') + '</button>';
+  }
+  var chunks = q.shuf.map(function(ci){
+    var used = a.indexOf(ci) >= 0;
+    return '<button class="jl-chunk' + (used ? ' used' : '') + '" onclick="jlFStarPick(' + i + ',' + ci + ')">' + (ci + 1) + '. ' + grEsc(q.chunks[ci]) + '</button>';
+  }).join('');
+  box.innerHTML = '<div class="jl-star-slots">' + slots + '</div><div>' + chunks + '</div><div style="margin-top:6px"><button class="chipbtn" onclick="jlFStarReset(' + i + ')">↻ Reset</button></div>';
+}
+function jlFStarPick(i, ci){
+  var a = JL.ans[i] || [];
+  if(a.indexOf(ci) >= 0) return;
+  if(a.length >= 4) return;
+  a.push(ci); JL.ans[i] = a;
+  jlFStarRender(i); jlFCount();
+}
+function jlFStarRemove(i, s){
+  var a = JL.ans[i] || [];
+  a.splice(s, 1); JL.ans[i] = a;
+  jlFStarRender(i); jlFCount();
+}
+function jlFStarReset(i){
+  JL.ans[i] = [];
+  jlFStarRender(i); jlFCount();
+}
+function jlFCount(){
+  var done = 0;
+  JL.qs.forEach(function(q, i){
+    var a = JL.ans[i];
+    if(q.star){ if(Array.isArray(a) && a.length === 4) done++; }
+    else if(a !== undefined && a !== null) done++;
+    var g = document.getElementById('jlg' + i);
+    if(g) g.classList.toggle('on', (q.star ? (Array.isArray(a) && a.length === 4) : (a !== undefined && a !== null)));
+  });
+  var c = document.getElementById('jlcount');
+  if(c) c.textContent = 'Đã làm ' + done + '/' + JL.qs.length + ' câu · ' + jlFSessLabel();
+  var c2 = document.getElementById('jlcount2');
+  if(c2) c2.textContent = 'Đã làm ' + done + '/' + JL.qs.length + ' câu';
+}
+function jlFSessionSubmit(auto){
+  if(!JL.on || JL.mode !== 'full') return;
+  var correct = 0;
+  JL.qs.forEach(function(q, i){ if(jlFIsCorrect(q, JL.ans[i])) correct++; });
+  var res = {qs:JL.qs, ans:JL.ans, used:JL.used, correct:correct};
+  jlStopTimer();
+  JL.qs.forEach(function(q, i){ JL.allAns[q.gi] = JL.ans[i]; });
+  if(JL.sess === 1 && JL.s2){
+    JL.s1res = res;
+    jlFInterstitial();
+  } else {
+    if(JL.sess === 2) JL.s2res = res; else JL.s1res = res;
+    JL.on = false;
+    jlFResult(auto);
+  }
+}
+function jlFInterstitial(){
+  var r = JL.s1res, cfg = JLCFG[JL.lv];
+  var byKind = {};
+  r.qs.forEach(function(q, i){
+    if(!byKind[q.kind]) byKind[q.kind] = {n:0, ok:0};
+    byKind[q.kind].n++;
+    if(jlFIsCorrect(q, r.ans[i])) byKind[q.kind].ok++;
+  });
+  var rows = Object.keys(byKind).map(function(k){ return '<tr><td>' + k + '</td><td style="text-align:right">' + byKind[k].ok + '/' + byKind[k].n + '</td></tr>'; }).join('');
+  var mm = Math.floor(r.used / 60), ss = r.used % 60;
+  document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">✅ Đã nộp Buổi 1 · 文字・語彙</div>'
+    + '<div class="qz-score">' + r.correct + '/' + r.qs.length + '</div>'
+    + '<div class="jl-sub">Thời gian Buổi 1: ' + mm + ' phút ' + ss + ' giây · Không quay lại Buổi 1 được nữa.</div>'
+    + '<table class="jl-res-tbl">' + rows + '</table>'
+    + '<div class="jl-note">Điểm chi tiết từng câu sẽ hiện sau khi nộp cả bài.</div>'
+    + '<div style="margin-top:14px"><button class="qz-next" onclick="jlFStartSession2()">▶ Bắt đầu Buổi 2 · 文法・読解 (' + cfg.s2.n + ' câu / ' + cfg.s2.min + ' phút)</button></div></div>';
+  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
+}
+function jlFGrade(pct){ return pct >= 67 ? 'A' : (pct >= 34 ? 'B' : 'C'); }
+function jlFResult(auto){
+  if(typeof psLog === 'function') psLog('exam');
+  var cfg = JLCFG[JL.lv], all = JL.allQs, ans = JL.allAns;
+  var total = all.length, correct = 0;
+  all.forEach(function(q, i){ if(jlFIsCorrect(q, ans[i])) correct++; });
+  var totalPct = Math.round(correct / total * 100);
+  var secs = cfg.secs.map(function(s){
+    var list = s.id === 'w' ? all : all.filter(function(q){ return s.id === 'lang' ? (q.sec === 'vocab' || q.sec === 'grammar') : q.sec === 'reading'; });
+    var ok = 0;
+    list.forEach(function(q){ if(jlFIsCorrect(q, ans[q.gi])) ok++; });
+    var pct = list.length ? Math.round(ok / list.length * 100) : 0;
+    var scaled = s.id === 'w' ? Math.round(pct / 100 * 120) : Math.round(pct / 100 * 60);
+    return {name:s.name, n:list.length, ok:ok, pct:pct, scaled:scaled, grade:jlFGrade(pct)};
+  });
+  var totalScaled = 0; secs.forEach(function(s){ totalScaled += s.scaled; });
+  var secFail = secs.filter(function(s){ return s.pct < 31.7; });
+  var pass = totalPct >= cfg.pass && secFail.length === 0;
+  if(typeof psRecord === 'function') psRecord('exam', totalPct, pass);
+  var used = (JL.s1res ? JL.s1res.used : 0) + (JL.s2res ? JL.s2res.used : 0);
+  var mm = Math.floor(used / 60), ss = used % 60;
+  var rows = secs.map(function(s){
+    return '<tr><td>' + s.name + '</td><td style="text-align:right">' + s.ok + '/' + s.n + '</td><td style="text-align:right">' + s.pct + '%</td><td style="text-align:right">' + s.scaled + '</td><td style="text-align:right">' + s.grade + '</td></tr>';
+  }).join('');
+  var verdict = pass
+    ? '🎉 ĐẠT — đủ ' + cfg.pass + '% tổng và qua từng phần. Giữ phong độ này tới ngày thi thật.'
+    : (secFail.length ? '❌ CHƯA ĐẠT — trượt phần: ' + secFail.map(function(s){ return s.name + ' (' + s.pct + '% < 31,7%)'; }).join(', ') + '. Trượt 1 phần là trượt cả bài dù tổng đủ.' : '❌ CHƯA ĐẠT — tổng ' + totalPct + '% chưa đủ ' + cfg.pass + '%. Xem lại phần giải thích bên dưới rồi làm đề mới.');
+  var review = all.map(function(q, i){
+    var a = ans[i], ok = jlFIsCorrect(q, a);
+    var body;
+    if(q.star){
+      var userOrder = Array.isArray(a) ? a.map(function(ci){ return q.chunks[ci]; }).join(' → ') : '(chưa làm)';
+      var rightOrder = q.chunks.join(' → ');
+      body = '<div style="font-size:14px;line-height:1.7">Thứ tự của bạn: ' + grEsc(userOrder) + '<br>Thứ tự đúng: <b>' + grEsc(rightOrder) + '</b> ★ ở mảnh thứ 3</div>';
+    } else {
+      body = '<div class="jl-opts">' + q.opts.map(function(o, j){
+        var cls = j === q.ans ? ' ok' : (j === a ? ' bad' : '');
+        return '<button class="jl-opt' + cls + '" disabled>' + (j + 1) + '. ' + grEsc(o) + (j === q.ans ? ' ✓' : (j === a ? ' ✗' : '')) + '</button>';
+      }).join('') + '</div>';
+    }
+    return '<div class="jl-q"><span class="jl-tag">' + q.prob + ' · ' + q.kind + (q.sub ? ' · ' + q.sub : '') + ' · Câu ' + (i + 1) + (ok ? ' · ✅ Đúng' : ' · ❌ Sai') + '</span><div class="jl-qt">' + q.q + '</div>' + body + '<div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
+  }).join('');
+  document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">' + (auto ? '⏰ Hết giờ! ' : '') + 'Kết quả JLPT ' + JL.lv + ' (Thi thử đầy đủ)</div>'
+    + '<div class="qz-score">' + correct + '/' + total + ' (' + totalPct + '%)</div>'
+    + '<div class="jl-sub">Điểm ước lượng phần Viết: <b>' + totalScaled + '/120</b> (chưa gồm Nghe hiểu 60 điểm)<br>' + verdict + '<br>Thời gian làm bài: ' + mm + ' phút ' + ss + ' giây</div>'
+    + '<table class="jl-res-tbl"><tr><th>Phần</th><th style="text-align:right">Đúng</th><th style="text-align:right">%</th><th style="text-align:right">Điểm</th><th style="text-align:right">Loại</th></tr>' + rows + '</table>'
+    + '<div class="jl-note">Điểm ước lượng từ % câu đúng — điểm thi thật dùng thang chuẩn hóa (IRT), không quy đổi trực tiếp từ số câu đúng. Xếp loại tham khảo từng phần: A (≥67%), B (34–66%), C (&lt;34%). Điểm tối thiểu từng phần: 31,7% (tương đương 19/60).</div>'
+    + '<div style="margin-top:14px"><button class="qz-next" onclick="jlFStart()">🔁 Làm đề mới</button> <button class="qz-next" style="background:#17324a" onclick="jlStart()">⚡ Luyện nhanh</button> <button class="chipbtn" onclick="jlHome()">Về trang đề thi</button></div></div>'
+    + review;
+  window.scrollTo({ top: document.getElementById('jlptbox').offsetTop - 70, behavior: 'smooth' });
+}
 
 /* ===== Trọng âm ===== */
 var ACC = [{"a":0,"meaning":"hoa anh đào","pair":"","reading":"さくら","word":"桜"},{"a":0,"meaning":"bạn bè","pair":"","reading":"ともだち","word":"友達"},{"a":0,"meaning":"tàu điện","pair":"","reading":"でんしゃ","word":"電車"},{"a":0,"meaning":"trường học","pair":"","reading":"がっこう","word":"学校"},{"a":0,"meaning":"gió; cảm lạnh","pair":"","reading":"かぜ","word":"風"},{"a":0,"meaning":"cá","pair":"","reading":"さかな","word":"魚"},{"a":0,"meaning":"chim","pair":"","reading":"とり","word":"鳥"},{"a":0,"meaning":"ô tô, xe hơi","pair":"","reading":"くるま","word":"車"},{"a":0,"meaning":"nước (lạnh)","pair":"","reading":"みず","word":"水"},{"a":0,"meaning":"tiếng Nhật","pair":"","reading":"にほんご","word":"日本語"},{"a":0,"meaning":"điện thoại","pair":"","reading":"でんわ","word":"電話"},{"a":0,"meaning":"công việc","pair":"","reading":"しごと","word":"仕事"},{"a":0,"meaning":"công ty","pair":"","reading":"かいしゃ","word":"会社"},{"a":0,"meaning":"thuốc","pair":"","reading":"くすり","word":"薬"},{"a":1,"meaning":"thời tiết","pair":"","reading":"てんき","word":"天気"},{"a":1,"meaning":"buổi sáng","pair":"","reading":"あさ","word":"朝"},{"a":1,"meaning":"ban đêm","pair":"","reading":"よる","word":"夜"},{"a":1,"meaning":"biển","pair":"","reading":"うみ","word":"海"},{"a":1,"meaning":"con mèo","pair":"","reading":"ねこ","word":"猫"},{"a":1,"meaning":"cuốn sách","pair":"","reading":"ほん","word":"本"},{"a":1,"meaning":"cơm; bữa ăn","pair":"","reading":"ごはん","word":"ご飯"},{"a":1,"meaning":"bánh mì","pair":"","reading":"パン","word":"パン"},{"a":2,"meaning":"tuyết","pair":"","reading":"ゆき","word":"雪"},{"a":2,"meaning":"núi","pair":"","reading":"やま","word":"山"},{"a":2,"meaning":"sông","pair":"","reading":"かわ","word":"川"},{"a":2,"meaning":"con chó","pair":"","reading":"いぬ","word":"犬"},{"a":3,"meaning":"thầy/cô giáo","pair":"","reading":"せんせい","word":"先生"},{"a":3,"meaning":"cái đầu","pair":"","reading":"あたま","word":"頭"},{"a":2,"meaning":"cái cầu","pair":"はし","reading":"はし","word":"橋"},{"a":1,"meaning":"đôi đũa","pair":"はし","reading":"はし","word":"箸"},{"a":0,"meaning":"mép, rìa, đầu mút","pair":"はし","reading":"はし","word":"端"},{"a":1,"meaning":"mưa","pair":"あめ","reading":"あめ","word":"雨"},{"a":0,"meaning":"kẹo","pair":"あめ","reading":"あめ","word":"飴"},{"a":2,"meaning":"hoa","pair":"はな","reading":"はな","word":"花"},{"a":0,"meaning":"cái mũi","pair":"はな","reading":"はな","word":"鼻"},{"a":1,"meaning":"thần linh","pair":"かみ","reading":"かみ","word":"神"},{"a":2,"meaning":"giấy","pair":"かみ","reading":"かみ","word":"紙"},{"a":1,"meaning":"cắt","pair":"きる","reading":"きる","word":"切る"},{"a":0,"meaning":"mặc (áo)","pair":"きる","reading":"きる","word":"着る"},{"a":1,"meaning":"trở về","pair":"かえる","reading":"かえる","word":"帰る"},{"a":0,"meaning":"con ếch","pair":"かえる","reading":"かえる","word":"蛙"},{"a":1,"meaning":"mùa thu","pair":"あき","reading":"あき","word":"秋"},{"a":0,"meaning":"chỗ trống","pair":"あき","reading":"あき","word":"空き"},{"a":1,"meaning":"đám mây","pair":"くも","reading":"くも","word":"雲"},{"a":0,"meaning":"con nhện","pair":"くも","reading":"くも","word":"蜘蛛"},{"a":1,"meaning":"bây giờ","pair":"いま","reading":"いま","word":"今"},{"a":0,"meaning":"phòng khách","pair":"いま","reading":"いま","word":"居間"}];
