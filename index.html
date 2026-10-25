@@ -359,6 +359,39 @@ td{padding:7px 6px;border-bottom:1px solid #eee}
 .jl-subnote{font-size:12px;color:#b26a00;background:#fff8e1;border-radius:8px;padding:3px 8px;display:inline-block;margin-top:4px}
 .jl-frame{font-size:17px;line-height:2}
 
+/* ===== Thi thử JLPT — giao diện kiểu đề thi (1 cột, thẻ trắng, đáp án 2 cột) ===== */
+#jlptbox #jlbody{max-width:1000px;margin:0 auto;background:#f7f8fa;border-radius:16px;padding:18px 20px 26px}
+#jlptbox .jl-q{position:relative;background:#fff;border:1.5px solid #e5e7eb;border-radius:18px;padding:18px 20px;margin-top:20px;box-shadow:0 1px 3px rgba(23,50,74,.06)}
+#jlptbox .jl-qnum{position:absolute;top:16px;left:18px;width:34px;height:34px;border-radius:50%;background:#e3f0fa;color:#17324a;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+#jlptbox .jl-q .jl-tag{margin-left:44px}
+#jlptbox .jl-q .jl-qt{font-size:17px}
+#jlptbox .jl-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+#jlptbox .jl-opt{display:flex;align-items:flex-start;gap:10px;text-align:left;padding:12px 14px;border:2px solid #e2e2e2;border-radius:12px;background:#fff;font-size:15px;cursor:pointer;color:#223;line-height:1.5}
+#jlptbox .jl-opt:not(:disabled):hover{border-color:#4a90d9;background:#f0f7ff}
+#jlptbox .jl-onum{flex:none;width:24px;height:24px;border-radius:50%;background:#eef2f7;color:#667;font-size:13px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+#jlptbox .jl-otext{flex:1;min-width:0}
+#jlptbox .jl-opt.sel{border-color:#c62828;background:#fdecea;font-weight:700}
+#jlptbox .jl-opt.sel .jl-onum{background:#c62828;color:#fff}
+#jlptbox .jl-opt.ok{border-color:#2e7d32;background:#e8f5e9}
+#jlptbox .jl-opt.ok .jl-onum{background:#2e7d32;color:#fff}
+#jlptbox .jl-opt.bad{border-color:#c62828;background:#fdecea}
+#jlptbox .jl-opt.bad .jl-onum{background:#c62828;color:#fff}
+#jlptbox .jl-opt:disabled{cursor:default}
+#jlptbox .jl-prob{background:#fff;border:0;border-bottom:2px solid #17324a;border-radius:0;padding:12px 2px 10px;margin-top:26px;font-size:17px;font-weight:800;color:#17324a}
+#jlptbox .jl-prob .jl-inst{display:block;background:#fdf6e3;border-left:4px solid #b26a00;border-radius:0 8px 8px 0;color:#5a4632;font-size:14px;font-weight:400;padding:8px 12px;margin-top:8px;line-height:1.6}
+#jlptbox .jl-part{background:#fff;border-left:5px solid #c62828;border-radius:0 12px 12px 0;color:#17324a;font-size:17px;padding:12px 14px;box-shadow:0 1px 3px rgba(23,50,74,.06)}
+#jlptbox .jl-part span{color:#666}
+#jlptbox .jl-part .jl-inst{color:#666}
+#jlptbox .jl-pass{background:transparent;border:0;border-radius:0;padding:6px 2px;margin:12px 0;font-size:16px;line-height:1.9;color:#223}
+#jlptbox .jl-frame{font-size:18px;line-height:2.2}
+#jlptbox .jl-star b{color:#c62828}
+#jlptbox .jl-slot{min-width:72px;padding:10px 12px;border:2px solid #e2e2e2;border-radius:12px;background:#fff;font-size:15px}
+#jlptbox .jl-slot.star{border-color:#c62828;background:#fdecea}
+#jlptbox .jl-chunk{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:2px solid #e2e2e2;border-radius:12px;background:#fff;font-size:15px;cursor:pointer;margin:0 8px 8px 0}
+#jlptbox .jl-chunk:not(.used):hover{border-color:#4a90d9;background:#f0f7ff}
+#jlptbox .jl-modeb{box-shadow:0 1px 3px rgba(23,50,74,.06)}
+@media(max-width:640px){#jlptbox #jlbody{padding:12px 10px}#jlptbox .jl-opts{grid-template-columns:1fr}#jlptbox .jl-q{padding:16px 14px}#jlptbox .jl-q .jl-tag{margin-left:40px}}
+
 /* ===== Trọng âm ===== */
 #accentbox{padding:14px 6px 6px}
 .ac-theory{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:14px 16px;margin-top:12px}
@@ -4608,8 +4641,8 @@ function jlTick(){
 
 function jlRenderExam(){
   var html = JL.qs.map(function(q, i){
-    var opts = q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlChoose(' + i + ',' + j + ')">' + (j + 1) + '. ' + grEsc(o) + '</button>'; }).join('');
-    return '<div class="jl-q"><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div></div>';
+    var opts = q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlChoose(' + i + ',' + j + ')"><span class="jl-onum">' + (j + 1) + '</span><span class="jl-otext">' + grEsc(o) + '</span></button>'; }).join('');
+    return '<div class="jl-q"><span class="jl-qnum">' + (i + 1) + '</span><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div></div>';
   }).join('');
   html += '<div style="text-align:center;margin-top:16px"><button class="qz-next" onclick="jlSubmit(false)">📩 Nộp bài</button> <span style="font-size:13px;color:#888" id="jlcount"></span></div>';
   document.getElementById('jlbody').innerHTML = html;
@@ -4635,9 +4668,9 @@ function jlSubmit(auto){
     var mine = JL.ans[i];
     var opts = q.opts.map(function(o, j){
       var cls = j === q.ans ? ' ok' : (j === mine ? ' bad' : '');
-      return '<button class="jl-opt' + cls + '" disabled>' + (j + 1) + '. ' + grEsc(o) + (j === q.ans ? ' ✓' : (j === mine ? ' ✗' : '')) + '</button>';
+      return '<button class="jl-opt' + cls + '" disabled><span class="jl-onum">' + (j + 1) + '</span><span class="jl-otext">' + grEsc(o) + (j === q.ans ? ' ✓' : (j === mine ? ' ✗' : '')) + '</span></button>';
     }).join('');
-    return '<div class="jl-q"><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + (mine === q.ans ? ' · ✅ Đúng' : ' · ❌ Sai') + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div><div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
+    return '<div class="jl-q"><span class="jl-qnum">' + (i + 1) + '</span><span class="jl-tag">' + q.sec + ' · Câu ' + (i + 1) + (mine === q.ans ? ' · ✅ Đúng' : ' · ❌ Sai') + '</span><div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + opts + '</div><div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
   }).join('');
   document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">' + (auto ? '⏰ Hết giờ! ' : '') + 'Kết quả JLPT ' + JL.lv + '</div><div class="qz-score">' + score + '/' + JL.qs.length + ' (' + pct + '%)</div><div class="jl-sub">' + (pass ? '🎉 ĐẠT (từ 60%) — giữ phong độ này tới ngày thi thật.' : 'Chưa đạt (cần từ 60%) — xem lại phần giải thích bên dưới rồi làm đề mới.') + '<br>Thời gian làm bài: ' + mm + ' phút ' + ss + ' giây</div><button class="qz-next" onclick="jlStart()">🔁 Làm đề mới</button> <button class="chipbtn" onclick="jlHome()">Về trang đề thi</button></div>' + review;
   window.scrollTo({ top: document.getElementById('jlptbox','tokuteibox').offsetTop - 70, behavior: 'smooth' });
@@ -5980,9 +6013,9 @@ function jlFRenderExam(){
     if(q.star){
       body = '<div class="jl-qt"><div class="jl-frame">' + jlRuby(q.pre) + ' （　） （　） <b>★</b> （　） ' + jlRuby(q.post) + '。</div></div><div class="jl-star" id="jls' + i + '"></div>';
     } else {
-      body = '<div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlFChoose(' + i + ',' + j + ')">' + (j + 1) + '. ' + (q.uline ? jlUnderline(o, q.uline) : grEsc(o)) + '</button>'; }).join('') + '</div>';
+      body = '<div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + q.opts.map(function(o, j){ return '<button class="jl-opt" id="jlo' + i + '_' + j + '" onclick="jlFChoose(' + i + ',' + j + ')"><span class="jl-onum">' + (j + 1) + '</span><span class="jl-otext">' + (q.uline ? jlUnderline(o, q.uline) : grEsc(o)) + '</span></button>'; }).join('') + '</div>';
     }
-    html += '<div class="jl-q" id="jlq' + i + '"><span class="jl-tag">' + tag + '</span>' + body + '</div>';
+    html += '<div class="jl-q" id="jlq' + i + '"><span class="jl-qnum">' + q.qnum + '</span><span class="jl-tag">' + tag + '</span>' + body + '</div>';
   });
   html += '<div style="text-align:center;margin-top:16px"><button class="qz-next" onclick="jlFSessionSubmit(false)">' + (JL.sess === 1 && JL.s2 ? '📩 Nộp Phần 1' : '📩 Nộp bài') + '</button> <span style="font-size:13px;color:#888" id="jlcount2"></span></div>';
   document.getElementById('jlbody').innerHTML = html;
@@ -6009,7 +6042,7 @@ function jlFStarRender(i){
   }
   var chunks = q.shuf.map(function(ci){
     var used = a.indexOf(ci) >= 0;
-    return '<button class="jl-chunk' + (used ? ' used' : '') + '" onclick="jlFStarPick(' + i + ',' + ci + ')">' + (ci + 1) + '. ' + jlRuby(q.chunks[ci]) + '</button>';
+    return '<button class="jl-chunk' + (used ? ' used' : '') + '" onclick="jlFStarPick(' + i + ',' + ci + ')"><span class="jl-onum">' + (ci + 1) + '</span><span class="jl-otext">' + jlRuby(q.chunks[ci]) + '</span></button>';
   }).join('');
   box.innerHTML = '<div class="jl-star-slots">' + slots + '</div><div>' + chunks + '</div><div style="margin-top:6px"><button class="chipbtn" onclick="jlFStarReset(' + i + ')">↻ Reset</button></div>';
 }
@@ -6129,10 +6162,10 @@ function jlFResult(auto){
     } else {
       body = '<div class="jl-qt">' + q.q + '</div><div class="jl-opts">' + q.opts.map(function(o, j){
         var cls = j === q.ans ? ' ok' : (j === a ? ' bad' : '');
-        return '<button class="jl-opt' + cls + '" disabled>' + (j + 1) + '. ' + (q.uline ? jlUnderline(o, q.uline) : grEsc(o)) + (j === q.ans ? ' ✓' : (j === a ? ' ✗' : '')) + '</button>';
+        return '<button class="jl-opt' + cls + '" disabled><span class="jl-onum">' + (j + 1) + '</span><span class="jl-otext">' + (q.uline ? jlUnderline(o, q.uline) : grEsc(o)) + (j === q.ans ? ' ✓' : (j === a ? ' ✗' : '')) + '</span></button>';
       }).join('') + '</div>';
     }
-    review += '<div class="jl-q"><span class="jl-tag">' + tag + '</span>' + body + '<div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
+    review += '<div class="jl-q"><span class="jl-qnum">' + q.qnum + '</span><span class="jl-tag">' + tag + '</span>' + body + '<div class="jl-exp" style="display:block">' + q.exp + '</div></div>';
   });
   document.getElementById('jlbody').innerHTML = '<div class="jl-start"><div class="jl-big">' + (auto ? '⏰ Hết giờ! ' : '') + 'Kết quả JLPT ' + JL.lv + ' (Thi thử đầy đủ)</div>'
     + '<div class="qz-score">' + correct + '/' + total + ' (' + totalPct + '%)</div>'
