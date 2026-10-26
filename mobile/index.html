@@ -15,9 +15,6 @@
 <meta name="apple-mobile-web-app-title" content="SoraKanji" />
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
 <title>SoraKanji — Bầu trời Kanji cho người Việt</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --red:#C8102E;
@@ -897,6 +894,59 @@
   .resultwrap p{color:var(--ink-2); font-size:14.5px; line-height:1.6; margin:6px 0 0; max-width:280px;}
   .passpill{font-weight:800; font-size:13px; padding:7px 14px; border-radius:999px; background:var(--good-soft); color:var(--good);}
   .passpill.fail{background:var(--red-soft); color:var(--red);}
+
+  /* Nút chuyển bảng kana — class riêng, KHÔNG dùng chung .lv với pill cấp độ JLPT */
+  .kanatab{
+    min-height:44px; padding:0 18px; border-radius:999px; border:1.5px solid var(--line);
+    background:var(--card); color:var(--ink); font-family:inherit; font-size:15px; font-weight:700; cursor:pointer;
+  }
+  .kanatab.on{background:var(--red); border-color:var(--red); color:#fff;}
+
+  /* Giao diện tối/sáng do người dùng bật trong Cài đặt (lưu localStorage, ghi đè theo hệ thống) */
+  :root[data-theme="dark"]{
+    --ink:#F2F1ED; --ink-2:#B9B7B0; --ink-3:#8B897F;
+    --bg:#151514; --card:#1E1E1C; --line:#2E2E2A;
+    --red-soft:#3A1620; --good-soft:#173324; --amber-soft:#33270E;
+    --sky:#7FB6E8; --sky-soft:#152A3D; --teal:#5FC4C2; --teal-soft:#0F2D2C;
+    --page-bg:#0C0C0B; --shadow:0 24px 60px rgba(0,0,0,.6);
+  }
+  :root[data-theme="dark"] .mondai{background:#2C2410; color:#E5CD8F;}
+  :root[data-theme="light"]{
+    --ink:#191919; --ink-2:#5A5A55; --ink-3:#8B8B84;
+    --bg:#F4F4F1; --card:#FFFFFF; --line:#E7E7E0;
+    --red-soft:#FDECEF; --good-soft:#E6F4EC; --amber-soft:#FBF0DA;
+    --sky:#1D6FB8; --sky-soft:#E1EEF9; --teal:#0E7C7B; --teal-soft:#DFF2F0;
+    --page-bg:#E9E7E1; --shadow:0 24px 60px rgba(20,16,10,.22), 0 4px 14px rgba(20,16,10,.12);
+  }
+  :root[data-theme="light"] .mondai{background:#FBF3DC; color:#5C4510;}
+  .soon{font-size:10px; font-weight:800; letter-spacing:.05em; background:var(--amber-soft); color:var(--amber); padding:4px 8px; border-radius:999px; white-space:nowrap;}
+  .examnote{
+    flex:0 0 auto; background:var(--amber-soft); color:var(--amber);
+    font-size:12.5px; font-weight:700; padding:8px 16px; line-height:1.45;
+  }
+  .confirmwrap{
+    position:absolute; inset:0; z-index:56; background:rgba(10,8,6,.45);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .confirmbox{background:var(--card); border-radius:18px; padding:20px; width:100%; max-width:340px;}
+  .confirmbox h3{margin:0 0 6px; font-size:16.5px; font-weight:800;}
+  .confirmbox p{margin:0 0 16px; font-size:13.5px; color:var(--ink-2); line-height:1.55;}
+  .playbtn:disabled{opacity:.38; cursor:default;}
+  .wordrow{
+    width:100%; display:flex; align-items:center; gap:12px; padding:11px 2px;
+    border:none; border-bottom:1px solid var(--line);
+    background:none; cursor:pointer; font-family:inherit; color:var(--ink); text-align:left;
+  }
+  .wordrow:last-child{border-bottom:none;}
+  .wordrow .ww{font-size:19px; font-weight:700; flex:0 0 auto; min-width:74px;}
+  .wordrow .wm{flex:1; min-width:0; font-size:13px; color:var(--ink-2); line-height:1.45;}
+  .wordrow .wm b{display:block; font-size:13.5px; color:var(--ink);}
+  .gcard{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:15px 16px; margin-bottom:10px;}
+  .gcard h3{margin:0 0 3px; font-size:16.5px;}
+  .gcard .gm{font-size:13px; color:var(--red); font-weight:700; margin:0 0 6px;}
+  .gcard p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.55;}
+  .gcard .ge{margin-top:8px; font-size:15px; color:var(--ink); line-height:1.6;}
+  .gcard .gev{font-size:13px; color:var(--ink-2); margin-top:2px;}
 </style>
 </head>
 <body>
@@ -1375,7 +1425,12 @@
           <button class="fbtn no" id="flashNo">Chưa thuộc</button>
           <button class="fbtn ok" id="flashOk">Đã thuộc</button>
         </div>
-        <p style="font-size:13px;color:var(--ink-2);text-align:center;margin:12px 0 0;" id="flashCount">Thẻ 3 / 23 · Đã thuộc 128 thẻ tuần này</p>
+        <p style="font-size:13px;color:var(--ink-2);text-align:center;margin:12px 0 0;" id="flashCount">Thẻ 1 / 23 · Đã thuộc 0 thẻ trong lượt ôn này</p>
+        <div id="flashDone" hidden style="text-align:center; margin-top:16px; background:var(--good-soft); border-radius:var(--radius); padding:18px;">
+          <b style="font-size:16px; color:var(--good);">Đã ôn xong 23 thẻ hôm nay</b>
+          <p style="font-size:13px; color:var(--ink-2); margin:6px 0 12px; line-height:1.5;">Nhiệm vụ “Ôn lại tâm pháp” ở Home đã được đánh dấu hoàn thành và cộng Tu vi.</p>
+          <button class="ghostbtn" id="flashRestart" style="min-height:48px;">Ôn lại từ đầu</button>
+        </div>
 
         <h2 class="secttl">Sắp đến hạn</h2>
         <div class="kanjigrid jp" id="dueGrid"></div>
@@ -1396,7 +1451,7 @@
           <div class="stats">
             <div class="stat"><b id="meTuvi">1.240</b><span>TU VI</span></div>
             <div class="stat"><b>12</b><span>NGÀY STREAK</span></div>
-            <div class="stat"><b>486</b><span>KANJI ĐÃ THUỘC</span></div>
+            <div class="stat"><b id="meKanjiDone">8</b><span>KANJI ĐÃ THUỘC</span></div>
           </div>
           <div class="realmprog" style="margin-top:12px;">
             <div class="rp-top">Đột phá Kim Đan <span>1.240 / 2.000 Tu vi</span></div>
@@ -1534,6 +1589,7 @@
           <div class="leadrow"><span class="l-rank top">3</span><span class="l-av">H</span><span class="l-main"><b>Hương Ly</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan · N4</span></span><span class="l-tv">3.210 Tu vi</span></div>
           <div class="leadrow"><span class="l-rank">18</span><span class="l-av" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · Tầng 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 Tu vi</span></div>
         </div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:8px 2px 0;">Bảng rút gọn: chỉ hiện top 3 của tuần và vị trí của bạn — hạng 18, cùng một con số với hạng ở Đấu Pháp Đài.</p>
       </section>
 
       <!-- ============ TAB: PHÒNG CHAT ============ -->
@@ -1547,12 +1603,16 @@
           <div class="chatmsg mine"><span class="c-av">B</span><span class="c-bub"><b>Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ</b><p>Cảm ơn cả nhà, để mình ghi vào flashcard ôn luôn.</p></span></div>
         </div>
         <div class="chatbar">
-          <input id="chatInput" type="text" placeholder="Nhắn cho các đạo hữu…" aria-label="Nhắn tin phòng chat" />
+          <input id="chatInput" type="text" maxlength="500" placeholder="Nhắn cho các đạo hữu…" aria-label="Nhắn tin phòng chat" />
           <button class="chatsend" id="chatSend" aria-label="Gửi tin nhắn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>
           </button>
         </div>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Bản xem thử: tin nhắn chỉ hiện trong phiên này, chưa gửi lên máy chủ.</p>
+        <div style="display:flex; justify-content:space-between; gap:10px; margin-top:8px; min-height:18px;">
+          <span id="chatHint" style="font-size:12px; color:var(--amber); font-weight:700; line-height:1.45;"></span>
+          <span id="chatCount" style="font-size:12px; color:var(--ink-3); font-weight:600; white-space:nowrap;">0/500</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:8px 2px 0;">Giới hạn 500 ký tự mỗi tin và giãn cách gửi 3 giây chống spam — giống bản web chính. Bản xem thử: tin nhắn chỉ hiện trong phiên này, chưa gửi lên máy chủ.</p>
       </section>
 
       <!-- ============ TAB: CÀI ĐẶT ============ -->
@@ -1579,44 +1639,45 @@
         </div>
 
         <div class="menu">
-          <button class="mrow" data-toggle>
+          <button class="mrow" data-toggle data-key="sound">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg>
             Âm thanh &amp; giọng đọc
             <span class="switch on"></span>
           </button>
-          <button class="mrow" data-toggle>
+          <button class="mrow" data-toggle data-key="remind">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21a2 2 0 0 0 4 0"/></svg>
-            Nhắc nhiệm vụ hằng ngày · 21:00
+            Nhắc nhiệm vụ hằng ngày · 21:00 <span class="soon">Sắp có</span>
             <span class="switch on"></span>
           </button>
-          <button class="mrow" data-toggle>
+          <button class="mrow" data-toggle data-key="dark">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
             Giao diện tối
             <span class="switch"></span>
           </button>
-          <button class="mrow" data-toggle>
+          <button class="mrow" data-toggle data-key="recog">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M9 9v11"/></svg>
             Tự nhận diện khi vẽ kanji
             <span class="switch on"></span>
           </button>
-          <button class="mrow" data-toggle>
+          <button class="mrow" data-toggle data-key="sync">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>
-            Đồng bộ tiến độ
+            Đồng bộ tiến độ <span class="soon">Sắp có</span>
             <span class="switch on"></span>
           </button>
         </div>
         <div class="menu">
-          <button class="mrow">
+          <button class="mrow" id="setBackupBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
             Sao lưu dữ liệu học
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
-          <button class="mrow">
+          <button class="mrow" id="setAboutBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
             Giới thiệu SoraKanji
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
         </div>
+        <p id="setMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:12px 2px 0; line-height:1.5;"></p>
         <p style="font-size:12.5px;color:var(--ink-3);text-align:center;margin:18px 0 4px;">SoraKanji — Bầu trời Kanji cho người Việt</p>
       </section>
     </div>
@@ -1651,7 +1712,7 @@
         <button class="iconbtn" id="backExam" aria-label="Quay lại danh sách đề">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div class="et">Test 1 · N4<span id="examPart">Phần 1 · 文字・語彙</span></div>
+        <div class="et"><span id="examTitle">Test 1 · N4</span><span id="examPart">Phần 1 · 文字・語彙</span></div>
         <div class="timer">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9.5 2.5h5"/></svg>
           <span id="timerTxt">25:00</span>
@@ -1659,6 +1720,7 @@
         <button class="submitbtn" id="submitBtn">Nộp bài</button>
       </div>
       <div class="examprog"><i id="examProgBar"></i></div>
+      <div class="examnote">Bản xem thử · 5 câu mẫu — đề thật có số câu và thời gian đúng như ghi ở danh sách đề của cấp đang chọn.</div>
       <div class="exambody" id="examBody"></div>
       <div class="examfoot">
         <button class="navbtn" id="prevBtn">← Trước</button>
@@ -1674,6 +1736,16 @@
         <h2 id="resultTitle">Kết quả bản xem thử</h2>
         <p id="resultNote"></p>
         <button class="cta" id="closeExamBtn" style="max-width:280px;">Quay lại danh sách đề</button>
+      </div>
+      <div class="confirmwrap" id="examConfirm" hidden>
+        <div class="confirmbox">
+          <h3>Chưa trả lời câu nào</h3>
+          <p>Bạn chưa chọn đáp án cho bất kỳ câu nào — nộp bây giờ sẽ được 0/5. Bạn có chắc muốn nộp bài trống không?</p>
+          <div style="display:flex; gap:10px;">
+            <button class="ghostbtn" id="confirmBack" style="flex:1; justify-content:center; min-height:50px;">Làm tiếp</button>
+            <button class="cta" id="confirmSubmit" style="flex:1; margin-top:0; min-height:50px;">Nộp luôn</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1727,7 +1799,7 @@
         <button class="iconbtn" id="closeDraw" aria-label="Quay lại — đóng vẽ kanji">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2 id="drawTitle">Vẽ kanji</h2><span id="drawSub">Vẽ 1 chữ vào ô rồi bấm Nhận diện</span></div>
+        <div><h2 id="drawTitle">Vẽ kanji</h2><span id="drawSub">Vẽ 1 chữ vào ô rồi bấm Gợi ý theo số nét</span></div>
       </div>
       <div class="detailbody">
         <div class="drawbox" id="drawBox">
@@ -1735,7 +1807,7 @@
           <canvas id="drawCanvas"></canvas>
         </div>
         <div class="candrow" id="candRow" hidden>
-          <div class="clabel" id="candLabel">Gợi ý chữ gần giống (minh họa) — bấm để xem chi tiết:</div>
+          <div class="clabel" id="candLabel">Gợi ý minh họa theo số nét — bấm để xem chi tiết:</div>
           <div class="candchips" id="candChips"></div>
         </div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Mẹo: vẽ đủ nét và đúng thứ tự nét thì nhận diện càng chính xác.</p>
@@ -1743,7 +1815,7 @@
       <div class="detailfoot">
         <button class="ghostbtn" id="drawUndo">Hoàn tác</button>
         <button class="ghostbtn" id="drawClear">Xóa hết</button>
-        <button class="cta" id="drawRecog" style="flex:1;">Nhận diện</button>
+        <button class="cta" id="drawRecog" style="flex:1;">Gợi ý theo số nét</button>
         <button class="cta" id="drawDone" style="flex:1;" hidden>Xong</button>
       </div>
     </div>
@@ -1758,11 +1830,16 @@
       </div>
       <div class="detailbody">
         <div class="kanatools">
-          <button class="lv on" id="kanaHira" style="min-height:42px;padding:0 16px;font-size:14px;">Hiragana</button>
-          <button class="lv" id="kanaKata" style="min-height:42px;padding:0 16px;font-size:14px;">Katakana</button>
+          <button class="kanatab on" id="kanaHira" style="min-height:42px;padding:0 16px;font-size:14px;">Hiragana</button>
+          <button class="kanatab" id="kanaKata" style="min-height:42px;padding:0 16px;font-size:14px;">Katakana</button>
         </div>
+        <h3 class="secttl" style="margin-top:2px;">Seion · Âm trong (46 chữ)</h3>
         <div class="kanagrid jp" id="kanaGrid"></div>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">46 chữ cái cơ bản (seion). Thuộc lòng 2 bảng này là bước đầu tiên trước khi học kanji.</p>
+        <h3 class="secttl">Dakuon · Âm đục (25 chữ)</h3>
+        <div class="kanagrid jp" id="kanaGridD"></div>
+        <h3 class="secttl">Yōon · Âm ghép (33 chữ)</h3>
+        <div class="kanagrid jp" id="kanaGridY"></div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Bảng đầy đủ: 46 chữ seion + 25 chữ dakuon (thêm dấu ゛/゜) + 33 chữ yōon (ghép với ゃ・ゅ・ょ nhỏ). Thuộc lòng bảng này là bước đầu tiên trước khi học kanji.</p>
       </div>
     </div>
 
@@ -1809,7 +1886,7 @@
           <div class="stat"><b id="dCong">145</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>ĐIỂM CỐNG HIẾN</span></div>
         </div>
         <div class="card" style="margin-top:12px;">
-          <div class="lesson-head"><h3>Mùa đấu tuần này</h3><span>HẠNG 12 TOÀN TÔNG</span></div>
+          <div class="lesson-head"><h3>Mùa đấu tuần này</h3><span>HẠNG 18 TUẦN NÀY</span></div>
           <p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.55;">Thành tích của bạn: <b style="color:var(--ink);" id="dRecord">3 thắng – 1 thua</b>. Cuối tuần, top mùa đấu được vinh danh trên bảng xếp hạng tông môn.</p>
           <button class="cta" id="duelRandom" style="margin-top:12px;">Ghép đối thủ ngẫu nhiên</button>
           <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:10px 0 0;">Còn <b style="color:var(--ink);" id="dLeftTxt">3</b> lượt đấu hôm nay. Đối thủ ngẫu nhiên cùng cảnh giới đã hoàn thành lượt đấu của họ — điểm của họ được ẩn cho đến khi bạn đấu xong.</p>
@@ -1881,7 +1958,7 @@
         <div class="card shopcard">
           <div class="walletrow">
             <span class="w-ic jp" style="background:var(--amber-soft); color:var(--amber);">丹</span>
-            <span class="w-main"><b>Đan Tụ Linh</b><span>Tăng gấp đôi Tu vi nhận được trong 1 giờ tu luyện.</span></span>
+            <span class="w-main"><b>Đan Tụ Linh</b><span>Đan dược sưu tầm của tông môn. Bản xem thử mới lưu đan vào túi đồ — hiệu lực tăng gấp đôi Tu vi trong 1 giờ sẽ kích hoạt ở bản chính thức.</span></span>
             <button class="buybtn" data-buy data-kind="linh" data-price="50" data-name="Đan Tụ Linh"><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-linh"></use></svg>50 LT</button>
           </div>
           <div class="walletrow">
@@ -1988,6 +2065,12 @@
         <div><h2>Quản lý học viên</h2><span>Trang riêng của Admin — học viên thường không thấy trang này</span></div>
       </div>
       <div class="detailbody">
+        <div id="admLock" style="text-align:center; padding:30px 12px;">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-3);"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <h3 style="margin:12px 0 6px; font-size:17px; font-weight:800;">Chỉ tài khoản Admin mới xem được</h3>
+          <p style="margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.6;">Tài khoản bạn đang dùng là tài khoản học viên thường nên trang Quản lý học viên bị khóa. Khi đăng nhập bằng tài khoản Admin, trang này sẽ hiện tổng số người dùng app, tổng số người đã lên Premium, số tài khoản bị khóa và danh sách học viên để nâng Premium, tặng linh thạch, khóa / mở khóa.</p>
+        </div>
+        <div id="admMain" hidden>
         <div class="balstrip">
           <div class="stat"><b id="admUsers">1.284</b><span>TỔNG NGƯỜI DÙNG</span></div>
           <div class="stat"><b id="admPremium">236</b><span>ĐÃ LÊN PREMIUM</span></div>
@@ -2001,6 +2084,77 @@
         <h2 class="secttl">Danh sách học viên</h2>
         <div class="card shopcard" id="admList" style="margin-top:0;"></div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Bản xem thử: số liệu và danh sách học viên là dữ liệu minh họa. Thao tác nâng Premium, tặng linh thạch và khóa / mở khóa chỉ có hiệu lực trong phiên này — bản thật sẽ kiểm tra quyền Admin ở máy chủ trước khi cho mở trang.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ BÀI 12: DANH SÁCH 12 KANJI ============ -->
+    <div class="overlay front" id="lessonOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeLesson" aria-label="Quay lại — đóng danh sách kanji Bài 12">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Bài 12 · Gia đình</h2><span>Đủ 12 kanji của bài — bấm vào từng chữ để học chi tiết</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="kanjigrid jp" id="lessonGrid"></div>
+        <p id="lessonNote" style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;"></p>
+      </div>
+    </div>
+
+    <!-- ============ TỪ VỰNG: DANH SÁCH TỪ ============ -->
+    <div class="overlay front" id="wordsOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeWords" aria-label="Quay lại — đóng danh sách từ vựng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Từ vựng</h2><span>24 từ trong kho xem thử — bấm vào 1 từ để xem chi tiết</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="card" style="margin-top:0; padding-top:6px; padding-bottom:6px;" id="wordsList"></div>
+      </div>
+    </div>
+
+    <!-- ============ NGỮ PHÁP N4 ============ -->
+    <div class="overlay front" id="grammarOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeGrammar" aria-label="Quay lại — đóng ngữ pháp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Ngữ pháp N4</h2><span>6 mẫu câu trọng tâm của khóa N4 (theo Minna no Nihongo Sơ cấp 2)</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="gcard"><h3 class="jp">〜なければなりません</h3><p class="gm">phải làm gì đó (bắt buộc)</p><p class="ge jp">明日までに レポートを 出さなければなりません。</p><p class="gev">Phải nộp báo cáo trước ngày mai.</p></div>
+        <div class="gcard"><h3 class="jp">〜てもいいです</h3><p class="gm">được phép làm gì đó</p><p class="ge jp">ここに 座ってもいいですか。</p><p class="gev">Tôi ngồi ở đây có được không?</p></div>
+        <div class="gcard"><h3 class="jp">〜てはいけません</h3><p class="gm">không được làm gì đó (cấm)</p><p class="ge jp">ここで 写真を 撮ってはいけません。</p><p class="gev">Không được chụp ảnh ở đây.</p></div>
+        <div class="gcard"><h3 class="jp">〜たほうがいいです</h3><p class="gm">nên làm gì đó (khuyên)</p><p class="ge jp">早く 寝たほうがいいです。</p><p class="gev">Bạn nên đi ngủ sớm.</p></div>
+        <div class="gcard"><h3 class="jp">〜かもしれません</h3><p class="gm">có lẽ, biết đâu (phỏng đoán)</p><p class="ge jp">明日は 雨かもしれません。</p><p class="gev">Ngày mai có lẽ sẽ mưa.</p></div>
+        <div class="gcard"><h3 class="jp">〜たり〜たりします</h3><p class="gm">làm việc này việc kia (liệt kê ví dụ)</p><p class="ge jp">休みの日は 本を 読んだり、音楽を 聞いたりします。</p><p class="gev">Ngày nghỉ tôi khi thì đọc sách, khi thì nghe nhạc.</p></div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:4px 2px 0;">Bản xem thử hiện 6 mẫu trọng tâm — kho đầy đủ 315 mẫu ngữ pháp N5–N1 nằm ở bản web chính SoraKanji.</p>
+      </div>
+    </div>
+
+    <!-- ============ GIỚI THIỆU SORAKANJI ============ -->
+    <div class="overlay front" id="aboutOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeAbout" aria-label="Quay lại — đóng giới thiệu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Giới thiệu SoraKanji</h2><span>Bầu trời Kanji cho người Việt</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="bigkanji">
+          <div class="bk jp">空</div>
+          <div class="bhv">SoraKanji</div>
+          <div class="bmean">Học Kanji, từ vựng, ngữ pháp và luyện thi JLPT N5–N1 cho người Việt</div>
+        </div>
+        <div class="drows">
+          <div class="drow"><b>Học</b><span class="v">2.138 kanji N5–N1 kèm chiết tự dễ nhớ, 214 bộ thủ, bảng kana đầy đủ (seion, dakuon, yōon) và flashcard ôn theo hạn quên.</span></div>
+          <div class="drow"><b>Luyện thi</b><span class="v">Phòng thi JLPT đúng format đề thật: đủ số câu, thời gian và thang điểm 180 cho cả 5 cấp N5–N1.</span></div>
+          <div class="drow"><b>Tu tiên</b><span class="v">Nhiệm vụ mỗi ngày, 10 cảnh giới từ Luyện Khí đến Đại Đế, Đấu Pháp Đài đấu lệch giờ và Tàng Bảo Các tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến.</span></div>
+          <div class="drow"><b>Nguyên tắc</b><span class="v">Bài học, đề thi và từ vựng luôn miễn phí — linh thạch chỉ mua tiện ích và đồ trang trí, không khóa nội dung học bằng tiền.</span></div>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Đây là bản xem thử giao diện điện thoại — nội dung đầy đủ nằm ở bản web chính SoraKanji.</p>
       </div>
     </div>
 
@@ -2138,6 +2292,9 @@
     currentKanji.done = !currentKanji.done;
     document.getElementById("kdDone").textContent = currentKanji.done ? "Đã thuộc ✓ Bấm để bỏ dấu" : "Đánh dấu đã thuộc";
     if(currentCell) currentCell.classList.toggle("done", currentKanji.done);
+    syncKanjiStat();
+    if(KANJI.every(function(k){ return k.done; })) completeMission("kanji");
+    saveProgress();
   });
   document.getElementById("speakKanji").addEventListener("click", function(){
     if(!currentKanji || !("speechSynthesis" in window)) return;
@@ -2177,6 +2334,7 @@
   }
   document.querySelectorAll(".lv").forEach(function(b){
     b.addEventListener("click", function(){
+      if(!b.dataset.lv) return; /* nút không phải pill cấp độ thì bỏ qua — tránh ghi đè curLevel */
       document.querySelectorAll(".lv").forEach(function(x){ x.classList.remove("on"); });
       b.classList.add("on");
       curLevel = b.dataset.lv;
@@ -2195,7 +2353,7 @@
       '<span class="r1"><h3>'+s.t+'</h3><span class="cnt">'+s.done+'/'+s.total+' CÂU</span></span>' +
       '<p>'+s.d+'</p>' +
       '<span class="bar"><i style="width:'+pct+'%"></i></span>';
-    b.addEventListener("click", function(){ openExam(1); });
+    b.addEventListener("click", function(){ openExam(0, s.t + " · " + curLevel, 25); });
     setList.appendChild(b);
   });
 
@@ -2204,13 +2362,23 @@
   var examBody = document.getElementById("examBody");
   var resultEl = document.getElementById("examResult");
   var cur = 0, answers = [], timerId = null, timeLeft = 25*60;
+  var examKind = "test", listenPlays = [];
 
   function fmt(s){ var m = Math.floor(s/60), ss = s%60; return (m<10?"0":"")+m+":"+(ss<10?"0":"")+ss; }
+  function levelMinutes(lv){
+    var m = TESTMETA[lv] ? parseInt(TESTMETA[lv].time, 10) : 25;
+    return isNaN(m) ? 25 : m;
+  }
 
-  function openExam(){
+  function openExam(testNo, label, minutes){
+    examKind = testNo ? "test" : "practice";
     answers = QUESTIONS.map(function(){ return -1; });
-    cur = 0; timeLeft = 25*60;
+    listenPlays = QUESTIONS.map(function(){ return 0; });
+    cur = 0;
+    timeLeft = (minutes || levelMinutes(curLevel)) * 60;
+    document.getElementById("examTitle").textContent = label || ("Test " + testNo + " · " + curLevel);
     document.getElementById("timerTxt").textContent = fmt(timeLeft);
+    document.getElementById("examConfirm").hidden = true;
     resultEl.hidden = true;
     examBody.hidden = false;
     document.querySelector(".examfoot").style.display = "";
@@ -2220,13 +2388,14 @@
     if(timerId) clearInterval(timerId);
     timerId = setInterval(function(){
       timeLeft--;
-      if(timeLeft <= 0){ timeLeft = 0; clearInterval(timerId); submitExam(); }
+      if(timeLeft <= 0){ timeLeft = 0; clearInterval(timerId); submitExam(true); }
       document.getElementById("timerTxt").textContent = fmt(timeLeft);
     }, 1000);
   }
   function closeExam(){
     examOverlay.classList.remove("open");
     examOverlay.setAttribute("aria-hidden","true");
+    document.getElementById("examConfirm").hidden = true;
     if(timerId) clearInterval(timerId);
     closeSheet();
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -2238,9 +2407,10 @@
       '<div class="qnum"><span class="qc">'+(cur+1)+'</span><span>Câu '+(cur+1)+' / '+QUESTIONS.length+' · '+q.part.split("·")[1].trim()+'</span></div>' +
       '<p class="qtext jp">'+q.q+'</p><p class="qsub">'+q.sub+'</p>';
     if(q.listen){
-      html += '<div class="playrow"><button class="playbtn" id="listenBtn" aria-label="Phát đoạn nghe">' +
+      var listenLeft = 2 - listenPlays[cur];
+      html += '<div class="playrow"><button class="playbtn" id="listenBtn" aria-label="Phát đoạn nghe"' + (listenLeft <= 0 ? " disabled" : "") + '>' +
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5Z"/></svg></button>' +
-        '<p>Nghe tối đa 2 lần như đề thật.<br>Đoạn nghe phát bằng giọng Nhật trên máy của bạn.</p></div>';
+        '<p id="listenNote">' + (listenLeft > 0 ? ("Còn " + listenLeft + " lượt nghe (tối đa 2 lần như đề thật).") : "Đã hết 2 lượt nghe của câu này.") + '<br>Đoạn nghe phát bằng giọng Nhật trên máy của bạn.</p></div>';
     }
     html += '<div class="answers">';
     q.opts.forEach(function(o, i){
@@ -2259,6 +2429,12 @@
     var lb = document.getElementById("listenBtn");
     if(lb){
       lb.addEventListener("click", function(){
+        if(listenPlays[cur] >= 2) return; /* khóa sau 2 lần phát như đề thật */
+        listenPlays[cur]++;
+        var left2 = 2 - listenPlays[cur];
+        var note = document.getElementById("listenNote");
+        if(note) note.innerHTML = (left2 > 0 ? ("Còn " + left2 + " lượt nghe (tối đa 2 lần như đề thật).") : "Đã hết 2 lượt nghe của câu này.") + "<br>Đoạn nghe phát bằng giọng Nhật trên máy của bạn.";
+        if(left2 <= 0) lb.disabled = true;
         if(!("speechSynthesis" in window)) return;
         window.speechSynthesis.cancel();
         var u1 = new SpeechSynthesisUtterance(q.listen); u1.lang = "ja-JP"; u1.rate = 0.82;
@@ -2299,7 +2475,12 @@
   document.getElementById("openSheet").addEventListener("click", openSheet);
   scrim.addEventListener("click", closeSheet);
 
-  function submitExam(){
+  function submitExam(force){
+    if(!force && answeredN() === 0){
+      document.getElementById("examConfirm").hidden = false;
+      return;
+    }
+    document.getElementById("examConfirm").hidden = true;
     if(timerId) clearInterval(timerId);
     var correct = 0;
     QUESTIONS.forEach(function(q, i){ if(answers[i]===q.ans) correct++; });
@@ -2313,47 +2494,86 @@
     document.getElementById("resultScore").textContent = correct + "/" + QUESTIONS.length;
     document.getElementById("resultTitle").textContent = pass ? "Tốt — nhịp làm bài ổn" : "Suýt soát lại vài câu nhé";
     document.getElementById("resultNote").textContent =
-      "Đây là 5 câu mẫu trong phòng thi. Đề thật " + curLevel + " có " + TESTMETA[curLevel].q +
-      ", chấm thang 180 và mỗi phần phải đạt tối thiểu 19/60 mới tính đậu.";
+      "Bản xem thử chấm theo 5 câu mẫu: đạt khi đúng từ 3/5 câu. Đề thật " + curLevel + " có " + TESTMETA[curLevel].q +
+      ", chấm thang 180 — bản xem thử không áp ngưỡng từng phần của đề thật.";
+    onExamSubmitted(correct);
   }
-  document.getElementById("submitBtn").addEventListener("click", submitExam);
+  document.getElementById("submitBtn").addEventListener("click", function(){ submitExam(false); });
+  document.getElementById("confirmBack").addEventListener("click", function(){ document.getElementById("examConfirm").hidden = true; });
+  document.getElementById("confirmSubmit").addEventListener("click", function(){ submitExam(true); });
   document.getElementById("closeExamBtn").addEventListener("click", closeExam);
   document.getElementById("backExam").addEventListener("click", closeExam);
   document.getElementById("ctaContinue").addEventListener("click", function(){
-    openKanji(KANJI[6], null);
+    openKanjiLesson();
   });
-  document.getElementById("quickPracticeBtn").addEventListener("click", function(){ openExam(1); });
-  document.getElementById("retryBtn").addEventListener("click", function(){ openExam(1); });
+  document.getElementById("quickPracticeBtn").addEventListener("click", function(){ openExam(0, "Luyện nhanh · " + curLevel, 25); });
+  document.getElementById("retryBtn").addEventListener("click", function(){ openExam(0, "Làm lại câu sai · " + curLevel, 25); });
 
-  /* ---------- Flashcard ---------- */
-  var flipped = false, flashIdx = 3;
-  var flashCard = document.getElementById("flashCard");
-  function flip(){
-    flipped = !flipped;
-    document.getElementById("flashFront").hidden = flipped;
-    document.getElementById("flashBack").hidden = !flipped;
-  }
-  flashCard.addEventListener("click", flip);
-  function nextFlash(){
-    flashIdx++;
-    flipped = false;
-    document.getElementById("flashFront").hidden = false;
-    document.getElementById("flashBack").hidden = true;
-    document.getElementById("flashCount").textContent = "Thẻ " + Math.min(flashIdx,23) + " / 23 · Đã thuộc 128 thẻ tuần này";
-  }
-  document.getElementById("flashOk").addEventListener("click", nextFlash);
-  document.getElementById("flashNo").addEventListener("click", nextFlash);
+  /* Flashcard: deck thật nằm ở mục “Flashcard deck” ngay sau phần Từ vựng (cần dữ liệu VOCAB). */
 
-  /* ---------- Settings toggles ---------- */
+  /* ---------- Cài đặt: công tắc có hành vi thật + lưu localStorage ---------- */
+  var settings = {
+    sound: true, remind: true,
+    dark: !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches),
+    recog: true, sync: true
+  };
+  try{
+    var savedSet = JSON.parse(window.localStorage.getItem("sk_settings") || "null");
+    if(savedSet) for(var sk in settings) if(typeof savedSet[sk] === "boolean") settings[sk] = savedSet[sk];
+  }catch(_){}
+  function saveSettings(){ try{ window.localStorage.setItem("sk_settings", JSON.stringify(settings)); }catch(_){} }
+  function applyTheme(){
+    document.documentElement.setAttribute("data-theme", settings.dark ? "dark" : "light");
+  }
+  function setMsg(t){ setTxt("setMsg", t); }
+  function renderSettings(){
+    document.querySelectorAll("[data-toggle]").forEach(function(row){
+      var sw = row.querySelector(".switch");
+      if(sw && row.dataset.key && (row.dataset.key in settings)) sw.classList.toggle("on", !!settings[row.dataset.key]);
+    });
+    applyTheme();
+  }
   document.querySelectorAll("[data-toggle]").forEach(function(row){
     row.addEventListener("click", function(){
-      var sw = row.querySelector(".switch");
-      if(sw) sw.classList.toggle("on");
+      var key = row.dataset.key;
+      if(!key || !(key in settings)) return;
+      settings[key] = !settings[key];
+      saveSettings();
+      renderSettings();
+      if(key === "dark") setMsg(settings.dark ? "Đã bật giao diện tối — áp dụng ngay cho toàn app và được lưu lại." : "Đã tắt giao diện tối — app dùng giao diện sáng.");
     });
   });
+  renderSettings();
+
+  /* Sao lưu: xuất toàn bộ dữ liệu học hiện có thành file JSON tải xuống */
+  document.getElementById("setBackupBtn").addEventListener("click", function(){
+    var data = {
+      app: "SoraKanji",
+      exportedAt: new Date().toISOString(),
+      tuvi: state.tuvi, linhThach: state.linh, diemCongHien: state.cong,
+      capDaKhai: LV_NAMES[appliedLv], changHienTai: REALMS[appliedLv].n, buocLotrinhDaXong: pathStepDone,
+      kanjiDaThuoc: KANJI.filter(function(k){ return k.done; }).map(function(k){ return k.ch; }),
+      nhiemVuDaXong: missionsState.done,
+      caiDat: settings
+    };
+    try{
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "sorakanji-sao-luu.json";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+      setMsg("Đã xuất file sao lưu sorakanji-sao-luu.json — xem trong thư mục Tải xuống của máy.");
+    }catch(_){
+      setMsg("Trình duyệt này đang chặn tải file nên chưa xuất được bản sao lưu.");
+    }
+  });
+  document.getElementById("setAboutBtn").addEventListener("click", function(){ showOv(document.getElementById("aboutOverlay")); });
+  document.getElementById("closeAbout").addEventListener("click", function(){ hideOv(document.getElementById("aboutOverlay")); });
 
   /* ---------- Helpers for the new tools ---------- */
   function speakJP(text, rate){
+    if(!settings.sound) return; /* công tắc Âm thanh trong Cài đặt đang tắt */
     if(!("speechSynthesis" in window) || !text) return;
     var u = new SpeechSynthesisUtterance(text);
     u.lang = "ja-JP"; u.rate = rate || 0.85;
@@ -2410,6 +2630,55 @@
   document.getElementById("speakVocab").addEventListener("click", function(){ if(curVocab) speakJP(curVocab.ex[0], 0.85); });
   document.getElementById("vdFlash").addEventListener("click", function(){ hideOv(vocabOverlay); goTab("review"); });
 
+  /* ---------- Flashcard deck: 23 thẻ từ kho từ vựng, qua thẻ là đổi thẻ thật ---------- */
+  var DECK = VOCAB.slice(0, 23);
+  var flipped = false, flashIdx = 0, flashKnown = 0, flashDeckDone = false;
+  var flashCard = document.getElementById("flashCard");
+  function renderFlash(){
+    var done = flashIdx >= DECK.length;
+    flashCard.hidden = done;
+    document.querySelector(".flashbtns").style.display = done ? "none" : "";
+    document.getElementById("flashCount").hidden = done;
+    document.getElementById("flashDone").hidden = !done;
+    if(done){
+      if(!flashDeckDone){ flashDeckDone = true; completeMission("review"); }
+      return;
+    }
+    var v = DECK[flashIdx];
+    flipped = false;
+    var front = document.getElementById("flashFront");
+    var back = document.getElementById("flashBack");
+    front.hidden = false; back.hidden = true;
+    front.innerHTML = '<div class="fk jp">' + v.w + '</div><div class="fhint">Bấm vào thẻ để xem nghĩa</div>';
+    back.innerHTML = '<div class="fhv">' + v.hv + '</div><div class="fread jp">' + v.r + '</div>' +
+      '<div class="fmean">' + v.m + '<br><span class="jp" style="font-size:14.5px;">' + v.ex[0] + ' — ' + v.ex[1] + '</span></div>';
+    document.getElementById("flashCount").textContent =
+      "Thẻ " + (flashIdx + 1) + " / " + DECK.length + " · Đã thuộc " + flashKnown + " thẻ trong lượt ôn này";
+  }
+  function flipFlash(){
+    if(flashIdx >= DECK.length) return;
+    flipped = !flipped;
+    document.getElementById("flashFront").hidden = flipped;
+    document.getElementById("flashBack").hidden = !flipped;
+  }
+  flashCard.addEventListener("click", flipFlash);
+  flashCard.addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); flipFlash(); }
+  });
+  function nextFlash(known){
+    if(flashIdx >= DECK.length) return;
+    if(known) flashKnown++;
+    flashIdx++;
+    renderFlash();
+  }
+  document.getElementById("flashOk").addEventListener("click", function(){ nextFlash(true); });
+  document.getElementById("flashNo").addEventListener("click", function(){ nextFlash(false); });
+  document.getElementById("flashRestart").addEventListener("click", function(){
+    flashIdx = 0; flashKnown = 0; flashDeckDone = false;
+    renderFlash();
+  });
+  renderFlash();
+
   /* ---------- Search with suggestions ---------- */
   var sInput = document.getElementById("searchInput");
   var sBox = document.getElementById("suggest");
@@ -2463,7 +2732,20 @@
   }
   sInput.addEventListener("input", runSearch);
   sInput.addEventListener("focus", function(){ if(sBox.hidden) runSearch(); });
-  sInput.addEventListener("blur", function(){ setTimeout(hideSuggest, 180); });
+  sInput.addEventListener("blur", function(){
+    /* Chỉ ẩn khi focus rời hẳn vùng tìm kiếm (ô nhập + nút xóa/mic + hộp gợi ý) —
+       Tab qua các nút trong vùng rồi tới gợi ý thì hộp phải còn mở để Enter mở được */
+    setTimeout(function(){
+      var st = document.querySelector(".searchsticky");
+      if(!st || !st.contains(document.activeElement)) hideSuggest();
+    }, 180);
+  });
+  sBox.addEventListener("focusout", function(){
+    setTimeout(function(){
+      var st = document.querySelector(".searchsticky");
+      if(!st || !st.contains(document.activeElement)) hideSuggest();
+    }, 180);
+  });
   sInput.addEventListener("keydown", function(e){
     if(e.key === "Enter"){
       var first = sBox.querySelector(".sg-item");
@@ -2475,6 +2757,12 @@
     var it = e.target.closest ? e.target.closest(".sg-item") : null;
     if(!it) return;
     e.preventDefault();
+    openResult(it.dataset.kind, parseInt(it.dataset.i, 10));
+  });
+  sBox.addEventListener("click", function(e){
+    /* Dùng bàn phím (Tab tới gợi ý rồi Enter/Space) cũng mở được kết quả như chạm */
+    var it = e.target.closest ? e.target.closest(".sg-item") : null;
+    if(!it) return;
     openResult(it.dataset.kind, parseInt(it.dataset.i, 10));
   });
   sClear.addEventListener("click", function(){
@@ -2556,31 +2844,56 @@
   drawCanvas.addEventListener("pointerup", endStroke);
   drawCanvas.addEventListener("pointercancel", endStroke);
 
+  var drawMode = "free", sheetKanji = null;
   function openDraw(mode, k){
+    drawMode = mode;
     strokes = []; curStroke = null; drawing = false;
     candRow.hidden = true; candChips.innerHTML = "";
-    var trace = (mode === "trace" && k);
+    var sheet = (mode === "sheet");
+    if(sheet){ sheetKanji = k || KANJI[0]; k = sheetKanji; }
+    var trace = ((mode === "trace" && k) || sheet);
     drawGhost.textContent = trace ? k.ch : "";
     drawGhost.classList.toggle("on", !!trace);
-    document.getElementById("drawTitle").textContent = trace ? ("Luyện viết · " + k.ch) : "Vẽ kanji";
-    document.getElementById("drawSub").textContent = trace ? ("Tô theo chữ mẫu — " + k.stroke) : "Vẽ 1 chữ vào ô rồi bấm Nhận diện";
+    document.getElementById("drawTitle").textContent = sheet ? "Phiếu luyện viết" : (trace ? ("Luyện viết · " + k.ch) : "Vẽ kanji");
+    document.getElementById("drawSub").textContent = sheet
+      ? "Phiếu tập tô — chọn 1 chữ bên dưới rồi tô theo chữ mẫu trong ô"
+      : (trace ? ("Tô theo chữ mẫu — " + k.stroke) : "Vẽ 1 chữ vào ô rồi bấm Gợi ý theo số nét");
     document.getElementById("drawRecog").hidden = !!trace;
     document.getElementById("drawDone").hidden = !trace;
+    if(sheet) buildSheetChips();
     showOv(drawOverlay);
     requestAnimationFrame(sizeCanvas);
   }
+  function buildSheetChips(){
+    candRow.hidden = false;
+    candLabel.textContent = "Chọn chữ cho phiếu luyện viết — chữ mẫu hiện mờ trong ô để tô theo:";
+    candChips.innerHTML = "";
+    KANJI.forEach(function(k){
+      var b = document.createElement("button");
+      b.className = "candchip";
+      b.innerHTML = '<span class="cc jp">' + k.ch + '</span><span class="chv">' + k.hv + '</span>';
+      b.addEventListener("click", function(){
+        sheetKanji = k;
+        drawGhost.textContent = k.ch;
+        document.getElementById("drawSub").textContent = "Phiếu tập tô · " + k.ch + " (" + k.hv + ") — " + k.stroke;
+        strokes = []; curStroke = null; redrawDraw();
+      });
+      candChips.appendChild(b);
+    });
+  }
+  function openWorksheet(){ openDraw("sheet", null); }
   document.getElementById("closeDraw").addEventListener("click", function(){ hideOv(drawOverlay); });
   document.getElementById("drawDone").addEventListener("click", function(){ hideOv(drawOverlay); });
   document.getElementById("drawUndo").addEventListener("click", function(){ strokes.pop(); redrawDraw(); });
-  document.getElementById("drawClear").addEventListener("click", function(){ strokes = []; curStroke = null; candRow.hidden = true; redrawDraw(); });
+  document.getElementById("drawClear").addEventListener("click", function(){ strokes = []; curStroke = null; candRow.hidden = (drawMode !== "sheet"); redrawDraw(); });
   document.getElementById("drawRecog").addEventListener("click", function(){
     candRow.hidden = false;
     if(!strokes.length){
-      candLabel.textContent = "Bạn chưa vẽ nét nào — vẽ 1 chữ vào ô rồi bấm Nhận diện lại nhé.";
+      candLabel.textContent = "Bạn chưa vẽ nét nào — vẽ 1 chữ vào ô rồi bấm Gợi ý theo số nét nhé.";
       candChips.innerHTML = "";
       return;
     }
-    candLabel.textContent = "Gợi ý chữ gần giống (minh họa) — bấm để xem chi tiết:";
+    candLabel.textContent = "Gợi ý minh họa theo số nét — bấm để xem chi tiết:";
     candChips.innerHTML = "";
     var start = strokes.length % KANJI.length;
     for(var j = 0; j < 4; j++){
@@ -2609,11 +2922,31 @@
     ["わ","ワ","wa"],null,null,null,["を","ヲ","wo"],
     ["ん","ン","n"]
   ];
+  var KANA_D = [
+    ["が","ガ","ga"],["ぎ","ギ","gi"],["ぐ","グ","gu"],["げ","ゲ","ge"],["ご","ゴ","go"],
+    ["ざ","ザ","za"],["じ","ジ","ji"],["ず","ズ","zu"],["ぜ","ゼ","ze"],["ぞ","ゾ","zo"],
+    ["だ","ダ","da"],["ぢ","ヂ","ji"],["づ","ヅ","zu"],["で","デ","de"],["ど","ド","do"],
+    ["ば","バ","ba"],["び","ビ","bi"],["ぶ","ブ","bu"],["べ","ベ","be"],["ぼ","ボ","bo"],
+    ["ぱ","パ","pa"],["ぴ","ピ","pi"],["ぷ","プ","pu"],["ぺ","ペ","pe"],["ぽ","ポ","po"]
+  ];
+  var KANA_Y = [
+    ["きゃ","キャ","kya"],["きゅ","キュ","kyu"],["きょ","キョ","kyo"],
+    ["ぎゃ","ギャ","gya"],["ぎゅ","ギュ","gyu"],["ぎょ","ギョ","gyo"],
+    ["しゃ","シャ","sha"],["しゅ","シュ","shu"],["しょ","ショ","sho"],
+    ["じゃ","ジャ","ja"],["じゅ","ジュ","ju"],["じょ","ジョ","jo"],
+    ["ちゃ","チャ","cha"],["ちゅ","チュ","chu"],["ちょ","チョ","cho"],
+    ["ぢゃ","ヂャ","ja"],["ぢゅ","ヂュ","ju"],["ぢょ","ヂョ","jo"],
+    ["にゃ","ニャ","nya"],["にゅ","ニュ","nyu"],["にょ","ニョ","nyo"],
+    ["ひゃ","ヒャ","hya"],["ひゅ","ヒュ","hyu"],["ひょ","ヒョ","hyo"],
+    ["びゃ","ビャ","bya"],["びゅ","ビュ","byu"],["びょ","ビョ","byo"],
+    ["ぴゃ","ピャ","pya"],["ぴゅ","ピュ","pyu"],["ぴょ","ピョ","pyo"],
+    ["みゃ","ミャ","mya"],["みゅ","ミュ","myu"],["みょ","ミョ","myo"],
+    ["りゃ","リャ","rya"],["りゅ","リュ","ryu"],["りょ","リョ","ryo"]
+  ];
   var kanaMode = 0;
-  var kanaGrid = document.getElementById("kanaGrid");
-  function renderKana(){
-    kanaGrid.innerHTML = "";
-    KANA.forEach(function(c){
+  function fillKana(grid, rows){
+    grid.innerHTML = "";
+    rows.forEach(function(c){
       var b = document.createElement("button");
       if(!c){ b.className = "kanacell blank"; b.disabled = true; }
       else{
@@ -2621,8 +2954,13 @@
         b.innerHTML = '<span class="kc">' + c[kanaMode] + '</span><span class="kr">' + c[2] + '</span>';
         b.addEventListener("click", function(){ speakJP(c[kanaMode], 0.7); });
       }
-      kanaGrid.appendChild(b);
+      grid.appendChild(b);
     });
+  }
+  function renderKana(){
+    fillKana(document.getElementById("kanaGrid"), KANA);
+    fillKana(document.getElementById("kanaGridD"), KANA_D);
+    fillKana(document.getElementById("kanaGridY"), KANA_Y);
   }
   function setKanaMode(m){
     kanaMode = m;
@@ -2638,24 +2976,60 @@
   /* ---------- Utility row wiring ---------- */
   document.getElementById("utilDraw").addEventListener("click", function(){ openDraw("free", null); });
   document.getElementById("utilKana").addEventListener("click", function(){ showOv(document.getElementById("kanaOverlay")); });
-  document.getElementById("utilQuiz").addEventListener("click", function(){ openExam(1); });
+  document.getElementById("utilQuiz").addEventListener("click", function(){ openExam(0, "Quiz nhanh · " + curLevel, 25); });
   document.getElementById("utilFlash").addEventListener("click", function(){ goTab("review"); });
 
   /* ---------- App grid (kiểu iPhone) + nhiệm vụ hôm nay ---------- */
   function openKanjiLesson(){
-    goTab("home");
-    openKanji(KANJI[0], null);
+    renderLesson();
+    showOv(document.getElementById("lessonOverlay"));
   }
+  function renderLesson(){
+    var g = document.getElementById("lessonGrid");
+    g.innerHTML = "";
+    KANJI.forEach(function(k){
+      var cell = kanjiCell(k);
+      cell.addEventListener("click", function(){ hideOv(document.getElementById("lessonOverlay")); });
+      g.appendChild(cell);
+    });
+    var doneN = KANJI.filter(function(k){ return k.done; }).length;
+    document.getElementById("lessonNote").textContent =
+      "Đã thuộc " + doneN + "/12 chữ của Bài 12. Thuộc hết 12 chữ là hoàn thành nhiệm vụ “Tu luyện Kanji” hôm nay (+40 Tu vi).";
+    if(doneN >= 12) completeMission("kanji");
+  }
+  document.getElementById("closeLesson").addEventListener("click", function(){ hideOv(document.getElementById("lessonOverlay")); });
+
+  /* Danh sách từ vựng — đích riêng của icon Từ vựng */
+  var wordsBuilt = false;
+  function openWords(){
+    if(!wordsBuilt){
+      wordsBuilt = true;
+      var list = document.getElementById("wordsList");
+      VOCAB.forEach(function(v){
+        var b = document.createElement("button");
+        b.className = "wordrow";
+        b.innerHTML = '<span class="ww jp">' + v.w + '</span><span class="wm"><b class="jp">' + v.r + ' · ' + v.roma + '</b>' + v.hv + ' · ' + v.m + '</span><span class="sg-tag">CHI TIẾT</span>';
+        b.addEventListener("click", function(){ hideOv(document.getElementById("wordsOverlay")); openVocab(v); });
+        list.appendChild(b);
+      });
+    }
+    showOv(document.getElementById("wordsOverlay"));
+  }
+  document.getElementById("closeWords").addEventListener("click", function(){ hideOv(document.getElementById("wordsOverlay")); });
+  document.getElementById("closeGrammar").addEventListener("click", function(){ hideOv(document.getElementById("grammarOverlay")); });
   document.querySelectorAll("[data-app]").forEach(function(b){
     b.addEventListener("click", function(){
       var a = b.dataset.app;
       if(a === "kanji") openKanjiLesson();
-      else if(a === "vocab" || a === "grammar" || a === "practice") goTab("practice");
+      else if(a === "vocab") openWords();
+      else if(a === "grammar") showOv(document.getElementById("grammarOverlay"));
+      else if(a === "practice") goTab("practice");
       else if(a === "jlpt") goTab("jlpt");
       else if(a === "review" || a === "flash") goTab("review");
-      else if(a === "draw" || a === "write") openDraw("free", null);
+      else if(a === "draw") openDraw("free", null);
+      else if(a === "write") openWorksheet();
       else if(a === "kana") showOv(document.getElementById("kanaOverlay"));
-      else if(a === "quiz") openExam(1);
+      else if(a === "quiz") openExam(0, "Quiz nhanh · " + curLevel, 25);
       else if(a === "duel") openDuel();
       else if(a === "shop") openShop();
       else if(a === "rank") goTab("rank");
@@ -2666,14 +3040,14 @@
     });
   });
   document.getElementById("missionKanji").addEventListener("click", openKanjiLesson);
-  document.getElementById("missionQuiz").addEventListener("click", function(){ openExam(1); });
+  document.getElementById("missionQuiz").addEventListener("click", function(){ openExam(0, "Quiz nhanh · " + curLevel, 25); });
   document.getElementById("missionReview").addEventListener("click", function(){ goTab("review"); });
   document.getElementById("missionExam").addEventListener("click", function(){ goTab("jlpt"); });
 
   /* ---------- Hàng trong tab Cá nhân ---------- */
   document.getElementById("meRankRow").addEventListener("click", function(){ goTab("rank"); });
   document.getElementById("meChatRow").addEventListener("click", function(){ goTab("chat"); });
-  document.getElementById("meWriteRow").addEventListener("click", function(){ openDraw("free", null); });
+  document.getElementById("meWriteRow").addEventListener("click", function(){ openWorksheet(); });
   document.getElementById("meSettingsRow").addEventListener("click", function(){ goTab("settings"); });
 
   /* ---------- Lộ trình học cá nhân: khai trình độ → chính tuyến ---------- */
@@ -2691,7 +3065,8 @@
   ];
   var PATH_STEPS = ["Bảng chữ cái", "Bộ thủ", "Kanji", "Từ vựng", "Ngữ pháp", "Nghe", "Thi thử"];
   var LV_NAMES = ["Chưa biết", "N5", "N4", "N3", "N2", "N1"];
-  var pathLv = 1;       /* hồ sơ mẫu: đã khai N5 → chặng Trúc Cơ, đang học N4 */
+  var pathLv = 1;       /* cấp đang chọn trong trang Khai trình độ */
+  var appliedLv = 1;    /* cấp đang thật sự áp dụng: hồ sơ mẫu đã khai N5 → chặng Trúc Cơ, đang học N4 */
   var pathStepDone = 2; /* bản mẫu: đã xong 2 bước đầu của chặng hiện tại */
 
   function stepsHTML(doneCount){
@@ -2720,25 +3095,25 @@
     });
   }
   function renderPathHome(){
-    var r = REALMS[pathLv];
-    var next = REALMS[pathLv + 1];
+    var r = REALMS[appliedLv];
+    var next = REALMS[appliedLv + 1];
     document.getElementById("pathStageLine").textContent =
-      "Đã khai " + LV_NAMES[pathLv] + " · Đang ở chặng " + r.n + " — " + r.courseLbl;
+      "Đã khai " + LV_NAMES[appliedLv] + " · Đang ở chặng " + r.n + " — " + r.courseLbl;
     document.getElementById("pathSteps").innerHTML = stepsHTML(pathStepDone);
     document.getElementById("pathNote").innerHTML = next
       ? "Học lần lượt đủ 7 bước trong chặng. Đậu bước <b>Thi thử</b> cuối chặng là đột phá lên <b>" + next.n + "</b>."
       : "Bạn đang ở chặng cao nhất của chính tuyến — tu luyện mỗi ngày để giữ vững ngôi Đại Đế.";
-    var chipHTML = '<i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + pathLv + '"></use></svg> ' + r.n.toUpperCase();
+    var chipHTML = '<i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + appliedLv + '"></use></svg> ' + r.n.toUpperCase();
     document.getElementById("heroRealmChip").innerHTML = chipHTML;
     document.getElementById("meRealmChip").innerHTML = chipHTML;
     document.getElementById("heroSub").textContent = r.course.indexOf("N") === 0
       ? "Hôm nay tu luyện tiếp " + r.course + " nhé"
-      : (pathLv >= 9 ? "Hôm nay tu luyện giữ vững đỉnh phong nhé" : "Hôm nay tu luyện nâng cao sau N1 nhé");
+      : (appliedLv >= 9 ? "Hôm nay tu luyện giữ vững đỉnh phong nhé" : "Hôm nay tu luyện nâng cao sau N1 nhé");
     document.getElementById("meCourse").textContent = (r.course.indexOf("N") === 0
       ? "Đang học " + r.course
-      : (pathLv >= 9 ? "Đã đạt đỉnh phong Đại Đế" : "Đang tu luyện nâng cao sau N1")) + " · Mục tiêu thi 12/2026";
+      : (appliedLv >= 9 ? "Đã đạt đỉnh phong Đại Đế" : "Đang tu luyện nâng cao sau N1")) + " · Mục tiêu thi 12/2026";
     document.getElementById("mePathLbl").textContent =
-      "Lộ trình học cá nhân — đã khai " + LV_NAMES[pathLv] + ", chặng " + r.n;
+      "Lộ trình học cá nhân — đã khai " + LV_NAMES[appliedLv] + ", chặng " + r.n;
   }
   var pathOverlay = document.getElementById("pathOverlay");
   function openPath(){ renderRoadmap(); showOv(pathOverlay); }
@@ -2749,15 +3124,96 @@
   document.getElementById("mePathRow").addEventListener("click", openPath);
   document.getElementById("closePath").addEventListener("click", function(){ hideOv(pathOverlay); });
   document.getElementById("pathApply").addEventListener("click", function(){
-    pathStepDone = 0; /* lộ trình mới soạn lại: bắt đầu từ bước 1 của chặng */
+    if(pathLv !== appliedLv){
+      appliedLv = pathLv;
+      pathStepDone = 0; /* chỉ khi đổi cấp mới soạn lại từ bước 1 — khai lại cùng cấp thì giữ nguyên các bước đã xong */
+    }
     renderPathHome();
+    saveProgress();
     hideOv(pathOverlay);
   });
   document.getElementById("pathSteps").innerHTML = stepsHTML(pathStepDone);
   document.getElementById("pathStepInfo").innerHTML = stepsHTML(-1);
 
+  /* ---------- Nhiệm vụ hôm nay: trạng thái hoàn thành + cộng Tu vi + lưu trữ ---------- */
+  var missionsState = { done: { kanji:false, quiz:false, review:false, exam:false }, quizProg: 6 };
+  var MISSIONS = {
+    kanji: { el: "missionKanji", reward: 40 },
+    quiz: { el: "missionQuiz", reward: 30 },
+    review: { el: "missionReview", reward: 35 },
+    exam: { el: "missionExam", reward: 25 }
+  };
+  function syncKanjiStat(){
+    setTxt("meKanjiDone", KANJI.filter(function(k){ return k.done; }).length);
+  }
+  function setMissionUI(key, done, total, subText){
+    var el = document.getElementById(MISSIONS[key].el);
+    if(!el) return;
+    var isDone = !!missionsState.done[key];
+    el.classList.toggle("done", isDone);
+    var sub = el.querySelector(".m-main span");
+    if(sub) sub.textContent = subText;
+    var bar = el.querySelector(".m-bar i");
+    if(bar) bar.style.width = Math.min(100, Math.round(done / total * 100)) + "%";
+    var st = el.querySelector(".m-state");
+    if(st){
+      st.textContent = isDone ? "Đã xong ✓" : (done > 0 ? "Đang làm" : "Chưa làm");
+      st.className = "m-state" + (isDone ? " done" : (done > 0 ? " doing" : ""));
+    }
+  }
+  function renderMissions(){
+    var kd = KANJI.filter(function(k){ return k.done; }).length;
+    setMissionUI("kanji", kd, 12, "Học 12 kanji · Đã xong " + kd + "/12");
+    var qp = Math.min(missionsState.quizProg, 10);
+    setMissionUI("quiz", qp, 10, "Trả lời đúng 10 câu · Đã đúng " + qp + "/10");
+    setMissionUI("review", missionsState.done.review ? 23 : 0, 23, "Ôn 23 thẻ sắp quên hôm nay");
+    setMissionUI("exam", missionsState.done.exam ? 1 : 0, 1, "Làm 1 đề Test N4 hoặc luyện nhanh 20 câu");
+    syncKanjiStat();
+  }
+  function completeMission(key){
+    if(missionsState.done[key]){ renderMissions(); return; }
+    missionsState.done[key] = true;
+    state.tuvi += MISSIONS[key].reward;
+    renderMissions();
+    renderWallet();
+  }
+  function onExamSubmitted(correct){
+    if(examKind === "test") completeMission("exam");
+    if(!missionsState.done.quiz){
+      missionsState.quizProg = Math.min(10, missionsState.quizProg + correct);
+      if(missionsState.quizProg >= 10) completeMission("quiz");
+      else { renderMissions(); saveProgress(); }
+    }
+  }
+  function saveProgress(){
+    try{
+      window.localStorage.setItem("sk_progress", JSON.stringify({
+        state: state, appliedLv: appliedLv, pathStepDone: pathStepDone,
+        missions: missionsState,
+        kanjiDone: KANJI.map(function(k){ return k.done ? 1 : 0; })
+      }));
+    }catch(_){}
+  }
+
   /* ---------- Kinh tế tu tiên: Tu vi · Linh thạch · Điểm cống hiến ---------- */
   var state = { tuvi:1240, linh:320, cong:145, duelLeft:3, wins:3, losses:1 };
+  /* Đọc lại dữ liệu đã lưu trên máy (Tu vi, ví, nhiệm vụ, lộ trình, kanji đã thuộc) */
+  (function loadProgress(){
+    try{
+      var d = JSON.parse(window.localStorage.getItem("sk_progress") || "null");
+      if(!d) return;
+      if(d.state) for(var k in state) if(typeof d.state[k] === "number") state[k] = d.state[k];
+      if(typeof d.appliedLv === "number"){ appliedLv = d.appliedLv; pathLv = d.appliedLv; }
+      if(typeof d.pathStepDone === "number") pathStepDone = d.pathStepDone;
+      if(d.missions){
+        if(d.missions.done) missionsState.done = d.missions.done;
+        if(typeof d.missions.quizProg === "number") missionsState.quizProg = d.missions.quizProg;
+      }
+      if(d.kanjiDone) KANJI.forEach(function(kk, i){ if(d.kanjiDone[i] != null) kk.done = !!d.kanjiDone[i]; });
+      dueGrid.innerHTML = "";
+      [KANJI[8], KANJI[9], KANJI[6], KANJI[7]].forEach(function(kk){ dueGrid.appendChild(kanjiCell(kk)); });
+    }catch(_){}
+  })();
   function fmtN(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
   function setTxt(id, txt){ var el = document.getElementById(id); if(el) el.textContent = txt; }
   function officeInfo(c){
@@ -2792,11 +3248,11 @@
     if(ob) ob.style.width = Math.min(100, Math.round(state.cong / (of.nextAt || 1) * 100)) + "%";
     document.querySelectorAll("[data-buy]").forEach(function(btn){
       if(btn.classList.contains("owned")) return;
-      var bal = btn.dataset.kind === "linh" ? state.linh : state.cong;
-      btn.disabled = bal < parseInt(btn.dataset.price, 10);
+      btn.disabled = false; /* nút luôn bấm được — thiếu tiền thì bấm vào sẽ báo rõ còn thiếu bao nhiêu */
     });
     var ex = document.getElementById("exchangeBtn");
-    if(ex) ex.disabled = state.linh < 100;
+    if(ex) ex.disabled = false;
+    saveProgress();
     refreshDuelBtns();
   }
   function refreshDuelBtns(){
@@ -2986,7 +3442,10 @@
     btn.addEventListener("click", function(){
       var kind = btn.dataset.kind, price = parseInt(btn.dataset.price, 10);
       var bal = kind === "linh" ? state.linh : state.cong;
-      if(bal < price){ shopMsg("Chưa đủ " + (kind === "linh" ? "linh thạch" : "điểm cống hiến") + " cho món này."); return; }
+      if(bal < price){
+        shopMsg("Chưa đủ " + (kind === "linh" ? "linh thạch" : "điểm cống hiến") + " — còn thiếu " + fmtN(price - bal) + (kind === "linh" ? " LT" : " điểm") + " nữa mới mua được «" + btn.dataset.name + "».");
+        return;
+      }
       if(kind === "linh") state.linh -= price; else state.cong -= price;
       if(btn.dataset.effect === "duelLeft"){
         state.duelLeft++;
@@ -3006,7 +3465,7 @@
     });
   });
   document.getElementById("exchangeBtn").addEventListener("click", function(){
-    if(state.linh < 100) return;
+    if(state.linh < 100){ shopMsg("Chưa đủ linh thạch để quyên — còn thiếu " + fmtN(100 - state.linh) + " LT."); return; }
     state.linh -= 100; state.cong += 10;
     shopMsg("Đã quyên 100 linh thạch cho tông môn · +10 điểm cống hiến (tổng " + fmtN(state.cong) + " điểm).");
     renderWallet();
@@ -3019,6 +3478,8 @@
   document.getElementById("meDuelBtn").addEventListener("click", openDuel);
   document.getElementById("meShopBtn").addEventListener("click", openShop);
   document.getElementById("rankDuelCard").addEventListener("click", openDuel);
+  renderPathHome();
+  renderMissions();
   renderWallet();
 
   /* ---------- Trang Admin: Quản lý học viên (chỉ tài khoản Admin mới thấy) ---------- */
@@ -3030,7 +3491,9 @@
     { name:"Văn Đức", rk:2, realm:"Kim Đan", lv:"N3", prem:true, blocked:false, linh:520, act:"Hoạt động hôm qua" },
     { name:"Thu Hằng", rk:1, realm:"Trúc Cơ", lv:"N5", prem:false, blocked:false, linh:180, act:"Hoạt động hôm qua" },
     { name:"Hoàng Nam", rk:0, realm:"Luyện Khí", lv:"N5", prem:false, blocked:false, linh:95, act:"Hoạt động 2 ngày trước" },
-    { name:"Phương Thảo", rk:1, realm:"Trúc Cơ", lv:"N4", prem:false, blocked:true, linh:60, act:"Hoạt động lần cuối 4 ngày trước" }
+    { name:"Phương Thảo", rk:1, realm:"Trúc Cơ", lv:"N4", prem:false, blocked:true, linh:60, act:"Hoạt động lần cuối 4 ngày trước" },
+    { name:"Đình Bảo", rk:0, realm:"Luyện Khí", lv:"N5", prem:false, blocked:true, linh:40, act:"Hoạt động lần cuối 6 ngày trước" },
+    { name:"Ngọc Trâm", rk:1, realm:"Trúc Cơ", lv:"N4", prem:false, blocked:true, linh:120, act:"Hoạt động lần cuối 1 tuần trước" }
   ];
   var admPremiumTotal = 236, admBlockedTotal = 3;
   var adminOverlay = document.getElementById("adminOverlay");
@@ -3089,7 +3552,13 @@
     });
     renderAdminStats();
   }
-  function openAdmin(){ renderAdmin(); showOv(adminOverlay); }
+  var isAdminAccount = false; /* tài khoản đang dùng trong bản xem thử là học viên thường — trang Admin bị khóa */
+  function openAdmin(){
+    document.getElementById("admLock").hidden = isAdminAccount;
+    document.getElementById("admMain").hidden = !isAdminAccount;
+    if(isAdminAccount) renderAdmin();
+    showOv(adminOverlay);
+  }
   document.getElementById("admSearch").addEventListener("input", renderAdmin);
   document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
@@ -3203,9 +3672,20 @@
   /* ---------- Phòng chat (bản xem thử, chỉ trong phiên) ---------- */
   var chatList = document.getElementById("chatList");
   var chatInput = document.getElementById("chatInput");
+  var lastChatAt = 0;
+  function updChatCount(){ setTxt("chatCount", (chatInput.value || "").length + "/500"); }
+  chatInput.addEventListener("input", updChatCount);
   function sendChat(){
     var t = (chatInput.value || "").trim();
     if(!t) return;
+    if(t.length > 500){ setTxt("chatHint", "Tin nhắn tối đa 500 ký tự — rút gọn lại giúp mình nhé."); return; }
+    var now = Date.now();
+    if(now - lastChatAt < 3000){
+      setTxt("chatHint", "Gửi chậm lại chút — chờ " + Math.ceil((3000 - (now - lastChatAt)) / 1000) + " giây nữa (chống spam).");
+      return;
+    }
+    lastChatAt = now;
+    setTxt("chatHint", "");
     var wrap = document.createElement("div");
     wrap.className = "chatmsg mine";
     var bub = document.createElement("span");
@@ -3220,6 +3700,7 @@
     wrap.appendChild(av); wrap.appendChild(bub);
     chatList.appendChild(wrap);
     chatInput.value = "";
+    updChatCount();
     var scr = document.getElementById("scr-chat");
     scr.scrollTop = scr.scrollHeight;
   }
