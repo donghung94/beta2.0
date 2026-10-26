@@ -4,8 +4,17 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<link rel="icon" href="data:," />
-<title>SoraKanji — Bản xem thử giao diện điện thoại</title>
+<meta name="theme-color" content="#C8102E" />
+<meta name="description" content="SoraKanji — học Kanji, từ vựng, ngữ pháp và luyện thi JLPT N5–N1 cho người Việt. Cài lên màn hình chính để học như một app thật." />
+<link rel="manifest" href="assets/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="SoraKanji" />
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+<title>SoraKanji — Bầu trời Kanji cho người Việt</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -31,6 +40,7 @@
     --page-bg:#E9E7E1;
     --shadow:0 24px 60px rgba(20,16,10,.22), 0 4px 14px rgba(20,16,10,.12);
     --radius:18px;
+    --tabh:calc(70px + env(safe-area-inset-bottom));
   }
   @media (prefers-color-scheme: dark){
     :root{
@@ -111,7 +121,7 @@
     flex:0 0 auto; display:grid; grid-template-columns:repeat(5,1fr);
     background:var(--card); border-top:1px solid var(--line);
     padding:8px 6px calc(10px + env(safe-area-inset-bottom));
-    z-index:20;
+    z-index:60;
   }
   .tabbtn{
     appearance:none; border:none; background:none; cursor:pointer;
@@ -299,6 +309,9 @@
     position:absolute; inset:0; background:var(--bg); z-index:40;
     transform:translateY(100%); transition:transform .32s cubic-bezier(.32,.72,.28,1);
     display:flex; flex-direction:column;
+    /* Chừa chỗ cho thanh tab dưới: nội dung trang con kết thúc ngay trên thanh tab,
+       nền trang vẫn phủ xuống sau thanh tab (thanh tab luôn nổi lên trên, bấm được) */
+    padding-bottom:var(--tabh);
   }
   .overlay.open{transform:translateY(0);}
   @media (prefers-reduced-motion: reduce){ .overlay{transition:none;} }
@@ -377,7 +390,7 @@
   .scrim{position:absolute; inset:0; background:rgba(10,8,6,.45); z-index:50; opacity:0; pointer-events:none; transition:opacity .25s;}
   .scrim.open{opacity:1; pointer-events:auto;}
   .sheet{
-    position:absolute; left:0; right:0; bottom:0; z-index:51; background:var(--card);
+    position:absolute; left:0; right:0; bottom:var(--tabh); z-index:51; background:var(--card);
     border-radius:22px 22px 0 0; padding:10px 18px calc(20px + env(safe-area-inset-bottom));
     transform:translateY(105%); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
     display:flex; flex-direction:column;
@@ -541,7 +554,9 @@
   .mission-head h2{font-size:16px; margin:0 0 2px; font-weight:800;}
   .mission-head p{margin:0; font-size:11.5px; color:var(--ink-2); line-height:1.35;}
   .missions-scroll{
-    flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+    flex:1 1 auto; min-height:0; overflow-y:auto;
+    /* Không đặt overscroll-behavior: cuộn hết khung thì lực cuộn chuyền tiếp
+       ra trang ngoài, kéo xuống tới lưới Pháp bảo — không bị kẹt trong khung */
     -webkit-overflow-scrolling:touch; padding:0 4px 10px 0;
     scrollbar-width:thin; scrollbar-color:#C9A24B transparent;
   }
@@ -844,6 +859,36 @@
   .admbtn:disabled{opacity:.45; cursor:default;}
   .admbtn.done{background:var(--good-soft); color:var(--good); border-color:transparent; opacity:1;}
   .sturow.isblocked .stu-main b, .sturow.isblocked .stu-main span{color:var(--ink-3);}
+
+  /* ---------- PWA: cài app + trạng thái offline ---------- */
+  .pwabanner{
+    margin-top:12px; background:var(--card); border:1.5px solid #C9A24B; border-radius:var(--radius);
+    padding:13px 14px; display:flex; align-items:center; gap:12px;
+  }
+  .pwabanner img{width:52px; height:52px; border-radius:13px; flex:0 0 auto; border:1px solid var(--line); background:#FBEFD2;}
+  .pwabanner .p-main{flex:1; min-width:0;}
+  .pwabanner .p-main b{display:block; font-size:14.5px; line-height:1.3;}
+  .pwabanner .p-main span{display:block; font-size:12px; color:var(--ink-2); line-height:1.45; margin-top:2px;}
+  .pwabtn{
+    flex:0 0 auto; min-height:46px; padding:0 16px; border:none; border-radius:12px; cursor:pointer;
+    background:var(--red); color:#fff; font-family:inherit; font-size:14px; font-weight:800; white-space:nowrap;
+  }
+  .pwabtn:disabled{background:var(--good-soft); color:var(--good); cursor:default;}
+  .pwacard{margin-top:0;}
+  .pwarow{display:flex; align-items:center; gap:11px; padding:11px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+  .pwarow:last-child{border-bottom:none;}
+  .pwarow .pw-k{flex:0 0 118px; color:var(--ink-2); font-weight:600; font-size:12.5px; line-height:1.4;}
+  .pwarow .pw-v{flex:1; min-width:0; font-weight:700; line-height:1.45;}
+  .pwadot{width:9px; height:9px; border-radius:50%; background:var(--good); flex:0 0 auto;}
+  .pwadot.off{background:var(--red);}
+  .pwadot.warn{background:#E3A008;}
+  .pwahelp{font-size:12.5px; color:var(--ink-2); line-height:1.6; margin:10px 2px 0;}
+  .pwahelp b{color:var(--ink);}
+  .offlinebar{
+    display:none; margin:10px 0 0; background:#2A2118; color:#F5D98A; border-radius:12px;
+    padding:10px 13px; font-size:12.5px; font-weight:700; line-height:1.45; align-items:center; gap:8px;
+  }
+  .offlinebar.show{display:flex;}
 
   /* result */
   .resultwrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; text-align:center;}
@@ -1263,6 +1308,17 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
 
+        <div class="offlinebar" id="offlineBar" role="status">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" style="flex:0 0 auto;"><path d="M2 8.5A15 15 0 0 1 22 8.5M5.5 12.5a10.5 10.5 0 0 1 13 0M9 16.2a6 6 0 0 1 6 0"/><circle cx="12" cy="19.4" r="1.15" fill="currentColor" stroke="none"/><path d="M3 3l18 18" stroke="#F08A94"/></svg>
+          Đang offline — dữ liệu mới sẽ cập nhật khi có mạng lại.
+        </div>
+
+        <div class="pwabanner" id="pwaBanner">
+          <img src="assets/icon-192.png" alt="Icon app SoraKanji — bé gái chibi áo đen đeo kiếm" width="52" height="52" />
+          <span class="p-main"><b>Cài SoraKanji lên màn hình chính</b><span id="pwaBannerTxt">Mở như app thật: toàn màn hình, không thanh trình duyệt, vào học nhanh hơn.</span></span>
+          <button class="pwabtn" id="pwaInstallBtn">Cài app</button>
+        </div>
+
 </section>
 
       <!-- ============ TAB: THI JLPT ============ -->
@@ -1503,7 +1559,26 @@
       <section class="screen" id="scr-settings">
         <h1 class="tabtitle">Cài đặt</h1>
         <p class="tabsub">Âm thanh, nhắc học và cách app hiển thị khi tu luyện.</p>
-        <div class="menu" style="margin-top:0;">
+
+        <div class="card pwacard">
+          <div class="lesson-head"><h3>App trên điện thoại (PWA)</h3><span>CÀI ĐẶT &amp; OFFLINE</span></div>
+          <div style="display:flex; gap:12px; align-items:center; margin-top:12px;">
+            <img src="assets/icon-192.png" alt="Icon app SoraKanji" width="58" height="58" style="border-radius:14px; border:1px solid var(--line); background:#FBEFD2; flex:0 0 auto;" />
+            <div style="flex:1; min-width:0;">
+              <b style="font-size:15px;">SoraKanji</b>
+              <p style="margin:2px 0 0; font-size:12.5px; color:var(--ink-2); line-height:1.45;">Icon bé gái chibi áo đen — hiện trên màn hình chính sau khi cài.</p>
+            </div>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pwarow"><span class="pw-k">Chế độ hiển thị</span><span class="pwadot warn" id="pwaModeDot"></span><span class="pw-v" id="pwaModeTxt">Đang mở trong trình duyệt</span></div>
+            <div class="pwarow"><span class="pw-k">Kết nối</span><span class="pwadot" id="pwaNetDot"></span><span class="pw-v" id="pwaNetTxt">Đang online</span></div>
+            <div class="pwarow"><span class="pw-k">Service worker</span><span class="pwadot warn" id="pwaSwDot"></span><span class="pw-v" id="pwaSwTxt">Đang đăng ký service worker…</span></div>
+          </div>
+          <button class="cta" id="pwaInstallBtn2" style="margin-top:12px;">Cài SoraKanji lên màn hình chính</button>
+          <p class="pwahelp" id="pwaHelp"><b>Android (Chrome):</b> bấm nút Cài ở trên, hoặc mở menu ⋮ → “Cài ứng dụng / Thêm vào Màn hình chính”.<br><b>iPhone (Safari):</b> bấm nút Chia sẻ → “Thêm vào Màn hình chính”.<br>Sau khi cài, mở SoraKanji từ icon ngoài màn hình chính để học toàn màn hình, không còn thanh trình duyệt.</p>
+        </div>
+
+        <div class="menu">
           <button class="mrow" data-toggle>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg>
             Âm thanh &amp; giọng đọc
@@ -1573,6 +1648,9 @@
     <!-- ============ EXAM OVERLAY ============ -->
     <div class="overlay" id="examOverlay" aria-hidden="true">
       <div class="examhead">
+        <button class="iconbtn" id="backExam" aria-label="Quay lại danh sách đề">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
         <div class="et">Test 1 · N4<span id="examPart">Phần 1 · 文字・語彙</span></div>
         <div class="timer">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9.5 2.5h5"/></svg>
@@ -1611,10 +1689,10 @@
     <!-- ============ KANJI DETAIL OVERLAY ============ -->
     <div class="overlay" id="kanjiOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeKanji" aria-label="Đóng chi tiết kanji">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeKanji" aria-label="Quay lại — đóng chi tiết kanji">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2 id="kdTitle">Chi tiết kanji</h2><span>Vuốt xuống hoặc bấm mũi tên để đóng</span></div>
+        <div><h2 id="kdTitle">Chi tiết kanji</h2><span>Bấm nút quay lại ở góc trái, hoặc vuốt xuống để đóng</span></div>
         <button class="iconbtn" id="speakKanji" style="margin-left:auto;" aria-label="Nghe cách đọc">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7"/></svg>
         </button>
@@ -1646,8 +1724,8 @@
     <!-- ============ DRAW KANJI OVERLAY ============ -->
     <div class="overlay front" id="drawOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeDraw" aria-label="Đóng vẽ kanji">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeDraw" aria-label="Quay lại — đóng vẽ kanji">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2 id="drawTitle">Vẽ kanji</h2><span id="drawSub">Vẽ 1 chữ vào ô rồi bấm Nhận diện</span></div>
       </div>
@@ -1673,8 +1751,8 @@
     <!-- ============ KANA OVERLAY ============ -->
     <div class="overlay front" id="kanaOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeKana" aria-label="Đóng bảng chữ cái">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeKana" aria-label="Quay lại — đóng bảng chữ cái">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2>Bảng chữ cái</h2><span>Bấm vào 1 chữ để nghe cách đọc</span></div>
       </div>
@@ -1691,8 +1769,8 @@
     <!-- ============ VOCAB DETAIL OVERLAY ============ -->
     <div class="overlay front" id="vocabOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeVocab" aria-label="Đóng chi tiết từ vựng">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeVocab" aria-label="Quay lại — đóng chi tiết từ vựng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2>Từ vựng</h2><span>Chi tiết từ</span></div>
         <button class="iconbtn" id="speakVocab" style="margin-left:auto;" aria-label="Nghe phát âm từ">
@@ -1719,8 +1797,8 @@
     <!-- ============ ĐẤU PHÁP ĐÀI OVERLAY ============ -->
     <div class="overlay front" id="duelOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeDuel" aria-label="Đóng Đấu Pháp Đài">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeDuel" aria-label="Quay lại — đóng Đấu Pháp Đài">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2>Đấu Pháp Đài</h2><span>Đấu lệch giờ — mỗi người đấu lúc rảnh, cùng 1 bộ đề</span></div>
       </div>
@@ -1788,8 +1866,8 @@
     <!-- ============ TÀNG BẢO CÁC OVERLAY ============ -->
     <div class="overlay front" id="shopOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeShop" aria-label="Đóng Tàng Bảo Các">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeShop" aria-label="Quay lại — đóng Tàng Bảo Các">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2>Tàng Bảo Các</h2><span>Nơi tiêu linh thạch và đổi điểm cống hiến</span></div>
       </div>
@@ -1875,8 +1953,8 @@
     <!-- ============ PATH OVERLAY: KHAI TRÌNH ĐỘ + LỘ TRÌNH CÁ NHÂN ============ -->
     <div class="overlay front" id="pathOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closePath" aria-label="Đóng lộ trình học cá nhân">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closePath" aria-label="Quay lại — đóng lộ trình học cá nhân">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2>Lộ trình học cá nhân</h2><span>Khai trình độ — app soạn chính tuyến riêng cho bạn</span></div>
       </div>
@@ -1904,8 +1982,8 @@
     <!-- ============ ADMIN OVERLAY: QUẢN LÝ HỌC VIÊN (chỉ tài khoản Admin mới thấy) ============ -->
     <div class="overlay front" id="adminOverlay" aria-hidden="true">
       <div class="detailhead">
-        <button class="iconbtn" id="closeAdmin" aria-label="Đóng quản lý học viên">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="iconbtn" id="closeAdmin" aria-label="Quay lại — đóng quản lý học viên">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
         <div><h2>Quản lý học viên</h2><span>Trang riêng của Admin — học viên thường không thấy trang này</span></div>
       </div>
@@ -1927,7 +2005,7 @@
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Mới thêm: trang Quản lý học viên dành riêng cho Admin (icon “Quản trị” trong lưới Pháp bảo hoặc mục Quản lý học viên ở tab Cá nhân) — hiện tổng số người dùng app, tổng số người đã lên Premium và số tài khoản bị khóa; từng học viên có nút Nâng Premium, Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Mới thêm: trang Quản lý học viên dành riêng cho Admin (icon “Quản trị” trong lưới Pháp bảo hoặc mục Quản lý học viên ở tab Cá nhân) — hiện tổng số người dùng app, tổng số người đã lên Premium và số tài khoản bị khóa; từng học viên có nút Nâng Premium, Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm cạnh index.html kèm theo bộ PWA, kiểm soát toàn bộ app để học offline.</p>
 </div>
 
 <script>
@@ -1999,7 +2077,12 @@
     document.getElementById(screens[name]).scrollTop = 0;
   }
   document.querySelectorAll(".tabbtn").forEach(function(b){
-    b.addEventListener("click", function(){ goTab(b.dataset.tab); });
+    b.addEventListener("click", function(){
+      /* Thanh tab luôn hiện ở mọi trang: bấm tab là đóng mọi trang con đang mở rồi về đúng tab đó */
+      closeExam(); closeKanji(); stopDTimer(); closeSheet();
+      document.querySelectorAll(".overlay.front").forEach(function(o){ hideOv(o); });
+      goTab(b.dataset.tab);
+    });
   });
   document.querySelectorAll("[data-goto]").forEach(function(b){
     b.addEventListener("click", function(){
@@ -2235,6 +2318,7 @@
   }
   document.getElementById("submitBtn").addEventListener("click", submitExam);
   document.getElementById("closeExamBtn").addEventListener("click", closeExam);
+  document.getElementById("backExam").addEventListener("click", closeExam);
   document.getElementById("ctaContinue").addEventListener("click", function(){
     openKanji(KANJI[6], null);
   });
@@ -3009,6 +3093,112 @@
   document.getElementById("admSearch").addEventListener("input", renderAdmin);
   document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
+
+  /* ---------- PWA: cài lên màn hình chính + service worker + offline ---------- */
+  var deferredInstall = null;
+  var pwaBtns = [document.getElementById("pwaInstallBtn"), document.getElementById("pwaInstallBtn2")];
+  function isStandalone(){
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+  function isIOS(){
+    return /iphone|ipad|ipod/i.test(window.navigator.userAgent || "");
+  }
+  function renderPWA(){
+    var installed = isStandalone();
+    var online = window.navigator.onLine !== false;
+    setTxt("pwaModeTxt", installed ? "Đang chạy như app đã cài (toàn màn hình)" : "Đang mở trong trình duyệt");
+    var md = document.getElementById("pwaModeDot");
+    if(md) md.className = "pwadot" + (installed ? "" : " warn");
+    setTxt("pwaNetTxt", online ? "Đang online" : "Đang offline — dữ liệu mới sẽ cập nhật khi có mạng lại");
+    var nd = document.getElementById("pwaNetDot");
+    if(nd) nd.className = "pwadot" + (online ? "" : " off");
+    var ob = document.getElementById("offlineBar");
+    if(ob) ob.classList.toggle("show", !online);
+    var banner = document.getElementById("pwaBanner");
+    if(banner) banner.hidden = installed;
+    pwaBtns.forEach(function(b){
+      if(!b) return;
+      if(installed){ b.disabled = true; b.textContent = "Đã cài ✓"; }
+      else if(deferredInstall){ b.disabled = false; b.textContent = b.id === "pwaInstallBtn" ? "Cài app" : "Cài SoraKanji lên màn hình chính"; }
+      else if(isIOS()){ b.disabled = false; b.textContent = b.id === "pwaInstallBtn" ? "Cách cài" : "Cách cài trên iPhone"; }
+      else { b.disabled = false; b.textContent = b.id === "pwaInstallBtn" ? "Cài app" : "Cài SoraKanji lên màn hình chính"; }
+    });
+    if(installed) setTxt("pwaBannerTxt", "Đã cài xong — mở SoraKanji từ icon ngoài màn hình chính nhé.");
+  }
+  function doInstall(){
+    if(isStandalone()){ renderPWA(); return; }
+    if(deferredInstall){
+      deferredInstall.prompt();
+      deferredInstall.userChoice.then(function(choice){
+        if(choice && choice.outcome === "accepted"){
+          setTxt("pwaBannerTxt", "Đã nhận lệnh cài — chờ icon SoraKanji hiện ngoài màn hình chính nhé.");
+        }
+        deferredInstall = null;
+        renderPWA();
+      }).catch(function(){ deferredInstall = null; renderPWA(); });
+      return;
+    }
+    /* Trình duyệt chưa đưa hộp thoại cài tự động: hướng dẫn theo hệ máy, cuộn tới mục PWA trong Cài đặt */
+    goTab("settings");
+    var help = document.getElementById("pwaHelp");
+    if(help){
+      help.innerHTML = isIOS()
+        ? "<b>iPhone (Safari):</b> bấm nút <b>Chia sẻ</b> ở thanh dưới Safari → chọn <b>“Thêm vào Màn hình chính”</b> → bấm <b>Thêm</b>. Icon bé gái chibi sẽ hiện ngoài màn hình chính.<br>Sau khi cài, mở SoraKanji từ icon đó để học toàn màn hình, không còn thanh trình duyệt."
+        : "<b>Android (Chrome):</b> mở menu <b>⋮</b> góc phải trên của Chrome → chọn <b>“Cài ứng dụng”</b> hoặc <b>“Thêm vào Màn hình chính”</b> → bấm <b>Cài đặt</b>.<br>Nếu chưa thấy mục này, tải lại trang một lần rồi thử lại — trình duyệt cần nhận đủ manifest, icon và service worker trước khi cho cài.";
+    }
+  }
+  pwaBtns.forEach(function(b){ if(b) b.addEventListener("click", doInstall); });
+  window.addEventListener("beforeinstallprompt", function(e){
+    e.preventDefault();
+    deferredInstall = e;
+    renderPWA();
+  });
+  window.addEventListener("appinstalled", function(){
+    deferredInstall = null;
+    renderPWA();
+  });
+  window.addEventListener("online", renderPWA);
+  window.addEventListener("offline", renderPWA);
+  if(window.matchMedia){
+    var mq = window.matchMedia("(display-mode: standalone)");
+    if(mq && mq.addEventListener) mq.addEventListener("change", renderPWA);
+  }
+  if("serviceWorker" in window.navigator){
+    window.addEventListener("load", function(){
+      window.navigator.serviceWorker.register("sw.js").then(function(reg){
+        var swDot = document.getElementById("pwaSwDot");
+        var update = function(){
+          var hasController = !!window.navigator.serviceWorker.controller;
+          setTxt("pwaSwTxt", hasController
+            ? "Sẵn sàng — service worker đang kiểm soát, mở được khi offline"
+            : "Đã đăng ký service worker — tải lại trang một lần để kích hoạt bản offline");
+          if(swDot) swDot.className = "pwadot" + (hasController ? "" : " warn");
+        };
+        update();
+        if(reg && reg.addEventListener){
+          reg.addEventListener("updatefound", function(){
+            var nw = reg.installing;
+            if(nw) nw.addEventListener("statechange", update);
+          });
+        }
+        window.navigator.serviceWorker.addEventListener("controllerchange", update);
+      }).catch(function(){
+        setTxt("pwaSwTxt", "Trình duyệt này chưa cho đăng ký service worker — vẫn cài icon ra màn hình chính được");
+        var swDot2 = document.getElementById("pwaSwDot");
+        if(swDot2) swDot2.className = "pwadot warn";
+      });
+    });
+  } else {
+    setTxt("pwaSwTxt", "Trình duyệt này không hỗ trợ service worker — học offline chưa bật được");
+    var swDot3 = document.getElementById("pwaSwDot");
+    if(swDot3) swDot3.className = "pwadot warn";
+  }
+  /* Lối tắt từ icon đã cài (manifest shortcuts): ?tab=jlpt / review / rank … */
+  try{
+    var startTab = new URLSearchParams(window.location.search).get("tab");
+    if(startTab && screens[startTab]) goTab(startTab);
+  }catch(_){}
+  renderPWA();
 
   /* ---------- Phòng chat (bản xem thử, chỉ trong phiên) ---------- */
   var chatList = document.getElementById("chatList");
