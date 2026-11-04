@@ -4299,8 +4299,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var EX_BUILT = {};   /* "lv-test" -> mảng câu hỏi đã xây */
   var EXS = null;      /* phiên thi hiện tại */
   var exTimerId = null;
-  var exAudio = new Audio();
-  exAudio.preload = "auto";
+  var exAudio = null;   /* phần tử Audio của lượt phát hiện tại; mỗi lượt phát tạo phần tử MỚI tinh (exFreshAudio) */
 
   function exFmtT(s){ s = Math.max(0, Math.floor(s || 0)); var m = Math.floor(s / 60), ss = s % 60; return (m < 10 ? "0" : "") + m + ":" + (ss < 10 ? "0" : "") + ss; }
   function exWrittenN(lv){ return (window.EXAM_COMP[lv] || []).reduce(function(a, r){ return a + r[2]; }, 0); }
@@ -4602,12 +4601,31 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     return p === 1 ? "Phần 1 · 文字・語彙" : (p === 2 ? "Phần 2 · 文法・読解" : "Phần 3 · 聴解");
   }
+  /* Mỗi lượt phát dùng một phần tử Audio MỚI tinh: phần tử dùng chung từng bị
+     iOS giữ trạng thái lỗi sau lượt phát đầu (phát lại câu 90 lỗi mã 4, bấm
+     Tải lại trên cùng phần tử vẫn chết). exDisposeAudio hủy hẳn phần tử cũ —
+     dừng, gỡ handler, gỡ src, bỏ tham chiếu — để không trạng thái hay sự kiện
+     trễ nào của lượt cũ rò sang lượt sau. */
+  function exDisposeAudio(){
+    if(!exAudio) return;
+    var a = exAudio;
+    exAudio = null;
+    try{ a.pause(); }catch(_){ }
+    a.onended = null; a.onerror = null; a.onplaying = null;
+    try{ a.removeAttribute("src"); a.load(); }catch(_){ }
+  }
+  function exFreshAudio(){
+    exDisposeAudio();
+    exAudio = new Audio();
+    exAudio.preload = "auto";
+    return exAudio;
+  }
   function exStopAudio(){
-    try{ exAudio.pause(); }catch(_){ }
-    exAudio.onended = null; exAudio.onerror = null;
-    /* Gỡ hẳn src + load() để xóa trạng thái lỗi/tải dở còn sót trên phần tử
-       Audio dùng chung — tránh lỗi của câu trước kẹt sang câu sau. */
-    try{ exAudio.removeAttribute("src"); exAudio.load(); }catch(_){ }
+    exDisposeAudio();
+    if(EXS && EXS.listen && EXS.listen[EXS.cur]){
+      var st = EXS.listen[EXS.cur];
+      st.playing = false; st.loading = false; st.introPlaying = false;
+    }
   }
   function openExam(testNo){
     var qs = EX_BUILT[curLevel + "-" + testNo];
@@ -4721,7 +4739,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       html += exStarHtml(q, EXS.answers[cur]);
     } else if(q.part === 3){
       var lst = EXS.listen[cur];
-      if(lst.stage === "ask" && lst.plays >= 2) lst.stage = "answer";
+      if(lst.stage === "ask" && lst.plays >= 2 && !lst.playing && !lst.loading) lst.stage = "answer";
       html += exListenHtml(q, cur);
     } else {
       html += exQTextHtml(q);
@@ -4785,14 +4803,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var listenFirst = (q.kind === "概要理解" || q.kind === "統合理解");
     var picKind = (q.kind === "発話表現");
     var picHtml = (picKind && q.pic) ? '<img class="ex-pic" src="assets/listen-' + EXS.lv.toLowerCase() + '/img/' + q.pic + '" alt="Tranh tình huống của câu nghe">' : "";
+    function errBox(){
+      var errDetail = st.audioErrFile ? '<br><span style="font-weight:600;font-size:13px;color:var(--ink-2);">File: ' + esc(st.audioErrFile) + (st.audioErrCode ? ' · Mã lỗi: ' + st.audioErrCode : '') + '</span>' : "";
+      return '<div class="ex-audio-err" role="alert"><p>Không phát được audio. Kiểm tra loa/chế độ im lặng rồi bấm Tải lại file — app tải lại file nghe bằng trình phát mới, không dùng bản đã lưu trong máy.' + errDetail + '</p>' +
+        '<button class="ex-retrybtn" id="exRetryBtn" type="button">Tải lại file &amp; nghe lại</button></div>';
+    }
     function playRow(){
-      if(st.audioErr){
-        var errDetail = st.audioErrFile ? '<br><span style="font-weight:600;font-size:13px;color:var(--ink-2);">File: ' + esc(st.audioErrFile) + (st.audioErrCode ? ' · Mã lỗi: ' + st.audioErrCode : '') + '</span>' : "";
-        return '<div class="ex-audio-err" role="alert"><p>Không phát được audio. Kiểm tra loa/chế độ im lặng rồi bấm Tải lại file — app sẽ tải lại file nghe từ đầu, không dùng bản đã lưu trong máy.' + errDetail + '</p>' +
-          '<button class="ex-retrybtn" id="exRetryBtn" type="button">Tải lại file &amp; nghe lại</button></div>';
+      if(st.loading){
+        return '<div class="playrow"><span class="ex-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Đang tải bản nghe…</p></div>';
       }
-      var playing = !!(exAudio.src && !exAudio.paused && !exAudio.ended);
-      if(playing){
+      if(st.audioErr){
+        return errBox();
+      }
+      if(st.playing || st.introPlaying){
         var note = st.introPlaying
           ? "Đang phát file mở đầu của Mondai (chuông trong file + hướng dẫn + ví dụ)… Nghe xong sẽ tự chuyển sang bản nghe của câu."
           : "Đang phát bản nghe… Nghe xong, đáp án sẽ hiện để bạn chọn.";
@@ -4838,7 +4861,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     /* stage answer: hiện câu hỏi + đáp án để chọn (tranh vẫn hiện cùng đáp án ở 発話表現). */
     h += '<p class="ex-qtext jp">' + esc(exStrip(q.qText)) + '</p>';
     h += picHtml;
-    if(st.plays < 2){
+    if(st.loading){
+      h += '<div class="playrow"><span class="ex-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Đang tải bản nghe…</p></div>';
+    } else if(st.audioErr){
+      h += errBox();
+    } else if(st.playing){
+      h += '<div class="playrow"><span class="ex-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Đang phát bản nghe…</p></div>';
+    } else if(st.plays < 2){
       h += '<div class="playrow"><button class="playbtn" id="exReplayBtn" aria-label="Nghe lại bản nghe">' +
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5Z"/></svg></button>' +
         '<p>Nghe lại được 1 lần nữa (mỗi câu tối đa 2 lần phát).</p></div>';
@@ -4888,7 +4917,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var rt = document.getElementById("exRetryBtn");
       if(rt) rt.addEventListener("click", function(){
         var lst = EXS.listen[cur];
-        if(lst){ lst.audioErr = false; lst.forceFresh = true; }
+        if(lst){
+          /* Retry lần đầu sau lỗi: URL sạch + phần tử Audio mới tinh. Nếu vẫn
+             lỗi tiếp thì các lần retry sau mới thêm ?skv= để vòng qua cache. */
+          lst.forceFresh = (lst.errCount || 0) >= 2;
+          lst.audioErr = false;
+        }
         exPlayListen(cur);
       });
     }
@@ -4901,78 +4935,89 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!EXS) return;
     var st = EXS.listen[cur];
     var q = EXS.qs[cur];
+    /* Mỗi lượt phát chạy trên một phần tử Audio MỚI (exFreshAudio) và mọi
+       handler đều gắn mã lượt (st.attempt): sự kiện trễ của phần tử cũ đã hủy
+       không được phép đụng vào trạng thái của lượt mới. Lượt phát chỉ được
+       tính khi sự kiện 'playing' thực sự nổ — bấm nút mà file lỗi hoặc chưa
+       phát được thì không mất lượt, và giao diện chỉ render theo trạng thái
+       thật (đang tải → đang phát → xong/lỗi), không render mò theo lần bấm. */
     /* Đề chuẩn: câu đầu mỗi Mondai phát file mở đầu (chuông + hướng dẫn + ví dụ)
        trước bản nghe của câu; lượt mở đầu KHÔNG tính vào 2 lượt phát của câu.
        Mở đầu lỗi/không phát được thì bỏ qua, vào thẳng bản nghe của câu. */
     if(q.introAu && !st.introDone){
       exStopAudio();
-      st.introPlaying = true;
-      exAudio.src = (q.auBase || ("assets/listen-" + EXS.lv.toLowerCase() + "/")) + q.introAu;
-      var introSettled = false;
-      var introNext = function(){
-        if(introSettled) return;
-        introSettled = true;
-        if(!EXS || EXS.cur !== cur) return;
-        EXS.listen[cur].introDone = true;
-        EXS.listen[cur].introPlaying = false;
+      var tokenI = (st.attempt = (st.attempt || 0) + 1);
+      st.loading = true; st.introPlaying = false;
+      if(EXS.cur === cur) renderQ();
+      var auI = exFreshAudio();
+      auI.src = (q.auBase || ("assets/listen-" + EXS.lv.toLowerCase() + "/")) + q.introAu;
+      var settledI = false;
+      function introAlive(){ return !settledI && EXS && EXS.cur === cur && EXS.listen[cur] === st && st.attempt === tokenI; }
+      function introNext(){
+        if(!introAlive()) return;
+        settledI = true;
+        st.introDone = true; st.introPlaying = false; st.loading = false;
         exPlayListen(cur);
+      }
+      auI.onplaying = function(){
+        if(!introAlive()) return;
+        st.introPlaying = true; st.loading = false;
+        if(EXS.cur === cur) renderQ();
       };
-      exAudio.onended = introNext;
-      exAudio.onerror = introNext;
-      var ip = exAudio.play();
+      auI.onended = introNext;
+      auI.onerror = introNext;
+      var ip = auI.play();
       if(ip && ip.catch) ip.catch(introNext);
-      if(EXS && EXS.cur === cur && EXS.listen[cur].stage === "ask") renderQ();
       return;
     }
     st.introPlaying = false;
     if(st.plays >= 2) return;
-    st.plays++;
     exStopAudio();
-    /* Phát lại sau lỗi (nút Tải lại file): thêm tham số phiên vào URL để bỏ qua
-       mọi bản cache cũ trong máy/mạng, tải lại file từ đầu. Lượt phát thường
-       giữ URL sạch như cũ. */
+    var token = (st.attempt = (st.attempt || 0) + 1);
+    st.loading = true; st.audioErr = false;
+    if(EXS.cur === cur) renderQ();
+    var au = exFreshAudio();
+    /* Lượt thường và retry lần đầu giữ URL sạch; chỉ khi nút Tải lại đã đặt
+       forceFresh (retry sau nhiều lần lỗi) mới thêm ?skv= để vòng qua mọi
+       bản cache cũ trong máy/mạng, tải lại file từ đầu. */
     var auUrl = (q.auBase || ("assets/listen-" + EXS.lv.toLowerCase() + "/")) + q.au;
     if(st.forceFresh){
       st.forceFresh = false;
       auUrl += (auUrl.indexOf("?") >= 0 ? "&" : "?") + "skv=" + Date.now();
     }
-    exAudio.src = auUrl;
-    try{ exAudio.load(); }catch(_){ }
-    exAudio.onended = function(){
-      if(!EXS || EXS.cur !== cur) return;
-      if(EXS.listen[cur].stage === "ask"){ EXS.listen[cur].stage = "answer"; renderQ(); }
+    au.src = auUrl;
+    var counted = false, settled = false;
+    function alive(){ return !settled && EXS && EXS.cur === cur && EXS.listen[cur] === st && st.attempt === token; }
+    au.onplaying = function(){
+      if(!alive()) return;
+      if(!counted){ counted = true; st.plays++; }   /* chỉ tính lượt khi tiếng thực sự phát ra */
+      st.playing = true; st.loading = false; st.audioErr = false; st.errCount = 0;
+      if(EXS.cur === cur) renderQ();
     };
-    var failed = false;
+    au.onended = function(){
+      if(!alive()) return;
+      settled = true;
+      st.playing = false; st.loading = false;
+      if(st.stage === "ask") st.stage = "answer";
+      if(EXS.cur === cur) renderQ();
+    };
     function exPlayFail(){
-      if(failed) return;
-      failed = true;
-      if(!EXS) return;
-      var lst = EXS.listen[cur];
-      if(!lst) return;
-      /* Phát lỗi (bị trình duyệt chặn hoặc file lỗi): không tính lượt, ở yên stage 'ask', hiện thông báo lỗi + nút Tải lại file. */
-      lst.audioErr = true;
-      lst.audioErrFile = q.au || "";
-      lst.audioErrCode = (exAudio.error && exAudio.error.code) ? exAudio.error.code : "";
-      lst.plays = Math.max(0, lst.plays - 1);
-      lst.stage = "ask";
+      if(!alive()) return;
+      settled = true;
+      /* Phát lỗi (bị trình duyệt chặn hoặc file lỗi): không tính lượt (plays
+         chỉ tăng ở 'playing'), giữ nguyên stage, hiện hộp lỗi kèm tên file +
+         mã lỗi và nút Tải lại riêng — không render nào được xóa hộp lỗi này
+         trừ khi lượt phát sau thực sự bắt đầu. */
+      st.playing = false; st.loading = false;
+      st.audioErr = true;
+      st.audioErrFile = q.au || "";
+      st.audioErrCode = (au.error && au.error.code) ? au.error.code : "";
+      st.errCount = (st.errCount || 0) + 1;
       if(EXS.cur === cur) renderQ();
     }
-    exAudio.onerror = exPlayFail;
-    var p = exAudio.play();
-    if(p && p.then){
-      p.then(function(){
-        /* Phát bắt đầu thành công: xóa cờ lỗi. */
-        if(!EXS) return;
-        var lst = EXS.listen[cur];
-        if(lst && lst.audioErr){
-          lst.audioErr = false;
-          if(EXS.cur === cur && lst.stage === "ask") renderQ();
-        }
-      }, exPlayFail);
-    } else if(st.audioErr){
-      st.audioErr = false;
-    }
-    if(EXS && EXS.cur === cur && EXS.listen[cur].stage === "ask") renderQ();
+    au.onerror = exPlayFail;
+    var p = au.play();
+    if(p && p.catch) p.catch(exPlayFail);
   }
   function exIsAnswered(i){
     var q = EXS.qs[i], a = EXS.answers[i];
