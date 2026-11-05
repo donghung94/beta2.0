@@ -984,35 +984,92 @@
   .sv-facade img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
   .sv-facade .sv-play{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:66px; height:47px; background:var(--red); border-radius:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,.4); pointer-events:none;}
   .sv-facade .sv-play svg{width:24px; height:24px; color:#fff;}
-  /* Chữ chạy: danh sách câu nằm ngay dưới video, câu đang phát tự cuộn vào tầm nhìn + tô đỏ */
-  #svLines{margin-top:10px;}
+  /* Sân khấu video: thanh bản dịch của câu đang phát hiện trên đầu video như app mẫu */
+  .sv-stage{position:relative;}
+  .sv-cap{
+    position:absolute; top:0; left:0; right:0; z-index:5; pointer-events:none; display:none;
+    padding:10px 14px 20px; border-radius:14px 14px 0 0;
+    background:linear-gradient(180deg, rgba(12,10,8,.78), rgba(12,10,8,0));
+    color:#fff; font-size:14.5px; font-weight:700; line-height:1.45;
+  }
+  .sv-cap.show{display:block;}
+  /* Cụm điều khiển ngay dưới video kiểu app mẫu: thanh tiến trình; hàng chip
+     Furigana / Bản dịch + công tắc Tự ngắt câu; hàng nút câu trước – lặp câu –
+     phát lớn – câu sau – tốc độ */
+  .sv-dock{margin-top:10px;}
+  .sv-seekrow{display:flex; align-items:center; gap:10px;}
+  .sv-seekrow .sv-t{font-size:12px; font-weight:700; color:var(--ink-2); font-variant-numeric:tabular-nums; min-width:30px;}
+  .sv-seekrow .sv-t:last-child{text-align:right;}
+  #svSeek{flex:1; min-width:0; -webkit-appearance:none; appearance:none; height:5px; border-radius:99px; background:var(--line); outline:none; cursor:pointer;}
+  #svSeek::-webkit-slider-thumb{-webkit-appearance:none; width:17px; height:17px; border-radius:50%; background:var(--red); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.3); cursor:pointer;}
+  #svSeek::-moz-range-thumb{width:15px; height:15px; border-radius:50%; background:var(--red); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.3); cursor:pointer;}
+  .sv-togrow{display:flex; align-items:center; gap:8px; margin-top:11px;}
+  .sv-chip{
+    display:inline-flex; align-items:center; gap:5px; border:1.5px solid var(--line); background:var(--card);
+    color:var(--ink-2); border-radius:9px; padding:6px 11px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .sv-chip svg{width:15px; height:15px; flex:0 0 auto;}
+  .sv-chip.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
+  .sv-ap{margin-left:auto; display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--ink);}
+  .sv-switch{width:46px; height:27px; flex:0 0 auto; border-radius:99px; border:none; background:var(--line); position:relative; cursor:pointer; padding:0; transition:background .15s;}
+  .sv-switch::after{content:""; position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transition:left .15s;}
+  .sv-switch[aria-checked="true"]{background:var(--red);}
+  .sv-switch[aria-checked="true"]::after{left:22px;}
+  @media (prefers-reduced-motion: reduce){ .sv-switch, .sv-switch::after{transition:none;} }
+  .sv-transport{display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding:0 4px;}
+  .sv-tbtn{width:46px; height:46px; border:none; background:transparent; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:12px; padding:0;}
+  .sv-tbtn svg{width:27px; height:27px;}
+  .sv-tbtn.on{color:var(--red);}
+  .sv-tbtn:active{background:var(--red-soft);}
+  .sv-bigplay{
+    width:58px; height:58px; border:none; border-radius:16px; background:var(--red); color:#fff; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(200,16,46,.3); padding:0;
+  }
+  .sv-bigplay svg{width:27px; height:27px;}
+  .sv-speedbtn{min-width:46px; height:46px; border:none; background:transparent; color:var(--red); font-family:inherit; font-size:15.5px; font-weight:800; cursor:pointer; border-radius:12px; padding:0 6px;}
+  .sv-speedbtn:active{background:var(--red-soft);}
+  /* Chữ chạy: danh sách câu trơn ngay dưới cụm điều khiển, câu đang phát tự cuộn
+     vào tầm nhìn + tô nền; từng cụm từ được tô đỏ + gạch chân theo tiến độ phát (karaoke) */
+  #svLines{margin-top:8px; position:relative;}
   .sv-line .sv-lja ruby{ruby-align:center;}
   .sv-line .sv-lja rt{font-size:.52em; font-weight:600; color:var(--ink-2);}
-  /* Hàng nút điều khiển nằm dưới cùng trang, sau danh sách câu */
-  .sv-controls{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
-  .sv-ctl{
-    flex:1 1 0; min-width:96px; min-height:46px; border-radius:12px; cursor:pointer; font-family:inherit;
-    border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-size:13.5px; font-weight:700;
-    display:flex; align-items:center; justify-content:center; gap:6px; padding:7px 6px;
+  /* Khung giải thích = BONG BÓNG nổi bám ngay vào câu vừa bấm (không còn là hộp
+     nằm cố định phía trên danh sách): JS ghim bong bóng ngay dưới câu đó, có
+     đuôi nhọn chĩa lên câu; nếu gần cuối danh sách không đủ chỗ thì lật lên
+     trên câu, đuôi quay xuống. Có nút × để đóng. */
+  .sv-exp{
+    display:none; position:absolute; left:2px; right:2px; z-index:9;
+    background:var(--amber-soft); border:1px solid var(--amber); border-radius:16px;
+    padding:12px 34px 13px 14px; box-shadow:0 12px 26px rgba(20,16,10,.22);
   }
-  .sv-ctl svg{width:18px; height:18px; flex:0 0 auto;}
-  .sv-ctl.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
-  .sv-ctl:active{border-color:var(--red);}
-  .sv-exp{display:none; margin-top:12px; background:var(--amber-soft); border:1px solid var(--amber); border-radius:13px; padding:13px 14px;}
-  .sv-exp.show{display:block;}
+  .sv-exp.show{display:block; animation:svPop .18s ease;}
+  @keyframes svPop{from{opacity:0; transform:translateY(5px) scale(.98);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .sv-exp.show{animation:none;} }
+  .sv-exp::before, .sv-exp::after{
+    content:""; position:absolute; left:34px; width:0; height:0;
+    border:9px solid transparent; border-top:0; border-bottom:0;
+  }
+  .sv-exp.below::before{top:-9px; border-bottom:9px solid var(--amber);}
+  .sv-exp.below::after{top:-7.5px; border-bottom:9px solid var(--amber-soft);}
+  .sv-exp.above::before{bottom:-9px; border-top:9px solid var(--amber);}
+  .sv-exp.above::after{bottom:-7.5px; border-top:9px solid var(--amber-soft);}
   .sv-exp b{display:block; font-size:12px; letter-spacing:.05em; color:var(--amber); margin-bottom:5px;}
   .sv-exp p{margin:0; font-size:14px; line-height:1.65; color:var(--ink);}
-  .sv-line{
-    width:100%; display:flex; gap:11px; align-items:flex-start; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
-    background:var(--card); border:1.5px solid var(--line); border-radius:13px; padding:11px 13px; margin-bottom:8px;
+  .sv-exp-x{
+    position:absolute; top:6px; right:6px; width:28px; height:28px; border:none; border-radius:9px;
+    background:transparent; color:var(--amber); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
   }
-  .sv-line .sv-ltime{flex:0 0 auto; font-size:11.5px; font-weight:800; color:var(--ink-3); background:var(--bg); border:1px solid var(--line); border-radius:7px; padding:3px 7px; margin-top:2px; font-variant-numeric:tabular-nums;}
-  .sv-line .sv-lmain{flex:1; min-width:0;}
-  .sv-line .sv-lja{display:block; font-size:15.5px; font-weight:600; line-height:1.6;}
-  .sv-line .sv-lvi{display:block; font-size:12.5px; color:var(--ink-2); margin-top:2px; line-height:1.45;}
-  .sv-line.active{border-color:var(--red); background:var(--red-soft);}
-  .sv-line.active .sv-ltime{color:var(--red); border-color:var(--red); background:var(--card);}
-  .sv-line:active{border-color:var(--red);}
+  .sv-exp-x svg{width:16px; height:16px;}
+  .sv-exp-x:active{background:rgba(0,0,0,.07);}
+  .sv-line{
+    width:100%; display:block; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+    background:transparent; border:none; border-radius:14px; padding:11px 13px; margin-bottom:2px;
+  }
+  .sv-line .sv-lmain{display:block;}
+  .sv-line .sv-lja{display:block; font-size:17px; font-weight:600; line-height:1.95;}
+  .sv-line .sv-lvi{display:block; font-size:13px; color:var(--ink-2); margin-top:1px; line-height:1.5;}
+  .sv-line.active{background:var(--red-soft);}
+  .sv-line .sv-w.done, .sv-line .sv-w.now{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
 
   /* Đọc hiểu: chọn cấp → dạng bài → danh sách bài → trang đọc (đoạn văn + câu hỏi
      + giải thích + từ vựng). Tái dùng .setrow/.lsopt/.lsexp ở trên. */
@@ -2639,29 +2696,60 @@
         <div><h2>Shadowing · Video N5</h2><span>Ở nhà ga: hỏi tàu đi Tokyo · phụ đề chạy theo video</span></div>
       </div>
       <div class="detailbody">
-        <div class="sv-videowrap" id="svVideoWrap">
-          <button class="sv-facade" type="button" id="svFacade" aria-label="Phát video shadowing N5: hỏi tàu đi ga Tokyo">
-            <img src="https://i.ytimg.com/vi/r_o5gRWkkaA/hqdefault.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga">
-            <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          </button>
+        <div class="sv-stage">
+          <div class="sv-videowrap" id="svVideoWrap">
+            <button class="sv-facade" type="button" id="svFacade" aria-label="Phát video shadowing N5: hỏi tàu đi ga Tokyo">
+              <img src="https://i.ytimg.com/vi/r_o5gRWkkaA/hqdefault.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga">
+              <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            </button>
+          </div>
+          <div class="sv-cap" id="svCap"></div>
         </div>
 
-        <div class="sv-exp" id="svExp"><b>GIẢI THÍCH · CÂU <span id="svExpNum">1</span></b><p id="svExpText"></p></div>
+        <div class="sv-dock">
+          <div class="sv-seekrow">
+            <span class="sv-t" id="svTimeCur">0:00</span>
+            <input type="range" id="svSeek" min="0" max="1000" step="1" value="0" aria-label="Tiến trình video — kéo để tua">
+            <span class="sv-t" id="svTimeDur">0:22</span>
+          </div>
+          <div class="sv-togrow">
+            <button class="sv-chip on" id="svToggleFuri" type="button" aria-pressed="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              Furigana
+            </button>
+            <button class="sv-chip on" id="svToggleVi" type="button" aria-pressed="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5h9M8.5 4v1.5c0 3.4-1.9 6.6-3.9 8.3M6.2 9c.8 2.3 2.6 4.6 4.9 5.9M13 20.5l4.3-9 4.3 9M15 17.2h4.6"/></svg>
+              Bản dịch
+            </button>
+            <span class="sv-ap">Tự ngắt câu
+              <button class="sv-switch" id="svAutoPause" type="button" role="switch" aria-checked="false" aria-label="Tự ngắt câu — tự dừng ở cuối mỗi câu"></button>
+            </span>
+          </div>
+          <div class="sv-transport">
+            <button class="sv-tbtn" id="svPrev" type="button" aria-label="Câu trước">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5.5h2.4v13H6zM20 5.9c0-.8-.9-1.3-1.6-.9L10 11.1a1.15 1.15 0 0 0 0 1.8L18.4 19c.7.4 1.6-.1 1.6-.9z"/></svg>
+            </button>
+            <button class="sv-tbtn" id="svLoop" type="button" aria-pressed="false" aria-label="Lặp câu này">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2.5 21 6.5l-4 4"/><path d="M3 12.5v-1a5 5 0 0 1 5-5h13M7 21.5 3 17.5l4-4"/><path d="M21 11.5v1a5 5 0 0 1-5 5H3"/></svg>
+            </button>
+            <button class="sv-bigplay" id="svPlayPause" type="button" aria-label="Phát hoặc tạm dừng video">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+            </button>
+            <button class="sv-tbtn" id="svNext" type="button" aria-label="Câu sau">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.6 5.5H18v13h-2.4zM4 5.9c0-.8.9-1.3 1.6-.9L14 11.1a1.15 1.15 0 0 1 0 1.8L5.6 19c-.7.4-1.6-.1-1.6-.9z"/></svg>
+            </button>
+            <button class="sv-speedbtn" id="svSpeed" type="button" aria-label="Tốc độ phát — bấm để đổi">1x</button>
+          </div>
+        </div>
+
+        <div class="sv-exp below" id="svExp" role="dialog" aria-label="Bong bóng giải thích câu">
+          <button class="sv-exp-x" id="svExpClose" type="button" aria-label="Đóng khung giải thích">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+          <b>GIẢI THÍCH · CÂU <span id="svExpNum">1</span></b><p id="svExpText"></p>
+        </div>
 
         <div id="svLines"></div>
-
-        <div class="sv-controls">
-          <button class="sv-ctl" id="svPlayPause" type="button">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-            <span id="svPlayPauseLabel">Phát video</span>
-          </button>
-          <button class="sv-ctl" id="svLoop" type="button" aria-pressed="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5 21 6.5l-4 4"/><path d="M3 12.5v-1a5 5 0 0 1 5-5h13M7 21.5 3 17.5l4-4"/><path d="M21 11.5v1a5 5 0 0 1-5 5H3"/></svg>
-            Lặp câu này
-          </button>
-          <button class="sv-ctl on" id="svToggleFuri" type="button" aria-pressed="true">Furigana: Bật</button>
-          <button class="sv-ctl on" id="svToggleVi" type="button" aria-pressed="true">Dịch: Bật</button>
-        </div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -6908,33 +6996,113 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   ];
   var svOverlay = document.getElementById("shadowVideoOverlay");
   var svPlayer = null, svReady = false, svTimer = null, svCur = -1, svLoop = false, svShowFuri = true, svShowVi = true, svExpIdx = -1;
+  /* Kiểu app mẫu: tự ngắt câu (svAutoPause), karaoke từng cụm từ (svSegs),
+     đổi tốc độ phát (svRates), thanh tiến trình kéo được */
+  var svAutoPause = false, svAutoP = -1, svRates = [1, 1.25, 1.5, 0.75, 0.5], svRateIdx = 0;
+  var svSegs = [], svKaraKey = "", svLastT = 0;
   function svEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-  /* Furigana dạng "漢字[かんじ]" → <ruby>: cụm chữ Hán liền trước ngoặc là phần gốc */
-  function svRuby(furi){
-    return svEsc(furi).replace(/([\u4e00-\u9faf]+)\[([^\]]+)\]/g, "<ruby>$1<rt>$2</rt></ruby>");
-  }
   function svFmt(t){
     t = Math.max(0, Math.floor(t));
     return Math.floor(t / 60) + ":" + ("0" + (t % 60)).slice(-2);
   }
+  /* Tách 1 câu thành các cụm từ cho karaoke: quét chuỗi furigana "漢字[かんじ]",
+     cụm chữ Hán ở cuối đoạn tích lũy khi gặp "[" trở thành 1 cụm kèm cách đọc;
+     phần kana/ký tự còn lại cắt nhỏ tại dấu câu, sau trợ từ, tối đa 5 ký tự */
+  function svSegments(s){
+    var segs = [], src = s.furi, plain = "", i = 0;
+    function pushPlain(txt){
+      var buf = "";
+      for(var k = 0; k < txt.length; k++){
+        buf += txt[k];
+        var c = txt[k];
+        if("、。」！？".indexOf(c) >= 0 || buf.length >= 5 || ("はがをにへでともか".indexOf(c) >= 0 && buf.length >= 2 && k < txt.length - 1)){
+          segs.push({b: buf, r: null}); buf = "";
+        }
+      }
+      if(buf) segs.push({b: buf, r: null});
+    }
+    function flushPlain(){ if(plain){ pushPlain(plain); plain = ""; } }
+    while(i < src.length){
+      if(src[i] === "["){
+        var j = src.indexOf("]", i);
+        if(j < 0){ plain += src[i]; i++; continue; }
+        var k = plain.length;
+        while(k > 0 && plain.charCodeAt(k - 1) >= 0x4e00 && plain.charCodeAt(k - 1) <= 0x9faf) k--;
+        var kanji = plain.slice(k);
+        plain = plain.slice(0, k);
+        flushPlain();
+        if(kanji) segs.push({b: kanji, r: src.slice(i + 1, j)});
+        i = j + 1;
+      } else { plain += src[i]; i++; }
+    }
+    flushPlain();
+    return segs;
+  }
   function svRenderLines(){
     var wrap = document.getElementById("svLines");
+    /* Bong bóng giải thích sống trong #svLines: giữ lại phần tử trước khi dựng
+       lại danh sách (innerHTML sẽ xóa nó), lát nữa gắn lại + ghim lại vị trí */
+    var expEl = document.getElementById("svExp");
+    var expInWrap = !!(expEl && expEl.parentNode === wrap);
+    svSegs = SV_SUBS.map(function(s){
+      var segs = svSegments(s), cum = [], tot = 0;
+      segs.forEach(function(g){ tot += g.b.length; cum.push(tot); });
+      return {segs: segs, cum: cum, total: tot};
+    });
     var h = "";
     SV_SUBS.forEach(function(s, i){
+      var words = svSegs[i].segs.map(function(g){
+        var inner = (g.r && svShowFuri) ? "<ruby>" + svEsc(g.b) + "<rt>" + svEsc(g.r) + "</rt></ruby>" : svEsc(g.b);
+        return '<span class="sv-w">' + inner + "</span>";
+      }).join("");
       h += '<button class="sv-line" type="button" data-sv="' + i + '">' +
-        '<span class="sv-ltime">' + svFmt(s.start) + '</span>' +
-        '<span class="sv-lmain"><span class="sv-lja jp">' + (svShowFuri ? svRuby(s.furi) : svEsc(s.ja)) + '</span>' +
+        '<span class="sv-lmain"><span class="sv-lja jp">' + words + '</span>' +
         (svShowVi ? '<span class="sv-lvi">' + svEsc(s.vi) + '</span>' : '') + '</span></button>';
     });
     wrap.innerHTML = h;
+    svKaraKey = "";
     wrap.querySelectorAll("[data-sv]").forEach(function(b){
       b.addEventListener("click", function(){ svSeekTo(parseInt(b.getAttribute("data-sv"), 10), true); });
     });
+    if(expEl && (expInWrap || svExpIdx >= 0)){
+      wrap.appendChild(expEl);
+      if(svExpIdx >= 0) svPlaceExp();
+    }
+  }
+  /* Karaoke: tỉ lệ thời gian đã qua trong câu → các cụm từ đã đọc được tô đỏ +
+     gạch chân, cụm đang đọc cũng vậy (gạch chân chạy dần như app mẫu). Thời điểm
+     từng cụm từ nội suy đều theo số ký tự vì phụ đề viết sẵn chỉ có mốc đầu/cuối câu */
+  function svKaraoke(t){
+    if(svCur < 0 || !svSegs[svCur]) return;
+    var s = SV_SUBS[svCur], info = svSegs[svCur];
+    var frac = (t - s.start) / Math.max(0.01, s.end - s.start);
+    if(frac < 0) frac = 0; if(frac > 1) frac = 1;
+    var target = frac * info.total, now = -1, k;
+    for(k = 0; k < info.cum.length; k++){ if(info.cum[k] > target){ now = k; break; } }
+    if(frac >= 1) now = -1;
+    var key = svCur + "|" + now + "|" + (frac >= 1 ? 1 : 0);
+    if(key === svKaraKey) return;
+    svKaraKey = key;
+    var line = document.querySelectorAll("#svLines .sv-line")[svCur];
+    if(!line) return;
+    line.querySelectorAll(".sv-w").forEach(function(w, j){
+      w.classList.toggle("done", frac >= 1 || (now >= 0 && j < now));
+      w.classList.toggle("now", j === now);
+    });
+  }
+  function svCapUpdate(){
+    var cap = document.getElementById("svCap");
+    if(!cap) return;
+    if(svCur >= 0 && svShowVi){ cap.textContent = SV_SUBS[svCur].vi; cap.classList.add("show"); }
+    else cap.classList.remove("show");
   }
   function svSetNow(i){
     if(i === svCur) return;
     svCur = i;
     document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === i); });
+    document.querySelectorAll("#svLines .sv-w").forEach(function(w){ w.classList.remove("done"); w.classList.remove("now"); });
+    svKaraKey = "";
+    svCapUpdate();
     /* Chữ sub chạy cuộn: câu đang phát tự cuộn vào tầm nhìn trong danh sách */
     var actLine = document.querySelector("#svLines .sv-line.active");
     if(actLine && svOverlay.classList.contains("open") && actLine.scrollIntoView){
@@ -6942,17 +7110,65 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       actLine.scrollIntoView({block:"nearest", behavior: svReduce ? "auto" : "smooth"});
     }
     if(svExpIdx >= 0) svShowExp(i);
+    svKaraoke(svLastT);
   }
+  /* Bong bóng giải thích: gắn khung vào trong #svLines rồi ghim ngay dưới câu
+     được bấm (đuôi nhọn chĩa lên câu). Nếu phía dưới không đủ chỗ trong danh
+     sách thì lật bong bóng lên trên câu, đuôi quay xuống. Đang phát mà câu
+     hiện tại đổi thì bong bóng bám theo câu mới (svSetNow gọi lại svShowExp). */
   function svShowExp(i){
     svExpIdx = i;
+    var exp = document.getElementById("svExp");
     document.getElementById("svExpNum").textContent = i + 1;
     document.getElementById("svExpText").textContent = SV_SUBS[i].exp;
-    document.getElementById("svExp").classList.add("show");
+    var wrap = document.getElementById("svLines");
+    if(exp.parentNode !== wrap) wrap.appendChild(exp);
+    exp.classList.add("show");
+    svPlaceExp();
+    if(exp.scrollIntoView && svOverlay.classList.contains("open")){
+      var svReduce2 = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      exp.scrollIntoView({block:"nearest", behavior: svReduce2 ? "auto" : "smooth"});
+    }
+  }
+  function svPlaceExp(){
+    if(svExpIdx < 0) return;
+    var exp = document.getElementById("svExp");
+    if(!exp.classList.contains("show")) return;
+    var wrap = document.getElementById("svLines");
+    var line = document.querySelectorAll("#svLines .sv-line")[svExpIdx];
+    if(!line) return;
+    var eh = exp.offsetHeight, lt = line.offsetTop, lh = line.offsetHeight;
+    var belowTop = lt + lh + 9;
+    if(wrap.offsetHeight - belowTop >= eh + 4 || lt - eh - 9 < 0){
+      exp.style.top = belowTop + "px";
+      exp.classList.add("below"); exp.classList.remove("above");
+    } else {
+      exp.style.top = (lt - eh - 9) + "px";
+      exp.classList.add("above"); exp.classList.remove("below");
+    }
+  }
+  function svHideExp(){
+    svExpIdx = -1;
+    document.getElementById("svExp").classList.remove("show");
+  }
+  var SV_ICO_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+  var SV_ICO_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg>';
+  function svPlayBtn(playing){
+    document.getElementById("svPlayPause").innerHTML = playing ? SV_ICO_PAUSE : SV_ICO_PLAY;
   }
   function svTogglePlay(){
     if(!svPlayer){ svLoadPlayer(true); return; }
-    if(svPlayer.getPlayerState && svPlayer.getPlayerState() === 1) svPlayer.pauseVideo();
-    else if(svPlayer.playVideo) svPlayer.playVideo();
+    if(svPlayer.getPlayerState && svPlayer.getPlayerState() === 1){ svPlayer.pauseVideo(); return; }
+    /* Vừa bị Tự ngắt câu dừng ở cuối câu: bấm phát tiếp thì qua câu kế tiếp */
+    if(svAutoP >= 0){
+      var ap = svAutoP; svAutoP = -1;
+      var t = svPlayer.getCurrentTime ? svPlayer.getCurrentTime() : 0;
+      if(t >= SV_SUBS[ap].end - 0.15){
+        svSeekTo(ap + 1 < SV_SUBS.length ? ap + 1 : ap, false);
+        return;
+      }
+    }
+    if(svPlayer.playVideo) svPlayer.playVideo();
   }
   function svLoadPlayer(autoplay){
     if(svPlayer){ if(autoplay && svPlayer.playVideo) svPlayer.playVideo(); return; }
@@ -6964,11 +7180,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         videoId: SV_ID,
         playerVars: {playsinline: 1, rel: 0, modestbranding: 1},
         events: {
-          onReady: function(e){ svReady = true; if(autoplay) e.target.playVideo(); },
+          onReady: function(e){
+            svReady = true;
+            if(svPlayer.setPlaybackRate) svPlayer.setPlaybackRate(svRates[svRateIdx]);
+            if(autoplay) e.target.playVideo();
+          },
           onStateChange: function(e){
-            var lbl = document.getElementById("svPlayPauseLabel");
-            if(e.data === YT.PlayerState.PLAYING) lbl.textContent = "Tạm dừng";
-            else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) lbl.textContent = "Phát video";
+            svPlayBtn(e.data === YT.PlayerState.PLAYING);
           }
         }
       });
@@ -6983,6 +7201,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
   }
   function svSeekTo(i, showExp){
+    if(i < 0) i = 0;
+    if(i > SV_SUBS.length - 1) i = SV_SUBS.length - 1;
+    svAutoP = -1;
     svLoadPlayer(false);
     svSetNow(i);
     if(showExp) svShowExp(i);
@@ -7001,6 +7222,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     if(!svPlayer || !svReady || !svPlayer.getCurrentTime) return;
     var t = svPlayer.getCurrentTime();
+    svLastT = t;
+    /* Thanh tiến trình + đồng hồ kiểu app mẫu */
+    var dur = svPlayer.getDuration ? svPlayer.getDuration() : 0;
+    var seek = document.getElementById("svSeek");
+    if(dur > 0){
+      document.getElementById("svTimeDur").textContent = svFmt(dur);
+      if(document.activeElement !== seek){
+        seek.value = Math.round(t / dur * 1000);
+        var pct = (t / dur * 100).toFixed(1);
+        seek.style.background = "linear-gradient(to right, var(--red) " + pct + "%, var(--line) " + pct + "%)";
+      }
+    }
+    document.getElementById("svTimeCur").textContent = svFmt(t);
     var idx = -1;
     SV_SUBS.forEach(function(s, i){ if(t >= s.start && t < s.end) idx = i; });
     if(idx < 0){
@@ -7012,31 +7246,68 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         svPlayer.seekTo(SV_SUBS[svCur].start + 0.03, true);
         return;
       }
+      /* Tự ngắt câu: dừng ngay khi câu đang phát kết thúc, chờ người học nói theo */
+      if(svAutoPause && svCur >= 0 && idx === svCur && t >= SV_SUBS[svCur].end - 0.02 &&
+         svPlayer.getPlayerState && svPlayer.getPlayerState() === 1){
+        svAutoP = svCur;
+        svPlayer.pauseVideo();
+        svSetNow(idx);
+        svKaraoke(t);
+        return;
+      }
       svSetNow(idx);
     }
+    svKaraoke(t);
   }
   document.getElementById("svFacade").addEventListener("click", function(){ svLoadPlayer(true); });
+  document.getElementById("svExpClose").addEventListener("click", function(e){ e.stopPropagation(); svHideExp(); });
   document.getElementById("svPlayPause").addEventListener("click", svTogglePlay);
+  document.getElementById("svSeek").addEventListener("input", function(){
+    if(!svPlayer || !svReady || !svPlayer.getDuration) return;
+    var d = svPlayer.getDuration();
+    if(d > 0){ svAutoP = -1; svPlayer.seekTo(d * this.value / 1000, true); }
+  });
+  document.getElementById("svSeek").addEventListener("change", function(){ this.blur(); });
+  document.getElementById("svPrev").addEventListener("click", function(){
+    var target = svCur > 0 ? svCur - 1 : 0;
+    /* Đang nghe dở câu quá 1.5 giây: bấm câu trước = nghe lại từ đầu câu này */
+    if(svCur >= 0 && svLastT - SV_SUBS[svCur].start > 1.5) target = svCur;
+    svSeekTo(target, false);
+  });
+  document.getElementById("svNext").addEventListener("click", function(){
+    svSeekTo((svCur < 0 ? 0 : svCur + 1), false);
+  });
   document.getElementById("svLoop").addEventListener("click", function(){
     svLoop = !svLoop;
     this.classList.toggle("on", svLoop);
     this.setAttribute("aria-pressed", svLoop ? "true" : "false");
   });
+  document.getElementById("svSpeed").addEventListener("click", function(){
+    svRateIdx = (svRateIdx + 1) % svRates.length;
+    this.textContent = svRates[svRateIdx] + "x";
+    if(svPlayer && svReady && svPlayer.setPlaybackRate) svPlayer.setPlaybackRate(svRates[svRateIdx]);
+  });
+  document.getElementById("svAutoPause").addEventListener("click", function(){
+    svAutoPause = !svAutoPause;
+    this.setAttribute("aria-checked", svAutoPause ? "true" : "false");
+    svAutoP = -1;
+  });
   document.getElementById("svToggleFuri").addEventListener("click", function(){
     svShowFuri = !svShowFuri;
     this.classList.toggle("on", svShowFuri);
     this.setAttribute("aria-pressed", svShowFuri ? "true" : "false");
-    this.textContent = "Furigana: " + (svShowFuri ? "Bật" : "Tắt");
     svRenderLines();
     document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === svCur); });
+    svKaraoke(svLastT);
   });
   document.getElementById("svToggleVi").addEventListener("click", function(){
     svShowVi = !svShowVi;
     this.classList.toggle("on", svShowVi);
     this.setAttribute("aria-pressed", svShowVi ? "true" : "false");
-    this.textContent = "Dịch: " + (svShowVi ? "Bật" : "Tắt");
     svRenderLines();
     document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === svCur); });
+    svCapUpdate();
+    svKaraoke(svLastT);
   });
   document.getElementById("listenGoShadowVideo").addEventListener("click", function(){
     hideOv(listenOverlay);
@@ -7044,7 +7315,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(svCur < 0) svSetNow(0);
     showOv(svOverlay);
     if(svTimer) clearInterval(svTimer);
-    svTimer = setInterval(svTick, 250);
+    svTimer = setInterval(svTick, 120);
   });
   document.getElementById("closeShadowVideo").addEventListener("click", function(){
     if(svPlayer && svPlayer.pauseVideo) svPlayer.pauseVideo();
