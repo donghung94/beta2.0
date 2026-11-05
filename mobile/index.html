@@ -912,9 +912,9 @@
   .shstatus{font-size:13px; color:var(--ink-2); line-height:1.55; margin:12px 2px 0; min-height:20px;}
   .shnav{display:flex; gap:9px; margin-top:13px;}
 
-  /* Luyện nghe: chọn cấp N4–N1 dạng lưới tab 2×2 ở đầu trang chọn cấp — bấm một ô là nhảy
+  /* Luyện nghe: chọn cấp N5–N1 dạng lưới tab ở đầu trang chọn cấp — bấm một ô là nhảy
      thẳng vào trang của cấp đó (Part 3 + Shadowing); các phần khác nằm dưới lưới.
-     Không có ô N5 vì N5 là cấp mặc định / trang hiện tại. */
+     Ô của cấp đang chọn mang class .on (viền đỏ, nền đỏ nhạt, chữ cấp đỏ). */
   .ls-lvgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:2px;}
   .ls-lvtile{
     background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:13px 6px 11px;
@@ -925,6 +925,8 @@
   .ls-lvtile .n{display:block; margin-top:4px; font-size:12px; font-weight:700; color:var(--red);}
   .ls-lvtile span{display:block; margin-top:2px; font-size:10.5px; color:var(--ink-2); line-height:1.3;}
   .ls-lvtile:active{transform:scale(.96); border-color:var(--red); background:var(--red-soft);}
+  .ls-lvtile.on{border-color:var(--red); background:var(--red-soft);}
+  .ls-lvtile.on b{color:var(--red);}
 
   /* Luyện nghe N5: danh sách bài, trang làm bài (audio MP3 + đáp án), Shadowing theo hội thoại */
   .lsmeta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
@@ -7170,9 +7172,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var lsQuizOverlay = document.getElementById("lsQuizOverlay");
   var lsShOverlay = document.getElementById("lsShOverlay");
   var LS_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
-  /* Lưới tab ở đầu trang Luyện nghe chỉ gồm N4–N1: N5 là cấp mặc định / trang
-     hiện tại nên không có ô riêng trong lưới (chỉ đạo 2026-11-05). */
-  var LS_GRID_LEVELS = ["N4", "N3", "N2", "N1"];
+  /* Lưới tab ở đầu trang Luyện nghe gồm đủ 5 cấp N5–N1; ô của cấp đang chọn
+     (mặc định N5) hiển thị trạng thái active. */
+  var LS_GRID_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
   var LS_COUNTS = {N5: 24, N4: 28, N3: 28, N2: 32, N1: 37};
   var LS_TYPES = {1:"Dạng 1 · Chọn hình", 2:"Dạng 2 · Chọn đáp án", 3:"Dạng 3 · Chọn lời đáp", 4:"Dạng 4 · Chọn câu trả lời", 5:"Dạng 5 · Thảo luận"};
   var lsLevel = "N5";
@@ -7274,7 +7276,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     box.innerHTML = "";
     LS_GRID_LEVELS.forEach(function(lv){
       var b = document.createElement("button");
-      b.className = "ls-lvtile";
+      b.className = "ls-lvtile" + (lv === lsLevel ? " on" : "");
+      if(lv === lsLevel) b.setAttribute("aria-current", "true");
       b.setAttribute("aria-label", "Mở trang luyện nghe " + lv + " — " + LS_COUNTS[lv] + " hội thoại Part 3 và Shadowing");
       b.innerHTML = '<b>' + lv + '</b><span class="n">' + LS_COUNTS[lv] + ' hội thoại</span><span>Part 3 · Shadowing</span>';
       b.addEventListener("click", function(){
@@ -7531,7 +7534,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("lsGoMinna").addEventListener("click", function(){
     hideOv(lsN5Overlay); shRender(); showOv(shadowOverlay);
   });
-  document.getElementById("closeLsN5").addEventListener("click", function(){ hideOv(lsN5Overlay); showOv(listenOverlay); });
+  document.getElementById("closeLsN5").addEventListener("click", function(){ hideOv(lsN5Overlay); lsRenderLevels(); showOv(listenOverlay); });
 
   document.getElementById("closeListen").addEventListener("click", function(){ hideOv(listenOverlay); });
   document.getElementById("closeRead").addEventListener("click", function(){ hideOv(readOverlay); });
@@ -11513,7 +11516,7 @@ function furiHTML(text){
       actions:[{label:"Mở Đọc hiểu", action:"read"}] },
     { id:"listenread", label:"Luyện nghe & đọc hiểu ở đâu?",
       keywords:["luyen nghe va doc hieu","nghe va doc"],
-      answer:"Hai mục này nằm cạnh nhau trong lưới Pháp bảo ở Home:\n\n• Luyện nghe: ô “Luyện nghe” → chọn cấp N4–N1 ở lưới trên đầu trang → luyện Part 3 (149 hội thoại có MP3, chọn đáp án, xem giải thích), Shadowing theo hội thoại và Shadowing bằng video có phụ đề chạy.\n• Đọc hiểu: ô “Đọc hiểu” → chọn cấp → chọn dạng bài (Ngắn · Vừa · Tìm thông tin · Dài · Hiểu ý chính tùy cấp) → đọc bài, trả lời 2 câu, xem giải thích và từ vựng cuối bài.\n\nHỏi riêng “luyện nghe ở đâu” hoặc “đọc hiểu ở đâu” mình sẽ chỉ chi tiết từng mục.",
+      answer:"Hai mục này nằm cạnh nhau trong lưới Pháp bảo ở Home:\n\n• Luyện nghe: ô “Luyện nghe” → chọn cấp N5–N1 ở lưới trên đầu trang → luyện Part 3 (149 hội thoại có MP3, chọn đáp án, xem giải thích), Shadowing theo hội thoại và Shadowing bằng video có phụ đề chạy.\n• Đọc hiểu: ô “Đọc hiểu” → chọn cấp → chọn dạng bài (Ngắn · Vừa · Tìm thông tin · Dài · Hiểu ý chính tùy cấp) → đọc bài, trả lời 2 câu, xem giải thích và từ vựng cuối bài.\n\nHỏi riêng “luyện nghe ở đâu” hoặc “đọc hiểu ở đâu” mình sẽ chỉ chi tiết từng mục.",
       actions:[{label:"Mở Luyện nghe", action:"listen"},{label:"Mở Đọc hiểu", action:"read"}] },
     { id:"vocab", label:"Học từ vựng ở đâu?",
       keywords:["tu vung","hoc tu","tango","chuyen nganh","tokutei","pikachu","minna"],
