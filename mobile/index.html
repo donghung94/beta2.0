@@ -955,6 +955,74 @@
   .lsdlgline .shbtns{margin-top:11px;}
   .lsplayall{width:100%; margin-bottom:12px;}
 
+  /* ---------- Shadowing bằng video (bản thử): video YouTube + phụ đề chạy đồng bộ + bấm câu xem giải thích ---------- */
+  #shadowVideoOverlay{z-index:59;}
+  .sv-entry{
+    width:100%; display:block; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:0; overflow:hidden; margin-bottom:10px;
+  }
+  .sv-entry:active{border-color:var(--red);}
+  .sv-thumb{position:relative; aspect-ratio:16/9; background:#14141c;}
+  .sv-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .sv-thumb .sv-play{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:62px; height:44px;
+    background:var(--red); border-radius:12px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  .sv-thumb .sv-play svg{width:22px; height:22px; color:#fff;}
+  .sv-thumb .sv-dur{position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,.78); color:#fff; font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:6px;}
+  .sv-entry .sv-meta{padding:13px 15px 14px;}
+  .sv-entry .sv-meta h3{margin:0 0 3px; font-size:15.5px; font-weight:700;}
+  .sv-entry .sv-meta p{margin:0; font-size:13px; color:var(--ink-2); line-height:1.5;}
+  .sv-newtag{display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.06em; padding:3px 8px; border-radius:999px; background:var(--red); color:#fff; vertical-align:2px; margin-left:7px;}
+  .sv-videowrap{position:relative; aspect-ratio:16/9; background:#000; border-radius:14px; overflow:hidden;}
+  /* Lớp phủ trong suốt trên khung video: bấm vào video chỉ phát/dừng qua nút của app,
+     iframe YouTube không nhận click trực tiếp nên không bị kéo ra ngoài YouTube */
+  .sv-videowrap iframe, .sv-videowrap #svPlayer{position:absolute; inset:0; width:100%; height:100%; border:0; display:block; pointer-events:none;}
+  .sv-shield{position:absolute; inset:0; z-index:2; cursor:pointer; background:transparent;}
+  .sv-facade{position:absolute; inset:0; width:100%; height:100%; border:0; padding:0; margin:0; background:#14141c; cursor:pointer; display:block;}
+  .sv-facade img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .sv-facade .sv-play{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:66px; height:47px; background:var(--red); border-radius:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,.4); pointer-events:none;}
+  .sv-facade .sv-play svg{width:24px; height:24px; color:#fff;}
+  /* Hộp chữ chạy: nằm ngay dưới video, thu nhỏ gọn hơn trước */
+  .sv-now{
+    margin-top:8px; background:var(--card); border:1.5px solid var(--red); border-radius:14px; padding:10px 12px 9px;
+  }
+  .sv-now .sv-nowhead{display:flex; align-items:center; gap:8px; margin-bottom:4px;}
+  .sv-now .sv-spk{font-size:11px; font-weight:800; letter-spacing:.05em; padding:3px 9px; border-radius:999px;}
+  .sv-now .sv-spk.m{background:var(--sky-soft); color:var(--sky);}
+  .sv-now .sv-spk.f{background:var(--red-soft); color:var(--red);}
+  .sv-now .sv-time{margin-left:auto; font-size:12px; font-weight:700; color:var(--ink-3); font-variant-numeric:tabular-nums;}
+  .sv-now .sv-ja{font-size:16px; font-weight:700; line-height:1.75;}
+  .sv-now .sv-ja ruby{ruby-align:center;}
+  .sv-now .sv-ja rt{font-size:.52em; font-weight:600; color:var(--ink-2);}
+  .sv-now .sv-vi{font-size:12.5px; color:var(--ink-2); margin-top:3px; line-height:1.5;}
+  .sv-now .sv-hint{font-size:11px; color:var(--ink-3); margin-top:6px;}
+  .sv-controls{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  .sv-ctl{
+    flex:1 1 0; min-width:96px; min-height:46px; border-radius:12px; cursor:pointer; font-family:inherit;
+    border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-size:13.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:6px; padding:7px 6px;
+  }
+  .sv-ctl svg{width:18px; height:18px; flex:0 0 auto;}
+  .sv-ctl.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
+  .sv-ctl:active{border-color:var(--red);}
+  .sv-exp{display:none; margin-top:12px; background:var(--amber-soft); border:1px solid var(--amber); border-radius:13px; padding:13px 14px;}
+  .sv-exp.show{display:block;}
+  .sv-exp b{display:block; font-size:12px; letter-spacing:.05em; color:var(--amber); margin-bottom:5px;}
+  .sv-exp p{margin:0; font-size:14px; line-height:1.65; color:var(--ink);}
+  .sv-line{
+    width:100%; display:flex; gap:11px; align-items:flex-start; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+    background:var(--card); border:1.5px solid var(--line); border-radius:13px; padding:11px 13px; margin-bottom:8px;
+  }
+  .sv-line .sv-ltime{flex:0 0 auto; font-size:11.5px; font-weight:800; color:var(--ink-3); background:var(--bg); border:1px solid var(--line); border-radius:7px; padding:3px 7px; margin-top:2px; font-variant-numeric:tabular-nums;}
+  .sv-line .sv-lmain{flex:1; min-width:0;}
+  .sv-line .sv-lja{display:block; font-size:15.5px; font-weight:600; line-height:1.6;}
+  .sv-line .sv-lvi{display:block; font-size:12.5px; color:var(--ink-2); margin-top:2px; line-height:1.45;}
+  .sv-line.active{border-color:var(--red); background:var(--red-soft);}
+  .sv-line.active .sv-ltime{color:var(--red); border-color:var(--red); background:var(--card);}
+  .sv-line:active{border-color:var(--red);}
+
   /* Đọc hiểu: chọn cấp → dạng bài → danh sách bài → trang đọc (đoạn văn + câu hỏi
      + giải thích + từ vựng). Tái dùng .setrow/.lsopt/.lsexp ở trên. */
   .rdpass{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 16px; margin-bottom:6px;}
@@ -1139,6 +1207,19 @@
   .leadrow .l-main b{display:block; font-size:14px;}
   .leadrow .l-main span{font-size:12px; color:var(--ink-2);}
   .leadrow .l-tv{flex:0 0 auto; font-weight:800; font-size:13.5px; color:var(--amber); white-space:nowrap;}
+  /* Bảng xếp hạng mở rộng: hạng 4–10 ẩn mặc định, nút "Xem thêm" ở cuối bảng mới hiện */
+  .rankmore{display:none;}
+  .rankmore.open{display:block;}
+  .leaddots{text-align:center; color:var(--ink-3); font-weight:800; letter-spacing:.35em; font-size:13px; padding:4px 0 2px;}
+  .seemorebtn{
+    width:100%; min-height:48px; margin-top:10px; border:1.5px solid var(--line); border-radius:14px;
+    background:var(--card); color:var(--red); font-family:inherit; font-size:15px; font-weight:800; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:7px;
+  }
+  .seemorebtn:active{border-color:var(--red); background:var(--red-soft);}
+  .seemorebtn svg{width:18px; height:18px; transition:transform .2s;}
+  .seemorebtn.open svg{transform:rotate(180deg);}
+  @media (prefers-reduced-motion: reduce){ .seemorebtn svg{transition:none;} }
 
   /* ---------- Phòng chat ---------- */
   .chatlist{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
@@ -2077,7 +2158,28 @@
       <section class="screen" id="scr-rank">
         <h1 class="tabtitle">Xếp hạng</h1>
         <p class="tabsub">Cảnh giới tu luyện — tích Tu vi từ nhiệm vụ, quiz và đề thi để đột phá từ Luyện Khí lên Đại Đế.</p>
-        <div class="card" style="margin-top:0;">
+
+        <h2 class="secttl" style="margin-top:2px;">Đạo hữu dẫn đầu tuần này</h2>
+        <div class="card" style="margin-top:0; padding-top:6px; padding-bottom:6px;">
+          <div class="leadrow"><span class="l-rank top">1</span><span class="l-av">M</span><span class="l-main"><b>Minh Anh</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk4"></use></svg>Hóa Thần · N3</span></span><span class="l-tv">7.420 Tu vi</span></div>
+          <div class="leadrow"><span class="l-rank top">2</span><span class="l-av">T</span><span class="l-main"><b>Tuấn Kiệt</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk3"></use></svg>Nguyên Anh · N2</span></span><span class="l-tv">5.860 Tu vi</span></div>
+          <div class="leadrow"><span class="l-rank top">3</span><span class="l-av">H</span><span class="l-main"><b>Hương Ly</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan · N4</span></span><span class="l-tv">3.210 Tu vi</span></div>
+          <div class="rankmore" id="rankMore">
+            <div class="leadrow"><span class="l-rank">4</span><span class="l-av">K</span><span class="l-main"><b>Khánh Linh</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan · N4</span></span><span class="l-tv">2.980 Tu vi</span></div>
+            <div class="leadrow"><span class="l-rank">5</span><span class="l-av">Q</span><span class="l-main"><b>Quốc Bảo</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan · N3</span></span><span class="l-tv">2.610 Tu vi</span></div>
+            <div class="leadrow"><span class="l-rank">6</span><span class="l-av">T</span><span class="l-main"><b>Thu Hằng</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan · N5</span></span><span class="l-tv">2.205 Tu vi</span></div>
+            <div class="leadrow"><span class="l-rank">7</span><span class="l-av">V</span><span class="l-main"><b>Văn Đức</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · N4</span></span><span class="l-tv">1.890 Tu vi</span></div>
+            <div class="leadrow"><span class="l-rank">8</span><span class="l-av">N</span><span class="l-main"><b>Ngọc Mai</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · N3</span></span><span class="l-tv">1.720 Tu vi</span></div>
+            <div class="leadrow"><span class="l-rank">9</span><span class="l-av">H</span><span class="l-main"><b>Hải Đăng</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · N5</span></span><span class="l-tv">1.505 Tu vi</span></div>
+            <div class="leadrow"><span class="l-rank">10</span><span class="l-av">T</span><span class="l-main"><b>Thanh Tùng</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · N4</span></span><span class="l-tv">1.330 Tu vi</span></div>
+            <div class="leaddots" aria-hidden="true">···</div>
+          </div>
+          <div class="leadrow"><span class="l-rank">18</span><span class="l-av" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · Tầng 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 Tu vi</span></div>
+        </div>
+        <button class="seemorebtn" id="rankMoreBtn" aria-expanded="false" aria-controls="rankMore"><span id="rankMoreLabel">Xem thêm</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:8px 2px 0;">Bảng rút gọn: mặc định chỉ hiện top 3 của tuần và vị trí của bạn — bấm “Xem thêm” để mở rộng hạng 4–10. Hạng của bạn là 18, cùng một con số với hạng ở Đấu Pháp Đài.</p>
+
+        <div class="card">
           <div class="prof">
             <div class="avatar" style="background:#E3A008;">築</div>
             <div>
@@ -2094,16 +2196,16 @@
 
         <h2 class="secttl">Thang cảnh giới</h2>
         <div id="realmLadder">
-          <div class="realmrow got"><span class="r-ic jp">気</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk0"></use></svg>Luyện Khí</b><span>0 Tu vi · Cảnh giới khởi đầu</span></span><span class="r-state">Đã đạt</span></div>
-          <div class="realmrow cur"><span class="r-ic jp">築</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ</b><span>1.000 Tu vi · Đang tu luyện tại đây</span></span><span class="r-state">Hiện tại</span></div>
-          <div class="realmrow"><span class="r-ic jp">丹</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan</b><span>2.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
-          <div class="realmrow"><span class="r-ic jp">嬰</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk3"></use></svg>Nguyên Anh</b><span>4.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
-          <div class="realmrow"><span class="r-ic jp">神</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk4"></use></svg>Hóa Thần</b><span>7.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
-          <div class="realmrow"><span class="r-ic jp">虚</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk5"></use></svg>Luyện Hư</b><span>12.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
-          <div class="realmrow"><span class="r-ic jp">合</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk6"></use></svg>Hợp Thể</b><span>20.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
-          <div class="realmrow"><span class="r-ic jp">乗</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk7"></use></svg>Đại Thừa</b><span>32.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
-          <div class="realmrow"><span class="r-ic jp">劫</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk8"></use></svg>Độ Kiếp</b><span>50.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
           <div class="realmrow"><span class="r-ic jp">帝</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk9"></use></svg>Đại Đế</b><span>80.000 Tu vi · Đỉnh phong SoraKanji</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">劫</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk8"></use></svg>Độ Kiếp</b><span>50.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">乗</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk7"></use></svg>Đại Thừa</b><span>32.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">合</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk6"></use></svg>Hợp Thể</b><span>20.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">虚</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk5"></use></svg>Luyện Hư</b><span>12.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">神</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk4"></use></svg>Hóa Thần</b><span>7.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">嬰</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk3"></use></svg>Nguyên Anh</b><span>4.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow"><span class="r-ic jp">丹</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan</b><span>2.000 Tu vi</span></span><span class="r-state">Chưa mở</span></div>
+          <div class="realmrow cur"><span class="r-ic jp">築</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ</b><span>1.000 Tu vi · Đang tu luyện tại đây</span></span><span class="r-state">Hiện tại</span></div>
+          <div class="realmrow got"><span class="r-ic jp">気</span><span class="r-main"><b><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk0"></use></svg>Luyện Khí</b><span>0 Tu vi · Cảnh giới khởi đầu</span></span><span class="r-state">Đã đạt</span></div>
         </div>
 
         <h2 class="secttl">Chức vụ tông môn</h2>
@@ -2114,11 +2216,11 @@
           <p id="officeNote">Bạn đang có 145 điểm cống hiến — còn 155 điểm nữa là lên Nội môn đệ tử.</p>
         </div>
         <div id="officeLadder">
-          <div class="realmrow cur"><span class="r-ic jp">門</span><span class="r-main"><b>Ngoại môn đệ tử</b><span>0 điểm cống hiến · Chức vụ khởi đầu</span></span><span class="r-state">Hiện tại</span></div>
-          <div class="realmrow"><span class="r-ic jp">内</span><span class="r-main"><b>Nội môn đệ tử</b><span>300 điểm · Mở nhiệm vụ tông môn cấp cao</span></span><span class="r-state">Chưa đạt</span></div>
-          <div class="realmrow"><span class="r-ic jp">伝</span><span class="r-main"><b>Chân truyền đệ tử</b><span>800 điểm · Vào được phòng luyện riêng</span></span><span class="r-state">Chưa đạt</span></div>
-          <div class="realmrow"><span class="r-ic jp">老</span><span class="r-main"><b>Trưởng lão</b><span>2.000 điểm · Được giao nhiệm vụ cho đệ tử</span></span><span class="r-state">Chưa đạt</span></div>
           <div class="realmrow"><span class="r-ic jp">宗</span><span class="r-main"><b>Tông chủ</b><span>5.000 điểm · Đỉnh cao địa vị tông môn</span></span><span class="r-state">Chưa đạt</span></div>
+          <div class="realmrow"><span class="r-ic jp">老</span><span class="r-main"><b>Trưởng lão</b><span>2.000 điểm · Được giao nhiệm vụ cho đệ tử</span></span><span class="r-state">Chưa đạt</span></div>
+          <div class="realmrow"><span class="r-ic jp">伝</span><span class="r-main"><b>Chân truyền đệ tử</b><span>800 điểm · Vào được phòng luyện riêng</span></span><span class="r-state">Chưa đạt</span></div>
+          <div class="realmrow"><span class="r-ic jp">内</span><span class="r-main"><b>Nội môn đệ tử</b><span>300 điểm · Mở nhiệm vụ tông môn cấp cao</span></span><span class="r-state">Chưa đạt</span></div>
+          <div class="realmrow cur"><span class="r-ic jp">門</span><span class="r-main"><b>Ngoại môn đệ tử</b><span>0 điểm cống hiến · Chức vụ khởi đầu</span></span><span class="r-state">Hiện tại</span></div>
         </div>
 
         <button class="card mocktest" id="rankDuelCard" style="width:100%; text-align:left; font-family:inherit; color:var(--ink);">
@@ -2127,14 +2229,6 @@
           <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
         </button>
 
-        <h2 class="secttl">Đạo hữu dẫn đầu tuần này</h2>
-        <div class="card" style="margin-top:0; padding-top:6px; padding-bottom:6px;">
-          <div class="leadrow"><span class="l-rank top">1</span><span class="l-av">M</span><span class="l-main"><b>Minh Anh</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk4"></use></svg>Hóa Thần · N3</span></span><span class="l-tv">7.420 Tu vi</span></div>
-          <div class="leadrow"><span class="l-rank top">2</span><span class="l-av">T</span><span class="l-main"><b>Tuấn Kiệt</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk3"></use></svg>Nguyên Anh · N2</span></span><span class="l-tv">5.860 Tu vi</span></div>
-          <div class="leadrow"><span class="l-rank top">3</span><span class="l-av">H</span><span class="l-main"><b>Hương Ly</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk2"></use></svg>Kim Đan · N4</span></span><span class="l-tv">3.210 Tu vi</span></div>
-          <div class="leadrow"><span class="l-rank">18</span><span class="l-av" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · Tầng 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 Tu vi</span></div>
-        </div>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:8px 2px 0;">Bảng rút gọn: chỉ hiện top 3 của tuần và vị trí của bạn — hạng 18, cùng một con số với hạng ở Đấu Pháp Đài.</p>
       </section>
 
       <!-- ============ TAB: PHÒNG CHAT ============ -->
@@ -2454,6 +2548,19 @@
         <h3 class="wvsec">Luyện nghe theo cấp JLPT</h3>
         <p class="wvinfo">Cả 5 cấp N5–N1 đều đã có nội dung: 149 hội thoại Part 3 có file nghe giọng đã duyệt, kèm Shadowing luyện từng câu trong chính các hội thoại đó.</p>
         <div id="lsLevels"></div>
+        <h3 class="wvsec">Shadowing bằng video</h3>
+        <p class="wvinfo">Xem video, phụ đề chạy theo ở dưới, bấm vào từng câu để xem giải thích — bản thử đầu tiên với 1 hội thoại N5.</p>
+        <button class="sv-entry" id="listenGoShadowVideo">
+          <span class="sv-thumb">
+            <img src="https://i.ytimg.com/vi/r_o5gRWkkaA/hqdefault.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga" loading="lazy">
+            <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="sv-dur">0:22</span>
+          </span>
+          <span class="sv-meta">
+            <h3>N5 · Ở nhà ga: hỏi tàu đi Tokyo<span class="sv-newtag">THỬ</span></h3>
+            <p>Video 22 giây · 9 câu phụ đề · bấm câu để xem giải thích ngữ pháp và từ mới.</p>
+          </span>
+        </button>
         <h2 class="secttl">Phần nghe đã có sẵn</h2>
         <button class="setrow" id="listenGoShadow">
           <span class="r1"><h3>Shadowing</h3><span class="cnt">MỞ ›</span></span>
@@ -2528,6 +2635,55 @@
         <p class="wvinfo">Từng câu dưới đây luyện bằng giọng máy của thiết bị: nghe, nghe chậm, ghi âm nhắc lại (tối đa 30 giây) rồi nghe lại giọng mình để so sánh.</p>
         <div id="lsShLines"></div>
         <p class="shstatus" id="lsShStatus"></p>
+        <div class="wv-endpad" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- ============ SHADOWING BẰNG VIDEO (BẢN THỬ): VIDEO + PHỤ ĐỀ ĐỒNG BỘ + GIẢI THÍCH ============ -->
+    <div class="overlay front" id="shadowVideoOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeShadowVideo" aria-label="Quay lại — về trang Luyện nghe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Shadowing · Video N5</h2><span>Ở nhà ga: hỏi tàu đi Tokyo · phụ đề chạy theo video</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="sv-videowrap" id="svVideoWrap">
+          <button class="sv-facade" type="button" id="svFacade" aria-label="Phát video shadowing N5: hỏi tàu đi ga Tokyo">
+            <img src="https://i.ytimg.com/vi/r_o5gRWkkaA/hqdefault.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga">
+            <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          </button>
+        </div>
+
+        <div class="sv-now" id="svNow">
+          <div class="sv-nowhead">
+            <span class="sv-spk m" id="svNowSpk">NAM</span>
+            <span id="svNowCount" style="font-size:12px;font-weight:700;color:var(--ink-3);">Câu 1 / 9</span>
+            <span class="sv-time" id="svNowTime">0:00 / 0:22</span>
+          </div>
+          <div class="sv-ja jp" id="svNowJa"></div>
+          <div class="sv-vi" id="svNowVi"></div>
+          <div class="sv-hint">Bấm vào câu đang hiện (hoặc một câu trong danh sách dưới) để xem giải thích và nhảy video tới đúng câu đó.</div>
+        </div>
+
+        <div class="sv-controls">
+          <button class="sv-ctl" id="svPlayPause" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+            <span id="svPlayPauseLabel">Phát video</span>
+          </button>
+          <button class="sv-ctl" id="svLoop" type="button" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5 21 6.5l-4 4"/><path d="M3 12.5v-1a5 5 0 0 1 5-5h13M7 21.5 3 17.5l4-4"/><path d="M21 11.5v1a5 5 0 0 1-5 5H3"/></svg>
+            Lặp câu này
+          </button>
+          <button class="sv-ctl on" id="svToggleFuri" type="button" aria-pressed="true">Furigana: Bật</button>
+          <button class="sv-ctl on" id="svToggleVi" type="button" aria-pressed="true">Dịch: Bật</button>
+        </div>
+
+        <div class="sv-exp" id="svExp"><b>GIẢI THÍCH · CÂU <span id="svExpNum">1</span></b><p id="svExpText"></p></div>
+
+        <h3 class="wvsec">Tất cả các câu trong video</h3>
+        <p class="wvinfo">Câu đang phát sẽ tự tô đỏ. Bấm một câu để video nhảy tới câu đó và hiện giải thích.</p>
+        <div id="svLines"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -6753,6 +6909,177 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   lsRenderLevels();
 
+  /* ---------- Shadowing bằng video (bản thử 1 bài): YouTube nhúng + phụ đề đồng bộ ----------
+     Video của chính kênh SoraKanji (Unlisted để thử): ID r_o5gRWkkaA, hội thoại n5-1-1
+     (ga tàu, hỏi tàu đi Tokyo + mua vé). Phụ đề + giải thích VIẾT SẴN (9 câu, mốc thời
+     gian đo trên audio gốc) — lúc chạy KHÔNG gọi API nào. Bấm câu: nhảy video tới câu
+     đó + hiện giải thích. Trình phát nạp qua YouTube IFrame API khi mở lần đầu.
+     Không có link mở ra YouTube: iframe được phủ lớp chặn click (sv-shield) nên bấm
+     vào khung video chỉ phát/dừng trong app, không bị kéo ra ngoài. */
+  var SV_ID = "r_o5gRWkkaA";
+  var SV_SUBS = [
+    {start:0.00, end:5.36, spk:"男", ja:"すみません、東京駅へ行きたいんですが、この電車は東京駅へ行きますか。", furi:"すみません、東京[とうきょう]駅[えき]へ行きたいんですが、この電車は東京[とうきょう]駅[えき]へ行きますか。", vi:"Xin lỗi, tôi muốn đi ga Tokyo. Tàu này có tới ga Tokyo không ạ?", exp:"～たいんですが: ～たい là “muốn”, thêm んです để giải thích lý do một cách lịch sự khi nhờ vả. Từ mới: 東京駅 (とうきょうえき, ga Tokyo), 電車 (でんしゃ, tàu điện)."},
+    {start:6.06, end:9.02, spk:"女", ja:"いいえ、この電車は東京駅へ行きません。", furi:"いいえ、この電車は東京[とうきょう]駅[えき]へ行きません。", vi:"Không ạ, tàu này không đi ga Tokyo.", exp:"Phủ định lịch sự: 行きます (đi) → 行きません (không đi). Mẫu ～へ行きません = “không đi đến…”."},
+    {start:9.52, end:10.82, spk:"女", ja:"次の電車に乗ってください。", furi:"次[つぎ]の電車に乗[の]ってください。", vi:"Anh đi chuyến tàu tiếp theo nhé.", exp:"～てください: “hãy…” — nhờ vả, yêu cầu lịch sự. Từ mới: 次 (つぎ, tiếp theo), 乗る (のる, lên tàu/xe)."},
+    {start:11.47, end:11.94, spk:"男", ja:"そうですか。", furi:"そうですか。", vi:"Vậy à.", exp:"そうですか: “Vậy à / Thế à” — đáp lại khi vừa nghe thông tin mới, không phải câu hỏi thật sự."},
+    {start:12.36, end:12.91, spk:"男", ja:"わかりました。", furi:"わかりました。", vi:"Tôi hiểu rồi.", exp:"わかりました: dạng lịch sự quá khứ của わかる (hiểu) — “Tôi hiểu rồi”, dùng khi đã nắm được thông tin."},
+    {start:13.89, end:15.51, spk:"男", ja:"あの、切符はどこで買いますか。", furi:"あの、切符[きっぷ]はどこで買[か]いますか。", vi:"À, vé thì mua ở đâu ạ?", exp:"あの: từ đệm khi ngập ngừng trước khi hỏi. Từ mới: 切符 (きっぷ, vé). どこで + 買いますか: hỏi “mua ở đâu” (で chỉ nơi diễn ra hành động)."},
+    {start:16.10, end:17.64, spk:"女", ja:"あちらの券売機で買えますよ。", furi:"あちらの券売機[けんばいき]で買[か]えますよ。", vi:"Anh mua được ở máy bán vé đằng kia đấy.", exp:"あちら: “đằng kia” (xa cả người nói và người nghe). Từ mới: 券売機 (けんばいき, máy bán vé). ～で買えます: 買える là thể khả năng của 買う — “có thể mua”."},
+    {start:18.22, end:19.83, spk:"女", ja:"東京駅まで300円です。", furi:"東京[とうきょう]駅[えき]まで300円です。", vi:"Đến ga Tokyo là 300 yên.", exp:"～まで + số tiền: “đến ga Tokyo là 300 yên” — まで chỉ điểm đến, phạm vi. 円 (えん, yên)."},
+    {start:20.35, end:21.32, spk:"男", ja:"ありがとうございます。", furi:"ありがとうございます。", vi:"Cảm ơn ạ.", exp:"ありがとうございます: “Cảm ơn” dạng lịch sự, dùng với người lạ, nhân viên."}
+  ];
+  var svOverlay = document.getElementById("shadowVideoOverlay");
+  var svPlayer = null, svReady = false, svTimer = null, svCur = -1, svLoop = false, svShowFuri = true, svShowVi = true, svExpIdx = -1;
+  function svEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  /* Furigana dạng "漢字[かんじ]" → <ruby>: cụm chữ Hán liền trước ngoặc là phần gốc */
+  function svRuby(furi){
+    return svEsc(furi).replace(/([\u4e00-\u9faf]+)\[([^\]]+)\]/g, "<ruby>$1<rt>$2</rt></ruby>");
+  }
+  function svFmt(t){
+    t = Math.max(0, Math.floor(t));
+    return Math.floor(t / 60) + ":" + ("0" + (t % 60)).slice(-2);
+  }
+  function svRenderLines(){
+    var wrap = document.getElementById("svLines");
+    var h = "";
+    SV_SUBS.forEach(function(s, i){
+      h += '<button class="sv-line" type="button" data-sv="' + i + '">' +
+        '<span class="sv-ltime">' + svFmt(s.start) + '</span>' +
+        '<span class="sv-lmain"><span class="sv-lja jp">' + svEsc(s.ja) + '</span>' +
+        (svShowVi ? '<span class="sv-lvi">' + svEsc(s.vi) + '</span>' : '') + '</span></button>';
+    });
+    wrap.innerHTML = h;
+    wrap.querySelectorAll("[data-sv]").forEach(function(b){
+      b.addEventListener("click", function(){ svSeekTo(parseInt(b.getAttribute("data-sv"), 10), true); });
+    });
+  }
+  function svSetNow(i){
+    if(i === svCur) return;
+    svCur = i;
+    var s = SV_SUBS[i];
+    var spk = document.getElementById("svNowSpk");
+    var male = s.spk === "男";
+    spk.textContent = male ? "NAM" : "NỮ · NHÂN VIÊN GA";
+    spk.className = "sv-spk " + (male ? "m" : "f");
+    document.getElementById("svNowCount").textContent = "Câu " + (i + 1) + " / " + SV_SUBS.length;
+    document.getElementById("svNowJa").innerHTML = svShowFuri ? svRuby(s.furi) : svEsc(s.ja);
+    var viEl = document.getElementById("svNowVi");
+    viEl.textContent = s.vi;
+    viEl.style.display = svShowVi ? "" : "none";
+    document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === i); });
+    if(svExpIdx >= 0) svShowExp(i);
+  }
+  function svShowExp(i){
+    svExpIdx = i;
+    document.getElementById("svExpNum").textContent = i + 1;
+    document.getElementById("svExpText").textContent = SV_SUBS[i].exp;
+    document.getElementById("svExp").classList.add("show");
+  }
+  function svTogglePlay(){
+    if(!svPlayer){ svLoadPlayer(true); return; }
+    if(svPlayer.getPlayerState && svPlayer.getPlayerState() === 1) svPlayer.pauseVideo();
+    else if(svPlayer.playVideo) svPlayer.playVideo();
+  }
+  function svLoadPlayer(autoplay){
+    if(svPlayer){ if(autoplay && svPlayer.playVideo) svPlayer.playVideo(); return; }
+    var wrap = document.getElementById("svVideoWrap");
+    wrap.innerHTML = '<div id="svPlayer"></div><div class="sv-shield" id="svShield" role="button" aria-label="Phát hoặc tạm dừng video"></div>';
+    document.getElementById("svShield").addEventListener("click", svTogglePlay);
+    function create(){
+      svPlayer = new YT.Player("svPlayer", {
+        videoId: SV_ID,
+        playerVars: {playsinline: 1, rel: 0, modestbranding: 1},
+        events: {
+          onReady: function(e){ svReady = true; if(autoplay) e.target.playVideo(); },
+          onStateChange: function(e){
+            var lbl = document.getElementById("svPlayPauseLabel");
+            if(e.data === YT.PlayerState.PLAYING) lbl.textContent = "Tạm dừng";
+            else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) lbl.textContent = "Phát video";
+          }
+        }
+      });
+    }
+    if(window.YT && YT.Player){ create(); }
+    else{
+      var prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function(){ if(prev) prev(); create(); };
+      var tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+  }
+  function svSeekTo(i, showExp){
+    svLoadPlayer(false);
+    svSetNow(i);
+    if(showExp) svShowExp(i);
+    function go(){
+      if(svPlayer && svPlayer.seekTo){ svPlayer.seekTo(SV_SUBS[i].start + 0.03, true); svPlayer.playVideo(); }
+      else setTimeout(go, 350);
+    }
+    go();
+  }
+  function svTick(){
+    if(!svOverlay.classList.contains("open")){
+      /* Trang đã đóng (nút quay lại hoặc thanh tab): dừng video + dừng đồng bộ phụ đề */
+      if(svPlayer && svPlayer.pauseVideo) svPlayer.pauseVideo();
+      if(svTimer){ clearInterval(svTimer); svTimer = null; }
+      return;
+    }
+    if(!svPlayer || !svReady || !svPlayer.getCurrentTime) return;
+    var t = svPlayer.getCurrentTime();
+    document.getElementById("svNowTime").textContent = svFmt(t) + " / 0:22";
+    var idx = -1;
+    SV_SUBS.forEach(function(s, i){ if(t >= s.start && t < s.end) idx = i; });
+    if(idx < 0){
+      /* Khoảng lặng giữa các câu: giữ câu gần nhất phía trước */
+      SV_SUBS.forEach(function(s, i){ if(t >= s.end) idx = i; });
+    }
+    if(idx >= 0){
+      if(svLoop && svCur >= 0 && idx !== svCur && t > SV_SUBS[svCur].end){
+        svPlayer.seekTo(SV_SUBS[svCur].start + 0.03, true);
+        return;
+      }
+      svSetNow(idx);
+    }
+  }
+  document.getElementById("svFacade").addEventListener("click", function(){ svLoadPlayer(true); });
+  document.getElementById("svNow").addEventListener("click", function(){ if(svCur >= 0) svShowExp(svCur); });
+  document.getElementById("svPlayPause").addEventListener("click", svTogglePlay);
+  document.getElementById("svLoop").addEventListener("click", function(){
+    svLoop = !svLoop;
+    this.classList.toggle("on", svLoop);
+    this.setAttribute("aria-pressed", svLoop ? "true" : "false");
+  });
+  document.getElementById("svToggleFuri").addEventListener("click", function(){
+    svShowFuri = !svShowFuri;
+    this.classList.toggle("on", svShowFuri);
+    this.setAttribute("aria-pressed", svShowFuri ? "true" : "false");
+    this.textContent = "Furigana: " + (svShowFuri ? "Bật" : "Tắt");
+    var keep = svCur; svCur = -1; svSetNow(keep >= 0 ? keep : 0);
+  });
+  document.getElementById("svToggleVi").addEventListener("click", function(){
+    svShowVi = !svShowVi;
+    this.classList.toggle("on", svShowVi);
+    this.setAttribute("aria-pressed", svShowVi ? "true" : "false");
+    this.textContent = "Dịch: " + (svShowVi ? "Bật" : "Tắt");
+    svRenderLines();
+    var keep = svCur; svCur = -1; svSetNow(keep >= 0 ? keep : 0);
+    document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === svCur); });
+  });
+  document.getElementById("listenGoShadowVideo").addEventListener("click", function(){
+    hideOv(listenOverlay);
+    svRenderLines();
+    if(svCur < 0) svSetNow(0);
+    showOv(svOverlay);
+    if(svTimer) clearInterval(svTimer);
+    svTimer = setInterval(svTick, 250);
+  });
+  document.getElementById("closeShadowVideo").addEventListener("click", function(){
+    if(svPlayer && svPlayer.pauseVideo) svPlayer.pauseVideo();
+    if(svTimer){ clearInterval(svTimer); svTimer = null; }
+    hideOv(svOverlay); showOv(listenOverlay);
+  });
+
   /* ---------- Đọc hiểu: chọn cấp → dạng bài → danh sách bài → trang đọc ----------
      Sản xuất hàng loạt: 20 ô cấp × dạng, mỗi ô 10 bài TỰ VIẾT MỚI (không copy
      đề JLPT thật, không trùng ngân hàng đề thi của app), nạp lười từng ô từ
@@ -9798,6 +10125,14 @@ function furiHTML(text){
   document.getElementById("meDuelBtn").addEventListener("click", openDuel);
   document.getElementById("meShopBtn").addEventListener("click", openShop);
   document.getElementById("rankDuelCard").addEventListener("click", openDuel);
+  /* Nút "Xem thêm" cuối bảng xếp hạng tuần: mở rộng / thu gọn hạng 4–10 */
+  var rankMoreBtn = document.getElementById("rankMoreBtn");
+  rankMoreBtn.addEventListener("click", function(){
+    var open = document.getElementById("rankMore").classList.toggle("open");
+    rankMoreBtn.classList.toggle("open", open);
+    rankMoreBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    document.getElementById("rankMoreLabel").textContent = open ? "Thu gọn" : "Xem thêm";
+  });
   renderPathHome();
   renderMissions();
   renderWallet();
