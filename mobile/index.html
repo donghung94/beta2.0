@@ -108,7 +108,7 @@
   .screens{flex:1 1 auto; position:relative; overflow:hidden;}
   .screen{
     position:absolute; inset:0; overflow-y:auto; overscroll-behavior:contain;
-    padding:10px 18px 22px; display:none; scrollbar-width:none;
+    padding:10px 18px 108px; display:none; scrollbar-width:none;
   }
   .screen::-webkit-scrollbar{display:none;}
   .screen.active{display:block;}
@@ -1640,6 +1640,136 @@
   .gcard p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.55;}
   .gcard .ge{margin-top:8px; font-size:15px; color:var(--ink); line-height:1.6;}
   .gcard .gev{font-size:13px; color:var(--ink-2); margin-top:2px;}
+
+  /* ---------- Trợ lý AI Sora: nút tròn nổi + khung chat hướng dẫn dùng app ---------- */
+  .assistant-fab{
+    position:absolute; right:16px; bottom:calc(var(--tabh) + 14px); z-index:70;
+    width:58px; height:58px; border-radius:50%; padding:0; cursor:pointer;
+    border:2px solid #C9A24B; background:#FFF8EC;
+    box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18);
+    display:flex; align-items:center; justify-content:center;
+    animation:assistantPulse 2.6s ease-in-out infinite;
+  }
+  .assistant-fab img{
+    width:100%; height:100%; border-radius:50%; display:block;
+    object-fit:cover; object-position:50% 8%;
+  }
+  .assistant-fab .assistant-fab-badge{
+    position:absolute; right:-3px; bottom:-3px; width:23px; height:23px; border-radius:50%;
+    background:var(--red); color:#fff; border:2px solid var(--card);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .assistant-fab .assistant-fab-badge svg{width:12px; height:12px;}
+  .assistant-fab:active{transform:scale(.93);}
+  .assistant-fab.hide{display:none;}
+  @keyframes assistantPulse{
+    0%,100%{box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18), 0 0 0 0 rgba(200,16,46,.28);}
+    50%{box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18), 0 0 0 7px rgba(200,16,46,0);}
+  }
+  .assistant-scrim{
+    position:absolute; inset:0; z-index:71; background:rgba(10,8,6,.42);
+    opacity:0; pointer-events:none; transition:opacity .22s;
+  }
+  .assistant-scrim.open{opacity:1; pointer-events:auto;}
+  .assistant-panel{
+    position:absolute; right:12px; z-index:72;
+    width:min(366px, calc(100% - 24px));
+    bottom:calc(var(--tabh) + 12px);
+    height:min(572px, calc(100% - var(--tabh) - 92px));
+    max-height:calc(100% - var(--tabh) - 24px);
+    background:var(--card); border:1px solid var(--line); border-radius:22px;
+    box-shadow:0 22px 50px rgba(20,16,10,.32), 0 4px 14px rgba(20,16,10,.16);
+    display:flex; flex-direction:column; overflow:hidden;
+    opacity:0; pointer-events:none; transform:translateY(14px) scale(.97); transform-origin:bottom right;
+    transition:opacity .22s, transform .22s cubic-bezier(.32,.72,.28,1);
+  }
+  .assistant-panel.open{opacity:1; pointer-events:auto; transform:translateY(0) scale(1);}
+  .assistant-head{
+    flex:0 0 auto; display:flex; align-items:center; gap:11px;
+    padding:12px 12px 12px 14px; border-bottom:1px solid var(--line); background:var(--card);
+  }
+  .assistant-head img{
+    width:46px; height:46px; border-radius:50%; flex:0 0 auto; display:block;
+    object-fit:cover; object-position:50% 8%; background:#FFF8EC;
+    border:1.5px solid #C9A24B;
+  }
+  .assistant-head .assistant-hmain{flex:1; min-width:0;}
+  .assistant-head h2{margin:0; font-size:15.5px; font-weight:800; line-height:1.25;}
+  .assistant-head p{margin:2px 0 0; font-size:12px; color:var(--ink-2); line-height:1.4; display:flex; align-items:center; gap:6px;}
+  .assistant-head .assistant-dot{width:8px; height:8px; border-radius:50%; background:var(--good); flex:0 0 auto;}
+  .assistant-close{
+    width:38px; height:38px; border-radius:50%; border:1.5px solid var(--line); flex:0 0 auto;
+    background:var(--card); color:var(--ink-2); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .assistant-close svg{width:17px; height:17px;}
+  .assistant-close:active{border-color:var(--red); color:var(--red); background:var(--red-soft);}
+  .assistant-msgs{
+    flex:1 1 auto; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none;
+    background:var(--bg); padding:14px 12px 10px;
+    display:flex; flex-direction:column; gap:9px;
+  }
+  .assistant-msgs::-webkit-scrollbar{display:none;}
+  .assistant-msg{max-width:88%; font-size:14px; line-height:1.58; overflow-wrap:break-word;}
+  .assistant-msg .assistant-txt{white-space:pre-line;}
+  .assistant-msg.bot{
+    align-self:flex-start; background:var(--card); color:var(--ink);
+    border:1px solid var(--line); border-radius:4px 16px 16px 16px; padding:10px 12px;
+  }
+  .assistant-msg.user{
+    align-self:flex-end; background:var(--red); color:#fff;
+    border-radius:16px 4px 16px 16px; padding:10px 12px;
+  }
+  .assistant-msg.typing{display:flex; gap:5px; align-items:center; padding:13px 14px;}
+  .assistant-msg.typing i{width:7px; height:7px; border-radius:50%; background:var(--ink-3); animation:assistantTyping 1s ease-in-out infinite;}
+  .assistant-msg.typing i:nth-child(2){animation-delay:.15s;}
+  .assistant-msg.typing i:nth-child(3){animation-delay:.3s;}
+  @keyframes assistantTyping{0%,100%{transform:translateY(0); opacity:.45;}50%{transform:translateY(-3px); opacity:1;}}
+  .assistant-actions{display:flex; flex-wrap:wrap; gap:7px; margin-top:10px;}
+  .assistant-act{
+    min-height:37px; padding:6px 13px; border-radius:999px; cursor:pointer;
+    border:1.5px solid var(--red); background:var(--red-soft); color:var(--red);
+    font-family:inherit; font-size:13px; font-weight:800;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .assistant-act svg{width:14px; height:14px; flex:0 0 auto;}
+  .assistant-act:active{background:var(--red); color:#fff;}
+  .assistant-chips{
+    flex:0 0 auto; display:flex; flex-wrap:wrap; gap:7px;
+    padding:10px 12px 2px; background:var(--card);
+  }
+  .assistant-chip{
+    min-height:34px; padding:5px 12px; border-radius:999px; cursor:pointer;
+    border:1.5px solid var(--line); background:var(--card); color:var(--ink);
+    font-family:inherit; font-size:12.5px; font-weight:700;
+  }
+  .assistant-chip:active{border-color:var(--red); color:var(--red); background:var(--red-soft);}
+  .assistant-form{
+    flex:0 0 auto; display:flex; gap:8px; align-items:center;
+    padding:9px 12px 6px; background:var(--card);
+  }
+  .assistant-form input{
+    flex:1; min-width:0; min-height:46px; border:1.5px solid var(--line); border-radius:999px;
+    background:var(--bg); color:var(--ink); font-family:inherit; font-size:14.5px;
+    padding:0 15px; outline:none; -webkit-appearance:none; appearance:none;
+  }
+  .assistant-form input:focus{border-color:var(--red);}
+  .assistant-form input::placeholder{color:var(--ink-3);}
+  .assistant-send{
+    width:46px; height:46px; border-radius:50%; border:none; cursor:pointer; flex:0 0 auto;
+    background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .assistant-send svg{width:19px; height:19px;}
+  .assistant-send:active{background:var(--red-dark);}
+  .assistant-note{
+    flex:0 0 auto; margin:0; padding:2px 16px 11px; background:var(--card);
+    font-size:11px; color:var(--ink-3); line-height:1.45; text-align:center;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .assistant-fab{animation:none;}
+    .assistant-msg.typing i{animation:none;}
+    .assistant-panel, .assistant-scrim{transition:none;}
+  }
 </style>
 </head>
 <body>
@@ -2427,6 +2557,48 @@
         Cài đặt
       </button>
     </nav>
+
+    <!-- ============ TRỢ LÝ AI SORA: nút tròn nổi + khung chat ============ -->
+    <button class="assistant-fab" id="assistantFab" type="button" aria-label="Mở trợ lý Sora — hướng dẫn dùng app" aria-expanded="false" aria-controls="assistantPanel">
+      <img src="assets/chibi.png" alt="" width="58" height="58" />
+      <span class="assistant-fab-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg></span>
+    </button>
+    <div class="assistant-scrim" id="assistantScrim" aria-hidden="true"></div>
+    <section class="assistant-panel" id="assistantPanel" role="dialog" aria-label="Trợ lý Sora — hướng dẫn sử dụng app" aria-hidden="true">
+      <div class="assistant-head">
+        <img src="assets/chibi.png" alt="Sora — bé chibi trợ lý của SoraKanji" width="46" height="46" />
+        <div class="assistant-hmain">
+          <h2>Sora · Trợ lý SoraKanji</h2>
+          <p><span class="assistant-dot" aria-hidden="true"></span>Hướng dẫn dùng app — hỏi gì về tính năng cũng được</p>
+        </div>
+        <button class="assistant-close" id="assistantClose" type="button" aria-label="Đóng trợ lý">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="assistant-msgs" id="assistantMsgs" tabindex="0" aria-label="Nội dung trò chuyện với trợ lý">
+        <div class="assistant-msg bot"><span class="assistant-txt">Chào đạo hữu, mình là Sora — trợ lý của SoraKanji. Mình hướng dẫn cách dùng mọi tính năng trong app: học từ vựng, ngữ pháp, kanji, luyện thi, luyện nghe, đọc hiểu, luyện viết, thi đấu…
+
+Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của bạn nhé.</span></div>
+      </div>
+      <div class="assistant-chips" id="assistantChips" aria-label="Chủ đề gợi ý">
+        <button class="assistant-chip" type="button" data-assistant-topic="start">Bắt đầu từ đâu?</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="learn">Học từ vựng / ngữ pháp / kanji</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="exam">Luyện thi JLPT</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="listenread">Luyện nghe &amp; đọc hiểu</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="write">Luyện viết, vẽ kanji</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="flash">Flashcard &amp; Shadowing</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="fun">Đấu trường, xếp hạng, linh thạch</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="install">Cài app &amp; học offline</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="search">Tìm kiếm &amp; tra cứu</button>
+      </div>
+      <form class="assistant-form" id="assistantForm">
+        <input id="assistantInput" type="text" maxlength="300" placeholder="Hỏi cách dùng app… VD: luyện nghe ở đâu?" aria-label="Nhập câu hỏi cho trợ lý" autocomplete="off" />
+        <button class="assistant-send" id="assistantSend" type="submit" aria-label="Gửi câu hỏi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>
+        </button>
+      </form>
+      <p class="assistant-note">Sora trả lời ngay trong máy theo đúng tính năng có sẵn của app, không cần mạng.</p>
+    </section>
 
     <!-- ============ EXAM OVERLAY ============ -->
     <div class="overlay" id="examOverlay" aria-hidden="true">
@@ -3452,6 +3624,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   /* Bỏ khoảng trắng giữa các từ khi hiển thị câu tiếng Nhật (giữ nguyên nội dung). */
   function exStrip(s){ return String(s == null ? "" : s).replace(/[\s　]+/g, ""); }
+  /* Chỗ trống điền đáp án: dữ liệu gốc là （　）, sau exStrip thành （）— hiển thị thành (........) cho dễ thấy. */
+  function exBlank(s){ return String(s == null ? "" : s).split("（）").join("(........)"); }
   function exUnderline(s, t){
     var es = exEsc(exStrip(s)), et = exEsc(exStrip(t));
     var ix = es.indexOf(et);
@@ -3678,7 +3852,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
 
   /* Xây phần viết của 1 đề. Trả {qs} hoặc {error:'short', kind, made, need}. */
-  function exBuildWritten(lv, seed){
+  function exBuildWritten(lv, seed, testNo){
+    /* Chế độ ĐỀ CỐ ĐỊNH: cấp nào có bộ đề viết riêng từng Test
+       (window.WRITTEN_<lv>_SETS, nạp lười từ assets/written-<lv>-x9.js) thì lấy
+       nguyên bộ của đúng Test đó — xem exBuildWrittenFixed. Không có bộ riêng
+       thì giữ engine bốc mẫu theo seed như trước. */
+    var FSETS = (typeof window !== "undefined" ? window["WRITTEN_" + lv + "_SETS"] : null) || null;
+    if(testNo && FSETS && FSETS[String(testNo)]) return exBuildWrittenFixed(lv, seed, FSETS[String(testNo)]);
     EX_RNG = seed ? exMulberry32(seed) : Math.random;
     var spec = (typeof EXAM_COMP !== "undefined" ? EXAM_COMP : null) || (typeof window !== "undefined" ? window.EXAM_COMP : null);
     var D = (typeof window !== "undefined" ? window["JLNEW_" + lv] : null) || (typeof JLNEW_ALL !== "undefined" ? JLNEW_ALL[lv] : null);
@@ -4037,6 +4217,187 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
     EX_RNG = Math.random;
     return {qs: qs, made: madeMap};
+  }
+
+  /* Xây phần viết từ 1 BỘ ĐỀ CỐ ĐỊNH (S = window.WRITTEN_<lv>_SETS[testNo]):
+     lấy TOÀN BỘ câu trong bộ theo đúng thứ tự đã sắp, không bốc mẫu, không lọc
+     trùng — bộ đã được kiểm chứng rời nhau giữa các Test trước khi gắn app.
+     g1/star đọc câu cố định trong bộ thay vì sinh từ GRAMMAR_DATA; exp/voc lấy
+     thẳng từ câu khi có. Chỉ thứ tự phương án trong từng câu được xáo theo seed
+     như engine thường. Thiếu câu ở bất kỳ dạng nào -> {error:'short'} để lớp
+     mở đề tự khóa đề đó thay vì hiện một đề dở. */
+  function exBuildWrittenFixed(lv, seed, S){
+    EX_RNG = seed ? exMulberry32(seed) : Math.random;
+    var spec = (typeof window !== "undefined" && window.EXAM_COMP) ? window.EXAM_COMP[lv] : null;
+    var INST = (typeof window !== "undefined" && window.EXAM_INST) || {};
+    function done(r){ EX_RNG = Math.random; return r; }
+    if(!spec || !S) return done({error: "nodata"});
+    var qs = [];
+    function mkOpts(correct, distracts){
+      var opts = distracts.slice(0, 3); opts.push(correct); exShuffle(opts);
+      return {opts: opts, ans: opts.indexOf(correct)};
+    }
+    function base(sec, kindName, kindKey){
+      return {sec: sec, kind: kindName, kindKey: kindKey, real: true, subNote: "", pass: null, passHtml: null,
+        qText: "", qHtml: null, uline: null, opts: null, imgOpts: null, ans: -1, star: null,
+        au: null, exp: null, voc: null, fullSent: null, correctText: ""};
+    }
+    function ok4(correct, w){ return typeof correct === "string" && !!correct && Array.isArray(w) && w.length === 3 && w.indexOf(correct) < 0; }
+    function takeOpts(q, it, correct){
+      var o = mkOpts(correct, it.w);
+      q.opts = o.opts; q.ans = o.ans; q.exp = it.exp || null; q.voc = it.voc || null;
+    }
+    function buildVocab(key, need, kindName){
+      var items = S[key] || [], made = 0;
+      for(var i = 0; i < items.length && made < need; i++){
+        var it = items[i]; if(!it) continue;
+        var q = null;
+        if(key === "yomi"){
+          if(typeof it.s !== "string" || !ok4(it.r, it.w)) continue;
+          q = base("vocab", kindName, "yomi"); q.qText = it.s; q.uline = it.t; takeOpts(q, it, it.r);
+          q.fullSent = it.s; q.correctText = it.r;
+        } else if(key === "hyoki"){
+          if(typeof it.s !== "string" || !ok4(it.k, it.w)) continue;
+          q = base("vocab", kindName, "hyoki"); q.qText = it.s; q.uline = it.h; takeOpts(q, it, it.k);
+          q.fullSent = it.s.replace(it.h, it.k); q.correctText = it.k;
+        } else if(key === "ctx"){
+          if(typeof it.s !== "string" || !ok4(it.a, it.w)) continue;
+          q = base("vocab", kindName, "ctx"); q.qText = it.s; takeOpts(q, it, it.a);
+          q.fullSent = it.s.replace("（　）", it.a); q.correctText = it.a;
+        } else if(key === "syn"){
+          if(typeof it.s !== "string" || !ok4(it.a, it.w)) continue;
+          q = base("vocab", kindName, "syn"); q.qText = it.s; q.uline = it.t; takeOpts(q, it, it.a);
+          q.fullSent = it.s; q.correctText = it.a;
+        } else if(key === "yoho"){
+          if(!Array.isArray(it.s) || it.s.length !== 4 || typeof it.a !== "number" || it.a < 0 || it.a > 3) continue;
+          q = base("vocab", kindName, "yoho");
+          q.qHtml = '<div class="ex-yoho-w jp">' + exEsc(it.t) + "</div>"; q.uline = it.t;
+          var idx = exShuffle([0, 1, 2, 3]);
+          q.opts = idx.map(function(x){ return it.s[x]; }); q.ans = idx.indexOf(it.a);
+          q.correctText = it.s[it.a]; q.exp = it.exp || null; q.voc = it.voc || null;
+        }
+        if(q){ qs.push(q); made++; }
+      }
+      return made;
+    }
+    function buildG1Fixed(need, kindName){
+      var made = 0;
+      (S.g1dlg || []).forEach(function(dit){
+        if(made >= need || !dit || !Array.isArray(dit.d) || dit.d.length !== 2 || !ok4(dit.a, dit.w)) return;
+        var q = base("grammar", kindName, "g1");
+        q.qText = dit.d[0] + "\n" + dit.d[1]; takeOpts(q, dit, dit.a);
+        q.fullSent = dit.d[0] + " " + dit.d[1].replace("（　）", dit.a); q.correctText = dit.a;
+        qs.push(q); made++;
+      });
+      (S.g1 || []).forEach(function(it){
+        if(made >= need || !it || typeof it.s !== "string" || !ok4(it.a, it.w)) return;
+        var q = base("grammar", kindName, "g1");
+        q.qText = it.s; takeOpts(q, it, it.a);
+        q.fullSent = it.s.replace("（　）", it.a); q.correctText = it.a;
+        qs.push(q); made++;
+      });
+      return made;
+    }
+    function buildStarFixed(need, kindName){
+      var made = 0;
+      (S.star || []).forEach(function(it){
+        if(made >= need || !it || !Array.isArray(it.chunks) || it.chunks.length !== 4) return;
+        var q = base("grammar", kindName, "star");
+        /* post trong bộ có thể chứa dấu 。 ở cuối; renderer tự thêm 。 như câu
+           sinh từ GRAMMAR_DATA nên bỏ một dấu ở đây cho khớp. */
+        q.star = {pre: it.pre || "", post: String(it.post || "").replace(/。$/, ""), chunks: it.chunks.slice(), shuf: exShuffle([0, 1, 2, 3])};
+        q.ans = -1;
+        q.fullSent = (it.pre || "") + it.chunks.join("") + (it.post || "");
+        q.correctText = q.fullSent;
+        q.exp = it.exp || null; q.voc = it.voc || null;
+        qs.push(q); made++;
+      });
+      return made;
+    }
+    function buildBunshoFixed(need, kindName){
+      var it = (S.bunsho || [])[0];
+      if(!it || typeof it.p !== "string" || !Array.isArray(it.b) || it.b.length !== 5) return 0;
+      var passTxt = (it.intro ? it.intro + "\n" : "") + it.p;
+      var made = 0;
+      it.b.forEach(function(bl, n){
+        if(made >= need || !bl || !ok4(bl.a, bl.w)) return;
+        var q = base("grammar", kindName, "bunsho");
+        q.pass = passTxt;
+        q.qText = "（　" + (n + 1) + "　）に入れるのに最もよいものを選びなさい。";
+        var o = mkOpts(bl.a, bl.w); q.opts = o.opts; q.ans = o.ans;
+        q.correctText = bl.a; q.exp = it.exp || null; q.voc = it.voc || null;
+        qs.push(q); made++;
+      });
+      return made;
+    }
+    function pushReadFixed(passTxt, kindName, kindKey, rq){
+      var idx = exShuffle([0, 1, 2, 3]);
+      var opts = idx.map(function(x){ return rq.o[x]; });
+      var q = base("reading", kindName, kindKey);
+      q.pass = passTxt;
+      q.qText = rq.q; q.opts = opts; q.ans = idx.indexOf(rq.a);
+      q.exp = rq.exp || rq.e || null; q.voc = rq.voc || null;
+      q.correctText = opts[q.ans];
+      qs.push(q);
+    }
+    function buildReadFixed(need, key, kindName){
+      var made = 0;
+      if(key === "readS"){
+        (S.readS || []).forEach(function(it){
+          if(made >= need || !it || typeof it.p !== "string" || typeof it.q !== "string" || !Array.isArray(it.o) || it.o.length !== 4 || typeof it.a !== "number") return;
+          pushReadFixed(it.p, kindName, key, it); made++;
+        });
+      } else {
+        (S[key] || []).forEach(function(it){
+          if(!it || typeof it.p !== "string" || !Array.isArray(it.qs)) return;
+          it.qs.forEach(function(rq){
+            if(made >= need || !rq || typeof rq.q !== "string" || !Array.isArray(rq.o) || rq.o.length !== 4 || typeof rq.a !== "number") return;
+            pushReadFixed(it.p, kindName, key, rq); made++;
+          });
+        });
+      }
+      return made;
+    }
+    function buildInfoFixed(need, kindName){
+      var made = 0;
+      (S.info || []).forEach(function(it){
+        if(made >= need || !it || typeof it.tpl !== "string" || typeof it.q !== "string" || !Array.isArray(it.opts) || it.opts.length !== 4 || typeof it.ans !== "number") return;
+        var q = base("reading", kindName, "info");
+        if(it.inst) q.inst = it.inst;
+        q.passHtml = it.tpl;
+        q.qText = it.q; q.opts = it.opts.slice(); q.ans = it.ans;
+        q.exp = it.exp || null; q.voc = it.voc || null; q.correctText = it.opts[it.ans];
+        qs.push(q); made++;
+      });
+      return made;
+    }
+    var madeMap = {};
+    for(var si = 0; si < spec.length; si++){
+      var row = spec[si], key = row[0], n = row[2], kindName = row[1];
+      var m = 0;
+      if(key === "yomi" || key === "hyoki" || key === "ctx" || key === "syn" || key === "yoho") m = buildVocab(key, n, kindName);
+      else if(key === "g1") m = buildG1Fixed(n, kindName);
+      else if(key === "star") m = buildStarFixed(n, kindName);
+      else if(key === "bunsho") m = buildBunshoFixed(n, kindName);
+      else if(key === "readS" || key === "readM" || key === "readL") m = buildReadFixed(n, key, kindName);
+      else if(key === "info") m = buildInfoFixed(n, kindName);
+      madeMap[key] = m;
+      if(m < n) return done({error: "short", kind: key, made: m, need: n});
+    }
+    /* Đánh số 問題 + nhãn mục con + hướng dẫn: cùng quy ước với engine thường. */
+    var probN = 0, probMap = {};
+    var subByKind = {}, subSub = "";
+    spec.forEach(function(row){ if(row[4] === "sub") subSub = row[5] || ""; else subByKind[row[1]] = row[5] || ""; });
+    qs.forEach(function(q){
+      q.subNo = q.real ? (subByKind[q.kind] || "") : subSub;
+      if(q.real){
+        if(!probMap[q.kind]) probMap[q.kind] = "問題" + (++probN);
+        q.prob = probMap[q.kind];
+      } else q.prob = "";
+      if(!q.inst) q.inst = INST[q.kind] || "";
+      q.part = q.sec === "vocab" ? 1 : 2;
+    });
+    return done({qs: qs, made: madeMap});
   }
 
   /* Xây phần nghe của 1 đề: mỗi Test dùng đúng 1 bộ riêng (Test 1 = bộ 1 ở
@@ -4569,7 +4930,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           if(!l){ cb(false); return; }
           /* Bộ nghe riêng từng đề là phần bổ sung: nạp xong (hoặc lỗi) mới tính
              đề mở được; lỗi file bộ riêng thì exBuildListen tự lùi về bộ 1. */
-          ensureListenSets(lv, function(){ cb(true); });
+          ensureWrittenSets(lv, function(){
+            ensureListenSets(lv, function(){ cb(true); });
+          });
         });
       }); });
     });
@@ -4582,7 +4945,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var ok = false;
       if(tn <= open && window["JLNEW_" + lv] && window["LISTEN_" + lv]){
         var seed = exSeedFor(lv, tn);
-        var bw = exBuildWritten(lv, seed);
+        var bw = exBuildWritten(lv, seed, tn);
         var bl = bw.error ? null : exBuildListen(lv, seed, tn);
         if(!bw.error && bl && !bl.error){
           ok = true;
@@ -4972,7 +5335,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function exQTextHtml(q){
     if(q.qHtml) return q.qHtml;
     var t = q.uline ? exUnderline(q.qText, q.uline) : esc(exStrip(q.qText));
-    return '<p class="ex-qtext jp">' + t.replace(/\n/g, "<br>") + '</p>';
+    return '<p class="ex-qtext jp">' + exBlank(t).replace(/\n/g, "<br>") + '</p>';
   }
   function exOptLabel(q, j){
     if(q.imgOpts) return "Hình " + (j + 1);
@@ -5101,7 +5464,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     if(st.stage === "ask"){
       if(askFirst){
-        h += '<p class="ex-qtext jp">' + esc(exStrip(q.qText)) + '</p>';
+        h += '<p class="ex-qtext jp">' + exBlank(esc(exStrip(q.qText))) + '</p>';
       } else if(listenFirst){
         h += '<p class="qsub">Hãy nghe bài nói. Nghe xong, câu hỏi và đáp án sẽ hiện để bạn chọn.</p>';
       } else if(picKind){
@@ -5113,7 +5476,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       return h;
     }
     /* stage answer: hiện câu hỏi + đáp án để chọn (tranh vẫn hiện cùng đáp án ở 発話表現). */
-    h += '<p class="ex-qtext jp">' + esc(exStrip(q.qText)) + '</p>';
+    h += '<p class="ex-qtext jp">' + exBlank(esc(exStrip(q.qText))) + '</p>';
     h += picHtml;
     if(st.loading){
       h += '<div class="playrow"><span class="ex-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Đang tải bản nghe…</p></div>';
@@ -5425,7 +5788,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         (q.star
           ? '<p class="ex-qtext jp">' + esc(exStrip(q.fullSent)) + '</p>'
           : (q.part === 3
-            ? '<p class="ex-qtext jp">' + esc(exStrip(q.qText)) + '</p>'
+            ? '<p class="ex-qtext jp">' + exBlank(esc(exStrip(q.qText))) + '</p>'
             : exQTextHtml(q))) +
         '<p class="rvline">Bạn chọn: <b>' + esc(exUserAnswerText(q, a)) + '</b></p>' +
         '<p class="rvline">Đáp án đúng: <b>' + esc(exCorrectAnswerText(q)) + '</b></p>' +
@@ -6756,6 +7119,36 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       st.state = 3;
       var q = st.queue; st.queue = [];
       q.forEach(function(f){ f(null); });
+    };
+    document.head.appendChild(s);
+  }
+
+  /* Bộ đề viết CỐ ĐỊNH từng Test (window.WRITTEN_<lv>_SETS) — hiện chỉ N3 có:
+     assets/written-n3-x9.js gồm 9 bộ × 74 câu viết, mỗi Test một bộ riêng không
+     trùng câu. Nạp lười cùng nhịp với bộ nghe riêng; lỗi nạp không chặn app —
+     exBuildWritten không thấy bộ riêng thì tự lùi về engine bốc mẫu như trước. */
+  var wrSetsLoad = {};
+  function ensureWrittenSets(lv, cb){
+    if(lv !== "N3"){ if(cb) cb(true); return; }
+    if(window["WRITTEN_" + lv + "_SETS"]){ if(cb) cb(true); return; }
+    var st = wrSetsLoad[lv];
+    if(!st){ st = wrSetsLoad[lv] = {state: 0, queue: []}; }
+    if(st.state === 3){ if(cb) cb(false); return; }
+    if(cb) st.queue.push(cb);
+    if(st.state === 1) return;
+    st.state = 1;
+    var s = document.createElement("script");
+    s.src = "assets/written-" + lv.toLowerCase() + "-x9.js";
+    s.onload = function(){
+      var ok = !!window["WRITTEN_" + lv + "_SETS"];
+      st.state = ok ? 2 : 3;
+      var q = st.queue; st.queue = [];
+      q.forEach(function(f){ f(ok); });
+    };
+    s.onerror = function(){
+      st.state = 3;
+      var q = st.queue; st.queue = [];
+      q.forEach(function(f){ f(false); });
     };
     document.head.appendChild(s);
   }
@@ -10747,6 +11140,276 @@ function furiHTML(text){
   }
   document.getElementById("chatSend").addEventListener("click", sendChat);
   chatInput.addEventListener("keydown", function(e){ if(e.key === "Enter") sendChat(); });
+})();
+</script>
+<script>
+/* ---------- Trợ lý AI Sora (bản xem thử): kho hỏi-đáp soạn sẵn chạy ngay trong máy ----------
+   Trả lời hướng dẫn dùng app theo đúng tính năng hiện có; nút hành động trong câu trả lời
+   bấm thẳng vào phần tử thật của app (ô Pháp bảo, hàng tiện ích, thanh tab) để mở đúng chỗ.
+   Không gửi dữ liệu đi đâu, không lưu lịch sử chat — đóng trang là mất. */
+(function(){
+  var fab = document.getElementById("assistantFab");
+  var panel = document.getElementById("assistantPanel");
+  var scrim = document.getElementById("assistantScrim");
+  var closeBtn = document.getElementById("assistantClose");
+  var msgs = document.getElementById("assistantMsgs");
+  var form = document.getElementById("assistantForm");
+  var input = document.getElementById("assistantInput");
+  if(!fab || !panel || !form || !input || !msgs) return;
+  var isOpen = false;
+
+  function openAssistant(){
+    isOpen = true;
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    scrim.classList.add("open");
+    fab.classList.add("hide");
+    fab.setAttribute("aria-expanded", "true");
+    setTimeout(function(){ try{ input.focus(); }catch(e){} }, 80);
+  }
+  function closeAssistant(){
+    if(!isOpen) return;
+    isOpen = false;
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    scrim.classList.remove("open");
+    fab.classList.remove("hide");
+    fab.setAttribute("aria-expanded", "false");
+    try{ fab.focus(); }catch(e){}
+  }
+  fab.addEventListener("click", openAssistant);
+  closeBtn.addEventListener("click", closeAssistant);
+  scrim.addEventListener("click", closeAssistant);
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && isOpen) closeAssistant();
+  });
+
+  /* ----- Điều hướng thật: bấm vào phần tử có sẵn của app ----- */
+  function clickTab(name){
+    var b = document.querySelector('.tabbtn[data-tab="' + name + '"]');
+    if(b) b.click();
+  }
+  function clickApp(name){
+    var b = document.querySelector('[data-app="' + name + '"]');
+    if(b) b.click();
+  }
+  function clickId(id){
+    var b = document.getElementById(id);
+    if(b) b.click();
+  }
+  function doAction(action){
+    closeAssistant();
+    setTimeout(function(){
+      if(action === "home") clickTab("home");
+      else if(action === "path") clickId("pathOpenBtn");
+      else if(action === "vocab") clickApp("vocab");
+      else if(action === "grammar") clickApp("grammar");
+      else if(action === "kanji") clickApp("kanji");
+      else if(action === "exam") clickApp("jlpt");
+      else if(action === "listen") clickApp("listen");
+      else if(action === "read") clickApp("read");
+      else if(action === "duel") clickApp("duel");
+      else if(action === "shop") clickApp("shop");
+      else if(action === "rank") clickTab("rank");
+      else if(action === "chat") clickTab("chat");
+      else if(action === "me") clickTab("me");
+      else if(action === "settings") clickTab("settings");
+      else if(action === "draw") clickId("utilDraw");
+      else if(action === "write") clickId("utilWrite");
+      else if(action === "worksheet") clickId("meWriteRow");
+      else if(action === "kana") clickId("utilKana");
+      else if(action === "flash") clickId("utilFlash");
+      else if(action === "shadow") clickId("utilShadow");
+      else if(action === "search"){
+        clickTab("home");
+        setTimeout(function(){
+          var s = document.getElementById("searchInput");
+          if(s){ s.focus(); s.scrollIntoView({block:"center"}); }
+        }, 90);
+      }
+    }, 60);
+  }
+
+  /* ----- Kho hỏi-đáp: keywords viết không dấu để khớp cả khi người dùng gõ không dấu ----- */
+  var TOPICS = [
+    { id:"exam", label:"Luyện thi JLPT ở đâu, làm đề thế nào?",
+      keywords:["luyen thi","thi jlpt","lam de","de thi","phong thi","test 1","nop bai","phieu dap an","de chuan","thi thu","180 diem","cham diem"],
+      answer:"Vào phòng thi theo 2 đường: Home → lưới Pháp bảo → ô “Luyện thi”, hoặc Home → Nhiệm vụ hôm nay → “Thi thử”.\n\nCách làm đề:\n• Chọn cấp N5–N1 ở hàng nút trên cùng, rồi bấm 1 đề Test trong danh sách (riêng N3 có thêm “Đề chuẩn · N3” 102 câu theo đúng cấu trúc chính thức).\n• Trong phòng thi có đồng hồ đếm ngược chung cho cả đề, bấm đáp án để chọn, dùng nút “Phiếu đáp án” để nhảy nhanh tới câu bất kỳ.\n• Bấm “Nộp bài” để xem điểm trên thang 180, điểm từng phần và “Xem lại đáp án” kèm giải thích.\n\nLưu ý: N5/N4/N3 đã mở đủ Test 1–9 (phần viết N3 là 9 bộ đề cố định, mỗi đề một bộ riêng không trùng câu). N2/N1 hiện mới mở Test 1–2 (ngân hàng câu phần viết đang bổ sung tiếp) — đề hiện mờ là đề chưa mở, không phải lỗi. Chỗ trống trong câu hỏi hiển thị dạng (........).",
+      actions:[{label:"Mở Luyện thi", action:"exam"}] },
+    { id:"listen", label:"Luyện nghe ở đâu?",
+      keywords:["luyen nghe","nghe hieu","part 3","file nghe","mp3","nghe o dau"],
+      answer:"Home → lưới Pháp bảo → ô “Luyện nghe” → chọn cấp ở lưới N5–N1 trên đầu trang.\n\nTrong trang của mỗi cấp có:\n• Luyện nghe Part 3: 149 hội thoại có file MP3 (N5: 24, N4: 28, N3: 28, N2: 32, N1: 37) — bấm 1 hội thoại để nghe, chọn đáp án (dạng hình ở N5/N4, dạng chữ ở cấp cao hơn), chấm đúng/sai và xem giải thích.\n• Shadowing theo đúng các hội thoại đó (xem thêm ở chủ đề Flashcard & Shadowing).\n• Mục “Shadowing bằng video”: video có phụ đề chạy ở dưới, bấm vào từng câu phụ đề để xem giải thích.\n\nRiêng trang N5 còn có nhóm 8 câu mẫu kiểu Minna no Nihongo.",
+      actions:[{label:"Mở Luyện nghe", action:"listen"}] },
+    { id:"read", label:"Đọc hiểu ở đâu?",
+      keywords:["doc hieu","bai doc","doc o dau","tim thong tin","hieu y chinh"],
+      answer:"Home → lưới Pháp bảo → ô “Đọc hiểu”.\n\nCách học:\n• Chọn cấp N5–N1 → chọn dạng bài → bấm 1 bài trong danh sách (mỗi dạng có 10 bài, tổng 200 bài / 400 câu trong cả mục).\n• Dạng bài theo cấp: N5/N4 có Ngắn · Vừa · Tìm thông tin; N3 thêm dạng Dài; N2/N1 thêm dạng Hiểu ý chính.\n• Mỗi bài có 2 câu hỏi — trả lời xong xem giải thích vì sao đúng / vì sao đáp án khác sai và phần từ vựng cuối bài. Làm hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”.\n\nN5/N4/N3 có furigana hỗ trợ đọc kanji trong bài.",
+      actions:[{label:"Mở Đọc hiểu", action:"read"}] },
+    { id:"listenread", label:"Luyện nghe & đọc hiểu ở đâu?",
+      keywords:["luyen nghe va doc hieu","nghe va doc"],
+      answer:"Hai mục này nằm cạnh nhau trong lưới Pháp bảo ở Home:\n\n• Luyện nghe: ô “Luyện nghe” → chọn cấp N5–N1 → luyện Part 3 (149 hội thoại có MP3, chọn đáp án, xem giải thích), Shadowing theo hội thoại và Shadowing bằng video có phụ đề chạy.\n• Đọc hiểu: ô “Đọc hiểu” → chọn cấp → chọn dạng bài (Ngắn · Vừa · Tìm thông tin · Dài · Hiểu ý chính tùy cấp) → đọc bài, trả lời 2 câu, xem giải thích và từ vựng cuối bài.\n\nHỏi riêng “luyện nghe ở đâu” hoặc “đọc hiểu ở đâu” mình sẽ chỉ chi tiết từng mục.",
+      actions:[{label:"Mở Luyện nghe", action:"listen"},{label:"Mở Đọc hiểu", action:"read"}] },
+    { id:"vocab", label:"Học từ vựng ở đâu?",
+      keywords:["tu vung","hoc tu","tango","chuyen nganh","tokutei","pikachu","minna"],
+      answer:"Home → lưới Pháp bảo → ô “Từ vựng”. Trong mục Từ vựng có 2 nhóm:\n\n• JLPT: chọn cấp N5–N1 → danh sách bài xếp theo đúng thứ tự bài Minna no Nihongo → danh sách từ của bài. Bấm vào 1 hàng từ (hoặc nút loa) để nghe cách đọc; nút “Flashcard” đỏ ở góc phải trên trang từ là để ôn flashcard riêng của bài đó. Trong mục này còn có game Pikachu nối cặp kana ↔ kanji (bản N5).\n• Chuyên ngành: 14 nhóm từ ngành (thi Tokutei) — bấm vào 1 nhóm để xem danh sách từ của ngành đó.",
+      actions:[{label:"Mở Từ vựng", action:"vocab"}] },
+    { id:"grammar", label:"Học ngữ pháp ở đâu?",
+      keywords:["ngu phap","bunpo","tro tu","chia the","dong tu","mau ngu phap"],
+      answer:"Home → lưới Pháp bảo → ô “Ngữ pháp” → chọn cấp N5–N1.\n\n• N5/N4: bài xếp theo thứ tự Minna (N5 là Bài 1–25, N4 là Bài 26–50); N3/N2/N1: mẫu xếp theo 6 nhóm chủ đề. Bấm 1 bài/nhóm → bấm 1 mẫu để xem chi tiết: CẤU TRÚC · GIẢI NGHĨA · LƯU Ý, câu ví dụ (bấm để nghe đọc), mẫu liên quan, nút “Đã học” và 3 dạng bài tập × 10 câu ở cuối trang.\n• Hai thẻ đặc biệt ở đầu mục: “Trợ từ” (lưới bài theo nhóm trợ từ + bài tập điền trợ từ) và “Cách chia thể” (14 thể động từ, quy tắc 3 nhóm, bài tập tự gõ đáp án).\n\nFurigana chỉ hiện ở N5/N4/N3, lên N2/N1 là kanji trần để quen mặt chữ như đề thật.",
+      actions:[{label:"Mở Ngữ pháp", action:"grammar"}] },
+    { id:"kanji", label:"Học kanji ở đâu?",
+      keywords:["kanji","chu han","han viet","bo thu","thu tu net","video kanji","cau chuyen"],
+      answer:"Home → lưới Pháp bảo → ô “Kanji” → chọn cấp JLPT (N5: 126 chữ, N4: 235, N3: 429, N2: 273, N1: 1.075) → bấm 1 chữ trong lưới để mở trang chi tiết.\n\nTrang chi tiết có: Hán Việt, nghĩa, cách đọc On/Kun dạng chip (bấm để nghe), sơ đồ thứ tự nét có nút phát từng nét, bộ thủ và phân tích thành phần, mẹo ghi nhớ, danh sách từ vựng chứa chữ đó. Chữ nào đã có video “Kanji qua câu chuyện” thì thẻ video hiện thay sơ đồ nét — bấm thumbnail để xem.\n\nCuối trang chi tiết có nút “Luyện viết” (tô theo chữ đó) và “Đánh dấu đã thuộc”.",
+      actions:[{label:"Mở Kanji", action:"kanji"}] },
+    { id:"learn", label:"Học từ vựng / ngữ pháp / kanji ở đâu?",
+      keywords:["hoc tu vung ngu phap kanji"],
+      answer:"Cả ba mục đều nằm trong lưới “Pháp bảo tông môn” ở Home:\n\n• Từ vựng: chọn cấp → bài theo thứ tự Minna → danh sách từ, bấm hàng/nút loa để nghe đọc, có nút Flashcard riêng từng bài và nhóm từ chuyên ngành 14 ngành.\n• Ngữ pháp: chọn cấp → bài/nhóm chủ đề → mẫu chi tiết (CẤU TRÚC · GIẢI NGHĨA · LƯU Ý, ví dụ có tiếng, bài tập 3 dạng), kèm thẻ Trợ từ và Cách chia thể.\n• Kanji: chọn cấp N5–N1 → lưới chữ → trang chi tiết có On/Kun, thứ tự nét, mẹo nhớ và video câu chuyện với chữ đã có video.\n\nBạn muốn mở mục nào thì bấm nút tương ứng dưới đây, hoặc hỏi riêng từng mục (vd: “ngữ pháp ở đâu”).",
+      actions:[{label:"Mở Từ vựng", action:"vocab"},{label:"Mở Ngữ pháp", action:"grammar"},{label:"Mở Kanji", action:"kanji"}] },
+    { id:"write", label:"Luyện viết, vẽ kanji ở đâu?",
+      keywords:["luyen viet","ve kanji","nhan dien","bang kana","hiragana","katakana","phieu luyen viet","to chu"],
+      answer:"Cả ba nằm ở hàng tiện ích ngay đầu Home:\n\n• Vẽ kanji: vẽ chữ tự do vào ô — gợi ý chữ hiện ở thanh phía trên sau mỗi nét (vẽ ẩu vẫn nhận diện được), bấm vào 1 chữ gợi ý là mở trang chi tiết của chữ đó.\n• Luyện viết: chọn cấp N5–N1 → bấm 1 chữ trong bảng → chữ chạy xuống khung luyện bên dưới để tô theo mẫu.\n• Bảng kana: bảng Hiragana/Katakana đầy đủ (Seion 46 · Dakuon 25 · Yōon 36) — bấm vào 1 chữ để nghe cách đọc.\n\nMuốn phiếu tập tô để luyện nhiều chữ: tab Cá nhân → “Tạo phiếu luyện viết”.",
+      actions:[{label:"Vẽ kanji", action:"draw"},{label:"Luyện viết", action:"write"},{label:"Bảng kana", action:"kana"}] },
+    { id:"shadow", label:"Shadowing luyện thế nào?",
+      keywords:["shadowing","noi duoi","ghi am","luyen noi","phat am"],
+      answer:"Có 2 chỗ luyện Shadowing:\n\n• Nhanh nhất: hàng tiện ích đầu Home → “Shadowing” — 8 câu mẫu kiểu Minna: nghe câu mẫu → nghe chậm → “Ghi âm nhắc lại” (nói đuổi theo ngay) → “Nghe giọng mình” để so sánh với câu mẫu.\n• Theo cấp: Pháp bảo → Luyện nghe → chọn cấp → mục Shadowing của cấp đó: luyện từng câu trong chính các hội thoại Part 3, nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy (nghe / nghe chậm / ghi âm tối đa 30 giây / nghe lại).\n\nLần đầu ghi âm, trình duyệt sẽ hỏi quyền micro — bấm Cho phép thì mới ghi được. Nếu không nghe thấy câu mẫu, kiểm tra mục Âm thanh trong tab Cài đặt.",
+      actions:[{label:"Mở Shadowing", action:"shadow"},{label:"Mở Luyện nghe", action:"listen"}] },
+    { id:"flash", label:"Flashcard ôn ở đâu?",
+      keywords:["flashcard","on tap","the ghi nho","da thuoc","chua thuoc","on the"],
+      answer:"Ôn flashcard có 2 đường:\n\n• Ôn kanji theo bài: hàng tiện ích đầu Home → “Flashcard” (hoặc nhiệm vụ “Ôn lại tâm pháp”) → chọn cấp N5–N1 → chọn bài (12 chữ/bài) → bấm vào thẻ để lật xem cách đọc + nghĩa, rồi bấm “Đã thuộc” hoặc “Chưa thuộc”. Ôn xong bài là hoàn thành nhiệm vụ ôn thẻ của ngày.\n• Ôn từ vựng theo bài: mở Từ vựng → cấp → bài → trang danh sách từ → nút “Flashcard” đỏ ở góc phải trên.\n\nKhu “Sắp đến hạn” ở trang Ôn tập liệt kê các chữ sắp quên để bạn ôn lại trước.\n\nShadowing (luyện nói đuổi): hàng tiện ích đầu Home → “Shadowing” để luyện 8 câu Minna (nghe mẫu → ghi âm nhắc lại tối đa 30 giây → nghe lại so sánh), hoặc vào Luyện nghe → chọn cấp để shadowing theo từng hội thoại Part 3 và xem video phụ đề chạy.",
+      actions:[{label:"Mở Flashcard", action:"flash"},{label:"Mở Shadowing", action:"shadow"}] },
+    { id:"path", label:"Lộ trình, nhiệm vụ, Tu vi là gì?",
+      keywords:["lo trinh","khai trinh do","nhiem vu","tu vi","canh gioi","streak","dot pha","chinh tuyen"],
+      answer:"Lộ trình cá nhân nằm ở Home, khung “Nhiệm vụ hôm nay”:\n\n• Bấm “Khai trình độ” (hoặc tab Cá nhân → “Lộ trình học cá nhân”), chọn trình độ bạn đã đạt (Chưa biết / N5 / N4 / N3 / N2 / N1) — app xếp bạn vào chặng cảnh giới tương ứng (vd: đã khai N5 → chặng Trúc Cơ, học khóa N4) và soạn chính tuyến 7 bước: Bảng chữ cái → Bộ thủ → Kanji → Từ vựng → Ngữ pháp → Nghe → Thi thử. Đậu bước Thi thử cuối chặng là đột phá lên cảnh giới tiếp theo.\n• Nhiệm vụ hôm nay có 4 việc, làm xong cộng Tu vi: Kanji +40 · Quiz nhanh +30 · Ôn thẻ đến hạn +35 · Thi thử +25 (tổng +130/ngày). Tu vi tích đủ mốc thì lên cảnh giới (Luyện Khí → … → Đại Đế), xem thang đầy đủ ở tab Xếp hạng.",
+      actions:[{label:"Khai trình độ", action:"path"},{label:"Xem Xếp hạng", action:"rank"}] },
+    { id:"duel", label:"Đấu trường đấu thế nào?",
+      keywords:["dau truong","dau phap","dau lech gio","thi dau","doi thu"],
+      answer:"Home → lưới Pháp bảo → ô “Đấu trường” (hoặc tab Cá nhân → “Đấu Pháp Đài”).\n\nĐấu lệch giờ: bạn trả lời 10 câu, mỗi câu tối đa 15 giây — đúng được điểm, trả lời càng nhanh điểm tốc độ càng cao; đối thủ là “bóng” của một đạo hữu cùng cảnh giới đã đấu trước. Thắng trận được cộng Tu vi, điểm cống hiến và linh thạch; thua vẫn được một ít Tu vi và cống hiến. Mỗi ngày có 3 lượt đấu.",
+      actions:[{label:"Mở Đấu trường", action:"duel"}] },
+    { id:"shop", label:"Linh thạch, cống hiến, Bảo tàng là gì?",
+      keywords:["linh thach","cong hien","bao tang","tang bao","mua do","khung avatar","chuc vu"],
+      answer:"Xem số dư ở tab Cá nhân → thẻ “Ví tu luyện”:\n\n• Linh thạch: tiền trong app — kiếm từ nhiệm vụ, streak và thắng Đấu Pháp Đài; tiêu ở Bảo tàng để mua đan dược, thêm lượt đấu, khung avatar…\n• Điểm cống hiến: không mua được bằng tiền, chỉ kiếm bằng đóng góp thật (thắng đấu, giúp đạo hữu trong phòng chat…) — tích đủ điểm thì lên chức vụ tông môn (Ngoại môn → Nội môn → Chân truyền → Trưởng lão → Tông chủ) và đổi được đồ hiếm.\n\nBảo tàng mở từ Home → Pháp bảo → ô “Bảo tàng”, hoặc nút “Tàng Bảo Các” ngay trong ví ở tab Cá nhân.",
+      actions:[{label:"Mở Bảo tàng", action:"shop"},{label:"Mở ví của tôi", action:"me"}] },
+    { id:"rank", label:"Xếp hạng xem ở đâu?",
+      keywords:["xep hang","bang xep hang","top tuan","hang cua toi"],
+      answer:"Bấm tab “Xếp hạng” ở thanh dưới cùng (icon cúp).\n\nTrang này có: bảng đạo hữu dẫn đầu tuần (mặc định hiện top 3 + vị trí của bạn, bấm “Xem thêm” để mở hạng 4–10), cảnh giới hiện tại và Tu vi còn thiếu để đột phá, thang 10 cảnh giới từ Luyện Khí lên Đại Đế, và thang chức vụ tông môn tính bằng điểm cống hiến.",
+      actions:[{label:"Mở Xếp hạng", action:"rank"}] },
+    { id:"fun", label:"Đấu trường, xếp hạng, linh thạch ở đâu?",
+      keywords:["dau truong xep hang linh thach"],
+      answer:"Ba mục này đều có lối vào ở Home và thanh tab dưới:\n\n• Đấu trường: Pháp bảo → “Đấu trường” — đấu lệch giờ 10 câu (15 giây/câu) với đạo hữu cùng cảnh giới, thắng được Tu vi + cống hiến + linh thạch, 3 lượt/ngày.\n• Xếp hạng: tab “Xếp hạng” ở thanh dưới — bảng top tuần, thang cảnh giới Luyện Khí → Đại Đế và thang chức vụ tông môn.\n• Linh thạch & điểm cống hiến: số dư ở tab Cá nhân → “Ví tu luyện”; tiêu linh thạch / đổi đồ hiếm ở Pháp bảo → “Bảo tàng” (Tàng Bảo Các).\n\nHỏi riêng từng mục (vd: “linh thạch là gì”) mình sẽ giải thích kỹ hơn.",
+      actions:[{label:"Mở Đấu trường", action:"duel"},{label:"Mở Xếp hạng", action:"rank"},{label:"Mở Bảo tàng", action:"shop"}] },
+    { id:"chat", label:"Phòng chat dùng thế nào?",
+      keywords:["phong chat","chat voi","hoi dap","nhan tin","cong dong"],
+      answer:"Bấm tab “Phòng chat” ở thanh dưới cùng — nơi các đạo hữu hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.\n\nGõ tin ở ô dưới cùng rồi bấm nút gửi: mỗi tin tối đa 500 ký tự và giãn cách 3 giây giữa 2 lần gửi (chống spam).\n\nLưu ý: ở bản xem thử này, tin nhắn bạn gửi chỉ hiện trong phiên đang mở, chưa gửi lên máy chủ — đóng app là tin biến mất.",
+      actions:[{label:"Mở Phòng chat", action:"chat"}] },
+    { id:"install", label:"Cài app lên màn hình chính, học offline được không?",
+      keywords:["cai app","man hinh chinh","pwa","offline","khong co mang","mat mang","tai goi","cai dat app"],
+      answer:"Cài lên màn hình chính:\n• Cách nhanh: kéo xuống cuối Home, banner “Cài SoraKanji lên màn hình chính” → bấm “Cài app”. Hoặc tab Cài đặt → mục “App trên điện thoại (PWA)” → nút cài.\n• Android (Chrome): menu ⋮ → “Cài ứng dụng / Thêm vào Màn hình chính”. iPhone (Safari): nút Chia sẻ → “Thêm vào Màn hình chính”. Sau đó mở app từ icon chibi ngoài màn hình chính để học toàn màn hình.\n\nVề offline, nói thật để bạn khỏi hiểu lầm: bản xem thử này CHƯA học offline hoàn toàn được. Service worker hiện mới bao phủ thư mục assets nên phần chữ đã mở qua có thể còn xem lại, nhưng file nghe vẫn cần mạng mỗi lần phát. Khi phát hành thật, app sẽ chuyển service worker về cạnh trang chính và thêm nút “Tải để học offline” theo từng gói cấp/đề — tải gói lúc có mạng, sau đó học không cần mạng, giống các app học khác.",
+      actions:[{label:"Mở Cài đặt & mục PWA", action:"settings"}] },
+    { id:"search", label:"Tìm kiếm, tra cứu thế nào?",
+      keywords:["tim kiem","tra cuu","tra chu","tim tu","giong noi","micro tim"],
+      answer:"Thanh tìm kiếm nằm ngay đầu Home:\n\n• Gõ kanji, từ vựng hoặc Hán Việt — gợi ý hiện ngay dưới ô tìm, bấm vào 1 gợi ý để mở trang chi tiết của chữ/từ đó. Nút ✕ để xóa nhanh.\n• Bấm nút micro trong ô tìm để tìm bằng giọng nói tiếng Nhật (trình duyệt sẽ hỏi quyền micro).\n• Không biết gõ chữ gì? Dùng “Vẽ kanji” ở hàng tiện ích đầu Home: vẽ nét vào ô, app gợi ý chữ, bấm vào là tra được chi tiết.",
+      actions:[{label:"Tới ô tìm kiếm", action:"search"},{label:"Vẽ kanji để tra", action:"draw"}] },
+    { id:"settings", label:"Cài đặt, âm thanh, giao diện tối ở đâu?",
+      keywords:["cai dat","am thanh","khong nghe thay","giong doc","giao dien toi","dark","sao luu","tat tieng"],
+      answer:"Bấm tab “Cài đặt” ở thanh dưới cùng (icon bánh răng). Trong đó có:\n\n• Âm thanh & giọng đọc: tắt thì các câu mẫu Shadowing và tiếng đọc từ sẽ im — không nghe thấy tiếng Nhật thì kiểm tra công tắc này đầu tiên, và kiểm tra máy đã có giọng đọc tiếng Nhật chưa.\n• Giao diện tối: bật/tắt thủ công, ghi đè theo hệ thống.\n• Tự nhận diện khi vẽ kanji: bật để gợi ý hiện ngay sau mỗi nét ở màn Vẽ kanji.\n• Mục “App trên điện thoại (PWA)”: trạng thái cài đặt / kết nối / service worker và hướng dẫn cài cho Android + iPhone.\n• “Sao lưu dữ liệu học” và “Giới thiệu SoraKanji” ở khối dưới cùng.",
+      actions:[{label:"Mở Cài đặt", action:"settings"}] },
+    { id:"start", label:"Mới học thì bắt đầu từ đâu?",
+      keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
+      answer:"Chào đạo hữu! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: ở Home, khung “Nhiệm vụ hôm nay” → bấm “Khai trình độ” → chọn “Chưa biết” (hoặc cấp bạn đã đạt). App sẽ soạn chính tuyến riêng cho chặng của bạn: Bảng chữ cái → Bộ thủ → Kanji → Từ vựng → Ngữ pháp → Nghe → Thi thử.\n2. Làm Nhiệm vụ hôm nay: 4 việc nhỏ mỗi ngày (học kanji, quiz nhanh, ôn thẻ, thi thử) — làm xong là cộng Tu vi và giữ streak.\n3. Bấm nút đỏ “Tiếp tục tu luyện” ở Home để học tiếp đúng bài đang dở.\n\nChưa biết chữ nào? Bắt đầu bằng “Bảng kana” ở hàng tiện ích đầu Home — thuộc Hiragana/Katakana trước rồi hãy vào Kanji.",
+      actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] }
+  ];
+  var FALLBACK = {
+    answer:"Câu này nằm ngoài phần hướng dẫn dùng app mà mình trả lời được.\n\nNói rõ để bạn khỏi kỳ vọng nhầm: ở bản xem thử này, Sora là trợ lý chạy ngay trong máy với kho câu hỏi soạn sẵn về cách dùng SoraKanji — chưa phải AI trực tuyến, nên mình chưa dịch bài, chưa giải bài tập tiếng Nhật và chưa chấm bài được.\n\nBạn thử hỏi theo tính năng, ví dụ: “luyện nghe ở đâu”, “thi JLPT làm thế nào”, “linh thạch là gì”, “cài app ra màn hình chính” — hoặc bấm một chủ đề gợi ý bên dưới nhé.",
+    actions:[{label:"Bắt đầu từ đâu?", action:"path"},{label:"Xem Luyện thi", action:"exam"}]
+  };
+
+  function norm(s){
+    return (s || "").toLowerCase().replace(/đ/g, "d").normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function findTopic(query){
+    var q = " " + norm(query) + " ";
+    var best = null, bestScore = 0;
+    TOPICS.forEach(function(t){
+      var score = 0;
+      t.keywords.forEach(function(k){
+        if(q.indexOf(" " + k + " ") !== -1 || q.indexOf(k) !== -1) score += k.length;
+      });
+      if(score > bestScore){ bestScore = score; best = t; }
+    });
+    return bestScore > 0 ? best : null;
+  }
+
+  function scrollMsgs(){
+    requestAnimationFrame(function(){ msgs.scrollTop = msgs.scrollHeight; });
+  }
+  function addMsg(text, who, actions){
+    var wrap = document.createElement("div");
+    wrap.className = "assistant-msg " + who;
+    var span = document.createElement("span");
+    span.className = "assistant-txt";
+    span.textContent = text;
+    wrap.appendChild(span);
+    if(actions && actions.length){
+      var row = document.createElement("div");
+      row.className = "assistant-actions";
+      actions.forEach(function(a){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "assistant-act";
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+        b.appendChild(document.createTextNode(a.label));
+        b.addEventListener("click", function(){ doAction(a.action); });
+        row.appendChild(b);
+      });
+      wrap.appendChild(row);
+    }
+    msgs.appendChild(wrap);
+    scrollMsgs();
+    return wrap;
+  }
+  var typingEl = null;
+  function showTyping(){
+    typingEl = document.createElement("div");
+    typingEl.className = "assistant-msg bot typing";
+    typingEl.setAttribute("aria-hidden", "true");
+    typingEl.innerHTML = "<i></i><i></i><i></i>";
+    msgs.appendChild(typingEl);
+    scrollMsgs();
+  }
+  function hideTyping(){
+    if(typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+    typingEl = null;
+  }
+  var answering = false;
+  function ask(text, topic){
+    var q = (text || "").trim();
+    if(!q || answering) return;
+    addMsg(q, "user", null);
+    answering = true;
+    showTyping();
+    var t = topic || findTopic(q);
+    setTimeout(function(){
+      hideTyping();
+      answering = false;
+      if(t) addMsg(t.answer, "bot", t.actions);
+      else addMsg(FALLBACK.answer, "bot", FALLBACK.actions);
+    }, 550);
+  }
+
+  document.querySelectorAll("[data-assistant-topic]").forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var id = chip.getAttribute("data-assistant-topic");
+      var t = null;
+      TOPICS.forEach(function(x){ if(x.id === id) t = x; });
+      if(t) ask(chip.textContent.trim(), t);
+    });
+  });
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = input.value;
+    input.value = "";
+    ask(v, null);
+  });
 })();
 </script>
 </body>
