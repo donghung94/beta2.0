@@ -1221,6 +1221,32 @@
   }
   .mission .m-state.doing{background:var(--red-soft); color:var(--red); border-color:transparent;}
   .mission .m-state.done{background:var(--good-soft); color:var(--good); border-color:transparent;}
+  /* Hàng meta của Nhiệm vụ: ngày + giờ reset + đếm tổng + streak */
+  .mission-meta{
+    display:flex; flex-wrap:wrap; align-items:center; gap:5px 8px;
+    padding:0 0 8px; border-bottom:1px solid var(--line); flex:0 0 auto;
+  }
+  .mission-meta .mdate{font-size:12.5px; font-weight:800; color:var(--ink); white-space:nowrap;}
+  .mission-meta .mreset{font-size:11.5px; font-weight:600; color:var(--ink-2); white-space:nowrap;}
+  .mission-meta .mcount{
+    margin-left:auto; background:var(--red-soft); color:var(--red); font-weight:800; font-size:11.5px;
+    padding:4px 9px; border-radius:999px; white-space:nowrap;
+  }
+  .mission-meta .mstreak{
+    display:inline-flex; align-items:center; gap:4px; background:var(--amber-soft); color:var(--amber);
+    font-weight:800; font-size:11.5px; padding:4px 9px; border-radius:999px; white-space:nowrap;
+  }
+  .mission-meta .mstreak svg{width:13px; height:13px; flex:0 0 auto;}
+  /* Thanh nhắc 21:00 trong khung nhiệm vụ */
+  .remindbar{
+    display:flex; align-items:center; gap:8px; background:var(--amber-soft); color:var(--amber);
+    border-radius:10px; padding:8px 10px; font-size:12px; font-weight:700; line-height:1.4; margin-bottom:8px;
+  }
+  .remindbar[hidden]{display:none;}
+  .remindbar button{
+    margin-left:auto; flex:0 0 auto; background:none; border:none; color:inherit; cursor:pointer;
+    font-size:17px; font-weight:800; line-height:1; padding:2px 5px; font-family:inherit;
+  }
 
   /* ---------- App grid kiểu iPhone (nửa dưới trang chủ) ---------- */
   .appgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px 8px; margin-top:4px;}
@@ -1644,7 +1670,7 @@
   /* ---------- Trợ lý AI Sora: nút tròn nổi + khung chat hướng dẫn dùng app ---------- */
   .assistant-fab{
     position:absolute; right:16px; bottom:calc(var(--tabh) + 14px); z-index:70;
-    width:58px; height:58px; border-radius:50%; padding:0; cursor:pointer;
+    width:39px; height:39px; border-radius:50%; padding:0; cursor:pointer;
     border:2px solid #C9A24B; background:#FFF8EC;
     box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18);
     display:flex; align-items:center; justify-content:center;
@@ -1655,11 +1681,11 @@
     object-fit:cover; object-position:50% 8%;
   }
   .assistant-fab .assistant-fab-badge{
-    position:absolute; right:-3px; bottom:-3px; width:23px; height:23px; border-radius:50%;
+    position:absolute; right:-2px; bottom:-2px; width:16px; height:16px; border-radius:50%;
     background:var(--red); color:#fff; border:2px solid var(--card);
     display:flex; align-items:center; justify-content:center;
   }
-  .assistant-fab .assistant-fab-badge svg{width:12px; height:12px;}
+  .assistant-fab .assistant-fab-badge svg{width:8px; height:8px;}
   .assistant-fab:active{transform:scale(.93);}
   .assistant-fab.hide{display:none;}
   @keyframes assistantPulse{
@@ -1738,12 +1764,21 @@
     flex:0 0 auto; display:flex; flex-wrap:wrap; gap:7px;
     padding:10px 12px 2px; background:var(--card);
   }
+  /* Sau khi đã hỏi câu đầu tiên, khối gợi ý ẩn hẳn để nhường chỗ cho phần chat */
+  .assistant-chips.hide{display:none;}
   .assistant-chip{
     min-height:34px; padding:5px 12px; border-radius:999px; cursor:pointer;
     border:1.5px solid var(--line); background:var(--card); color:var(--ink);
     font-family:inherit; font-size:12.5px; font-weight:700;
   }
   .assistant-chip:active{border-color:var(--red); color:var(--red); background:var(--red-soft);}
+  .assistant-chips-close{
+    width:34px; height:34px; border-radius:50%; padding:0; cursor:pointer; flex:0 0 auto;
+    border:1.5px solid var(--line); background:var(--card); color:var(--ink-2);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .assistant-chips-close svg{width:13px; height:13px;}
+  .assistant-chips-close:active{border-color:var(--red); color:var(--red); background:var(--red-soft);}
   .assistant-form{
     flex:0 0 auto; display:flex; gap:8px; align-items:center;
     padding:9px 12px 6px; background:var(--card);
@@ -2152,11 +2187,21 @@
             </div>
             <span class="tuvi" id="wTuvi">1.240 Tu vi</span>
           </div>
+          <div class="mission-meta">
+            <span class="mdate" id="missionDate">Hôm nay</span>
+            <span class="mreset" id="missionReset">Làm mới lúc 00:00</span>
+            <span class="mcount" id="missionCount">Đã xong 0/5</span>
+            <span class="mstreak"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg><span id="missionStreak">Streak 0 ngày</span></span>
+          </div>
           <div class="missions-scroll" id="missionsScroll" tabindex="0" aria-label="Danh sách nhiệm vụ và lộ trình — cuộn để xem thêm">
+          <div class="remindbar" id="remindBar" hidden>
+            <span id="remindTxt">Đã qua 21:00 — bạn còn nhiệm vụ chưa xong hôm nay.</span>
+            <button id="remindClose" aria-label="Tắt nhắc hôm nay">×</button>
+          </div>
           <div class="realmprog">
             <div class="rp-top">Trúc Cơ · Tầng 3 <span>Mốc tiếp theo: Kim Đan · 2.000 Tu vi</span></div>
             <div class="bar"><i style="width:62%"></i></div>
-            <p>Còn <b>760 Tu vi</b> nữa là đột phá lên <b>Kim Đan</b>. Hoàn thành đủ 4 nhiệm vụ hôm nay được +130 Tu vi.</p>
+            <p>Còn <b>760 Tu vi</b> nữa là đột phá lên <b>Kim Đan</b>. Hoàn thành đủ <b id="rpCount">5</b> nhiệm vụ hôm nay được <b id="rpSum">+195</b> Tu vi.</p>
           </div>
           <div class="mission-list">
             <button class="mission" id="missionKanji">
@@ -2167,7 +2212,7 @@
             </button>
             <button class="mission" id="missionQuiz">
               <span class="m-ic u-amber"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4.6 13.4h6.2L9.6 22l8.6-11.6h-6.4Z"/></svg></span>
-              <span class="m-main"><b>Luyện kiếm — Quiz nhanh</b><span>Trả lời đúng 10 câu · Đã đúng 6/10</span><span class="m-bar"><i style="width:60%"></i></span></span>
+              <span class="m-main"><b>Luyện kiếm — Quiz nhanh</b><span>Trả lời đúng 10 câu · Đã đúng 0/10</span><span class="m-bar"><i style="width:0%"></i></span></span>
               <span class="m-reward"><b>+30</b><span>Tu vi</span></span>
               <span class="m-state doing">Đang làm</span>
             </button>
@@ -2180,7 +2225,13 @@
             <button class="mission" id="missionExam">
               <span class="m-ic u-sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></span>
               <span class="m-main"><b>Xuống núi thí luyện — Thi thử</b><span>Làm 1 đề Test JLPT đầy đủ</span><span class="m-bar"><i style="width:0%"></i></span></span>
-              <span class="m-reward"><b>+25</b><span>Tu vi</span></span>
+              <span class="m-reward"><b>+60</b><span>Tu vi</span></span>
+              <span class="m-state">Chưa làm</span>
+            </button>
+            <button class="mission" id="missionRot">
+              <span class="m-ic u-amber" id="rotIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></span>
+              <span class="m-main"><b id="rotTitle">Nhiệm vụ luân phiên hôm nay</b><span id="rotSub">Đổi mới mỗi ngày — nghe · đọc · từ vựng · ngữ pháp · shadowing</span><span class="m-bar"><i style="width:0%"></i></span></span>
+              <span class="m-reward"><b id="rotReward">+30</b><span>Tu vi</span></span>
               <span class="m-state">Chưa làm</span>
             </button>
           </div>
@@ -2289,7 +2340,7 @@
           </div>
           <div class="stats">
             <div class="stat"><b id="meTuvi">1.240</b><span>TU VI</span></div>
-            <div class="stat"><b>12</b><span>NGÀY STREAK</span></div>
+            <div class="stat"><b id="meStreak">0</b><span>NGÀY STREAK</span></div>
             <div class="stat"><b id="meKanjiDone">8</b><span>KANJI ĐÃ THUỘC</span></div>
           </div>
           <div class="realmprog" style="margin-top:12px;">
@@ -2498,7 +2549,7 @@
           </button>
           <button class="mrow" data-toggle data-key="remind">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21a2 2 0 0 0 4 0"/></svg>
-            Nhắc nhiệm vụ hằng ngày · 21:00 <span class="soon">Sắp có</span>
+            Nhắc nhiệm vụ hằng ngày · 21:00
             <span class="switch on"></span>
           </button>
           <button class="mrow" data-toggle data-key="dark">
@@ -2560,7 +2611,7 @@
 
     <!-- ============ TRỢ LÝ AI SORA: nút tròn nổi + khung chat ============ -->
     <button class="assistant-fab" id="assistantFab" type="button" aria-label="Mở trợ lý Sora — hướng dẫn dùng app" aria-expanded="false" aria-controls="assistantPanel">
-      <img src="assets/chibi.png" alt="" width="58" height="58" />
+      <img src="assets/chibi.png" alt="" width="39" height="39" />
       <span class="assistant-fab-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg></span>
     </button>
     <div class="assistant-scrim" id="assistantScrim" aria-hidden="true"></div>
@@ -2590,6 +2641,9 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="assistant-chip" type="button" data-assistant-topic="fun">Đấu trường, xếp hạng, linh thạch</button>
         <button class="assistant-chip" type="button" data-assistant-topic="install">Cài app &amp; học offline</button>
         <button class="assistant-chip" type="button" data-assistant-topic="search">Tìm kiếm &amp; tra cứu</button>
+        <button class="assistant-chips-close" id="assistantChipsClose" type="button" aria-label="Ẩn gợi ý câu hỏi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
       </div>
       <form class="assistant-form" id="assistantForm">
         <input id="assistantInput" type="text" maxlength="300" placeholder="Hỏi cách dùng app… VD: luyện nghe ở đâu?" aria-label="Nhập câu hỏi cho trợ lý" autocomplete="off" />
@@ -4280,6 +4334,22 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       }
       return made;
     }
+    function buildKotobaFixed(need, kindName){
+      /* 言葉の構成 (chỉ N2 có trong đặc tả): câu cố định trong bộ, quy ước hiển
+         thị như engine thường — real=false + ghi chú dạng thay thế, không đánh
+         số 問題 riêng (xem buildCtx isSub ở engine bốc mẫu). */
+      var items = S.kotoba || [], made = 0;
+      for(var i = 0; i < items.length && made < need; i++){
+        var it = items[i]; if(!it) continue;
+        if(typeof it.s !== "string" || !ok4(it.a, it.w)) continue;
+        var q = base("vocab", kindName, "kotoba");
+        q.real = false; q.subNote = "Dạng luyện thay thế — 言葉の構成";
+        q.qText = it.s; takeOpts(q, it, it.a);
+        q.fullSent = it.s.replace("（　）", it.a); q.correctText = it.a;
+        qs.push(q); made++;
+      }
+      return made;
+    }
     function buildG1Fixed(need, kindName){
       var made = 0;
       (S.g1dlg || []).forEach(function(dit){
@@ -4342,7 +4412,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     function buildReadFixed(need, key, kindName){
       var made = 0;
-      if(key === "readS"){
+      if(key === "tougou"){
+        /* 統合理解: 2 đoạn p1/p2 ghép thành 1 bài đọc như engine thường. */
+        (S.tougou || []).forEach(function(it){
+          if(!it || typeof it.p1 !== "string" || typeof it.p2 !== "string" || !Array.isArray(it.qs)) return;
+          var passTxt = "文章1\n" + it.p1 + "\n文章2\n" + it.p2;
+          it.qs.forEach(function(rq){
+            if(made >= need || !rq || typeof rq.q !== "string" || !Array.isArray(rq.o) || rq.o.length !== 4 || typeof rq.a !== "number") return;
+            pushReadFixed(passTxt, kindName, key, rq); made++;
+          });
+        });
+      } else if(key === "readS"){
         (S.readS || []).forEach(function(it){
           if(made >= need || !it || typeof it.p !== "string" || typeof it.q !== "string" || !Array.isArray(it.o) || it.o.length !== 4 || typeof it.a !== "number") return;
           pushReadFixed(it.p, kindName, key, it); made++;
@@ -4376,10 +4456,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var row = spec[si], key = row[0], n = row[2], kindName = row[1];
       var m = 0;
       if(key === "yomi" || key === "hyoki" || key === "ctx" || key === "syn" || key === "yoho") m = buildVocab(key, n, kindName);
+      else if(key === "kotoba") m = buildKotobaFixed(n, kindName);
       else if(key === "g1") m = buildG1Fixed(n, kindName);
       else if(key === "star") m = buildStarFixed(n, kindName);
       else if(key === "bunsho") m = buildBunshoFixed(n, kindName);
-      else if(key === "readS" || key === "readM" || key === "readL") m = buildReadFixed(n, key, kindName);
+      else if(key === "readS" || key === "readM" || key === "readL" || key === "tougou" || key === "shuchou") m = buildReadFixed(n, key, kindName);
       else if(key === "info") m = buildInfoFixed(n, kindName);
       madeMap[key] = m;
       if(m < n) return done({error: "short", kind: key, made: m, need: n});
@@ -4880,8 +4961,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("kdDone").textContent = currentPool.done ? "Đã thuộc ✓ Bấm để bỏ dấu" : "Đánh dấu đã thuộc";
     if(currentCell) currentCell.classList.toggle("done", currentPool.done);
     syncKanjiStat();
-    if(KANJI.every(function(k){ return k.done; })) completeMission("kanji");
-    saveProgress();
+    /* Nhiệm vụ Kanji của ngày chỉ tính chữ thuộc Bài 12 được đánh dấu trong hôm nay */
+    if(KANJI.indexOf(currentPool) !== -1){
+      ensureMissionDay();
+      missionsState.kanjiProg = Math.min(12, Math.max(0,
+        missionsState.kanjiProg + (currentPool.done ? 1 : -1)));
+      if(missionsState.kanjiProg >= 12) completeMission("kanji");
+      else { renderMissions(); saveProgress(); }
+    } else {
+      saveProgress();
+    }
   });
   document.getElementById("speakKanji").addEventListener("click", function(){
     if(!currentKanji || !("speechSynthesis" in window)) return;
@@ -5838,6 +5927,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       saveSettings();
       renderSettings();
       if(key === "dark") setMsg(settings.dark ? "Đã bật giao diện tối — áp dụng ngay cho toàn app và được lưu lại." : "Đã tắt giao diện tối — app dùng giao diện sáng.");
+      if(key === "remind"){
+        setMsg(settings.remind
+          ? "Đã bật nhắc nhiệm vụ lúc 21:00 — nếu mở app sau 21:00 mà chưa xong nhiệm vụ hôm nay, app hiện lời nhắc ngay trong khung “Nhiệm vụ hôm nay” ở Home."
+          : "Đã tắt nhắc nhiệm vụ 21:00 — app sẽ không hiện lời nhắc buổi tối nữa.");
+        if(typeof checkRemind === "function") checkRemind();
+      }
     });
   });
   renderSettings();
@@ -6998,6 +7093,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var blob = new Blob(shChunks, {type: shRecorder.mimeType || "audio/webm"});
         if(shUrls[shRecIdx]) URL.revokeObjectURL(shUrls[shRecIdx]);
         shUrls[shRecIdx] = URL.createObjectURL(blob);
+        rotActivity("shadow");
         if(shRecIdx === shIdx){
           shMineBtn.disabled = false;
           shStatus("Đã ghi xong. Bấm “Nghe giọng mình” rồi “Nghe câu mẫu” để nghe hai bản liền nhau và so sánh.");
@@ -7123,13 +7219,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.head.appendChild(s);
   }
 
-  /* Bộ đề viết CỐ ĐỊNH từng Test (window.WRITTEN_<lv>_SETS) — hiện chỉ N3 có:
-     assets/written-n3-x9.js gồm 9 bộ × 74 câu viết, mỗi Test một bộ riêng không
-     trùng câu. Nạp lười cùng nhịp với bộ nghe riêng; lỗi nạp không chặn app —
-     exBuildWritten không thấy bộ riêng thì tự lùi về engine bốc mẫu như trước. */
+  /* Bộ đề viết CỐ ĐỊNH từng Test (window.WRITTEN_<lv>_SETS) — N3, N2 và N1 có:
+     assets/written-<lv>-x9.js gồm 9 bộ viết (N3: 74 câu/bộ, N2: 75, N1: 71),
+     mỗi Test một bộ riêng không trùng câu. Nạp lười cùng nhịp với bộ nghe
+     riêng; lỗi nạp không chặn app — exBuildWritten không thấy bộ riêng thì
+     tự lùi về engine bốc mẫu như trước. */
   var wrSetsLoad = {};
   function ensureWrittenSets(lv, cb){
-    if(lv !== "N3"){ if(cb) cb(true); return; }
+    if(lv !== "N3" && lv !== "N2" && lv !== "N1"){ if(cb) cb(true); return; }
     if(window["WRITTEN_" + lv + "_SETS"]){ if(cb) cb(true); return; }
     var st = wrSetsLoad[lv];
     if(!st){ st = wrSetsLoad[lv] = {state: 0, queue: []}; }
@@ -7247,7 +7344,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         btn.className = "lsimgopt";
         btn.setAttribute("aria-label", "Đáp án " + (j + 1));
         btn.innerHTML = '<img src="' + lsDir() + 'img/' + name + '" alt="Đáp án ' + (j + 1) + ' của ' + it.au.replace(".mp3", "") + '"><span class="n">' + (j + 1) + '</span>';
-        btn.addEventListener("click", function(){ if(lsAnswered[key] == null){ lsAnswered[key] = j; picked = j; mark(ibtns); } });
+        btn.addEventListener("click", function(){ if(lsAnswered[key] == null){ lsAnswered[key] = j; picked = j; mark(ibtns); rotActivity("listen"); } });
         box.appendChild(btn);
         return btn;
       });
@@ -7258,7 +7355,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var btn = document.createElement("button");
         btn.className = "lsopt";
         btn.innerHTML = '<span class="n">' + (j + 1) + '</span><span class="jp">' + furiHTML(op) + '</span>';
-        btn.addEventListener("click", function(){ if(lsAnswered[key] == null){ lsAnswered[key] = j; picked = j; mark(tbtns); } });
+        btn.addEventListener("click", function(){ if(lsAnswered[key] == null){ lsAnswered[key] = j; picked = j; mark(tbtns); rotActivity("listen"); } });
         box.appendChild(btn);
         return btn;
       });
@@ -7331,6 +7428,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var blob = new Blob(lsChunks, {type: lsRec.mimeType || "audio/webm"});
         if(lsUrls[key]) URL.revokeObjectURL(lsUrls[key]);
         lsUrls[key] = URL.createObjectURL(blob);
+        rotActivity("shadow");
         lsRefreshRecBtns();
         lsShStatus("Đã ghi xong câu này. Bấm “Nghe giọng mình” rồi “Nghe” để so sánh với giọng máy.");
       };
@@ -8028,7 +8126,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     function refreshResult(){
       var answered = p.qs.every(function(q, qi){ return rdAns[doneKey + ":" + qi] != null; });
       if(!answered) return;
+      var wasRead = !!rdDone[doneKey];
       rdDone[doneKey] = 1;
+      if(!wasRead) rotActivity("read");
       document.getElementById("rdReadDone").style.display = "";
       var sc = rdScore(i);
       document.getElementById("rdResultTitle").textContent =
@@ -8128,7 +8228,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var doneN = KANJI.filter(function(k){ return k.done; }).length;
     document.getElementById("lessonNote").textContent =
       "Đã thuộc " + doneN + "/12 chữ của Bài 12. Thuộc hết 12 chữ là hoàn thành nhiệm vụ “Tu luyện Kanji” hôm nay (+40 Tu vi).";
-    if(doneN >= 12) completeMission("kanji");
+    ensureMissionDay();
+    if(missionsState.kanjiProg >= 12) completeMission("kanji");
+    else renderMissions();
   }
   document.getElementById("closeLesson").addEventListener("click", function(){ hideOv(document.getElementById("lessonOverlay")); });
 
@@ -8618,6 +8720,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       document.getElementById("wvFlashDoneNote").textContent =
         "Bạn đã thuộc " + known + " / " + wvDeck.length + " từ của bài này." +
         (known < wvDeck.length ? " Học lại bài để ôn tiếp các từ chưa thuộc nhé." : " Thuộc hết cả bài rồi — giỏi lắm!");
+      rotActivity("vocab");
       return;
     }
     var v = wvDeck[wvFIdx];
@@ -10340,6 +10443,7 @@ function furiHTML(text){
       var on = !!grLearned[key];
       this.classList.toggle("on", on);
       this.textContent = on ? "✓ Đã học mẫu này" : "Đánh dấu đã học";
+      if(on) rotActivity("grammar");
       if(grPatternsOverlay.classList.contains("open")) renderGrPatterns();
     });
     body.querySelectorAll("[data-gr-rel]").forEach(function(b){
@@ -10468,6 +10572,14 @@ function furiHTML(text){
   document.getElementById("missionQuiz").addEventListener("click", function(){ goTab("jlpt"); });
   document.getElementById("missionReview").addEventListener("click", function(){ goTab("review"); });
   document.getElementById("missionExam").addEventListener("click", function(){ goTab("jlpt"); });
+  document.getElementById("missionRot").addEventListener("click", function(){
+    var k = missionsState.rotKind;
+    if(k === "listen") showOv(document.getElementById("listenOverlay"));
+    else if(k === "read") showOv(document.getElementById("readOverlay"));
+    else if(k === "vocab") openWords();
+    else if(k === "grammar") openGrammar();
+    else if(k === "shadow"){ shRender(); showOv(shadowOverlay); }
+  });
 
   /* ---------- Hàng trong tab Cá nhân ---------- */
   document.getElementById("meRankRow").addEventListener("click", function(){ goTab("rank"); });
@@ -10560,16 +10672,74 @@ function furiHTML(text){
   document.getElementById("pathSteps").innerHTML = stepsHTML(pathStepDone);
   document.getElementById("pathStepInfo").innerHTML = stepsHTML(-1);
 
-  /* ---------- Nhiệm vụ hôm nay: trạng thái hoàn thành + cộng Tu vi + lưu trữ ---------- */
-  var missionsState = { done: { kanji:false, quiz:false, review:false, exam:false }, quizProg: 6 };
+  /* ---------- Nhiệm vụ hôm nay: theo ngày + reset 00:00 + nối hoạt động thật + streak ----------
+     missionsState.date là ngày (giờ máy) mà bộ nhiệm vụ hiện tại thuộc về. Sang ngày mới,
+     ensureMissionDay() đặt lại toàn bộ tiến độ của ngày, sinh nhiệm vụ luân phiên của ngày mới
+     và xóa số cũ — hôm sau mở app không còn thấy tiến độ hôm qua. Tiến độ chỉ tăng từ hoạt
+     động thật trong app: đánh dấu thuộc kanji Bài 12 (kanjiProg), số câu đúng khi nộp đề thi
+     (quizProg), ôn xong bộ flashcard, nộp 1 đề Test, và hoạt động khớp nhiệm vụ luân phiên.
+     missionsState.days ghi các ngày có ít nhất 1 nhiệm vụ hoàn thành -> streak tính từ đó. */
+  var ROT_DEFS = {
+    listen:  { title:"Thính âm — Luyện nghe", sub:"Nghe và trả lời 1 hội thoại ở mục Luyện nghe", reward:30, cls:"u-sky",
+               svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.6"/><rect x="17" y="14" width="4" height="6" rx="1.6"/></svg>' },
+    read:    { title:"Đọc văn — Đọc hiểu", sub:"Đọc và trả lời hết câu hỏi của 1 bài đọc", reward:30, cls:"u-green",
+               svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-4.5-2-8-2v14c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2V4c-3.5 0-6 .5-8 2z"/><path d="M12 6v14"/></svg>' },
+    vocab:   { title:"Tàng từ — Từ vựng", sub:"Học hết bộ flashcard của 1 bài từ vựng", reward:30, cls:"u-amber",
+               svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>' },
+    grammar: { title:"Ngộ pháp — Ngữ pháp", sub:"Mở 1 mẫu ngữ pháp và bấm “Đã học”", reward:30, cls:"u-red",
+               svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14M5 9h14M5 14h9M5 19h6"/></svg>' },
+    shadow:  { title:"Truy âm — Shadowing", sub:"Ghi âm nhắc lại 1 câu mẫu shadowing", reward:30, cls:"u-sky",
+               svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>' }
+  };
+  var ROT_ORDER = ["listen", "read", "vocab", "grammar", "shadow"];
+  var MISSION_KEYS = ["kanji", "quiz", "review", "exam", "rot"];
+  var missionsState = {
+    date: "", rotKind: "",
+    done: { kanji:false, quiz:false, review:false, exam:false, rot:false },
+    quizProg: 0, kanjiProg: -1, days: {}
+  };
   var MISSIONS = {
     kanji: { el: "missionKanji", reward: 40 },
     quiz: { el: "missionQuiz", reward: 30 },
     review: { el: "missionReview", reward: 35 },
-    exam: { el: "missionExam", reward: 25 }
+    exam: { el: "missionExam", reward: 60 },
+    rot: { el: "missionRot", reward: 30 }
   };
+  function dayKeyOf(d){
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function rotKindFor(d){
+    var idx = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+    return ROT_ORDER[((idx % ROT_ORDER.length) + ROT_ORDER.length) % ROT_ORDER.length];
+  }
+  function kanjiDoneCount(){ return KANJI.filter(function(k){ return k.done; }).length; }
+  function ensureMissionDay(){
+    var now = new Date(), t = dayKeyOf(now);
+    if(missionsState.date === t){
+      if(!missionsState.rotKind || !ROT_DEFS[missionsState.rotKind]) missionsState.rotKind = rotKindFor(now);
+      if(missionsState.kanjiProg < 0) missionsState.kanjiProg = Math.min(12, kanjiDoneCount());
+      return;
+    }
+    /* Sang ngày mới (hoặc lần chạy đầu tiên): đặt lại tiến độ ngày.
+       Lần đầu chưa từng có ngày nào được lưu thì lấy số kanji Bài 12 đã thuộc sẵn
+       làm mốc bắt đầu của hôm nay — đúng với số "Kanji đã thuộc" ở tab Cá nhân. */
+    var firstEver = !missionsState.date;
+    missionsState.date = t;
+    missionsState.done = { kanji:false, quiz:false, review:false, exam:false, rot:false };
+    missionsState.quizProg = 0;
+    missionsState.kanjiProg = firstEver ? Math.min(12, kanjiDoneCount()) : 0;
+    missionsState.rotKind = rotKindFor(now);
+  }
+  function missionStreak(){
+    var days = missionsState.days || {};
+    var d = new Date();
+    if(!days[dayKeyOf(d)]) d.setDate(d.getDate() - 1); /* hôm nay chưa xong việc nào thì tính chuỗi tới hôm qua */
+    var n = 0;
+    while(days[dayKeyOf(d)]){ n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
   function syncKanjiStat(){
-    setTxt("meKanjiDone", KANJI.filter(function(k){ return k.done; }).length);
+    setTxt("meKanjiDone", kanjiDoneCount());
   }
   function setMissionUI(key, done, total, subText){
     var el = document.getElementById(MISSIONS[key].el);
@@ -10586,21 +10756,61 @@ function furiHTML(text){
       st.className = "m-state" + (isDone ? " done" : (done > 0 ? " doing" : ""));
     }
   }
+  var WD_VN = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+  function renderMissionMeta(){
+    var now = new Date();
+    setTxt("missionDate", WD_VN[now.getDay()] + " · " +
+      String(now.getDate()).padStart(2, "0") + "/" + String(now.getMonth() + 1).padStart(2, "0") + "/" + now.getFullYear());
+    var mid = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+    var mins = Math.max(0, Math.round((mid - now) / 60000));
+    setTxt("missionReset", "Làm mới lúc 00:00 · còn " +
+      (mins >= 60 ? Math.floor(mins / 60) + " giờ " + (mins % 60) + " phút" : mins + " phút"));
+    var doneN = MISSION_KEYS.filter(function(k){ return missionsState.done[k]; }).length;
+    setTxt("missionCount", "Đã xong " + doneN + "/" + MISSION_KEYS.length);
+    var streak = missionStreak();
+    setTxt("missionStreak", "Streak " + streak + " ngày");
+    setTxt("meStreak", streak);
+    var rot = ROT_DEFS[missionsState.rotKind] || ROT_DEFS.listen;
+    var sum = MISSIONS.kanji.reward + MISSIONS.quiz.reward + MISSIONS.review.reward + MISSIONS.exam.reward + rot.reward;
+    setTxt("rpCount", MISSION_KEYS.length);
+    setTxt("rpSum", "+" + sum);
+  }
   function renderMissions(){
-    var kd = KANJI.filter(function(k){ return k.done; }).length;
-    setMissionUI("kanji", kd, 12, "Học 12 kanji · Đã xong " + kd + "/12");
+    ensureMissionDay();
+    var kp = Math.min(Math.max(missionsState.kanjiProg, 0), 12);
+    setMissionUI("kanji", kp, 12, "Học 12 kanji · Đã xong " + kp + "/12");
     var qp = Math.min(missionsState.quizProg, 10);
     setMissionUI("quiz", qp, 10, "Trả lời đúng 10 câu · Đã đúng " + qp + "/10");
     setMissionUI("review", missionsState.done.review ? 23 : 0, 23, "Ôn 23 thẻ sắp quên hôm nay");
     setMissionUI("exam", missionsState.done.exam ? 1 : 0, 1, "Làm 1 đề Test JLPT đầy đủ");
+    var rot = ROT_DEFS[missionsState.rotKind] || ROT_DEFS.listen;
+    setTxt("rotTitle", rot.title);
+    setTxt("rotReward", "+" + rot.reward);
+    var ric = document.getElementById("rotIcon");
+    if(ric){ ric.className = "m-ic " + rot.cls; ric.innerHTML = rot.svg; }
+    setMissionUI("rot", missionsState.done.rot ? 1 : 0, 1, rot.sub);
+    renderMissionMeta();
     syncKanjiStat();
+    checkRemind();
+  }
+  function missionReward(key){
+    if(key === "rot"){ var r = ROT_DEFS[missionsState.rotKind]; return r ? r.reward : MISSIONS.rot.reward; }
+    return MISSIONS[key].reward;
   }
   function completeMission(key){
+    ensureMissionDay();
     if(missionsState.done[key]){ renderMissions(); return; }
     missionsState.done[key] = true;
-    state.tuvi += MISSIONS[key].reward;
+    missionsState.days[missionsState.date] = 1;
+    state.tuvi += missionReward(key);
     renderMissions();
     renderWallet();
+  }
+  /* Hoạt động thật cho nhiệm vụ luân phiên: chỉ hoàn thành khi hoạt động khớp đúng
+     mục luân phiên của hôm nay (nghe / đọc / từ vựng / ngữ pháp / shadowing). */
+  function rotActivity(kind){
+    ensureMissionDay();
+    if(missionsState.rotKind === kind) completeMission("rot");
   }
   function onExamSubmitted(correct){
     if(examKind === "test") completeMission("exam");
@@ -10610,6 +10820,33 @@ function furiHTML(text){
       else { renderMissions(); saveProgress(); }
     }
   }
+  /* ---------- Nhắc nhiệm vụ 21:00 (bật/tắt ở Cài đặt, khóa "remind") ---------- */
+  function remindHiddenToday(){
+    try{ return window.localStorage.getItem("sk_remind_hide") === dayKeyOf(new Date()); }catch(_){ return false; }
+  }
+  function checkRemind(){
+    var bar = document.getElementById("remindBar");
+    if(!bar) return;
+    var show = false;
+    if(typeof settings !== "undefined" && settings && settings.remind && !remindHiddenToday()){
+      if(new Date().getHours() >= 21){
+        var left = MISSION_KEYS.filter(function(k){ return !missionsState.done[k]; }).length;
+        if(left > 0){
+          show = true;
+          setTxt("remindTxt", "Đã qua 21:00 — bạn còn " + left + "/" + MISSION_KEYS.length +
+            " nhiệm vụ chưa xong hôm nay. Làm nốt để giữ streak nhé!");
+        }
+      }
+    }
+    bar.hidden = !show;
+  }
+  document.getElementById("remindClose").addEventListener("click", function(){
+    try{ window.localStorage.setItem("sk_remind_hide", dayKeyOf(new Date())); }catch(_){}
+    checkRemind();
+  });
+  /* Đồng hồ nền: cập nhật đếm ngược tới 00:00, tự sang bộ nhiệm vụ của ngày mới
+     nếu app đang mở qua nửa đêm, và bật thanh nhắc khi qua 21:00. */
+  setInterval(function(){ renderMissions(); }, 30000);
   function saveProgress(){
     try{
       window.localStorage.setItem("sk_progress", JSON.stringify({
@@ -10631,8 +10868,13 @@ function furiHTML(text){
       if(typeof d.appliedLv === "number"){ appliedLv = d.appliedLv; pathLv = d.appliedLv; }
       if(typeof d.pathStepDone === "number") pathStepDone = d.pathStepDone;
       if(d.missions){
-        if(d.missions.done) missionsState.done = d.missions.done;
+        if(d.missions.done) for(var mk in missionsState.done)
+          if(mk in d.missions.done) missionsState.done[mk] = !!d.missions.done[mk];
         if(typeof d.missions.quizProg === "number") missionsState.quizProg = d.missions.quizProg;
+        if(typeof d.missions.kanjiProg === "number") missionsState.kanjiProg = d.missions.kanjiProg;
+        if(typeof d.missions.date === "string") missionsState.date = d.missions.date;
+        if(typeof d.missions.rotKind === "string" && ROT_DEFS[d.missions.rotKind]) missionsState.rotKind = d.missions.rotKind;
+        if(d.missions.days && typeof d.missions.days === "object") missionsState.days = d.missions.days;
       }
       if(d.kanjiDone) KANJI.forEach(function(kk, i){ if(d.kanjiDone[i] != null) kk.done = !!d.kanjiDone[i]; });
       dueGrid.innerHTML = "";
@@ -11155,7 +11397,16 @@ function furiHTML(text){
   var msgs = document.getElementById("assistantMsgs");
   var form = document.getElementById("assistantForm");
   var input = document.getElementById("assistantInput");
+  var chipsBox = document.getElementById("assistantChips");
+  var chipsClose = document.getElementById("assistantChipsClose");
   if(!fab || !panel || !form || !input || !msgs) return;
+
+  /* Khối gợi ý chỉ hiện lúc mới mở: đã hỏi câu đầu tiên hoặc bấm dấu ✕ là ẩn hẳn,
+     nhường toàn bộ chiều cao khung cho phần chat. */
+  function hideChips(){
+    if(chipsBox) chipsBox.classList.add("hide");
+  }
+  if(chipsClose) chipsClose.addEventListener("click", hideChips);
   var isOpen = false;
 
   function openAssistant(){
@@ -11234,7 +11485,7 @@ function furiHTML(text){
   var TOPICS = [
     { id:"exam", label:"Luyện thi JLPT ở đâu, làm đề thế nào?",
       keywords:["luyen thi","thi jlpt","lam de","de thi","phong thi","test 1","nop bai","phieu dap an","de chuan","thi thu","180 diem","cham diem"],
-      answer:"Vào phòng thi theo 2 đường: Home → lưới Pháp bảo → ô “Luyện thi”, hoặc Home → Nhiệm vụ hôm nay → “Thi thử”.\n\nCách làm đề:\n• Chọn cấp N5–N1 ở hàng nút trên cùng, rồi bấm 1 đề Test trong danh sách (riêng N3 có thêm “Đề chuẩn · N3” 102 câu theo đúng cấu trúc chính thức).\n• Trong phòng thi có đồng hồ đếm ngược chung cho cả đề, bấm đáp án để chọn, dùng nút “Phiếu đáp án” để nhảy nhanh tới câu bất kỳ.\n• Bấm “Nộp bài” để xem điểm trên thang 180, điểm từng phần và “Xem lại đáp án” kèm giải thích.\n\nLưu ý: N5/N4/N3 đã mở đủ Test 1–9 (phần viết N3 là 9 bộ đề cố định, mỗi đề một bộ riêng không trùng câu). N2/N1 hiện mới mở Test 1–2 (ngân hàng câu phần viết đang bổ sung tiếp) — đề hiện mờ là đề chưa mở, không phải lỗi. Chỗ trống trong câu hỏi hiển thị dạng (........).",
+      answer:"Vào phòng thi theo 2 đường: Home → lưới Pháp bảo → ô “Luyện thi”, hoặc Home → Nhiệm vụ hôm nay → “Thi thử”.\n\nCách làm đề:\n• Chọn cấp N5–N1 ở hàng nút trên cùng, rồi bấm 1 đề Test trong danh sách (riêng N3 có thêm “Đề chuẩn · N3” 102 câu theo đúng cấu trúc chính thức).\n• Trong phòng thi có đồng hồ đếm ngược chung cho cả đề, bấm đáp án để chọn, dùng nút “Phiếu đáp án” để nhảy nhanh tới câu bất kỳ.\n• Bấm “Nộp bài” để xem điểm trên thang 180, điểm từng phần và “Xem lại đáp án” kèm giải thích.\n\nLưu ý: cả 5 cấp N5/N4/N3/N2/N1 đều đã mở đủ Test 1–9 (phần viết của N3/N2/N1 là 9 bộ đề cố định mỗi cấp, mỗi đề một bộ riêng không trùng câu). Chỗ trống trong câu hỏi hiển thị dạng (........).",
       actions:[{label:"Mở Luyện thi", action:"exam"}] },
     { id:"listen", label:"Luyện nghe ở đâu?",
       keywords:["luyen nghe","nghe hieu","part 3","file nghe","mp3","nghe o dau"],
@@ -11278,7 +11529,7 @@ function furiHTML(text){
       actions:[{label:"Mở Flashcard", action:"flash"},{label:"Mở Shadowing", action:"shadow"}] },
     { id:"path", label:"Lộ trình, nhiệm vụ, Tu vi là gì?",
       keywords:["lo trinh","khai trinh do","nhiem vu","tu vi","canh gioi","streak","dot pha","chinh tuyen"],
-      answer:"Lộ trình cá nhân nằm ở Home, khung “Nhiệm vụ hôm nay”:\n\n• Bấm “Khai trình độ” (hoặc tab Cá nhân → “Lộ trình học cá nhân”), chọn trình độ bạn đã đạt (Chưa biết / N5 / N4 / N3 / N2 / N1) — app xếp bạn vào chặng cảnh giới tương ứng (vd: đã khai N5 → chặng Trúc Cơ, học khóa N4) và soạn chính tuyến 7 bước: Bảng chữ cái → Bộ thủ → Kanji → Từ vựng → Ngữ pháp → Nghe → Thi thử. Đậu bước Thi thử cuối chặng là đột phá lên cảnh giới tiếp theo.\n• Nhiệm vụ hôm nay có 4 việc, làm xong cộng Tu vi: Kanji +40 · Quiz nhanh +30 · Ôn thẻ đến hạn +35 · Thi thử +25 (tổng +130/ngày). Tu vi tích đủ mốc thì lên cảnh giới (Luyện Khí → … → Đại Đế), xem thang đầy đủ ở tab Xếp hạng.",
+      answer:"Lộ trình cá nhân nằm ở Home, khung “Nhiệm vụ hôm nay”:\n\n• Bấm “Khai trình độ” (hoặc tab Cá nhân → “Lộ trình học cá nhân”), chọn trình độ bạn đã đạt (Chưa biết / N5 / N4 / N3 / N2 / N1) — app xếp bạn vào chặng cảnh giới tương ứng (vd: đã khai N5 → chặng Trúc Cơ, học khóa N4) và soạn chính tuyến 7 bước: Bảng chữ cái → Bộ thủ → Kanji → Từ vựng → Ngữ pháp → Nghe → Thi thử. Đậu bước Thi thử cuối chặng là đột phá lên cảnh giới tiếp theo.\n• Nhiệm vụ hôm nay có 5 việc, làm mới lúc 00:00 mỗi ngày, làm xong cộng Tu vi: Kanji +40 · Quiz nhanh +30 · Ôn thẻ đến hạn +35 · Thi thử +60 · 1 nhiệm vụ luân phiên theo ngày (nghe / đọc hiểu / từ vựng / ngữ pháp / shadowing) +30 — tổng tối đa +195/ngày. Tiến độ tính từ hoạt động học thật trong ngày; khung nhiệm vụ hiện ngày, giờ làm mới, số việc đã xong và streak ngày liên tiếp. Tu vi tích đủ mốc thì lên cảnh giới (Luyện Khí → … → Đại Đế), xem thang đầy đủ ở tab Xếp hạng.",
       actions:[{label:"Khai trình độ", action:"path"},{label:"Xem Xếp hạng", action:"rank"}] },
     { id:"duel", label:"Đấu trường đấu thế nào?",
       keywords:["dau truong","dau phap","dau lech gio","thi dau","doi thu"],
@@ -11314,7 +11565,7 @@ function furiHTML(text){
       actions:[{label:"Mở Cài đặt", action:"settings"}] },
     { id:"start", label:"Mới học thì bắt đầu từ đâu?",
       keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
-      answer:"Chào đạo hữu! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: ở Home, khung “Nhiệm vụ hôm nay” → bấm “Khai trình độ” → chọn “Chưa biết” (hoặc cấp bạn đã đạt). App sẽ soạn chính tuyến riêng cho chặng của bạn: Bảng chữ cái → Bộ thủ → Kanji → Từ vựng → Ngữ pháp → Nghe → Thi thử.\n2. Làm Nhiệm vụ hôm nay: 4 việc nhỏ mỗi ngày (học kanji, quiz nhanh, ôn thẻ, thi thử) — làm xong là cộng Tu vi và giữ streak.\n3. Bấm nút đỏ “Tiếp tục tu luyện” ở Home để học tiếp đúng bài đang dở.\n\nChưa biết chữ nào? Bắt đầu bằng “Bảng kana” ở hàng tiện ích đầu Home — thuộc Hiragana/Katakana trước rồi hãy vào Kanji.",
+      answer:"Chào đạo hữu! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: ở Home, khung “Nhiệm vụ hôm nay” → bấm “Khai trình độ” → chọn “Chưa biết” (hoặc cấp bạn đã đạt). App sẽ soạn chính tuyến riêng cho chặng của bạn: Bảng chữ cái → Bộ thủ → Kanji → Từ vựng → Ngữ pháp → Nghe → Thi thử.\n2. Làm Nhiệm vụ hôm nay: 5 việc nhỏ mỗi ngày (học kanji, quiz nhanh, ôn thẻ, thi thử và 1 việc luân phiên theo ngày) — làm xong là cộng Tu vi và giữ streak.\n3. Bấm nút đỏ “Tiếp tục tu luyện” ở Home để học tiếp đúng bài đang dở.\n\nChưa biết chữ nào? Bắt đầu bằng “Bảng kana” ở hàng tiện ích đầu Home — thuộc Hiragana/Katakana trước rồi hãy vào Kanji.",
       actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] }
   ];
   var FALLBACK = {
@@ -11384,6 +11635,7 @@ function furiHTML(text){
   function ask(text, topic){
     var q = (text || "").trim();
     if(!q || answering) return;
+    hideChips();
     addMsg(q, "user", null);
     answering = true;
     showTyping();
