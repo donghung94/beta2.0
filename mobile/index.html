@@ -912,9 +912,10 @@
   .shstatus{font-size:13px; color:var(--ink-2); line-height:1.55; margin:12px 2px 0; min-height:20px;}
   .shnav{display:flex; gap:9px; margin-top:13px;}
 
-  /* Luyện nghe: chọn cấp N5–N1 dạng lưới tab ở đầu trang chọn cấp — bấm một ô là nhảy
-     thẳng vào trang của cấp đó (Part 3 + Shadowing); các phần khác nằm dưới lưới. */
-  .ls-lvgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:2px;}
+  /* Luyện nghe: chọn cấp N4–N1 dạng lưới tab 2×2 ở đầu trang chọn cấp — bấm một ô là nhảy
+     thẳng vào trang của cấp đó (Part 3 + Shadowing); các phần khác nằm dưới lưới.
+     Không có ô N5 vì N5 là cấp mặc định / trang hiện tại. */
+  .ls-lvgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:2px;}
   .ls-lvtile{
     background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:13px 6px 11px;
     font-family:inherit; color:var(--ink); cursor:pointer; text-align:center;
@@ -3014,11 +3015,6 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <h3 class="wvsec">Đọc hiểu theo cấp JLPT</h3>
         <p class="wvinfo">200 bài đọc tự viết mới hoàn toàn theo đúng chuẩn từng cấp (chỉ dùng kanji, từ vựng và ngữ pháp đến cấp đó; furigana cho N5/N4/N3, N2/N1 đọc chữ Hán trần như đề thật) — đọc bài, trả lời câu hỏi, xem giải thích tiếng Việt và từ vựng cuối bài. N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng như đề JLPT thật; mỗi dạng 10 bài.</p>
         <div id="rdLevels"></div>
-        <h2 class="secttl">Phần đọc đã có sẵn</h2>
-        <button class="setrow" id="readGoExam">
-          <span class="r1"><h3>Đọc hiểu trong phòng thi</h3><span class="cnt">MỞ ›</span></span>
-          <p>Câu mẫu phần Đọc hiểu — mở đúng phòng thi như khi bấm hàng “Đọc hiểu” ở tab Luyện đề.</p>
-        </button>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -3614,7 +3610,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Lưới Pháp bảo tông môn nay 10 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu / Xếp hạng · Bảo tàng · Phòng chat · Đấu trường. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Trong trang Đọc hiểu vẫn còn lối tắt bấm được tới danh sách đề thi JLPT đầy đủ trong phòng thi. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Pháp bảo và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Lưới Pháp bảo tông môn nay 10 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu / Xếp hạng · Bảo tàng · Phòng chat · Đấu trường. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Pháp bảo và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới.</p>
 </div>
 
   <!-- handwriting.js (MIT) — lớp gọi Google Input Tools, file nguyên bản ở assets/ -->
@@ -7174,6 +7170,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var lsQuizOverlay = document.getElementById("lsQuizOverlay");
   var lsShOverlay = document.getElementById("lsShOverlay");
   var LS_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
+  /* Lưới tab ở đầu trang Luyện nghe chỉ gồm N4–N1: N5 là cấp mặc định / trang
+     hiện tại nên không có ô riêng trong lưới (chỉ đạo 2026-11-05). */
+  var LS_GRID_LEVELS = ["N4", "N3", "N2", "N1"];
   var LS_COUNTS = {N5: 24, N4: 28, N3: 28, N2: 32, N1: 37};
   var LS_TYPES = {1:"Dạng 1 · Chọn hình", 2:"Dạng 2 · Chọn đáp án", 3:"Dạng 3 · Chọn lời đáp", 4:"Dạng 4 · Chọn câu trả lời", 5:"Dạng 5 · Thảo luận"};
   var lsLevel = "N5";
@@ -7273,7 +7272,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function lsRenderLevels(){
     var box = document.getElementById("lsLevels");
     box.innerHTML = "";
-    LS_LEVELS.forEach(function(lv){
+    LS_GRID_LEVELS.forEach(function(lv){
       var b = document.createElement("button");
       b.className = "ls-lvtile";
       b.setAttribute("aria-label", "Mở trang luyện nghe " + lv + " — " + LS_COUNTS[lv] + " hội thoại Part 3 và Shadowing");
@@ -7538,9 +7537,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("closeRead").addEventListener("click", function(){ hideOv(readOverlay); });
   document.getElementById("listenGoShadow").addEventListener("click", function(){
     hideOv(listenOverlay); shRender(); showOv(shadowOverlay);
-  });
-  document.getElementById("readGoExam").addEventListener("click", function(){
-    hideOv(readOverlay); goTab("jlpt");
   });
   lsRenderLevels();
 
@@ -9423,8 +9419,8 @@ function furiHTML(text){
       {n:11, pats:["Lượng từ: ～つ・～人・～台・～枚", "N を số lượng V", "Khoảng thời gian: ～時間・～日", "どのくらい・～ぐらい", "［Khoảng thời gian］に ～回 V", "N／số lượng だけ"]},
       {n:12, pats:["So sánh: より／のほうが"]},
       {n:13, pats:["V たいです"]},
-      {n:14, pats:["V てください", "V てもいいです", "V てはいけません"]},
-      {n:15, pats:["Vて います（trạng thái）", "知っています／知りません", "Vて います（công việc・thói quen）"]},
+      {n:14, pats:["V てください"]},
+      {n:15, pats:["V てもいいです", "V てはいけません", "Vて います（trạng thái）", "知っています／知りません", "Vて います（công việc・thói quen）"]},
       {n:16, pats:["V てから"]},
       {n:17, pats:["Vない（thể ない）", "Vないでください", "Vなければなりません", "Vなくてもいいです", "［Thời gian］までに"]},
       {n:18, pats:["V thể từ điển", "N／Vことができます", "趣味は N／Vことです", "V／Nの 前に", "［Khoảng thời gian］前に", "なかなか + phủ định", "ぜひ"]},
@@ -11517,7 +11513,7 @@ function furiHTML(text){
       actions:[{label:"Mở Đọc hiểu", action:"read"}] },
     { id:"listenread", label:"Luyện nghe & đọc hiểu ở đâu?",
       keywords:["luyen nghe va doc hieu","nghe va doc"],
-      answer:"Hai mục này nằm cạnh nhau trong lưới Pháp bảo ở Home:\n\n• Luyện nghe: ô “Luyện nghe” → chọn cấp N5–N1 → luyện Part 3 (149 hội thoại có MP3, chọn đáp án, xem giải thích), Shadowing theo hội thoại và Shadowing bằng video có phụ đề chạy.\n• Đọc hiểu: ô “Đọc hiểu” → chọn cấp → chọn dạng bài (Ngắn · Vừa · Tìm thông tin · Dài · Hiểu ý chính tùy cấp) → đọc bài, trả lời 2 câu, xem giải thích và từ vựng cuối bài.\n\nHỏi riêng “luyện nghe ở đâu” hoặc “đọc hiểu ở đâu” mình sẽ chỉ chi tiết từng mục.",
+      answer:"Hai mục này nằm cạnh nhau trong lưới Pháp bảo ở Home:\n\n• Luyện nghe: ô “Luyện nghe” → chọn cấp N4–N1 ở lưới trên đầu trang → luyện Part 3 (149 hội thoại có MP3, chọn đáp án, xem giải thích), Shadowing theo hội thoại và Shadowing bằng video có phụ đề chạy.\n• Đọc hiểu: ô “Đọc hiểu” → chọn cấp → chọn dạng bài (Ngắn · Vừa · Tìm thông tin · Dài · Hiểu ý chính tùy cấp) → đọc bài, trả lời 2 câu, xem giải thích và từ vựng cuối bài.\n\nHỏi riêng “luyện nghe ở đâu” hoặc “đọc hiểu ở đâu” mình sẽ chỉ chi tiết từng mục.",
       actions:[{label:"Mở Luyện nghe", action:"listen"},{label:"Mở Đọc hiểu", action:"read"}] },
     { id:"vocab", label:"Học từ vựng ở đâu?",
       keywords:["tu vung","hoc tu","tango","chuyen nganh","tokutei","pikachu","minna"],
