@@ -912,6 +912,19 @@
   .shstatus{font-size:13px; color:var(--ink-2); line-height:1.55; margin:12px 2px 0; min-height:20px;}
   .shnav{display:flex; gap:9px; margin-top:13px;}
 
+  /* Luyện nghe: chọn cấp N5–N1 dạng lưới tab ở đầu trang chọn cấp — bấm một ô là nhảy
+     thẳng vào trang của cấp đó (Part 3 + Shadowing); các phần khác nằm dưới lưới. */
+  .ls-lvgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:2px;}
+  .ls-lvtile{
+    background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:13px 6px 11px;
+    font-family:inherit; color:var(--ink); cursor:pointer; text-align:center;
+    transition:transform .12s, border-color .12s, background .12s;
+  }
+  .ls-lvtile b{display:block; font-size:20px; font-weight:800; line-height:1.1;}
+  .ls-lvtile .n{display:block; margin-top:4px; font-size:12px; font-weight:700; color:var(--red);}
+  .ls-lvtile span{display:block; margin-top:2px; font-size:10.5px; color:var(--ink-2); line-height:1.3;}
+  .ls-lvtile:active{transform:scale(.96); border-color:var(--red); background:var(--red-soft);}
+
   /* Luyện nghe N5: danh sách bài, trang làm bài (audio MP3 + đáp án), Shadowing theo hội thoại */
   .lsmeta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
   .lstype{font-size:11px; font-weight:800; letter-spacing:.05em; padding:4px 9px; border-radius:999px; background:var(--amber-soft); color:var(--amber);}
@@ -957,23 +970,35 @@
 
   /* ---------- Shadowing bằng video (bản thử): video YouTube + phụ đề chạy đồng bộ + bấm câu xem giải thích ---------- */
   #shadowVideoOverlay{z-index:59;}
+  /* Danh sách video: hàng ngang — thumb nhỏ bên trái, tiêu đề + mô tả bên phải.
+     Mỗi trang 5 video, video mới nhất ở đầu trang 1; phân trang ở #svPager. */
   .sv-entry{
-    width:100%; display:block; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:0; overflow:hidden; margin-bottom:10px;
+    width:100%; display:flex; gap:12px; align-items:center; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:10px; margin-bottom:10px;
   }
   .sv-entry:active{border-color:var(--red);}
-  .sv-thumb{position:relative; aspect-ratio:16/9; background:#14141c;}
+  .sv-thumb{position:relative; flex:0 0 118px; aspect-ratio:16/9; background:#14141c; border-radius:9px; overflow:hidden;}
   .sv-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
   .sv-thumb .sv-play{
-    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:62px; height:44px;
-    background:var(--red); border-radius:12px; display:flex; align-items:center; justify-content:center;
-    box-shadow:0 6px 18px rgba(0,0,0,.35);
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:36px; height:26px;
+    background:var(--red); border-radius:7px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.35);
   }
-  .sv-thumb .sv-play svg{width:22px; height:22px; color:#fff;}
-  .sv-thumb .sv-dur{position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,.78); color:#fff; font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:6px;}
-  .sv-entry .sv-meta{padding:13px 15px 14px;}
-  .sv-entry .sv-meta h3{margin:0 0 3px; font-size:15.5px; font-weight:700;}
-  .sv-entry .sv-meta p{margin:0; font-size:13px; color:var(--ink-2); line-height:1.5;}
+  .sv-thumb .sv-play svg{width:13px; height:13px; color:#fff;}
+  .sv-thumb .sv-dur{position:absolute; right:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:5px;}
+  .sv-entry .sv-meta{flex:1 1 auto; min-width:0;}
+  .sv-entry .sv-meta h3{margin:0 0 3px; font-size:14.5px; font-weight:700; line-height:1.4;}
+  .sv-entry .sv-meta p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.5;}
+  .sv-pager{display:flex; align-items:center; justify-content:center; gap:6px; margin:2px 0 14px; flex-wrap:wrap;}
+  .sv-pager:empty{display:none;}
+  .sv-pgbtn{
+    min-width:34px; height:34px; padding:0 9px; border:1px solid var(--line); border-radius:9px;
+    background:var(--card); color:var(--ink); font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .sv-pgbtn.on{background:var(--red); border-color:var(--red); color:#fff;}
+  .sv-pgbtn:disabled{opacity:.4; cursor:default;}
+  .sv-pgdots{font-size:13.5px; font-weight:700; color:var(--ink-2); padding:0 2px;}
   .sv-newtag{display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.06em; padding:3px 8px; border-radius:999px; background:var(--red); color:#fff; vertical-align:2px; margin-left:7px;}
   .sv-videowrap{position:relative; aspect-ratio:16/9; background:#000; border-radius:14px; overflow:hidden;}
   /* Lớp phủ trong suốt trên khung video: bấm vào video chỉ phát/dừng qua nút của app,
@@ -996,41 +1021,51 @@
   /* Cụm điều khiển ngay dưới video kiểu app mẫu: thanh tiến trình; hàng chip
      Furigana / Bản dịch + công tắc Tự ngắt câu; hàng nút câu trước – lặp câu –
      phát lớn – câu sau – tốc độ */
-  .sv-dock{margin-top:10px;}
-  .sv-seekrow{display:flex; align-items:center; gap:10px;}
-  .sv-seekrow .sv-t{font-size:12px; font-weight:700; color:var(--ink-2); font-variant-numeric:tabular-nums; min-width:30px;}
+  /* Cụm điều khiển thu nhỏ ~50% theo yêu cầu: mọi kích thước (nút, chip,
+     công tắc, chữ) giảm còn khoảng một nửa để nhường chỗ cho khung phụ đề */
+  .sv-dock{margin-top:6px;}
+  .sv-seekrow{display:flex; align-items:center; gap:7px;}
+  .sv-seekrow .sv-t{font-size:10.5px; font-weight:700; color:var(--ink-2); font-variant-numeric:tabular-nums; min-width:26px;}
   .sv-seekrow .sv-t:last-child{text-align:right;}
-  #svSeek{flex:1; min-width:0; -webkit-appearance:none; appearance:none; height:5px; border-radius:99px; background:var(--line); outline:none; cursor:pointer;}
-  #svSeek::-webkit-slider-thumb{-webkit-appearance:none; width:17px; height:17px; border-radius:50%; background:var(--red); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.3); cursor:pointer;}
-  #svSeek::-moz-range-thumb{width:15px; height:15px; border-radius:50%; background:var(--red); border:2.5px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.3); cursor:pointer;}
-  .sv-togrow{display:flex; align-items:center; gap:8px; margin-top:11px;}
+  #svSeek{flex:1; min-width:0; -webkit-appearance:none; appearance:none; height:4px; border-radius:99px; background:var(--line); outline:none; cursor:pointer;}
+  #svSeek::-webkit-slider-thumb{-webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--red); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;}
+  #svSeek::-moz-range-thumb{width:11px; height:11px; border-radius:50%; background:var(--red); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;}
+  .sv-togrow{display:flex; align-items:center; gap:6px; margin-top:6px;}
   .sv-chip{
-    display:inline-flex; align-items:center; gap:5px; border:1.5px solid var(--line); background:var(--card);
-    color:var(--ink-2); border-radius:9px; padding:6px 11px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+    display:inline-flex; align-items:center; gap:4px; border:1.5px solid var(--line); background:var(--card);
+    color:var(--ink-2); border-radius:7px; padding:3px 8px; font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer;
   }
-  .sv-chip svg{width:15px; height:15px; flex:0 0 auto;}
+  .sv-chip svg{width:12px; height:12px; flex:0 0 auto;}
   .sv-chip.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
-  .sv-ap{margin-left:auto; display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--ink);}
-  .sv-switch{width:46px; height:27px; flex:0 0 auto; border-radius:99px; border:none; background:var(--line); position:relative; cursor:pointer; padding:0; transition:background .15s;}
-  .sv-switch::after{content:""; position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transition:left .15s;}
+  .sv-ap{margin-left:auto; display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--ink);}
+  .sv-switch{width:34px; height:20px; flex:0 0 auto; border-radius:99px; border:none; background:var(--line); position:relative; cursor:pointer; padding:0; transition:background .15s;}
+  .sv-switch::after{content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transition:left .15s;}
   .sv-switch[aria-checked="true"]{background:var(--red);}
-  .sv-switch[aria-checked="true"]::after{left:22px;}
+  .sv-switch[aria-checked="true"]::after{left:17px;}
   @media (prefers-reduced-motion: reduce){ .sv-switch, .sv-switch::after{transition:none;} }
-  .sv-transport{display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding:0 4px;}
-  .sv-tbtn{width:46px; height:46px; border:none; background:transparent; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:12px; padding:0;}
-  .sv-tbtn svg{width:27px; height:27px;}
+  .sv-transport{display:flex; align-items:center; justify-content:space-between; margin-top:3px; padding:0 4px;}
+  .sv-tbtn{width:30px; height:30px; border:none; background:transparent; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:9px; padding:0;}
+  .sv-tbtn svg{width:19px; height:19px;}
   .sv-tbtn.on{color:var(--red);}
   .sv-tbtn:active{background:var(--red-soft);}
   .sv-bigplay{
-    width:58px; height:58px; border:none; border-radius:16px; background:var(--red); color:#fff; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(200,16,46,.3); padding:0;
+    width:34px; height:34px; border:none; border-radius:11px; background:var(--red); color:#fff; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 5px 13px rgba(200,16,46,.3); padding:0;
   }
-  .sv-bigplay svg{width:27px; height:27px;}
-  .sv-speedbtn{min-width:46px; height:46px; border:none; background:transparent; color:var(--red); font-family:inherit; font-size:15.5px; font-weight:800; cursor:pointer; border-radius:12px; padding:0 6px;}
+  .sv-bigplay svg{width:18px; height:18px;}
+  .sv-speedbtn{min-width:30px; height:30px; border:none; background:transparent; color:var(--red); font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer; border-radius:9px; padding:0 4px;}
   .sv-speedbtn:active{background:var(--red-soft);}
-  /* Chữ chạy: danh sách câu trơn ngay dưới cụm điều khiển, câu đang phát tự cuộn
-     vào tầm nhìn + tô nền; từng cụm từ được tô đỏ + gạch chân theo tiến độ phát (karaoke) */
-  #svLines{margin-top:8px; position:relative;}
+  /* Chữ chạy: phụ đề nằm trong KHUNG CUỘN riêng có chiều cao cố định ngay
+     dưới cụm điều khiển — đọc tới đâu, khung tự cuộn lên tới đó (JS cuộn
+     scrollTop của khung, không cuộn cả trang); câu đang phát tô nền, từng
+     cụm từ được tô đỏ + gạch chân theo tiến độ phát (karaoke) */
+  #svLines{
+    margin-top:8px; position:relative;
+    max-height:38dvh; overflow-y:auto; overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch; scrollbar-width:thin;
+    border:1px solid var(--line); border-radius:14px; background:var(--card);
+    padding:6px 4px;
+  }
   .sv-line .sv-lja ruby{ruby-align:center;}
   .sv-line .sv-lja rt{font-size:.52em; font-weight:600; color:var(--ink-2);}
   /* Khung giải thích = BONG BÓNG nổi bám ngay vào câu vừa bấm (không còn là hộp
@@ -2595,30 +2630,17 @@
       <div class="detailbody">
         <h3 class="wvsec">Luyện nghe theo cấp JLPT</h3>
         <p class="wvinfo">Cả 5 cấp N5–N1 đều đã có nội dung: 149 hội thoại Part 3 có file nghe giọng đã duyệt, kèm Shadowing luyện từng câu trong chính các hội thoại đó.</p>
-        <div id="lsLevels"></div>
+        <div id="lsLevels" class="ls-lvgrid"></div>
         <h3 class="wvsec">Shadowing bằng video</h3>
-        <p class="wvinfo">Xem video, phụ đề chạy theo ở dưới, bấm vào từng câu để xem giải thích — bản thử đầu tiên với 1 hội thoại N5.</p>
-        <button class="sv-entry" id="listenGoShadowVideo">
-          <span class="sv-thumb">
-            <img src="https://i.ytimg.com/vi/r_o5gRWkkaA/hqdefault.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga" loading="lazy">
-            <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-            <span class="sv-dur">0:22</span>
-          </span>
-          <span class="sv-meta">
-            <h3>N5 · Ở nhà ga: hỏi tàu đi Tokyo<span class="sv-newtag">THỬ</span></h3>
-            <p>Video 22 giây · 9 câu phụ đề · bấm câu để xem giải thích ngữ pháp và từ mới.</p>
-          </span>
-        </button>
+        <p class="wvinfo">Xem video, phụ đề chạy theo ở dưới, bấm vào từng câu để xem giải thích. Video mới nhất nằm ở đầu danh sách, mỗi trang 5 video.</p>
+        <div id="svList"></div>
+        <nav class="sv-pager" id="svPager" aria-label="Chuyển trang danh sách video shadowing"></nav>
         <h2 class="secttl">Phần nghe đã có sẵn</h2>
         <button class="setrow" id="listenGoShadow">
           <span class="r1"><h3>Shadowing</h3><span class="cnt">MỞ ›</span></span>
           <p>8 câu mẫu — nghe câu mẫu, nhắc lại theo rồi ghi âm nghe lại để so sánh.</p>
         </button>
-        <button class="setrow" id="listenGoExam">
-          <span class="r1"><h3>Nghe hiểu trong phòng thi</h3><span class="cnt">MỞ ›</span></span>
-          <p>Câu mẫu phần Nghe hiểu — mở đúng phòng thi như khi bấm hàng “Nghe hiểu” ở tab Luyện đề.</p>
-        </button>
-        <div class="wv-endpad" aria-hidden="true"></div>
+                <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -2699,7 +2721,7 @@
         <div class="sv-stage">
           <div class="sv-videowrap" id="svVideoWrap">
             <button class="sv-facade" type="button" id="svFacade" aria-label="Phát video shadowing N5: hỏi tàu đi ga Tokyo">
-              <img src="https://i.ytimg.com/vi/r_o5gRWkkaA/hqdefault.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga">
+              <img src="assets/sv-thumb-tokyo-station.jpg" alt="Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga">
               <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
             </button>
           </div>
@@ -4017,10 +4039,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return {qs: qs, made: madeMap};
   }
 
-  /* Xây phần nghe của 1 đề (dùng chung 1 bộ cho mọi đề cùng cấp, xáo thứ tự bằng seed). */
-  function exBuildListen(lv, seed){
+  /* Xây phần nghe của 1 đề: mỗi Test dùng đúng 1 bộ riêng (Test 1 = bộ 1 ở
+     LISTEN_<lv>; Test 2–9 = LISTEN_<lv>_SETS["2".."9"] nạp từ
+     assets/listening-<lv>-x9.js). Nếu file bộ riêng chưa nạp được thì lùi về
+     bộ 1 như trước. Trong bộ, thứ tự câu theo seed; đáp án chỉ xáo khi hiển thị. */
+  function exBuildListen(lv, seed, testNo){
     var spec = (typeof window !== "undefined" && window.EXAM_LISTEN) || null;
-    var items = (typeof window !== "undefined" ? window["LISTEN_" + lv] : null) || [];
+    var sets = (typeof window !== "undefined" ? window["LISTEN_" + lv + "_SETS"] : null) || null;
+    var items = (testNo && sets && sets[String(testNo)]) ? sets[String(testNo)]
+      : ((typeof window !== "undefined" ? window["LISTEN_" + lv] : null) || []);
     if(!spec || !spec[lv]) return {error: "nodata"};
     spec = spec[lv];
     var INST = (typeof window !== "undefined" && window.EXAM_LISTEN_INST) || {};
@@ -4057,7 +4084,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           prob: "問題" + t, subNo: "3." + t, inst: INST[row[0]] || "", part: 3,
           pass: null, passHtml: null, qText: it.q, qHtml: null, uline: null,
           opts: opts, imgOpts: imgs, pic: it.img || null, ans: ans, star: null,
-          au: it.au, exp: it.exp || null, fullSent: null, correctText: opts ? opts[ans] : ""});
+          au: it.au, exp: it.exp || null, dlg: it.dlg || null, fullSent: null, correctText: opts ? opts[ans] : ""});
       });
     });
     return {qs: qs};
@@ -4538,7 +4565,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     ensureGrammarData(function(g){
       if(!g || !window.EXAM_COMP || !window["JLNEW_" + lv]){ cb(false); return; }
       ensureMinnaData(function(){ ensureSpecData(function(){
-        ensureListenData(lv, function(l){ cb(!!l); });
+        ensureListenData(lv, function(l){
+          if(!l){ cb(false); return; }
+          /* Bộ nghe riêng từng đề là phần bổ sung: nạp xong (hoặc lỗi) mới tính
+             đề mở được; lỗi file bộ riêng thì exBuildListen tự lùi về bộ 1. */
+          ensureListenSets(lv, function(){ cb(true); });
+        });
       }); });
     });
   }
@@ -4551,7 +4583,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(tn <= open && window["JLNEW_" + lv] && window["LISTEN_" + lv]){
         var seed = exSeedFor(lv, tn);
         var bw = exBuildWritten(lv, seed);
-        var bl = bw.error ? null : exBuildListen(lv, seed);
+        var bl = bw.error ? null : exBuildListen(lv, seed, tn);
         if(!bw.error && bl && !bl.error){
           ok = true;
           var all = bw.qs.concat(bl.qs);
@@ -4897,7 +4929,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       '<div class="ex-rules">' +
       '<p><b>Luật đậu:</b> tổng điểm ≥ ' + pass + '/180 <b>và</b> mỗi phần đạt ≥ 31,7% số câu đúng — trượt một phần là trượt cả bài, giống đề thật.</p>' +
       '<p><b>Điểm là ước lượng:</b> app quy đổi từ % câu đúng (mỗi phần tối đa 60 điểm); đề thi thật dùng thang chuẩn hóa IRT nên điểm thật có thể lệch.</p>' +
-      '<p><b>Phần nghe:</b> mỗi câu theo đúng mẫu JLPT của từng dạng — dạng hỏi trước thì hiện câu hỏi trước khi nghe, dạng nghe trước thì nghe xong mới hiện câu hỏi và đáp án; mỗi câu phát tối đa 2 lần. Phần nghe dùng chung 1 bộ cho mọi đề cùng cấp ' + lv + '.</p>' +
+      '<p><b>Phần nghe:</b> mỗi câu theo đúng mẫu JLPT của từng dạng — dạng hỏi trước thì hiện câu hỏi trước khi nghe, dạng nghe trước thì nghe xong mới hiện câu hỏi và đáp án; mỗi câu phát tối đa 2 lần. Mỗi đề dùng một bộ nghe riêng: Test 1 dùng bộ 1, Test 2–9 dùng lần lượt bộ 2–9 của cấp ' + lv + '.</p>' +
       '<p>Làm lần lượt Phần 1 → Phần 2 → Phần 3 trong một luồng. Bấm “Phiếu đáp án” để nhảy tới câu bất kỳ. Hết giờ, bài tự nộp.</p>' +
       '</div>' +
       '<button class="cta" id="exStartBtn" style="margin-top:14px;">Bắt đầu làm bài</button>' +
@@ -6699,14 +6731,43 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.head.appendChild(s);
   }
 
+  /* Bộ nghe riêng Test 2–9 của từng cấp (window.LISTEN_<lv>_SETS), nạp lười từ
+     assets/listening-<lv>-x9.js — chỉ phần thi dùng; trang Luyện nghe vẫn dùng
+     bộ 1 qua ensureListenData. Lỗi nạp không chặn app: cb(false) và phần thi
+     lùi về bộ 1. */
+  var lsSetsLoad = {};
+  function ensureListenSets(lv, cb){
+    if(window["LISTEN_" + lv + "_SETS"]){ if(cb) cb(window["LISTEN_" + lv + "_SETS"]); return; }
+    var st = lsSetsLoad[lv];
+    if(!st){ st = lsSetsLoad[lv] = {state: 0, queue: []}; }
+    if(st.state === 3){ if(cb) cb(null); return; }
+    if(cb) st.queue.push(cb);
+    if(st.state === 1) return;
+    st.state = 1;
+    var s = document.createElement("script");
+    s.src = "assets/listening-" + lv.toLowerCase() + "-x9.js";
+    s.onload = function(){
+      var d = window["LISTEN_" + lv + "_SETS"] || null;
+      st.state = d ? 2 : 3;
+      var q = st.queue; st.queue = [];
+      q.forEach(function(f){ f(d); });
+    };
+    s.onerror = function(){
+      st.state = 3;
+      var q = st.queue; st.queue = [];
+      q.forEach(function(f){ f(null); });
+    };
+    document.head.appendChild(s);
+  }
+
   function lsRenderLevels(){
     var box = document.getElementById("lsLevels");
     box.innerHTML = "";
     LS_LEVELS.forEach(function(lv){
       var b = document.createElement("button");
-      b.className = "setrow";
-      b.innerHTML = '<span class="r1"><h3>' + lv + '</h3><span class="cnt">' + LS_COUNTS[lv] + ' BÀI ›</span></span>' +
-        '<p>Luyện nghe Part 3: ' + LS_COUNTS[lv] + ' hội thoại có file nghe giọng đã duyệt — nghe, chọn đáp án, xem giải thích. Kèm Shadowing luyện từng câu theo chính các hội thoại này.</p>';
+      b.className = "ls-lvtile";
+      b.setAttribute("aria-label", "Mở trang luyện nghe " + lv + " — " + LS_COUNTS[lv] + " hội thoại Part 3 và Shadowing");
+      b.innerHTML = '<b>' + lv + '</b><span class="n">' + LS_COUNTS[lv] + ' hội thoại</span><span>Part 3 · Shadowing</span>';
       b.addEventListener("click", function(){
         ensureListenData(lv, function(d){
           if(!d){ return; }
@@ -6967,9 +7028,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("listenGoShadow").addEventListener("click", function(){
     hideOv(listenOverlay); shRender(); showOv(shadowOverlay);
   });
-  document.getElementById("listenGoExam").addEventListener("click", function(){
-    hideOv(listenOverlay); goTab("jlpt");
-  });
   document.getElementById("readGoExam").addEventListener("click", function(){
     hideOv(readOverlay); goTab("jlpt");
   });
@@ -7001,6 +7059,81 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var svAutoPause = false, svAutoP = -1, svRates = [1, 1.25, 1.5, 0.75, 0.5], svRateIdx = 0;
   var svSegs = [], svKaraKey = "", svLastT = 0;
   function svEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  /* Danh sách video shadowing — MỚI NHẤT Ở ĐẦU mảng (video mới thêm lên đầu,
+     tự xuống trang sau khi quá 5 video/trang). thumb là ảnh bìa lưu trong app. */
+  var SV_VIDEOS = [
+    {id: "r_o5gRWkkaA", title: "N5 · Ở nhà ga: hỏi tàu đi Tokyo", tag: "THỬ",
+     meta: "Video 22 giây · 9 câu phụ đề · bấm câu để xem giải thích ngữ pháp và từ mới.",
+     dur: "0:22", thumb: "assets/sv-thumb-tokyo-station.jpg",
+     alt: "Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga"}
+  ];
+  var SV_PAGE_SIZE = 5, svListPage = 1;
+  function svOpenLesson(){
+    hideOv(listenOverlay);
+    svRenderLines();
+    if(svCur < 0) svSetNow(0);
+    showOv(svOverlay);
+    if(svTimer) clearInterval(svTimer);
+    svTimer = setInterval(svTick, 120);
+  }
+  function svRenderList(){
+    var box = document.getElementById("svList");
+    var pager = document.getElementById("svPager");
+    if(!box || !pager) return;
+    var pages = Math.max(1, Math.ceil(SV_VIDEOS.length / SV_PAGE_SIZE));
+    if(svListPage > pages) svListPage = pages;
+    if(svListPage < 1) svListPage = 1;
+    box.innerHTML = "";
+    SV_VIDEOS.slice((svListPage - 1) * SV_PAGE_SIZE, svListPage * SV_PAGE_SIZE).forEach(function(v){
+      var b = document.createElement("button");
+      b.className = "sv-entry";
+      b.setAttribute("aria-label", "Mở video shadowing: " + v.title);
+      b.innerHTML =
+        '<span class="sv-thumb">' +
+          '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt) + '" loading="lazy">' +
+          '<span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>' +
+          '<span class="sv-dur">' + svEsc(v.dur) + '</span>' +
+        '</span>' +
+        '<span class="sv-meta">' +
+          '<h3>' + svEsc(v.title) + (v.tag ? '<span class="sv-newtag">' + svEsc(v.tag) + '</span>' : '') + '</h3>' +
+          '<p>' + svEsc(v.meta) + '</p>' +
+        '</span>';
+      b.addEventListener("click", function(){ if(v.id === SV_ID) svOpenLesson(); });
+      box.appendChild(b);
+    });
+    pager.innerHTML = "";
+    if(pages <= 1) return;
+    function pgBtn(label, page, opts){
+      opts = opts || {};
+      var b = document.createElement("button");
+      b.className = "sv-pgbtn" + (opts.on ? " on" : "");
+      b.innerHTML = label;
+      if(opts.label) b.setAttribute("aria-label", opts.label);
+      if(opts.disabled){ b.disabled = true; }
+      else b.addEventListener("click", function(){ svListPage = page; svRenderList(); });
+      pager.appendChild(b);
+    }
+    pgBtn("«", svListPage - 1, {label: "Trang trước", disabled: svListPage <= 1});
+    /* Số trang: hiện hết nếu ≤7 trang; nhiều hơn thì rút gọn 1 … quanh trang hiện tại … trang cuối. */
+    var nums = [];
+    if(pages <= 7){ for(var i = 1; i <= pages; i++) nums.push(i); }
+    else{
+      nums = [1];
+      var lo = Math.max(2, svListPage - 1), hi = Math.min(pages - 1, svListPage + 1);
+      if(lo > 2) nums.push("…");
+      for(var j = lo; j <= hi; j++) nums.push(j);
+      if(hi < pages - 1) nums.push("…");
+      nums.push(pages);
+    }
+    nums.forEach(function(n){
+      if(n === "…"){
+        var d = document.createElement("span");
+        d.className = "sv-pgdots"; d.textContent = "…";
+        pager.appendChild(d);
+      } else pgBtn(String(n), n, {on: n === svListPage, label: "Trang " + n});
+    });
+    pgBtn("»", svListPage + 1, {label: "Trang sau", disabled: svListPage >= pages});
+  }
   function svFmt(t){
     t = Math.max(0, Math.floor(t));
     return Math.floor(t / 60) + ":" + ("0" + (t % 60)).slice(-2);
@@ -7103,11 +7236,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.querySelectorAll("#svLines .sv-w").forEach(function(w){ w.classList.remove("done"); w.classList.remove("now"); });
     svKaraKey = "";
     svCapUpdate();
-    /* Chữ sub chạy cuộn: câu đang phát tự cuộn vào tầm nhìn trong danh sách */
+    /* Chữ sub trong khung cuộn: đọc tới đâu, khung tự cuộn lên tới đó —
+       cuộn scrollTop của chính khung #svLines để câu đang phát nằm giữa
+       khung, không cuộn trang ngoài */
     var actLine = document.querySelector("#svLines .sv-line.active");
-    if(actLine && svOverlay.classList.contains("open") && actLine.scrollIntoView){
+    var svFrame = document.getElementById("svLines");
+    if(actLine && svFrame && svOverlay.classList.contains("open")){
       var svReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      actLine.scrollIntoView({block:"nearest", behavior: svReduce ? "auto" : "smooth"});
+      var svTarget = actLine.offsetTop - svFrame.clientHeight / 2 + actLine.offsetHeight / 2;
+      if(svTarget < 0) svTarget = 0;
+      if(typeof svFrame.scrollTo === "function") svFrame.scrollTo({top: svTarget, behavior: svReduce ? "auto" : "smooth"});
+      else svFrame.scrollTop = svTarget;
     }
     if(svExpIdx >= 0) svShowExp(i);
     svKaraoke(svLastT);
@@ -7125,9 +7264,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(exp.parentNode !== wrap) wrap.appendChild(exp);
     exp.classList.add("show");
     svPlaceExp();
-    if(exp.scrollIntoView && svOverlay.classList.contains("open")){
+    /* Bong bóng nằm trong khung cuộn phụ đề: cuộn khung (không cuộn trang)
+       sao cho bong bóng lọt hẳn vào vùng nhìn thấy của khung */
+    if(svOverlay.classList.contains("open")){
+      var fr = document.getElementById("svLines");
       var svReduce2 = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      exp.scrollIntoView({block:"nearest", behavior: svReduce2 ? "auto" : "smooth"});
+      var eTop = exp.offsetTop, eBot = eTop + exp.offsetHeight;
+      var vTop = fr.scrollTop, vBot = vTop + fr.clientHeight;
+      if(eTop < vTop || eBot > vBot){
+        var tTop = eTop - 6;
+        if(tTop < 0) tTop = 0;
+        if(typeof fr.scrollTo === "function") fr.scrollTo({top: tTop, behavior: svReduce2 ? "auto" : "smooth"});
+        else fr.scrollTop = tTop;
+      }
     }
   }
   function svPlaceExp(){
@@ -7139,7 +7288,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!line) return;
     var eh = exp.offsetHeight, lt = line.offsetTop, lh = line.offsetHeight;
     var belowTop = lt + lh + 9;
-    if(wrap.offsetHeight - belowTop >= eh + 4 || lt - eh - 9 < 0){
+    if(wrap.scrollHeight - belowTop >= eh + 4 || lt - eh - 9 < 0){
       exp.style.top = belowTop + "px";
       exp.classList.add("below"); exp.classList.remove("above");
     } else {
@@ -7309,14 +7458,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svCapUpdate();
     svKaraoke(svLastT);
   });
-  document.getElementById("listenGoShadowVideo").addEventListener("click", function(){
-    hideOv(listenOverlay);
-    svRenderLines();
-    if(svCur < 0) svSetNow(0);
-    showOv(svOverlay);
-    if(svTimer) clearInterval(svTimer);
-    svTimer = setInterval(svTick, 120);
-  });
+  svRenderList();
   document.getElementById("closeShadowVideo").addEventListener("click", function(){
     if(svPlayer && svPlayer.pauseVideo) svPlayer.pauseVideo();
     if(svTimer){ clearInterval(svTimer); svTimer = null; }
