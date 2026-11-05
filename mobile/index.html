@@ -997,8 +997,8 @@
   .sv-now .sv-ja ruby{ruby-align:center;}
   .sv-now .sv-ja rt{font-size:.52em; font-weight:600; color:var(--ink-2);}
   .sv-now .sv-vi{font-size:12.5px; color:var(--ink-2); margin-top:3px; line-height:1.5;}
-  .sv-now .sv-hint{font-size:11px; color:var(--ink-3); margin-top:6px;}
-  .sv-controls{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  /* Hàng nút điều khiển nằm dưới cùng trang, sau danh sách câu */
+  .sv-controls{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
   .sv-ctl{
     flex:1 1 0; min-width:96px; min-height:46px; border-radius:12px; cursor:pointer; font-family:inherit;
     border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-size:13.5px; font-weight:700;
@@ -2663,8 +2663,13 @@
           </div>
           <div class="sv-ja jp" id="svNowJa"></div>
           <div class="sv-vi" id="svNowVi"></div>
-          <div class="sv-hint">Bấm vào câu đang hiện (hoặc một câu trong danh sách dưới) để xem giải thích và nhảy video tới đúng câu đó.</div>
         </div>
+
+        <div class="sv-exp" id="svExp"><b>GIẢI THÍCH · CÂU <span id="svExpNum">1</span></b><p id="svExpText"></p></div>
+
+        <h3 class="wvsec">Tất cả các câu trong video</h3>
+        <p class="wvinfo">Câu đang phát sẽ tự tô đỏ và danh sách tự cuộn theo. Bấm một câu để video nhảy tới câu đó và hiện giải thích.</p>
+        <div id="svLines"></div>
 
         <div class="sv-controls">
           <button class="sv-ctl" id="svPlayPause" type="button">
@@ -2678,12 +2683,6 @@
           <button class="sv-ctl on" id="svToggleFuri" type="button" aria-pressed="true">Furigana: Bật</button>
           <button class="sv-ctl on" id="svToggleVi" type="button" aria-pressed="true">Dịch: Bật</button>
         </div>
-
-        <div class="sv-exp" id="svExp"><b>GIẢI THÍCH · CÂU <span id="svExpNum">1</span></b><p id="svExpText"></p></div>
-
-        <h3 class="wvsec">Tất cả các câu trong video</h3>
-        <p class="wvinfo">Câu đang phát sẽ tự tô đỏ. Bấm một câu để video nhảy tới câu đó và hiện giải thích.</p>
-        <div id="svLines"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -6967,6 +6966,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     viEl.textContent = s.vi;
     viEl.style.display = svShowVi ? "" : "none";
     document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === i); });
+    /* Chữ sub chạy cuộn: câu đang phát tự cuộn vào tầm nhìn trong danh sách */
+    var actLine = document.querySelector("#svLines .sv-line.active");
+    if(actLine && svOverlay.classList.contains("open") && actLine.scrollIntoView){
+      var svReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      actLine.scrollIntoView({block:"nearest", behavior: svReduce ? "auto" : "smooth"});
+    }
     if(svExpIdx >= 0) svShowExp(i);
   }
   function svShowExp(i){
