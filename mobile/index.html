@@ -1124,8 +1124,8 @@
   .rdvrow .r{font-size:13.5px; color:var(--ink-3); white-space:nowrap;}
   .rdvrow .m{font-size:14px; color:var(--ink-2); margin-left:auto; text-align:right;}
 
-  /* greeting + chibi background (logo thu nhỏ) */
-  .greetxt{display:flex; flex-direction:column; align-items:flex-start; max-width:74%;}
+  /* greeting + logo SoraKanji bên phải banner */
+  .greetxt{display:flex; flex-direction:column; align-items:flex-start; flex:1 1 auto; min-width:0;}
   .hero{
     border:1px solid var(--line); border-radius:18px; overflow:hidden;
     padding:11px 14px; min-height:92px; align-items:center;
@@ -1135,13 +1135,13 @@
        lời chào) sẽ thành trắng trên nền kem, không đọc được. */
     color:#2A2118;
     background-color:#FBEFD2;
-    background-image:
-      linear-gradient(90deg, rgba(251,239,210,.98) 34%, rgba(251,239,210,.78) 58%, rgba(251,239,210,.12) 88%),
-      url(assets/chibi.png);
-    background-repeat:no-repeat;
-    background-size:auto, auto 118%;
-    background-position:center, right 0 top 34%;
     --ink:#2A2118; --ink-2:#6F5B3E; --amber:#9C6603; --amber-soft:rgba(255,255,255,.6);
+  }
+  /* Logo app: ảnh vuông, cao vừa khung banner, bo góc như một ô logo */
+  .herologo{
+    width:96px; height:96px; flex:0 0 auto; margin-left:10px;
+    border-radius:14px; border:1px solid var(--line);
+    object-fit:cover; background:#F6EFDF; display:block;
   }
   .hero h1{font-size:18px; color:#2A2118;}
   .hero p{font-size:12.5px;}
@@ -2154,6 +2154,7 @@
             <p id="heroSub">Hôm nay tu luyện tiếp N4 nhé</p>
             <span class="realmchip" id="heroRealmChip"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> TRÚC CƠ · TẦNG 3</span>
           </div>
+          <img class="herologo" src="assets/logo.png" alt="Logo SoraKanji — chữ 空漢 màu xanh dương nằm dọc bên trái, bé chibi áo đen đeo kiếm đứng bên phải chỉ tay vào chữ" width="96" height="96" />
         </div>
 
         <h2 class="secttl">Pháp bảo tông môn</h2>
