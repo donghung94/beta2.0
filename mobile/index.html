@@ -1137,11 +1137,12 @@
     background-color:#FBEFD2;
     --ink:#2A2118; --ink-2:#6F5B3E; --amber:#9C6603; --amber-soft:rgba(255,255,255,.6);
   }
-  /* Logo app: ảnh vuông, cao vừa khung banner, bo góc như một ô logo */
+  /* Logo app: ảnh vuông, cao vừa khung banner, bo góc; nền trong suốt để
+     màu thẻ banner hiện qua vùng trong suốt của logo */
   .herologo{
     width:96px; height:96px; flex:0 0 auto; margin-left:10px;
-    border-radius:14px; border:1px solid var(--line);
-    object-fit:cover; background:#F6EFDF; display:block;
+    border-radius:14px; border:none;
+    object-fit:cover; background:transparent; display:block;
   }
   .hero h1{font-size:18px; color:#2A2118;}
   .hero p{font-size:12.5px;}
