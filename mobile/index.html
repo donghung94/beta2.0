@@ -1555,6 +1555,18 @@
 
   /* ---------- Trang Admin: Quản lý học viên ---------- */
   .adm-tag{font-size:10px; font-weight:800; letter-spacing:.08em; background:var(--red); color:#fff; padding:4px 8px; border-radius:999px; white-space:nowrap;}
+
+  /* ---------- Tài khoản: đăng nhập / đổi tài khoản + huy hiệu Admin ---------- */
+  .acctbar{margin-top:14px; padding-top:13px; border-top:1px solid var(--line);}
+  .acctline{display:flex; align-items:center; gap:8px; font-size:13.5px; min-width:0;}
+  .acctline svg{flex:0 0 auto; color:var(--ink-3);}
+  #acctEmail{font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .acctnote{font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:7px 0 11px;}
+  .acctbtn{min-height:44px; padding:0 15px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; color:var(--ink); display:inline-flex; align-items:center; justify-content:center; gap:6px;}
+  .loginfield{display:block; margin:2px 0 4px;}
+  .loginfield>span{display:block; font-size:12px; font-weight:800; letter-spacing:.06em; color:var(--ink-2); margin-bottom:6px;}
+  .logininput{width:100%; box-sizing:border-box; min-height:50px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); font-family:inherit; font-size:15px;}
+  .logininput:focus{outline:2px solid var(--red); outline-offset:1px; border-color:transparent;}
   .sturow{padding:12px 0; border-bottom:1px solid var(--line);}
   .sturow:last-child{border-bottom:none;}
   .stu-top{display:flex; align-items:center; gap:11px;}
@@ -2350,6 +2362,18 @@
             <div class="bar"><i style="width:62%"></i></div>
             <p>Hoàn thành nhiệm vụ hôm nay mỗi ngày để giữ tốc độ tu luyện.</p>
           </div>
+          <div class="acctbar">
+            <div class="acctline">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
+              <span id="acctEmail">Chưa đăng nhập</span>
+              <span class="adm-tag" id="acctAdminBadge" hidden>ADMIN</span>
+            </div>
+            <p class="acctnote" id="acctNote">Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng email Admin để mở.</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="acctbtn" id="acctLoginBtn" type="button">Đăng nhập / Đổi tài khoản</button>
+              <button class="acctbtn" id="acctLogoutBtn" type="button" hidden>Đăng xuất</button>
+            </div>
+          </div>
         </div>
 
         <div class="card">
@@ -2707,6 +2731,23 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <h3>Phiếu đáp án</h3>
       <p class="snote">Câu đỏ là đã trả lời. Bấm số để nhảy tới câu đó.</p>
       <div class="sheetgrid" id="sheetGrid"></div>
+    </div>
+
+    <!-- đăng nhập / đổi tài khoản (bản xem thử: đổi theo email ngay trong phiên) -->
+    <div class="sheet" id="loginSheet" aria-hidden="true">
+      <div class="grab"></div>
+      <h3>Đăng nhập / Đổi tài khoản</h3>
+      <p class="snote">Nhập email để app nhận diện tài khoản trong phiên này. Tài khoản Admin của app là <b>nongaphao@gmail.com</b> — đăng nhập bằng email đó sẽ mở ô <b>Quản trị</b> ở Home và mục <b>Quản lý học viên</b> ở tab Cá nhân; email khác vẫn là tài khoản học viên thường.</p>
+      <label class="loginfield">
+        <span>EMAIL ĐĂNG NHẬP</span>
+        <input class="logininput" id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="VD: nongaphao@gmail.com" aria-label="Email đăng nhập" />
+      </label>
+      <p id="loginMsg" style="font-size:13px; color:var(--red); font-weight:700; min-height:19px; margin:6px 0 10px; line-height:1.5;"></p>
+      <div style="display:flex; gap:10px;">
+        <button class="ghostbtn" id="loginCancel" type="button" style="flex:1; justify-content:center; min-height:52px;">Đóng</button>
+        <button class="sheetbtn" id="loginGo" type="button" style="flex:1;">Đăng nhập</button>
+      </div>
+      <button class="acctbtn" id="loginLogout" type="button" hidden style="width:100%; margin-top:10px;">Đăng xuất khỏi tài khoản hiện tại</button>
     </div>
 
     <!-- ============ KANJI DETAIL OVERLAY ============ -->
@@ -3611,7 +3652,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Lưới Pháp bảo tông môn nay 10 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu / Xếp hạng · Bảo tàng · Phòng chat · Đấu trường. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Pháp bảo và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Lưới Pháp bảo tông môn nay 10 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu / Xếp hạng · Bảo tàng · Phòng chat · Đấu trường. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Pháp bảo và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nay đã nối theo email đăng nhập: đầu tab Cá nhân có mục Tài khoản cho đăng nhập / đổi tài khoản ngay trong phiên này, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ (bản thật còn kiểm tra thêm cờ isAdmin=true trên tài khoản Firebase). Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới.</p>
 </div>
 
   <!-- handwriting.js (MIT) — lớp gọi Google Input Tools, file nguyên bản ở assets/ -->
@@ -4836,7 +4877,92 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     "上": "nuMStII6SDM",
     "下": "LS0GPU_Y2Vk",
     "九": "0bqSi3OrOVI",
-    "六": "b8YcTI0i3Zs"
+    "六": "b8YcTI0i3Zs",
+    "千": "I7eiOXKRpXw",
+    "岩": "k7IfQHqQq0M",
+    "森": "MS_zX43W0-I",
+    "泳": "ytETwsfXK-k",
+    "犬": "ELuRGiKtHTE",
+    "中": "-TY8oqxLZ9s",
+    "何": "99L7SzZtbWo",
+    "元": "WE9autECqhw",
+    "出": "e5BfCmtwVTw",
+    "古": "3gNiFrFoYdU",
+    "外": "VWQt1PdePiw",
+    "多": "HsxdSw0Imp4",
+    "寺": "jVsFPKyttLI",
+    "貝": "S6-zPNYbhQg",
+    "買": "fkaHvLFvbvY",
+    "内": "iE-r7E13mEk",
+    "少": "ZJpXQXT77Iw",
+    "帰": "8_DmmDg2HTU",
+    "物": "PDBo8ukEUkQ",
+    "町": "6R93QYIoHno",
+    "飲": "7_kOS8Tsaw8",
+    "一": "Bq_WpFCWdMU",
+    "万": "RyfbNxkD_Ls",
+    "三": "WxVhjfrzMlM",
+    "二": "LKJqSnL5Ol0",
+    "五": "ADGlFqn0SEg",
+    "人": "88F8T3wj7gk",
+    "今": "Dt_JE9kEOyg",
+    "先": "AKI40s1-B4E",
+    "入": "9EdSoJ7YHgo",
+    "八": "uDnmEKCzVTg",
+    "円": "IR_2bQckrjE",
+    "前": "ezjSi97T9dc",
+    "北": "7ZJU-xoZJFg",
+    "十": "9bC3KPwfask",
+    "午": "8RIe-1U3Yy0",
+    "半": "Psepv20FTfw",
+    "南": "q0UZzUDRHIY",
+    "友": "nPN7Sxn11MI",
+    "口": "FslaCGoX0aA",
+    "右": "A0j7iCOI0CI",
+    "四": "9-URqbYBvRE",
+    "国": "H93JQykTaTQ",
+    "土": "v4E6cGxLljg",
+    "夕": "UeByBCtJMrQ",
+    "大": "dQq50pGJhUA",
+    "天": "OY-avkHPZSY",
+    "女": "9peZKD6x_Qw",
+    "子": "Gx12bdUxuko",
+    "学": "q0aXa9uueJQ",
+    "小": "e65uB4rYBpw",
+    "山": "w5Va8Pq_yFg",
+    "川": "dsUqTw1ODuA",
+    "左": "nMqeT22hH4U",
+    "年": "POft_b-CNUc",
+    "後": "qwW1g3qU7fw",
+    "手": "nmJZup8PqQ4",
+    "新": "PJnHPIorAMA",
+    "方": "2Zn-wj1yDX8",
+    "日": "Bv0On3zdv30",
+    "月": "U23JrWj6fJY",
+    "木": "I49D8iBZnAI",
+    "本": "5gth8VMs-oY",
+    "来": "KPt_vt0ishU",
+    "東": "Zv3tEvWuGG8",
+    "校": "0pwnjcP7tcY",
+    "母": "U_4O7un9Ygc",
+    "毎": "jjX9yrmrC2M",
+    "気": "Vxq-dIVazIQ",
+    "水": "Tii2yZn1u1M",
+    "火": "2iAhgoF-8Sg",
+    "父": "vmXpk96fMOg",
+    "牛": "-excy085WnU",
+    "生": "Z2UwPxZE-Nk",
+    "田": "TiSfzAmA1o0",
+    "畑": "txzJAkh4nyY",
+    "白": "TSYXDciAtTA",
+    "百": "cBo95AW3kYY",
+    "目": "LVRgq5wkH0Q",
+    "石": "K095UadfJSU",
+    "立": "b-0dd1DWChw",
+    "竹": "bn36lH2pedY",
+    "米": "8ktJwy09E5U",
+    "耳": "I-hnM0FUtQk",
+    "肉": "etRgxIXFnh4"
   };
 
   var kdContent = document.getElementById("kdContent");
@@ -11238,12 +11364,46 @@ function furiHTML(text){
     });
     renderAdminStats();
   }
-  var isAdminAccount = false; /* trạng thái admin của tài khoản đang đăng nhập (bản thật đọc cờ isAdmin trên /users/{uid} trong Firebase) — bản xem thử đang là học viên thường nên mọi lối vào Admin đều ẩn */
+  /* ---------- Tài khoản + quyền Admin theo email ----------
+     Email được cấp Admin trong app: nongaphao@gmail.com.
+     Bản thật: sau khi đăng nhập Firebase, app đọc thêm cờ isAdmin=true trên
+     /users/{uid} (project donghung-3208d) rồi mới mở quyền — cờ đó cấp ở phía
+     Firebase, không nằm trong file này. Bản xem thử chưa có máy chủ đăng nhập
+     nên quyền Admin ở đây suy ra từ email đang đăng nhập trong phiên: đúng
+     email Admin thì ô “Quản trị” + mục Quản lý học viên hiện, email khác ẩn. */
+  var ADMIN_EMAILS = ["nongaphao@gmail.com"];
+  var signedInEmail = ""; /* email đang đăng nhập trong phiên; rỗng = chưa đăng nhập */
+  var isAdminAccount = false;
+  function refreshAdminState(){
+    isAdminAccount = !!signedInEmail && ADMIN_EMAILS.indexOf(signedInEmail) >= 0;
+  }
+  function renderAccount(){
+    var em = document.getElementById("acctEmail");
+    if(em) em.textContent = signedInEmail ? signedInEmail : "Chưa đăng nhập";
+    var badge = document.getElementById("acctAdminBadge");
+    if(badge) badge.hidden = !isAdminAccount;
+    var note = document.getElementById("acctNote");
+    if(note){
+      note.textContent = isAdminAccount
+        ? "Tài khoản Admin — ô Quản trị ở Home và mục Quản lý học viên bên dưới đã mở."
+        : (signedInEmail
+          ? "Tài khoản học viên thường — mục Quản trị chỉ hiện với tài khoản Admin."
+          : "Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng email Admin để mở.");
+    }
+    var outBtn = document.getElementById("acctLogoutBtn");
+    if(outBtn) outBtn.hidden = !signedInEmail;
+  }
   function applyAdminVisibility(){
     var cell = document.getElementById("gridAdminCell");
     if(cell) cell.hidden = !isAdminAccount;
     var row = document.getElementById("meAdminRow");
     if(row) row.hidden = !isAdminAccount;
+    renderAccount();
+  }
+  function setSignedInEmail(email){
+    signedInEmail = (email || "").trim().toLowerCase();
+    refreshAdminState();
+    applyAdminVisibility();
   }
   applyAdminVisibility();
   function openAdmin(){
@@ -11255,6 +11415,49 @@ function furiHTML(text){
   document.getElementById("admSearch").addEventListener("input", renderAdmin);
   document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
+
+  /* ---------- Đăng nhập / đổi tài khoản (trong phiên) ---------- */
+  var loginSheet = document.getElementById("loginSheet");
+  var loginScrim = document.getElementById("sheetScrim");
+  var loginEmailInput = document.getElementById("loginEmail");
+  var loginMsgEl = document.getElementById("loginMsg");
+  function loginMsg(t){ if(loginMsgEl) loginMsgEl.textContent = t || ""; }
+  function openLogin(){
+    if(loginEmailInput) loginEmailInput.value = signedInEmail || "";
+    loginMsg("");
+    var lo = document.getElementById("loginLogout");
+    if(lo) lo.hidden = !signedInEmail;
+    loginSheet.classList.add("open");
+    loginSheet.setAttribute("aria-hidden", "false");
+    if(loginScrim) loginScrim.classList.add("open");
+  }
+  function closeLogin(){
+    loginSheet.classList.remove("open");
+    loginSheet.setAttribute("aria-hidden", "true");
+    var ans = document.getElementById("answerSheet");
+    if(loginScrim && !(ans && ans.classList.contains("open"))) loginScrim.classList.remove("open");
+  }
+  function doLogin(){
+    var v = loginEmailInput ? loginEmailInput.value.trim() : "";
+    if(!v || v.indexOf("@") < 1 || v.indexOf(".", v.indexOf("@")) < 0){
+      loginMsg("Email chưa hợp lệ — kiểm tra lại giúp mình nhé.");
+      return;
+    }
+    setSignedInEmail(v);
+    closeLogin();
+    if(isAdminAccount) openAdmin(); /* vừa cấp Admin: mở thẳng trang Quản lý học viên để thấy đã mở khóa */
+  }
+  function doLogout(){
+    setSignedInEmail("");
+    closeLogin();
+  }
+  document.getElementById("acctLoginBtn").addEventListener("click", openLogin);
+  document.getElementById("acctLogoutBtn").addEventListener("click", doLogout);
+  document.getElementById("loginGo").addEventListener("click", doLogin);
+  document.getElementById("loginCancel").addEventListener("click", closeLogin);
+  document.getElementById("loginLogout").addEventListener("click", doLogout);
+  if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLogin(); } });
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")) closeLogin(); });
 
   /* ---------- PWA: cài lên màn hình chính + service worker + offline ---------- */
   var deferredInstall = null;
