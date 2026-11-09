@@ -12,256 +12,307 @@ window.VOCAB_SPEC = {
   {
    "word": "建設",
    "reading": "けんせつ",
+   "hanViet": "KIẾN THIẾT",
    "meaning": "xây dựng; công trình xây dựng"
   },
   {
    "word": "建築",
    "reading": "けんちく",
+   "hanViet": "KIẾN TRÚC",
    "meaning": "kiến trúc; xây dựng nhà cửa"
   },
   {
    "word": "土木",
    "reading": "どぼく",
+   "hanViet": "THỔ MỘC",
    "meaning": "công trình dân dụng; thổ mộc"
   },
   {
    "word": "工事",
    "reading": "こうじ",
+   "hanViet": "CÔNG SỰ",
    "meaning": "công trình; thi công"
   },
   {
    "word": "施工",
    "reading": "せこう",
+   "hanViet": "THI CÔNG",
    "meaning": "thi công"
   },
   {
    "word": "着工",
    "reading": "ちゃっこう",
+   "hanViet": "TRƯỚC CÔNG",
    "meaning": "khởi công"
   },
   {
    "word": "完工",
    "reading": "かんこう",
+   "hanViet": "HOÀN CÔNG",
    "meaning": "hoàn thành công trình"
   },
   {
    "word": "竣工",
    "reading": "しゅんこう",
+   "hanViet": "TUẤN CÔNG",
    "meaning": "hoàn công; bàn giao công trình"
   },
   {
    "word": "解体",
    "reading": "かいたい",
+   "hanViet": "GIẢI THỂ",
    "meaning": "tháo dỡ; phá dỡ"
   },
   {
    "word": "改修",
    "reading": "かいしゅう",
+   "hanViet": "CẢI TU",
    "meaning": "sửa chữa, cải tạo (công trình)"
   },
   {
    "word": "設計",
    "reading": "せっけい",
+   "hanViet": "THIẾT KẾ",
    "meaning": "thiết kế"
   },
   {
    "word": "図面",
    "reading": "ずめん",
+   "hanViet": "ĐỒ DIỆN",
    "meaning": "bản vẽ; bản thiết kế"
   },
   {
    "word": "工法",
    "reading": "こうほう",
+   "hanViet": "CÔNG PHÁP",
    "meaning": "phương pháp thi công"
   },
   {
    "word": "工程",
    "reading": "こうてい",
+   "hanViet": "CÔNG TRÌNH",
    "meaning": "công đoạn thi công; tiến độ công việc"
   },
   {
    "word": "仮設",
    "reading": "かせつ",
+   "hanViet": "GIẢ THIẾT",
    "meaning": "công trình tạm; hạng mục tạm"
   },
   {
    "word": "造成",
    "reading": "ぞうせい",
+   "hanViet": "TẠO THÀNH",
    "meaning": "san lấp, tạo mặt bằng (đất nền)"
   },
   {
    "word": "点検",
    "reading": "てんけん",
+   "hanViet": "ĐIỂM KIỂM",
    "meaning": "kiểm tra định kỳ; kiểm tra chi tiết"
   },
   {
    "word": "検査",
    "reading": "けんさ",
+   "hanViet": "KIỂM TRA",
    "meaning": "kiểm tra; nghiệm thu"
   },
   {
    "word": "建設業",
    "reading": "けんせつぎょう",
+   "hanViet": "KIẾN THIẾT NGHIỆP",
    "meaning": "ngành xây dựng"
   },
   {
    "word": "建築業",
    "reading": "けんちくぎょう",
+   "hanViet": "KIẾN TRÚC NGHIỆP",
    "meaning": "ngành kiến trúc – xây dựng"
   },
   {
    "word": "建設会社",
    "reading": "けんせつがいしゃ",
+   "hanViet": "KIẾN THIẾT HỘI XÃ",
    "meaning": "công ty xây dựng"
   },
   {
    "word": "建設機械",
    "reading": "けんせつきかい",
+   "hanViet": "KIẾN THIẾT CƠ GIỚI",
    "meaning": "máy móc xây dựng"
   },
   {
    "word": "建機",
    "reading": "けんき",
+   "hanViet": "KIẾN CƠ",
    "meaning": "máy xây dựng (viết tắt của 建設機械)"
   },
   {
    "word": "重機",
    "reading": "じゅうき",
+   "hanViet": "TRỌNG CƠ",
    "meaning": "máy móc hạng nặng; thiết bị nặng"
   },
   {
    "word": "建設資材",
    "reading": "けんせつしざい",
+   "hanViet": "KIẾN THIẾT TƯ TÀI",
    "meaning": "vật liệu xây dựng"
   },
   {
    "word": "建設労働者",
    "reading": "けんせつろうどうしゃ",
+   "hanViet": "KIẾN THIẾT LAO ĐỘNG GIẢ",
    "meaning": "công nhân xây dựng"
   },
   {
    "word": "工区",
    "reading": "こうく",
+   "hanViet": "CÔNG KHU",
    "meaning": "khu vực thi công; phân đoạn thi công"
   },
   {
    "word": "工事費",
    "reading": "こうじひ",
+   "hanViet": "CÔNG SỰ PHÍ",
    "meaning": "chi phí công trình"
   },
   {
    "word": "土建",
    "reading": "どけん",
+   "hanViet": "THỔ KIẾN",
    "meaning": "thổ mộc – kiến trúc"
   },
   {
    "word": "架橋",
    "reading": "かきょう",
+   "hanViet": "GIÁ KIỀU",
    "meaning": "xây cầu; bắc cầu"
   },
   {
    "word": "工作物",
    "reading": "こうさくぶつ",
+   "hanViet": "CÔNG TÁC VẬT",
    "meaning": "công trình kiến trúc; kết cấu công trình"
   },
   {
    "word": "基礎",
    "reading": "きそ",
+   "hanViet": "CƠ SỞ",
    "meaning": "móng; nền móng"
   },
   {
    "word": "地盤",
    "reading": "じばん",
+   "hanViet": "ĐỊA BÀN",
    "meaning": "nền đất; địa chất nền"
   },
   {
    "word": "土台",
    "reading": "どだい",
+   "hanViet": "THỔ ĐÀI",
    "meaning": "đế móng; bệ đỡ"
   },
   {
    "word": "杭",
    "reading": "くい",
+   "hanViet": "HÀNG",
    "meaning": "cọc"
   },
   {
    "word": "杭打ち",
    "reading": "くいうち",
+   "hanViet": "HÀNG ĐẢ",
    "meaning": "đóng cọc"
   },
   {
    "word": "柱",
    "reading": "はしら",
+   "hanViet": "TRỤ",
    "meaning": "cột"
   },
   {
    "word": "梁",
    "reading": "はり",
+   "hanViet": "LƯƠNG",
    "meaning": "dầm; xà"
   },
   {
    "word": "基礎梁",
    "reading": "きそばり",
+   "hanViet": "CƠ SỞ LƯƠNG",
    "meaning": "dầm móng"
   },
   {
    "word": "壁",
    "reading": "かべ",
+   "hanViet": "BÍCH",
    "meaning": "tường"
   },
   {
    "word": "床",
    "reading": "ゆか",
+   "hanViet": "SÀNG",
    "meaning": "sàn nhà"
   },
   {
    "word": "天井",
    "reading": "てんじょう",
+   "hanViet": "THIÊN TỈNH",
    "meaning": "trần nhà"
   },
   {
    "word": "屋根",
    "reading": "やね",
+   "hanViet": "ỐC CĂN",
    "meaning": "mái nhà"
   },
   {
    "word": "階段",
    "reading": "かいだん",
+   "hanViet": "GIAI ĐOẠN",
    "meaning": "cầu thang"
   },
   {
    "word": "建物",
    "reading": "たてもの",
+   "hanViet": "KIẾN VẬT",
    "meaning": "tòa nhà; công trình nhà"
   },
   {
    "word": "構造",
    "reading": "こうぞう",
+   "hanViet": "CẤU TẠO",
    "meaning": "kết cấu; cấu trúc"
   },
   {
    "word": "建前",
    "reading": "たてまえ",
+   "hanViet": "KIẾN TIỀN",
    "meaning": "lễ cất nóc; lễ dựng khung nhà"
   },
   {
    "word": "橋梁",
    "reading": "きょうりょう",
+   "hanViet": "KIỀU LƯƠNG",
    "meaning": "cầu (công trình cầu)"
   },
   {
    "word": "橋脚",
    "reading": "きょうきゃく",
+   "hanViet": "KIỀU CƯỚC",
    "meaning": "trụ cầu"
   },
   {
    "word": "橋桁",
    "reading": "はしげた",
+   "hanViet": "KIỀU HÀNH",
    "meaning": "dầm cầu"
   },
   {
    "word": "高架橋",
    "reading": "こうかきょう",
+   "hanViet": "CAO GIÁ KIỀU",
    "meaning": "cầu cạn; cầu vượt"
   },
   {
@@ -285,6 +336,7 @@ window.VOCAB_SPEC = {
   {
    "word": "道路",
    "reading": "どうろ",
+   "hanViet": "ĐẠO LỘ",
    "meaning": "đường bộ; đường giao thông"
   },
   {
@@ -295,11 +347,13 @@ window.VOCAB_SPEC = {
   {
    "word": "鉄筋",
    "reading": "てっきん",
+   "hanViet": "THIẾT CÂN",
    "meaning": "thép cây; cốt thép"
   },
   {
    "word": "鉄筋コンクリート",
    "reading": "てっきんこんくりーと",
+   "hanViet": "THIẾT CÂN",
    "meaning": "bê tông cốt thép",
    "ex": [
     "ここでは、レンガは鉄筋コンクリートの代わりになりません。",
@@ -309,21 +363,25 @@ window.VOCAB_SPEC = {
   {
    "word": "鉄筋コンクリート造",
    "reading": "てっきんこんくりーとぞう",
+   "hanViet": "THIẾT CÂN TẠO",
    "meaning": "kết cấu bê tông cốt thép"
   },
   {
    "word": "鉄骨",
    "reading": "てっこつ",
+   "hanViet": "THIẾT CỐT",
    "meaning": "khung thép; kết cấu thép"
   },
   {
    "word": "鉄骨鉄筋コンクリート造",
    "reading": "てっこつてっきんこんくりーとぞう",
+   "hanViet": "THIẾT CỐT THIẾT CÂN TẠO",
    "meaning": "kết cấu thép – bê tông cốt thép"
   },
   {
    "word": "鉄板",
    "reading": "てっぱん",
+   "hanViet": "THIẾT BẢN",
    "meaning": "tấm thép"
   },
   {
@@ -368,96 +426,115 @@ window.VOCAB_SPEC = {
   {
    "word": "木材",
    "reading": "もくざい",
+   "hanViet": "MỘC TÀI",
    "meaning": "gỗ; vật liệu gỗ"
   },
   {
    "word": "舗装",
    "reading": "ほそう",
+   "hanViet": "PHÔ TRANG",
    "meaning": "trải mặt đường; lát đường"
   },
   {
    "word": "打設",
    "reading": "だせつ",
+   "hanViet": "ĐẢ THIẾT",
    "meaning": "đổ (bê tông); thi công đổ bê tông"
   },
   {
    "word": "型枠",
    "reading": "かたわく",
+   "hanViet": "HÌNH",
    "meaning": "ván khuôn; cốp pha"
   },
   {
    "word": "養生",
    "reading": "ようじょう",
+   "hanViet": "DƯỠNG SINH",
    "meaning": "dưỡng hộ (bê tông); che phủ bảo vệ"
   },
   {
    "word": "掘削",
    "reading": "くっさく",
+   "hanViet": "QUẬT TƯỚC",
    "meaning": "đào đất; khai đào"
   },
   {
    "word": "盛土",
    "reading": "もりど",
+   "hanViet": "THỊNH THỔ",
    "meaning": "đắp đất; nền đắp"
   },
   {
    "word": "溶接",
    "reading": "ようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn"
   },
   {
    "word": "電気溶接",
    "reading": "でんきようせつ",
+   "hanViet": "ĐIỆN KHÍ DUNG TIẾP",
    "meaning": "hàn điện"
   },
   {
    "word": "仮溶接",
    "reading": "かりようせつ",
+   "hanViet": "GIẢ DUNG TIẾP",
    "meaning": "hàn đính; hàn tạm"
   },
   {
    "word": "溶接工",
    "reading": "ようせつこう",
+   "hanViet": "DUNG TIẾP CÔNG",
    "meaning": "thợ hàn"
   },
   {
    "word": "溶接棒",
    "reading": "ようせつぼう",
+   "hanViet": "DUNG TIẾP BỔNG",
    "meaning": "que hàn"
   },
   {
    "word": "溶接機",
    "reading": "ようせつき",
+   "hanViet": "DUNG TIẾP CƠ",
    "meaning": "máy hàn"
   },
   {
    "word": "大工",
    "reading": "だいく",
+   "hanViet": "ĐẠI CÔNG",
    "meaning": "thợ mộc"
   },
   {
    "word": "棟梁",
    "reading": "とうりょう",
+   "hanViet": "ĐỐNG LƯƠNG",
    "meaning": "thợ mộc cả; trưởng nhóm thợ mộc"
   },
   {
    "word": "左官",
    "reading": "さかん",
+   "hanViet": "TẢ QUAN",
    "meaning": "thợ trát vữa"
   },
   {
    "word": "鳶職",
    "reading": "とびしょく",
+   "hanViet": "DIÊN CHỨC",
    "meaning": "thợ giàn giáo; thợ làm việc trên cao"
   },
   {
    "word": "作業員",
    "reading": "さぎょういん",
+   "hanViet": "TÁC NGHIỆP VIÊN",
    "meaning": "công nhân (thi công)"
   },
   {
    "word": "足場",
    "reading": "あしば",
+   "hanViet": "TÚC TRƯỜNG",
    "meaning": "giàn giáo"
   },
   {
@@ -503,26 +580,31 @@ window.VOCAB_SPEC = {
   {
    "word": "配管",
    "reading": "はいかん",
+   "hanViet": "PHỐI QUẢN",
    "meaning": "đường ống (cấp thoát nước)"
   },
   {
    "word": "配線",
    "reading": "はいせん",
+   "hanViet": "PHỐI TUYẾN",
    "meaning": "đường dây điện; đi dây điện"
   },
   {
    "word": "給水",
    "reading": "きゅうすい",
+   "hanViet": "CẤP THỦY",
    "meaning": "cấp nước"
   },
   {
    "word": "排水",
    "reading": "はいすい",
+   "hanViet": "BÀI THỦY",
    "meaning": "thoát nước"
   },
   {
    "word": "防水",
    "reading": "ぼうすい",
+   "hanViet": "PHÒNG THỦY",
    "meaning": "chống thấm"
   }
  ],
@@ -530,21 +612,25 @@ window.VOCAB_SPEC = {
   {
    "word": "食品衛生",
    "reading": "しょくひんえいせい",
+   "hanViet": "THỰC PHẨM VỆ SINH",
    "meaning": "vệ sinh an toàn thực phẩm"
   },
   {
    "word": "衛生管理",
    "reading": "えいせいかんり",
+   "hanViet": "VỆ SINH QUẢN LÝ",
    "meaning": "quản lý vệ sinh"
   },
   {
    "word": "一般衛生管理",
    "reading": "いっぱんえいせいかんり",
+   "hanViet": "NHẤT BÁT VỆ SINH QUẢN LÝ",
    "meaning": "quản lý vệ sinh chung (áp dụng cho mọi loại thực phẩm, mọi nơi làm việc)"
   },
   {
    "word": "食品衛生法",
    "reading": "しょくひんえいせいほう",
+   "hanViet": "THỰC PHẨM VỆ SINH PHÁP",
    "meaning": "Luật Vệ sinh an toàn thực phẩm"
   },
   {
@@ -555,86 +641,103 @@ window.VOCAB_SPEC = {
   {
    "word": "危害要因",
    "reading": "きがいよういん",
+   "hanViet": "NGUY HẠI YẾU NHÂN",
    "meaning": "yếu tố gây hại (hazard) — nguyên nhân khiến người ăn bị bệnh hoặc bị thương"
   },
   {
    "word": "危害分析",
    "reading": "きがいぶんせき",
+   "hanViet": "NGUY HẠI PHÂN TÍCH",
    "meaning": "phân tích mối nguy"
   },
   {
    "word": "重要管理点",
    "reading": "じゅうようかんりてん",
+   "hanViet": "TRỌNG YẾU QUẢN LÝ ĐIỂM",
    "meaning": "điểm kiểm soát tới hạn (CCP)"
   },
   {
    "word": "管理基準",
    "reading": "かんりきじゅん",
+   "hanViet": "QUẢN LÝ CƠ CHUẨN",
    "meaning": "tiêu chuẩn quản lý (giới hạn tới hạn tại điểm kiểm soát)"
   },
   {
    "word": "逸脱",
    "reading": "いつだつ",
+   "hanViet": "DẬT THOÁT",
    "meaning": "sự sai lệch khỏi tiêu chuẩn quản lý"
   },
   {
    "word": "改善措置",
    "reading": "かいぜんそち",
+   "hanViet": "CẢI THIỆN THỐ TRÍ",
    "meaning": "biện pháp khắc phục, cải thiện khi có sai lệch"
   },
   {
    "word": "衛生標準作業手順",
    "reading": "えいせいひょうじゅんさぎょうてじゅん",
+   "hanViet": "VỆ SINH TIÊU CHUẨN TÁC NGHIỆP THỦ TỤC",
    "meaning": "quy trình thao tác tiêu chuẩn về vệ sinh (SSOP)"
   },
   {
    "word": "物理的危害要因",
    "reading": "ぶつりてききがいよういん",
+   "hanViet": "VẬT LÝ ĐÍCH NGUY HẠI YẾU NHÂN",
    "meaning": "yếu tố gây hại vật lý (dị vật cứng, sắc nhọn...)"
   },
   {
    "word": "化学的危害要因",
    "reading": "かがくてききがいよういん",
+   "hanViet": "HÓA HỌC ĐÍCH NGUY HẠI YẾU NHÂN",
    "meaning": "yếu tố gây hại hóa học (chất gây dị ứng, thuốc tẩy...)"
   },
   {
    "word": "生物的危害要因",
    "reading": "せいぶつてききがいよういん",
+   "hanViet": "SINH VẬT ĐÍCH NGUY HẠI YẾU NHÂN",
    "meaning": "yếu tố gây hại sinh học (vi khuẩn, vi-rút, nấm mốc...)"
   },
   {
    "word": "交差汚染",
    "reading": "こうさおせん",
+   "hanViet": "GIAO SOA Ô NHIỄM",
    "meaning": "nhiễm chéo (vật/người sạch tiếp xúc với vật/người bẩn)"
   },
   {
    "word": "異物",
    "reading": "いぶつ",
+   "hanViet": "DỊ VẬT",
    "meaning": "dị vật (thứ không nên có lẫn trong thực phẩm)"
   },
   {
    "word": "硬質異物",
    "reading": "こうしついぶつ",
+   "hanViet": "NGẠNH CHẤT DỊ VẬT",
    "meaning": "dị vật cứng (mảnh kim loại, thủy tinh, đá...)"
   },
   {
    "word": "異物混入",
    "reading": "いぶつこんにゅう",
+   "hanViet": "DỊ VẬT HỖN NHẬP",
    "meaning": "sự lẫn dị vật vào thực phẩm"
   },
   {
    "word": "食中毒",
    "reading": "しょくちゅうどく",
+   "hanViet": "THỰC TRÚNG ĐỘC",
    "meaning": "ngộ độc thực phẩm"
   },
   {
    "word": "食中毒菌",
    "reading": "しょくちゅうどくきん",
+   "hanViet": "THỰC TRÚNG ĐỘC KHUẨN",
    "meaning": "vi khuẩn gây ngộ độc thực phẩm"
   },
   {
    "word": "細菌",
    "reading": "さいきん",
+   "hanViet": "TẾ KHUẨN",
    "meaning": "vi khuẩn"
   },
   {
@@ -645,21 +748,25 @@ window.VOCAB_SPEC = {
   {
    "word": "微生物",
    "reading": "びせいぶつ",
+   "hanViet": "VI SINH VẬT",
    "meaning": "vi sinh vật"
   },
   {
    "word": "病原微生物",
    "reading": "びょうげんびせいぶつ",
+   "hanViet": "BỆNH NGUYÊN VI SINH VẬT",
    "meaning": "vi sinh vật gây bệnh"
   },
   {
    "word": "毒素",
    "reading": "どくそ",
+   "hanViet": "ĐỘC TỐ",
    "meaning": "độc tố"
   },
   {
    "word": "芽胞",
    "reading": "がほう",
+   "hanViet": "NHA BÀO",
    "meaning": "bào tử (dạng tồn tại chịu nhiệt của vi khuẩn)"
   },
   {
@@ -670,6 +777,7 @@ window.VOCAB_SPEC = {
   {
    "word": "寄生虫",
    "reading": "きせいちゅう",
+   "hanViet": "KÝ SINH TRÙNG",
    "meaning": "ký sinh trùng"
   },
   {
@@ -695,41 +803,49 @@ window.VOCAB_SPEC = {
   {
    "word": "腸炎ビブリオ",
    "reading": "ちょうえんびぶりお",
+   "hanViet": "TRƯỜNG VIÊM",
    "meaning": "vi khuẩn Vibrio parahaemolyticus (gây ngộ độc qua hải sản)"
   },
   {
    "word": "腸管出血性大腸菌",
    "reading": "ちょうかんしゅっけつせいだいちょうきん",
+   "hanViet": "TRƯỜNG QUẢN XUẤT HUYẾT TÍNH ĐẠI TRƯỜNG KHUẨN",
    "meaning": "vi khuẩn E. coli gây xuất huyết đường ruột (O157, O111...)"
   },
   {
    "word": "黄色ブドウ球菌",
    "reading": "おうしょくぶどうきゅうきん",
+   "hanViet": "HOÀNG SẮC CẦU KHUẨN",
    "meaning": "tụ cầu vàng (Staphylococcus aureus, có trên da, vết thương)"
   },
   {
    "word": "セレウス菌",
    "reading": "せれうすきん",
+   "hanViet": "KHUẨN",
    "meaning": "vi khuẩn Bacillus cereus (tạo bào tử chịu nhiệt, gặp ở cơm, ngũ cốc)"
   },
   {
    "word": "ウェルシュ菌",
    "reading": "うぇるしゅきん",
+   "hanViet": "KHUẨN",
    "meaning": "vi khuẩn Clostridium perfringens (tạo bào tử, gặp ở món hầm, cà ri)"
   },
   {
    "word": "ボツリヌス菌",
    "reading": "ぼつりぬすきん",
+   "hanViet": "KHUẨN",
    "meaning": "vi khuẩn Clostridium botulinum (gây ngộ độc nặng, gặp ở đồ hộp, thực phẩm đóng túi)"
   },
   {
    "word": "アレルギー物質",
    "reading": "あれるぎーぶっしつ",
+   "hanViet": "VẬT CHẤT",
    "meaning": "chất gây dị ứng (dị nguyên)"
   },
   {
    "word": "特定原材料",
    "reading": "とくていげんざいりょう",
+   "hanViet": "ĐẶC ĐỊNH NGUYÊN TÀI LIỆU",
    "meaning": "nguyên liệu đặc định (8 loại bắt buộc phải ghi nhãn: tôm, cua, óc chó, lúa mì, kiều mạch, trứng, sữa, lạc)"
   },
   {
@@ -745,21 +861,25 @@ window.VOCAB_SPEC = {
   {
    "word": "整理",
    "reading": "せいり",
+   "hanViet": "CHỈNH LÝ",
    "meaning": "sắp xếp — bỏ đi thứ không cần dùng (5S)"
   },
   {
    "word": "整頓",
    "reading": "せいとん",
+   "hanViet": "CHỈNH ĐỐN",
    "meaning": "ngăn nắp — đặt dụng cụ đúng chỗ quy định, dễ lấy (5S)"
   },
   {
    "word": "清掃",
    "reading": "せいそう",
+   "hanViet": "THANH TẢO",
    "meaning": "quét dọn, làm sạch (5S)"
   },
   {
    "word": "清潔",
    "reading": "せいけつ",
+   "hanViet": "THANH KHIẾT",
    "meaning": "sạch sẽ — duy trì trạng thái sạch (5S)"
   },
   {
@@ -775,66 +895,79 @@ window.VOCAB_SPEC = {
   {
    "word": "清潔作業区域",
    "reading": "せいけつさぎょうくいき",
+   "hanViet": "THANH KHIẾT TÁC NGHIỆP KHU VỰC",
    "meaning": "khu vực làm việc sạch (xử lý thực phẩm đã tiệt trùng: bày biện, đóng gói...)"
   },
   {
    "word": "準清潔作業区域",
    "reading": "じゅんせいけつさぎょうくいき",
+   "hanViet": "CHUẨN THANH KHIẾT TÁC NGHIỆP KHU VỰC",
    "meaning": "khu vực làm việc bán sạch (sơ chế, nấu nướng trước khi tiệt trùng)"
   },
   {
    "word": "汚染作業区域",
    "reading": "おせんさぎょうくいき",
+   "hanViet": "Ô NHIỄM TÁC NGHIỆP KHU VỰC",
    "meaning": "khu vực làm việc ô nhiễm (tiếp nhận nguyên liệu từ bên ngoài, đóng thùng xuất hàng)"
   },
   {
    "word": "洗浄",
    "reading": "せんじょう",
+   "hanViet": "TẨY TỊNH",
    "meaning": "rửa, tẩy rửa (làm sạch thiết bị, dụng cụ)"
   },
   {
    "word": "消毒",
    "reading": "しょうどく",
+   "hanViet": "TIÊU ĐỘC",
    "meaning": "khử trùng"
   },
   {
    "word": "殺菌",
    "reading": "さっきん",
+   "hanViet": "SÁT KHUẨN",
    "meaning": "diệt khuẩn"
   },
   {
    "word": "加熱殺菌",
    "reading": "かねつさっきん",
+   "hanViet": "GIA NHIỆT SÁT KHUẨN",
    "meaning": "diệt khuẩn bằng nhiệt"
   },
   {
    "word": "洗浄剤",
    "reading": "せんじょうざい",
+   "hanViet": "TẨY TỊNH TỄ",
    "meaning": "chất tẩy rửa"
   },
   {
    "word": "殺菌剤",
    "reading": "さっきんざい",
+   "hanViet": "SÁT KHUẨN TỄ",
    "meaning": "chất diệt khuẩn"
   },
   {
    "word": "薬剤",
    "reading": "やくざい",
+   "hanViet": "DƯỢC TỄ",
    "meaning": "hóa chất (thuốc tẩy, thuốc diệt khuẩn...) dùng trong nhà máy"
   },
   {
    "word": "次亜塩素酸ナトリウム",
    "reading": "じあえんそさんなとりうむ",
+   "hanViet": "THỨ Á DIÊM TỐ TOAN",
    "meaning": "natri hypoclorit (chất khử trùng, dùng pha dung dịch 200ppm)"
   },
   {
    "word": "手洗い",
    "reading": "てあらい",
+   "hanViet": "THỦ TẨY",
    "meaning": "rửa tay"
   },
   {
    "word": "作業服",
    "reading": "さぎょうふく",
+   "hanViet": "TÁC NGHIỆP PHỤC",
    "meaning": "đồng phục làm việc"
   },
   {
@@ -845,6 +978,7 @@ window.VOCAB_SPEC = {
   {
    "word": "手袋",
    "reading": "てぶくろ",
+   "hanViet": "THỦ ĐẠI",
    "meaning": "găng tay"
   },
   {
@@ -855,71 +989,85 @@ window.VOCAB_SPEC = {
   {
    "word": "健康チェック",
    "reading": "けんこうちぇっく",
+   "hanViet": "KIỆN KHANG",
    "meaning": "kiểm tra sức khỏe trước ca làm (tiêu chảy, sốt, vết thương ở tay...)"
   },
   {
    "word": "健康診断",
    "reading": "けんこうしんだん",
+   "hanViet": "KIỆN KHANG CHẨN ĐOÁN",
    "meaning": "khám sức khỏe định kỳ"
   },
   {
    "word": "検便",
    "reading": "けんべん",
+   "hanViet": "KIỂM TIỆN",
    "meaning": "xét nghiệm phân"
   },
   {
    "word": "作業手順書",
    "reading": "さぎょうてじゅんしょ",
+   "hanViet": "TÁC NGHIỆP THỦ TỤC THƯ",
    "meaning": "sổ tay quy trình làm việc"
   },
   {
    "word": "原材料",
    "reading": "げんざいりょう",
+   "hanViet": "NGUYÊN TÀI LIỆU",
    "meaning": "nguyên liệu"
   },
   {
    "word": "検収",
    "reading": "けんしゅう",
+   "hanViet": "KIỂM THU",
    "meaning": "kiểm nhận nguyên liệu (đối chiếu với đơn đặt hàng, kiểm tra ngoại quan, hạn dùng...)"
   },
   {
    "word": "賞味期限",
    "reading": "しょうみきげん",
+   "hanViet": "THƯỞNG VỊ KỲ HẠN",
    "meaning": "hạn ngon nhất (thời hạn giữ được vị ngon khi chưa mở bao bì)"
   },
   {
    "word": "消費期限",
    "reading": "しょうひきげん",
+   "hanViet": "TIÊU PHÍ KỲ HẠN",
    "meaning": "hạn tiêu dùng an toàn (quá hạn tuyệt đối không dùng)"
   },
   {
    "word": "使用期限",
    "reading": "しようきげん",
+   "hanViet": "SỬ DỤNG KỲ HẠN",
    "meaning": "hạn sử dụng nguyên liệu (ngày cuối cùng được phép dùng nguyên liệu đó)"
   },
   {
    "word": "先入先出",
    "reading": "せんにゅうせんしゅつ",
+   "hanViet": "TIÊN NHẬP TIÊN XUẤT",
    "meaning": "nhập trước xuất trước (FIFO — dùng nguyên liệu nhập trước)"
   },
   {
    "word": "解凍",
    "reading": "かいとう",
+   "hanViet": "GIẢI ĐÔNG",
    "meaning": "rã đông"
   },
   {
    "word": "自然解凍",
    "reading": "しぜんかいとう",
+   "hanViet": "TỰ NHIÊN GIẢI ĐÔNG",
    "meaning": "rã đông tự nhiên (ở nhiệt độ phòng)"
   },
   {
    "word": "冷蔵庫解凍",
    "reading": "れいぞうこかいとう",
+   "hanViet": "LÃNH TÀNG KHỐ GIẢI ĐÔNG",
    "meaning": "rã đông trong tủ lạnh"
   },
   {
    "word": "流水解凍",
    "reading": "りゅうすいかいとう",
+   "hanViet": "LƯU THỦY GIẢI ĐÔNG",
    "meaning": "rã đông bằng nước chảy"
   },
   {
@@ -930,81 +1078,97 @@ window.VOCAB_SPEC = {
   {
    "word": "冷蔵",
    "reading": "れいぞう",
+   "hanViet": "LÃNH TÀNG",
    "meaning": "bảo quản lạnh (10°C trở xuống)"
   },
   {
    "word": "冷凍",
    "reading": "れいとう",
+   "hanViet": "LÃNH ĐÔNG",
    "meaning": "bảo quản đông lạnh (-15°C trở xuống)"
   },
   {
    "word": "下処理",
    "reading": "したしょり",
+   "hanViet": "HẠ XỬ LÝ",
    "meaning": "sơ chế (rửa, gọt, cắt bỏ phần không dùng...)"
   },
   {
    "word": "加熱調理",
    "reading": "かねつちょうり",
+   "hanViet": "GIA NHIỆT ĐIỀU LÝ",
    "meaning": "nấu, chế biến bằng nhiệt"
   },
   {
    "word": "盛り付け",
    "reading": "もりつけ",
+   "hanViet": "THỊNH PHÓ",
    "meaning": "bày biện, xếp món ăn ra đĩa/khay"
   },
   {
    "word": "包装",
    "reading": "ほうそう",
+   "hanViet": "BAO TRANG",
    "meaning": "đóng gói, bao bì"
   },
   {
    "word": "目視検品",
    "reading": "もくしけんぴん",
+   "hanViet": "MỤC THỊ KIỂM PHẨM",
    "meaning": "kiểm tra hàng bằng mắt"
   },
   {
    "word": "中心温度",
    "reading": "ちゅうしんおんど",
+   "hanViet": "TRUNG TÂM ÔN ĐỘ",
    "meaning": "nhiệt độ tâm (nhiệt độ ở giữa thực phẩm, dùng kiểm tra diệt khuẩn)"
   },
   {
    "word": "飲食料品製造業",
    "reading": "いんしょくりょうひんせいぞうぎょう",
+   "hanViet": "ẨM THỰC LIỆU PHẨM CHẾ TẠO NGHIỆP",
    "meaning": "ngành sản xuất thực phẩm và đồ uống"
   },
   {
    "word": "食品工場",
    "reading": "しょくひんこうじょう",
+   "hanViet": "THỰC PHẨM CÔNG TRƯỜNG",
    "meaning": "nhà máy thực phẩm"
   },
   {
    "word": "特定技能",
    "reading": "とくていぎのう",
+   "hanViet": "ĐẶC ĐỊNH KỸ NĂNG",
    "meaning": "Kỹ năng đặc định (tư cách lưu trú Tokutei Gino)"
   },
   {
    "word": "冷凍調理食品",
    "reading": "れいとうちょうりしょくひん",
+   "hanViet": "LÃNH ĐÔNG ĐIỀU LÝ THỰC PHẨM",
    "meaning": "thực phẩm đông lạnh chế biến sẵn"
   },
   {
    "word": "畜産食品",
    "reading": "ちくさんしょくひん",
+   "hanViet": "SÚC SẢN THỰC PHẨM",
    "meaning": "thực phẩm chăn nuôi (thịt, giăm bông, xúc xích...)"
   },
   {
    "word": "水産食品",
    "reading": "すいさんしょくひん",
+   "hanViet": "THỦY SẢN THỰC PHẨM",
    "meaning": "thực phẩm thủy sản (cá, hải sản chế biến...)"
   },
   {
    "word": "労働安全",
    "reading": "ろうどうあんぜん",
+   "hanViet": "LAO ĐỘNG AN TOÀN",
    "meaning": "an toàn lao động"
   },
   {
    "word": "労働災害",
    "reading": "ろうどうさいがい",
+   "hanViet": "LAO ĐỘNG TAI HẠI",
    "meaning": "tai nạn lao động"
   },
   {
@@ -1015,16 +1179,19 @@ window.VOCAB_SPEC = {
   {
    "word": "危険予知訓練",
    "reading": "きけんよちくんれん",
+   "hanViet": "NGUY HIỂM DỰ TRI HUẤN LUYỆN",
    "meaning": "huấn luyện dự đoán nguy hiểm (KYT)"
   },
   {
    "word": "はさまれ・巻き込まれ",
    "reading": "はさまれ・まきこまれ",
+   "hanViet": "QUYỂN",
    "meaning": "tai nạn bị kẹp, bị cuốn vào máy móc"
   },
   {
    "word": "熱中症",
    "reading": "ねっちゅうしょう",
+   "hanViet": "NHIỆT TRUNG CHỨNG",
    "meaning": "say nắng, sốc nhiệt"
   }
  ],
@@ -1032,66 +1199,79 @@ window.VOCAB_SPEC = {
   {
    "word": "介護食",
    "reading": "かいごしょく",
+   "hanViet": "GIỚI HỘ THỰC",
    "meaning": "Thức ăn dành cho người cần chăm sóc (được chế biến mềm, dễ nhai, dễ nuốt)"
   },
   {
    "word": "嚥下",
    "reading": "えんげ",
+   "hanViet": "YẾN HẠ",
    "meaning": "Nuốt (đưa thức ăn từ miệng xuống dạ dày)"
   },
   {
    "word": "嚥下障害",
    "reading": "えんげしょうがい",
+   "hanViet": "YẾN HẠ CHƯỚNG NGẠI",
    "meaning": "Rối loạn nuốt, khó nuốt"
   },
   {
    "word": "誤嚥",
    "reading": "ごえん",
+   "hanViet": "NGỘ YẾN",
    "meaning": "Hít sặc (thức ăn hoặc nước đi nhầm vào khí quản)"
   },
   {
    "word": "誤嚥性肺炎",
    "reading": "ごえんせいはいえん",
+   "hanViet": "NGỘ YẾN TÍNH PHẾ VIÊM",
    "meaning": "Viêm phổi do hít sặc"
   },
   {
    "word": "経管栄養",
    "reading": "けいかんえいよう",
+   "hanViet": "KINH QUẢN VINH DƯỠNG",
    "meaning": "Nuôi ăn qua ống (qua sonde vào dạ dày hoặc ruột)"
   },
   {
    "word": "胃ろう",
    "reading": "いろう",
+   "hanViet": "VỊ",
    "meaning": "Mở thông dạ dày (lỗ mở qua thành bụng vào dạ dày để nuôi ăn)"
   },
   {
    "word": "食物残渣",
    "reading": "しょくもつざんさ",
+   "hanViet": "THỰC VẬT TÀN TRA",
    "meaning": "Thức ăn còn sót lại trong miệng sau khi nuốt"
   },
   {
    "word": "脱水症状",
    "reading": "だっすいしょうじょう",
+   "hanViet": "THOÁT THỦY CHỨNG TRẠNG",
    "meaning": "Triệu chứng mất nước"
   },
   {
    "word": "義歯",
    "reading": "ぎし",
+   "hanViet": "NGHĨA XỈ",
    "meaning": "Răng giả (hàm giả, cầu răng)"
   },
   {
    "word": "口腔ケア",
    "reading": "こうくうけあ",
+   "hanViet": "KHẨU KHOANG",
    "meaning": "Chăm sóc khoang miệng (đánh răng, vệ sinh răng giả, súc miệng)"
   },
   {
    "word": "主食",
    "reading": "しゅしょく",
-   "meaning": "Món chính (cơm, bánh mì, mì...)"
+   "hanViet": "CHỦ THỰC",
+   "meaning": "Thức ăn chính (cơm, bánh mì, mì...)"
   },
   {
    "word": "副食",
    "reading": "ふくしょく",
+   "hanViet": "PHÓ THỰC",
    "meaning": "Món ăn kèm với món chính"
   },
   {
@@ -1101,42 +1281,50 @@ window.VOCAB_SPEC = {
   },
   {
    "word": "脱健着患",
-   "reading": "だけんちゃっかん",
+   "reading": "だっけんちゃっかん",
+   "hanViet": "THOÁT KIỆN TRƯỚC HOẠN",
    "meaning": "Nguyên tắc thay quần áo: cởi từ bên lành, mặc từ bên liệt"
   },
   {
    "word": "足浴",
    "reading": "そくよく",
+   "hanViet": "TÚC DỤC",
    "meaning": "Ngâm, rửa chân bằng nước ấm"
   },
   {
    "word": "手浴",
    "reading": "しゅよく",
+   "hanViet": "THỦ DỤC",
    "meaning": "Ngâm, rửa tay bằng nước ấm"
   },
   {
    "word": "個浴",
    "reading": "こよく",
+   "hanViet": "CÁ DỤC",
    "meaning": "Tắm riêng (tắm cá nhân, một mình một bồn)"
   },
   {
    "word": "一般浴",
    "reading": "いっぱんよく",
+   "hanViet": "NHẤT BÁT DỤC",
    "meaning": "Tắm chung thông thường (bồn tắm chung)"
   },
   {
    "word": "機械浴",
    "reading": "きかいよく",
+   "hanViet": "CƠ GIỚI DỤC",
    "meaning": "Tắm bằng máy, thiết bị chuyên dụng (nằm trên cáng hoặc ghế tắm)"
   },
   {
    "word": "シャワー浴",
    "reading": "しゃわーよく",
+   "hanViet": "DỤC",
    "meaning": "Tắm vòi sen"
   },
   {
    "word": "清拭",
    "reading": "せいしき",
+   "hanViet": "THANH THỨC",
    "meaning": "Lau người bằng khăn ấm khi không tắm được"
   },
   {
@@ -1147,66 +1335,79 @@ window.VOCAB_SPEC = {
   {
    "word": "排泄",
    "reading": "はいせつ",
+   "hanViet": "BÀI TIẾT",
    "meaning": "Bài tiết (đại tiện, tiểu tiện)"
   },
   {
    "word": "排泄介助",
    "reading": "はいせつかいじょ",
+   "hanViet": "BÀI TIẾT GIỚI TRỢ",
    "meaning": "Hỗ trợ bài tiết (đi vệ sinh, thay tã...)"
   },
   {
    "word": "腹部膨満",
    "reading": "ふくぶぼうまん",
+   "hanViet": "PHÚC BỘ BÀNH MÃN",
    "meaning": "Chướng bụng, bụng căng trướng"
   },
   {
    "word": "便秘",
    "reading": "べんぴ",
+   "hanViet": "TIỆN BÍ",
    "meaning": "Táo bón"
   },
   {
    "word": "摘便",
    "reading": "てきべん",
+   "hanViet": "TRÍCH TIỆN",
    "meaning": "Móc phân (lấy phân bằng tay khi không tự đại tiện được)"
   },
   {
    "word": "浣腸",
    "reading": "かんちょう",
+   "hanViet": "HOÁN TRÀNG",
    "meaning": "Thụt tháo (đưa thuốc/nước vào trực tràng để gây đại tiện)"
   },
   {
    "word": "尿失禁",
    "reading": "にょうしっきん",
+   "hanViet": "NIỆU THẤT CẤM",
    "meaning": "Són tiểu"
   },
   {
    "word": "便失禁",
    "reading": "べんしっきん",
+   "hanViet": "TIỆN THẤT CẤM",
    "meaning": "Són phân"
   },
   {
    "word": "頻尿",
    "reading": "ひんにょう",
+   "hanViet": "TẦN NIỆU",
    "meaning": "Tiểu nhiều lần"
   },
   {
    "word": "乏尿",
    "reading": "ぼうにょう",
+   "hanViet": "PHẠP NIỆU",
    "meaning": "Thiểu niệu (lượng nước tiểu ít bất thường)"
   },
   {
    "word": "無尿",
    "reading": "むにょう",
+   "hanViet": "VÔ NIỆU",
    "meaning": "Vô niệu (gần như không có nước tiểu)"
   },
   {
    "word": "尿閉",
    "reading": "にょうへい",
+   "hanViet": "NIỆU BẾ",
    "meaning": "Bí tiểu (không tiểu được, nước tiểu ứ trong bàng quang)"
   },
   {
    "word": "導尿",
    "reading": "どうにょう",
+   "hanViet": "ĐẠO NIỆU",
    "meaning": "Đặt ống thông tiểu (dẫn nước tiểu ra ngoài)"
   },
   {
@@ -1222,76 +1423,91 @@ window.VOCAB_SPEC = {
   {
    "word": "尿路感染症",
    "reading": "にょうろかんせんしょう",
+   "hanViet": "NIỆU LỘ CẢM NHIỄM CHỨNG",
    "meaning": "Nhiễm trùng đường tiểu"
   },
   {
    "word": "陰部洗浄",
    "reading": "いんぶせんじょう",
+   "hanViet": "ÂM BỘ TẨY TỊNH",
    "meaning": "Vệ sinh vùng kín"
   },
   {
    "word": "移乗",
    "reading": "いじょう",
+   "hanViet": "DI THỪA",
    "meaning": "Chuyển vị trí (từ giường sang xe lăn, từ xe lăn sang ghế...)"
   },
   {
    "word": "移乗介助",
    "reading": "いじょうかいじょ",
+   "hanViet": "DI THỪA GIỚI TRỢ",
    "meaning": "Hỗ trợ chuyển vị trí"
   },
   {
    "word": "座位",
    "reading": "ざい",
+   "hanViet": "TỌA VỊ",
    "meaning": "Tư thế ngồi"
   },
   {
    "word": "立位",
    "reading": "りつい",
+   "hanViet": "LẬP VỊ",
    "meaning": "Tư thế đứng"
   },
   {
    "word": "臥位",
    "reading": "がい",
+   "hanViet": "NGỌA VỊ",
    "meaning": "Tư thế nằm"
   },
   {
    "word": "仰臥位",
    "reading": "ぎょうがい",
+   "hanViet": "NGƯỠNG NGỌA VỊ",
    "meaning": "Tư thế nằm ngửa"
   },
   {
    "word": "側臥位",
    "reading": "そくがい",
+   "hanViet": "TRẮC NGỌA VỊ",
    "meaning": "Tư thế nằm nghiêng"
   },
   {
    "word": "腹臥位",
    "reading": "ふくがい",
+   "hanViet": "PHÚC NGỌA VỊ",
    "meaning": "Tư thế nằm sấp"
   },
   {
    "word": "臥床",
    "reading": "がしょう",
+   "hanViet": "NGỌA SÀNG",
    "meaning": "Nằm xuống giường"
   },
   {
    "word": "離床",
    "reading": "りしょう",
+   "hanViet": "LY SÀNG",
    "meaning": "Rời khỏi giường"
   },
   {
    "word": "体位変換",
    "reading": "たいいへんかん",
+   "hanViet": "THỂ VỊ BIẾN HOÁN",
    "meaning": "Thay đổi tư thế nằm (để phòng loét do tỳ đè)"
   },
   {
    "word": "車いす",
    "reading": "くるまいす",
+   "hanViet": "XA",
    "meaning": "Xe lăn"
   },
   {
    "word": "歩行器",
    "reading": "ほこうき",
+   "hanViet": "BỘ HÀNH KHÍ",
    "meaning": "Khung tập đi"
   },
   {
@@ -1312,31 +1528,37 @@ window.VOCAB_SPEC = {
   {
    "word": "健側",
    "reading": "けんそく",
+   "hanViet": "KIỆN TRẮC",
    "meaning": "Bên cơ thể lành (không bị liệt)"
   },
   {
    "word": "患側",
    "reading": "かんそく",
+   "hanViet": "HOẠN TRẮC",
    "meaning": "Bên cơ thể bị liệt hoặc bị bệnh"
   },
   {
    "word": "残存機能",
    "reading": "ざんぞんきのう",
+   "hanViet": "TÀN TỒN CƠ NĂNG",
    "meaning": "Chức năng còn lại (khả năng người được chăm sóc vẫn tự làm được)"
   },
   {
    "word": "褥瘡",
    "reading": "じょくそう",
+   "hanViet": "NHỤC SANG",
    "meaning": "Loét do tỳ đè (loét giường, vết loét do nằm lâu một tư thế)"
   },
   {
    "word": "拘縮",
    "reading": "こうしゅく",
+   "hanViet": "CÂU SÚC",
    "meaning": "Co cứng khớp (khớp không cử động được bình thường)"
   },
   {
    "word": "廃用症候群",
    "reading": "はいようしょうこうぐん",
+   "hanViet": "PHẾ DỤNG CHỨNG HẬU QUẦN",
    "meaning": "Hội chứng suy giảm chức năng do nằm lâu, ít vận động"
   },
   {
@@ -1347,131 +1569,157 @@ window.VOCAB_SPEC = {
   {
    "word": "日常生活動作",
    "reading": "にちじょうせいかつどうさ",
+   "hanViet": "NHẬT THƯỜNG SINH HOẠT ĐỘNG TÁC",
    "meaning": "Hoạt động sinh hoạt hằng ngày (ADL: ăn, mặc, tắm, đi vệ sinh...)"
   },
   {
    "word": "関節可動域",
    "reading": "かんせつかどういき",
+   "hanViet": "QUAN TIẾT KHẢ ĐỘNG VỰC",
    "meaning": "Tầm vận động của khớp (ROM)"
   },
   {
    "word": "傾聴",
    "reading": "けいちょう",
+   "hanViet": "KHUYNH THÍNH",
    "meaning": "Lắng nghe một cách chân thành, chú tâm"
   },
   {
    "word": "自立",
    "reading": "じりつ",
+   "hanViet": "TỰ LẬP",
    "meaning": "Tự lập (tự làm được bằng sức mình, không cần hỗ trợ)"
   },
   {
    "word": "見守り",
    "reading": "みまもり",
+   "hanViet": "KIẾN THỦ",
    "meaning": "Quan sát, trông chừng từ bên cạnh để đảm bảo an toàn"
   },
   {
    "word": "一部介助",
    "reading": "いちぶかいじょ",
+   "hanViet": "NHẤT BỘ GIỚI TRỢ",
    "meaning": "Hỗ trợ một phần (chỉ giúp phần người đó không tự làm được)"
   },
   {
    "word": "全介助",
    "reading": "ぜんかいじょ",
+   "hanViet": "TOÀN GIỚI TRỢ",
    "meaning": "Hỗ trợ toàn bộ (giúp mọi động tác)"
   },
   {
    "word": "認知症",
    "reading": "にんちしょう",
+   "hanViet": "NHẬN TRI CHỨNG",
    "meaning": "Sa sút trí tuệ"
   },
   {
    "word": "幻覚",
    "reading": "げんかく",
+   "hanViet": "HUYỄN GIÁC",
    "meaning": "Ảo giác (nhìn hoặc nghe thấy thứ không có thật)"
   },
   {
    "word": "中核症状",
    "reading": "ちゅうかくしょうじょう",
+   "hanViet": "TRUNG HẠCH CHỨNG TRẠNG",
    "meaning": "Triệu chứng trung tâm của sa sút trí tuệ (suy giảm trí nhớ, mất định hướng...)"
   },
   {
    "word": "軽度認知障害",
    "reading": "けいどにんちしょうがい",
+   "hanViet": "KHINH ĐỘ NHẬN TRI CHƯỚNG NGẠI",
    "meaning": "Suy giảm nhận thức nhẹ (giai đoạn trước sa sút trí tuệ)"
   },
   {
    "word": "高次脳機能障害",
    "reading": "こうじのうきのうしょうがい",
+   "hanViet": "CAO THỨ NÃO CƠ NĂNG CHƯỚNG NGẠI",
    "meaning": "Rối loạn chức năng não cao cấp (ngôn ngữ, trí nhớ, chú ý...)"
   },
   {
    "word": "見当識障害",
    "reading": "けんとうしきしょうがい",
+   "hanViet": "KIẾN ĐƯƠNG THỨC CHƯỚNG NGẠI",
    "meaning": "Rối loạn định hướng (không nhận biết được thời gian, địa điểm, người quen)"
   },
   {
    "word": "せん妄",
    "reading": "せんもう",
+   "hanViet": "VỌNG",
    "meaning": "Mê sảng (rối loạn ý thức xuất hiện đột ngột, hay gặp ở người cao tuổi)"
   },
   {
    "word": "徘徊",
    "reading": "はいかい",
+   "hanViet": "BỒI HỒI",
    "meaning": "Đi lang thang vô định (triệu chứng của sa sút trí tuệ)"
   },
   {
    "word": "失語症",
    "reading": "しつごしょう",
+   "hanViet": "THẤT NGỮ CHỨNG",
    "meaning": "Mất ngôn ngữ (rối loạn nghe, nói, đọc, viết, thường sau đột quỵ)"
   },
   {
    "word": "喀痰吸引",
    "reading": "かくたんきゅういん",
+   "hanViet": "KHẠC ĐÀM HẤP DẪN",
    "meaning": "Hút đờm (dùng máy hút đờm, nước bọt trong miệng/mũi)"
   },
   {
    "word": "嘔気",
    "reading": "おうき",
+   "hanViet": "ỐU KHÍ",
    "meaning": "Buồn nôn"
   },
   {
    "word": "嘔吐",
    "reading": "おうと",
+   "hanViet": "ỐU THỔ",
    "meaning": "Nôn"
   },
   {
    "word": "悪寒",
    "reading": "おかん",
+   "hanViet": "ÁC HÀN",
    "meaning": "Ớn lạnh (cảm giác lạnh run khi bắt đầu sốt)"
   },
   {
    "word": "浮腫",
    "reading": "ふしゅ",
-   "meaning": "Phù (sưng do nước ứ dưới da, thường gọi là sưng phù/mu)"
+   "hanViet": "PHÙ THŨNG",
+   "meaning": "Phù (sưng do nước ứ dưới da, thường gọi là sưng phù)"
   },
   {
    "word": "異食",
    "reading": "いしょく",
+   "hanViet": "DỊ THỰC",
    "meaning": "Ăn vật không phải thức ăn (hành vi của người sa sút trí tuệ)"
   },
   {
    "word": "ろう便",
    "reading": "ろうべん",
+   "hanViet": "TIỆN",
    "meaning": "Nghịch phân, bôi phân lên người hoặc đồ vật"
   },
   {
    "word": "人工肛門",
    "reading": "じんこうこうもん",
+   "hanViet": "NHÂN CÔNG GIANG MÔN",
    "meaning": "Hậu môn nhân tạo"
   },
   {
    "word": "感情失禁",
    "reading": "かんじょうしっきん",
+   "hanViet": "CẢM TÌNH THẤT CẤM",
    "meaning": "Không kiểm soát được cảm xúc (tự nhiên cười hoặc khóc quá mức)"
   },
   {
    "word": "血糖測定",
    "reading": "けっとうそくてい",
+   "hanViet": "HUYẾT ĐƯỜNG TRẮC ĐỊNH",
    "meaning": "Đo đường huyết"
   },
   {
@@ -1484,56 +1732,67 @@ window.VOCAB_SPEC = {
   {
    "word": "農業",
    "reading": "のうぎょう",
+   "hanViet": "NÔNG NGHIỆP",
    "meaning": "nông nghiệp"
   },
   {
    "word": "栽培",
    "reading": "さいばい",
+   "hanViet": "TÀI BỒI",
    "meaning": "trồng trọt, canh tác"
   },
   {
    "word": "播種",
    "reading": "はしゅ",
+   "hanViet": "BÁ CHỦNG",
    "meaning": "gieo hạt"
   },
   {
    "word": "収穫",
    "reading": "しゅうかく",
+   "hanViet": "THU HOẠCH",
    "meaning": "thu hoạch"
   },
   {
    "word": "肥料",
    "reading": "ひりょう",
+   "hanViet": "PHÌ LIỆU",
    "meaning": "phân bón"
   },
   {
    "word": "農薬",
    "reading": "のうやく",
+   "hanViet": "NÔNG DƯỢC",
    "meaning": "thuốc bảo vệ thực vật, thuốc trừ sâu"
   },
   {
    "word": "害虫",
    "reading": "がいちゅう",
+   "hanViet": "HẠI TRÙNG",
    "meaning": "sâu hại, côn trùng gây hại cho cây trồng"
   },
   {
    "word": "土壌",
    "reading": "どじょう",
+   "hanViet": "THỔ NHƯỠNG",
    "meaning": "đất, thổ nhưỡng"
   },
   {
    "word": "苗",
    "reading": "なえ",
+   "hanViet": "MIÊU",
    "meaning": "cây giống, cây non"
   },
   {
    "word": "種",
    "reading": "たね",
+   "hanViet": "CHỦNG",
    "meaning": "hạt giống"
   },
   {
    "word": "田んぼ",
    "reading": "たんぼ",
+   "hanViet": "ĐIỀN",
    "meaning": "ruộng lúa"
   },
   {
@@ -1549,51 +1808,61 @@ window.VOCAB_SPEC = {
   {
    "word": "耕す",
    "reading": "たがやす",
+   "hanViet": "CANH",
    "meaning": "cày xới đất"
   },
   {
    "word": "除草",
    "reading": "じょそう",
+   "hanViet": "TRỪ THẢO",
    "meaning": "nhổ cỏ, diệt cỏ dại"
   },
   {
    "word": "剪定",
    "reading": "せんてい",
+   "hanViet": "TIỄN ĐỊNH",
    "meaning": "cắt tỉa cây"
   },
   {
    "word": "出荷",
    "reading": "しゅっか",
+   "hanViet": "XUẤT HÀ",
    "meaning": "xuất hàng, gửi nông sản đi bán"
   },
   {
    "word": "選別",
    "reading": "せんべつ",
+   "hanViet": "TUYỂN BIỆT",
    "meaning": "phân loại, lựa chọn (nông sản)"
   },
   {
    "word": "畜産",
    "reading": "ちくさん",
+   "hanViet": "SÚC SẢN",
    "meaning": "chăn nuôi"
   },
   {
    "word": "家畜",
    "reading": "かちく",
+   "hanViet": "GIA SÚC",
    "meaning": "gia súc"
   },
   {
    "word": "飼料",
    "reading": "しりょう",
+   "hanViet": "TỰ LIỆU",
    "meaning": "thức ăn chăn nuôi"
   },
   {
    "word": "搾乳",
    "reading": "さくにゅう",
+   "hanViet": "TRÁCH NHŨ",
    "meaning": "vắt sữa"
   },
   {
    "word": "堆肥",
    "reading": "たいひ",
+   "hanViet": "ĐÔI PHÌ",
    "meaning": "phân hữu cơ, phân ủ"
   },
   {
@@ -1604,6 +1873,7 @@ window.VOCAB_SPEC = {
   {
    "word": "灌漑",
    "reading": "かんがい",
+   "hanViet": "QUÁN KHÁI",
    "meaning": "tưới tiêu, thủy lợi"
   }
  ],
@@ -1616,16 +1886,19 @@ window.VOCAB_SPEC = {
   {
    "word": "日常清掃",
    "reading": "にちじょうせいそう",
+   "hanViet": "NHẬT THƯỜNG THANH TẢO",
    "meaning": "vệ sinh hằng ngày"
   },
   {
    "word": "定期清掃",
    "reading": "ていきせいそう",
+   "hanViet": "ĐỊNH KỲ THANH TẢO",
    "meaning": "vệ sinh định kỳ"
   },
   {
    "word": "掃除機",
    "reading": "そうじき",
+   "hanViet": "TẢO TRỪ CƠ",
    "meaning": "máy hút bụi"
   },
   {
@@ -1636,16 +1909,19 @@ window.VOCAB_SPEC = {
   {
    "word": "雑巾",
    "reading": "ぞうきん",
+   "hanViet": "TẠP CÂN",
    "meaning": "giẻ lau"
   },
   {
    "word": "洗剤",
    "reading": "せんざい",
+   "hanViet": "TẨY TỀ",
    "meaning": "chất tẩy rửa"
   },
   {
    "word": "消毒",
    "reading": "しょうどく",
+   "hanViet": "TIÊU ĐỘC",
    "meaning": "khử trùng, sát trùng"
   },
   {
@@ -1656,11 +1932,13 @@ window.VOCAB_SPEC = {
   {
    "word": "ガラス清掃",
    "reading": "がらすせいそう",
+   "hanViet": "THANH TẢO",
    "meaning": "lau kính"
   },
   {
    "word": "トイレ清掃",
    "reading": "といれせいそう",
+   "hanViet": "THANH TẢO",
    "meaning": "vệ sinh nhà vệ sinh"
   },
   {
@@ -1691,6 +1969,7 @@ window.VOCAB_SPEC = {
   {
    "word": "手袋",
    "reading": "てぶくろ",
+   "hanViet": "THỦ ĐẠI",
    "meaning": "găng tay"
   },
   {
@@ -1701,6 +1980,7 @@ window.VOCAB_SPEC = {
   {
    "word": "換気",
    "reading": "かんき",
+   "hanViet": "HOÁN KHÍ",
    "meaning": "thông gió"
   },
   {
@@ -1711,26 +1991,31 @@ window.VOCAB_SPEC = {
   {
    "word": "廊下",
    "reading": "ろうか",
+   "hanViet": "LANG HẠ",
    "meaning": "hành lang"
   },
   {
    "word": "階段",
    "reading": "かいだん",
+   "hanViet": "GIAI ĐOẠN",
    "meaning": "cầu thang"
   },
   {
    "word": "排水口",
    "reading": "はいすいこう",
+   "hanViet": "BÀI THỦY KHẨU",
    "meaning": "miệng cống, lỗ thoát nước"
   },
   {
    "word": "床",
    "reading": "ゆか",
+   "hanViet": "SÀNG",
    "meaning": "sàn nhà"
   },
   {
    "word": "拭き掃除",
    "reading": "ふきそうじ",
+   "hanViet": "THỨC TẢO TRỪ",
    "meaning": "lau chùi (bằng khăn)"
   }
  ],
@@ -1738,6 +2023,7 @@ window.VOCAB_SPEC = {
   {
    "word": "自動車整備",
    "reading": "じどうしゃせいび",
+   "hanViet": "TỰ ĐỘNG XA CHỈNH BỊ",
    "meaning": "bảo dưỡng, sửa chữa ô tô"
   },
   {
@@ -1768,26 +2054,31 @@ window.VOCAB_SPEC = {
   {
    "word": "車検",
    "reading": "しゃけん",
+   "hanViet": "XA KIỂM",
    "meaning": "kiểm định xe, đăng kiểm"
   },
   {
    "word": "点検",
    "reading": "てんけん",
+   "hanViet": "ĐIỂM KIỂM",
    "meaning": "kiểm tra (định kỳ)"
   },
   {
    "word": "修理",
    "reading": "しゅうり",
+   "hanViet": "TU LÝ",
    "meaning": "sửa chữa"
   },
   {
    "word": "交換",
    "reading": "こうかん",
+   "hanViet": "GIAO HOÁN",
    "meaning": "thay thế (phụ tùng)"
   },
   {
    "word": "冷却水",
    "reading": "れいきゃくすい",
+   "hanViet": "LÃNH KHƯỚC THỦY",
    "meaning": "nước làm mát động cơ"
   },
   {
@@ -1818,6 +2109,7 @@ window.VOCAB_SPEC = {
   {
    "word": "排気ガス",
    "reading": "はいきがす",
+   "hanViet": "BÀI KHÍ",
    "meaning": "khí thải"
   },
   {
@@ -1838,26 +2130,31 @@ window.VOCAB_SPEC = {
   {
    "word": "整備士",
    "reading": "せいびし",
+   "hanViet": "CHỈNH BỊ SĨ",
    "meaning": "thợ sửa chữa ô tô, kỹ thuật viên bảo dưỡng"
   },
   {
    "word": "故障",
    "reading": "こしょう",
+   "hanViet": "CỐ CHƯỚNG",
    "meaning": "hỏng hóc, sự cố"
   },
   {
    "word": "タイヤ交換",
    "reading": "たいやこうかん",
+   "hanViet": "GIAO HOÁN",
    "meaning": "thay lốp xe"
   },
   {
    "word": "オイル交換",
    "reading": "おいるこうかん",
+   "hanViet": "GIAO HOÁN",
    "meaning": "thay dầu máy"
   },
   {
    "word": "試運転",
    "reading": "しうんてん",
+   "hanViet": "THÍ VẬN CHUYỂN",
    "meaning": "chạy thử (sau sửa chữa)"
   }
  ],
@@ -1865,16 +2162,19 @@ window.VOCAB_SPEC = {
   {
    "word": "外食業",
    "reading": "がいしょくぎょう",
+   "hanViet": "NGOẠI THỰC NGHIỆP",
    "meaning": "ngành dịch vụ ăn uống"
   },
   {
    "word": "接客",
    "reading": "せっきゃく",
+   "hanViet": "TIẾP KHÁCH",
    "meaning": "phục vụ khách hàng"
   },
   {
    "word": "注文",
    "reading": "ちゅうもん",
+   "hanViet": "CHÚ VĂN",
    "meaning": "gọi món, đặt món"
   },
   {
@@ -1885,71 +2185,85 @@ window.VOCAB_SPEC = {
   {
    "word": "調理",
    "reading": "ちょうり",
+   "hanViet": "ĐIỀU LÝ",
    "meaning": "nấu nướng, chế biến món ăn"
   },
   {
    "word": "食材",
    "reading": "しょくざい",
+   "hanViet": "THỰC TÀI",
    "meaning": "nguyên liệu thực phẩm"
   },
   {
    "word": "衛生管理",
    "reading": "えいせいかんり",
+   "hanViet": "VỆ SINH QUẢN LÝ",
    "meaning": "quản lý vệ sinh (an toàn thực phẩm)"
   },
   {
    "word": "食中毒",
    "reading": "しょくちゅうどく",
+   "hanViet": "THỰC TRUNG ĐỘC",
    "meaning": "ngộ độc thực phẩm"
   },
   {
    "word": "食物アレルギー",
    "reading": "しょくもつあれるぎー",
+   "hanViet": "THỰC VẬT",
    "meaning": "dị ứng thực phẩm"
   },
   {
    "word": "洗浄",
    "reading": "せんじょう",
+   "hanViet": "TẨY TỊNH",
    "meaning": "rửa, làm sạch (chén bát, dụng cụ)"
   },
   {
    "word": "殺菌",
    "reading": "さっきん",
+   "hanViet": "SÁT KHUẨN",
    "meaning": "diệt khuẩn, tiệt trùng"
   },
   {
    "word": "冷蔵",
    "reading": "れいぞう",
+   "hanViet": "LÃNH TÀNG",
    "meaning": "bảo quản lạnh"
   },
   {
    "word": "冷凍",
    "reading": "れいとう",
+   "hanViet": "LÃNH ĐÔNG",
    "meaning": "cấp đông, bảo quản đông lạnh"
   },
   {
    "word": "解凍",
    "reading": "かいとう",
+   "hanViet": "GIẢI ĐÔNG",
    "meaning": "rã đông"
   },
   {
    "word": "下処理",
    "reading": "したしょり",
+   "hanViet": "HẠ XỬ LÝ",
    "meaning": "sơ chế (nguyên liệu)"
   },
   {
    "word": "盛り付け",
    "reading": "もりつけ",
+   "hanViet": "THỊNH PHÓ",
    "meaning": "bày biện, trình bày món ăn"
   },
   {
    "word": "配膳",
    "reading": "はいぜん",
+   "hanViet": "PHỐI THIỆN",
    "meaning": "dọn món, bưng món lên bàn"
   },
   {
    "word": "会計",
    "reading": "かいけい",
+   "hanViet": "HỘI KẾ",
    "meaning": "thanh toán (tiền ăn)"
   },
   {
@@ -1960,31 +2274,37 @@ window.VOCAB_SPEC = {
   {
    "word": "予約",
    "reading": "よやく",
+   "hanViet": "DỰ ƯỚC",
    "meaning": "đặt bàn trước"
   },
   {
    "word": "持ち帰り",
    "reading": "もちかえり",
+   "hanViet": "TRÌ QUY",
    "meaning": "mang về (mua mang đi)"
   },
   {
    "word": "異物混入",
    "reading": "いぶつこんにゅう",
+   "hanViet": "DỊ VẬT HỖN NHẬP",
    "meaning": "lẫn dị vật vào thực phẩm"
   },
   {
    "word": "交差汚染",
    "reading": "こうさおせん",
+   "hanViet": "GIAO SOA Ô NHIỄM",
    "meaning": "nhiễm chéo (thực phẩm)"
   },
   {
    "word": "仕込み",
    "reading": "しこみ",
+   "hanViet": "SĨ",
    "meaning": "chuẩn bị trước (nguyên liệu, món ăn)"
   },
   {
    "word": "中心温度",
    "reading": "ちゅうしんおんど",
+   "hanViet": "TRUNG TÂM ÔN ĐỘ",
    "meaning": "nhiệt độ trung tâm (của thực phẩm khi nấu)"
   }
  ],
@@ -1992,371 +2312,445 @@ window.VOCAB_SPEC = {
   {
    "word": "漁業",
    "reading": "ぎょぎょう",
+   "hanViet": "NGƯ NGHIỆP",
    "meaning": "nghề cá; ngành thủy sản"
   },
   {
    "word": "養殖業",
    "reading": "ようしょくぎょう",
+   "hanViet": "DƯỠNG THỰC NGHIỆP",
    "meaning": "nghề nuôi trồng thủy sản"
   },
   {
    "word": "沿岸漁業",
    "reading": "えんがんぎょぎょう",
+   "hanViet": "DUYÊN NGẠN NGƯ NGHIỆP",
    "meaning": "nghề cá ven bờ"
   },
   {
    "word": "沖合漁業",
    "reading": "おきあいぎょぎょう",
+   "hanViet": "XUNG HỢP NGƯ NGHIỆP",
    "meaning": "nghề cá xa bờ"
   },
   {
    "word": "遠洋漁業",
    "reading": "えんようぎょぎょう",
+   "hanViet": "VIỄN DƯƠNG NGƯ NGHIỆP",
    "meaning": "nghề cá biển xa"
   },
   {
    "word": "内水面漁業",
    "reading": "ないすいめんぎょぎょう",
+   "hanViet": "NỘI THỦY DIỆN NGƯ NGHIỆP",
    "meaning": "nghề cá nội địa (sông, hồ)"
   },
   {
    "word": "漁師",
    "reading": "りょうし",
+   "hanViet": "NGƯ SƯ",
    "meaning": "ngư dân"
   },
   {
    "word": "漁船",
    "reading": "ぎょせん",
+   "hanViet": "NGƯ THUYỀN",
    "meaning": "tàu cá"
   },
   {
    "word": "漁港",
    "reading": "ぎょこう",
+   "hanViet": "NGƯ CẢNG",
    "meaning": "cảng cá"
   },
   {
    "word": "漁場",
    "reading": "ぎょじょう",
+   "hanViet": "NGƯ TRƯỜNG",
    "meaning": "ngư trường"
   },
   {
    "word": "漁獲",
    "reading": "ぎょかく",
+   "hanViet": "NGƯ HOẠCH",
    "meaning": "sản lượng đánh bắt; cá đánh bắt được"
   },
   {
    "word": "漁獲高",
    "reading": "ぎょかくだか",
+   "hanViet": "NGƯ HOẠCH CAO",
    "meaning": "sản lượng đánh bắt"
   },
   {
    "word": "大漁",
    "reading": "たいりょう",
+   "hanViet": "ĐẠI NGƯ",
    "meaning": "được mẻ cá lớn"
   },
   {
    "word": "豊漁",
    "reading": "ほうりょう",
+   "hanViet": "PHONG NGƯ",
    "meaning": "mùa cá bội thu"
   },
   {
    "word": "乱獲",
    "reading": "らんかく",
+   "hanViet": "LOẠN HOẠCH",
    "meaning": "đánh bắt quá mức"
   },
   {
    "word": "水揚げ",
    "reading": "みずあげ",
+   "hanViet": "THỦY DƯƠNG",
    "meaning": "dỡ cá lên bờ; lượng cá cập cảng"
   },
   {
    "word": "魚市場",
    "reading": "うおいちば",
+   "hanViet": "NGƯ THỊ TRƯỜNG",
    "meaning": "chợ cá"
   },
   {
    "word": "漁具",
    "reading": "ぎょぐ",
+   "hanViet": "NGƯ CỤ",
    "meaning": "ngư cụ"
   },
   {
    "word": "網",
    "reading": "あみ",
+   "hanViet": "VÕNG",
    "meaning": "lưới"
   },
   {
    "word": "巻き網",
    "reading": "まきあみ",
+   "hanViet": "QUYỂN VÕNG",
    "meaning": "lưới vây (lưới rút)"
   },
   {
    "word": "底引き網",
    "reading": "そこびきあみ",
+   "hanViet": "ĐÊ DẪN VÕNG",
    "meaning": "lưới kéo đáy"
   },
   {
    "word": "刺し網",
    "reading": "さしあみ",
+   "hanViet": "THÍCH VÕNG",
    "meaning": "lưới rê (lưới mang)"
   },
   {
    "word": "定置網",
    "reading": "ていちあみ",
+   "hanViet": "ĐỊNH TRÍ VÕNG",
    "meaning": "lưới đặt cố định"
   },
   {
    "word": "延縄",
    "reading": "はえなわ",
+   "hanViet": "DIÊN THẰNG",
    "meaning": "câu dài (câu giăng)"
   },
   {
    "word": "釣り",
    "reading": "つり",
+   "hanViet": "ĐIẾU",
    "meaning": "câu cá"
   },
   {
    "word": "釣り針",
    "reading": "つりばり",
+   "hanViet": "ĐIẾU CHÂM",
    "meaning": "lưỡi câu"
   },
   {
    "word": "浮き",
    "reading": "うき",
+   "hanViet": "PHÙ",
    "meaning": "phao (lưới)"
   },
   {
    "word": "沈子",
    "reading": "ちんし",
+   "hanViet": "TRẦM TỬ",
    "meaning": "chì dìm lưới"
   },
   {
    "word": "網目",
    "reading": "あみめ",
+   "hanViet": "VÕNG MỤC",
    "meaning": "mắt lưới"
   },
   {
    "word": "魚群探知機",
    "reading": "ぎょぐんたんちき",
+   "hanViet": "NGƯ QUẦN THÁM TRI CƠ",
    "meaning": "máy dò đàn cá"
   },
   {
    "word": "籠",
    "reading": "かご",
+   "hanViet": "LUNG",
    "meaning": "lồng (bẫy)"
   },
   {
    "word": "蟹かご",
    "reading": "かにかご",
+   "hanViet": "GIẢI",
    "meaning": "lồng bắt cua"
   },
   {
    "word": "餌",
    "reading": "えさ",
+   "hanViet": "NHĨ",
    "meaning": "mồi câu; thức ăn cho cá"
   },
   {
    "word": "漁法",
    "reading": "ぎょほう",
+   "hanViet": "NGƯ PHÁP",
    "meaning": "phương pháp đánh bắt"
   },
   {
    "word": "操業",
    "reading": "そうぎょう",
+   "hanViet": "THAO NGHIỆP",
    "meaning": "hoạt động đánh bắt (ra khơi)"
   },
   {
    "word": "出漁",
    "reading": "しゅつりょう",
+   "hanViet": "XUẤT NGƯ",
    "meaning": "ra khơi đánh bắt"
   },
   {
    "word": "船長",
    "reading": "せんちょう",
+   "hanViet": "THUYỀN TRƯỞNG",
    "meaning": "thuyền trưởng"
   },
   {
    "word": "甲板",
    "reading": "かんぱん",
+   "hanViet": "GIÁP BẢN",
    "meaning": "boong tàu"
   },
   {
    "word": "船倉",
    "reading": "せんそう",
+   "hanViet": "THUYỀN THƯƠNG",
    "meaning": "khoang tàu"
   },
   {
    "word": "魚倉",
    "reading": "ぎょそう",
+   "hanViet": "NGƯ THƯƠNG",
    "meaning": "hầm chứa cá"
   },
   {
    "word": "機関室",
    "reading": "きかんしつ",
+   "hanViet": "CƠ QUAN THẤT",
    "meaning": "buồng máy"
   },
   {
    "word": "船橋",
    "reading": "せんきょう",
+   "hanViet": "THUYỀN KIỀU",
    "meaning": "buồng lái (đài chỉ huy)"
   },
   {
    "word": "羅針盤",
    "reading": "らしんばん",
+   "hanViet": "LA CHÂM BÀN",
    "meaning": "la bàn"
   },
   {
    "word": "海図",
    "reading": "かいず",
+   "hanViet": "HẢI ĐỒ",
    "meaning": "hải đồ"
   },
   {
    "word": "養殖",
    "reading": "ようしょく",
+   "hanViet": "DƯỠNG THỰC",
    "meaning": "nuôi trồng thủy sản"
   },
   {
    "word": "稚魚",
    "reading": "ちぎょ",
+   "hanViet": "TRĨ NGƯ",
    "meaning": "cá con; cá giống"
   },
   {
    "word": "種苗",
    "reading": "しゅびょう",
+   "hanViet": "CHỦNG MIÊU",
    "meaning": "con giống (thủy sản)"
   },
   {
    "word": "給餌",
    "reading": "きゅうじ",
+   "hanViet": "CẤP NHĨ",
    "meaning": "cho cá ăn"
   },
   {
    "word": "放流",
    "reading": "ほうりゅう",
+   "hanViet": "PHÓNG LƯU",
    "meaning": "thả giống (xuống biển, sông)"
   },
   {
    "word": "生け簀",
    "reading": "いけす",
+   "hanViet": "SINH",
    "meaning": "bể (lồng) giữ cá sống"
   },
   {
    "word": "養魚場",
    "reading": "ようぎょじょう",
+   "hanViet": "DƯỠNG NGƯ TRƯỜNG",
    "meaning": "trại nuôi cá"
   },
   {
    "word": "栽培漁業",
    "reading": "さいばいぎょぎょう",
+   "hanViet": "TÀI BỒI NGƯ NGHIỆP",
    "meaning": "nghề nuôi thả (nuôi cá con rồi thả ra tự nhiên)"
   },
   {
    "word": "赤潮",
    "reading": "あかしお",
+   "hanViet": "XÍCH TRIỀU",
    "meaning": "thủy triều đỏ"
   },
   {
    "word": "海流",
    "reading": "かいりゅう",
+   "hanViet": "HẢI LƯU",
    "meaning": "hải lưu"
   },
   {
    "word": "潮流",
    "reading": "ちょうりゅう",
+   "hanViet": "TRIỀU LƯU",
    "meaning": "dòng thủy triều"
   },
   {
    "word": "黒潮",
    "reading": "くろしお",
+   "hanViet": "HẮC TRIỀU",
    "meaning": "hải lưu Kuroshio (dòng nóng)"
   },
   {
    "word": "親潮",
    "reading": "おやしお",
+   "hanViet": "THÂN TRIỀU",
    "meaning": "hải lưu Oyashio (dòng lạnh)"
   },
   {
    "word": "水温",
    "reading": "すいおん",
+   "hanViet": "THỦY ÔN",
    "meaning": "nhiệt độ nước"
   },
   {
    "word": "水質",
    "reading": "すいしつ",
+   "hanViet": "THỦY CHẤT",
    "meaning": "chất lượng nước"
   },
   {
    "word": "選別",
    "reading": "せんべつ",
+   "hanViet": "TUYỂN BIỆT",
    "meaning": "phân loại (cá)"
   },
   {
    "word": "冷凍",
    "reading": "れいとう",
+   "hanViet": "LÃNH ĐÔNG",
    "meaning": "cấp đông"
   },
   {
    "word": "冷蔵",
    "reading": "れいぞう",
+   "hanViet": "LÃNH TÀNG",
    "meaning": "bảo quản lạnh"
   },
   {
    "word": "解凍",
    "reading": "かいとう",
+   "hanViet": "GIẢI ĐÔNG",
    "meaning": "rã đông"
   },
   {
    "word": "鮮度",
    "reading": "せんど",
+   "hanViet": "TIÊN ĐỘ",
    "meaning": "độ tươi"
   },
   {
    "word": "氷",
    "reading": "こおり",
+   "hanViet": "BĂNG",
    "meaning": "đá (nước đá)"
   },
   {
    "word": "活魚",
    "reading": "かつぎょ",
+   "hanViet": "HOẠT NGƯ",
    "meaning": "cá sống"
   },
   {
    "word": "鮮魚",
    "reading": "せんぎょ",
+   "hanViet": "TIÊN NGƯ",
    "meaning": "cá tươi"
   },
   {
    "word": "水産加工",
    "reading": "すいさんかこう",
+   "hanViet": "THỦY SẢN GIA CÔNG",
    "meaning": "chế biến thủy sản"
   },
   {
    "word": "魚介類",
    "reading": "ぎょかいるい",
+   "hanViet": "NGƯ GIỚI LOẠI",
    "meaning": "hải sản (cá và sò)"
   },
   {
    "word": "救命胴衣",
    "reading": "きゅうめいどうい",
+   "hanViet": "CỨU MỆNH Y",
    "meaning": "áo phao cứu sinh"
   },
   {
    "word": "救命ボート",
    "reading": "きゅうめいぼーと",
+   "hanViet": "CỨU MỆNH",
    "meaning": "xuồng cứu sinh"
   },
   {
    "word": "転落防止",
    "reading": "てんらくぼうし",
+   "hanViet": "CHUYỂN LẠC PHÒNG CHỈ",
    "meaning": "phòng chống rơi xuống biển"
   },
   {
    "word": "安全確認",
    "reading": "あんぜんかくにん",
+   "hanViet": "AN TOÀN XÁC NHẬN",
    "meaning": "kiểm tra an toàn"
   },
   {
    "word": "危険防止",
    "reading": "きけんぼうし",
+   "hanViet": "NGUY HIỂM PHÒNG CHỈ",
    "meaning": "phòng ngừa nguy hiểm"
   },
   {
@@ -2402,6 +2796,7 @@ window.VOCAB_SPEC = {
   {
    "word": "秋刀魚",
    "reading": "さんま",
+   "hanViet": "THU ĐAO NGƯ",
    "meaning": "cá thu đao"
   },
   {
@@ -2417,6 +2812,7 @@ window.VOCAB_SPEC = {
   {
    "word": "河豚",
    "reading": "ふぐ",
+   "hanViet": "HÀ ĐỒN",
    "meaning": "cá nóc"
   },
   {
@@ -2427,6 +2823,7 @@ window.VOCAB_SPEC = {
   {
    "word": "烏賊",
    "reading": "いか",
+   "hanViet": "Ô TẶC",
    "meaning": "mực"
   },
   {
@@ -2437,31 +2834,37 @@ window.VOCAB_SPEC = {
   {
    "word": "海老",
    "reading": "えび",
+   "hanViet": "HẢI LÃO",
    "meaning": "tôm"
   },
   {
    "word": "蟹",
    "reading": "かに",
+   "hanViet": "GIẢI",
    "meaning": "cua"
   },
   {
    "word": "牡蠣",
    "reading": "かき",
+   "hanViet": "MẪU LỆ",
    "meaning": "hàu"
   },
   {
    "word": "帆立",
    "reading": "ほたて",
+   "hanViet": "PHÀM LẬP",
    "meaning": "sò điệp"
   },
   {
    "word": "昆布",
    "reading": "こんぶ",
+   "hanViet": "CÔN BỐ",
    "meaning": "rong kombu"
   },
   {
    "word": "海藻",
    "reading": "かいそう",
+   "hanViet": "HẢI TẢO",
    "meaning": "rong biển"
   }
  ],
@@ -2469,16 +2872,19 @@ window.VOCAB_SPEC = {
   {
    "word": "航空機優先",
    "reading": "こうくうきゆうせん",
+   "hanViet": "HÀNG KHÔNG CƠ ƯU TIÊN",
    "meaning": "máy bay đang hoạt động được ưu tiên (trong khu vực hạn chế)"
   },
   {
    "word": "制限区域",
    "reading": "せいげんくいき",
+   "hanViet": "CHẾ HẠN KHU VỰC",
    "meaning": "khu vực hạn chế (chỉ người/xe được phép mới vào)"
   },
   {
    "word": "危険区域",
    "reading": "きけんくいき",
+   "hanViet": "NGUY HIỂM KHU VỰC",
    "meaning": "vùng nguy hiểm quanh động cơ đang chạy"
   },
   {
@@ -2489,6 +2895,7 @@ window.VOCAB_SPEC = {
   {
    "word": "危険物輸送",
    "reading": "きけんぶつゆそう",
+   "hanViet": "NGUY HIỂM VẬT DU TỐNG",
    "meaning": "vận chuyển hàng nguy hiểm bằng máy bay"
   },
   {
@@ -2499,6 +2906,7 @@ window.VOCAB_SPEC = {
   {
    "word": "航空保安",
    "reading": "こうくうほあん",
+   "hanViet": "HÀNG KHÔNG BẢO AN",
    "meaning": "an ninh hàng không"
   },
   {
@@ -2519,6 +2927,7 @@ window.VOCAB_SPEC = {
   {
    "word": "搬送作業",
    "reading": "はんそうさぎょう",
+   "hanViet": "BAN TỐNG TÁC NGHIỆP",
    "meaning": "vận chuyển, chất/dỡ hành lý và hàng hóa"
   },
   {
@@ -2544,6 +2953,7 @@ window.VOCAB_SPEC = {
   {
    "word": "バルク貨物室",
    "reading": "ばるくかもつしつ",
+   "hanViet": "HÓA VẬT THẤT",
    "meaning": "khoang hàng rời (xếp tay)"
   },
   {
@@ -2559,21 +2969,25 @@ window.VOCAB_SPEC = {
   {
    "word": "機内空調サービス",
    "reading": "きないくうちょうさーびす",
+   "hanViet": "CƠ NỘI KHÔNG ĐIỀU",
    "meaning": "cấp điều hòa cho máy bay đang đỗ"
   },
   {
    "word": "地上電源",
    "reading": "ちじょうでんげん",
+   "hanViet": "ĐỊA THƯỢNG ĐIỆN NGUYÊN",
    "meaning": "nguồn điện mặt đất cấp cho máy bay đang đỗ"
   },
   {
    "word": "手荷物仕分け作業",
    "reading": "てにもつしわけさぎょう",
+   "hanViet": "THỦ HÀ VẬT SĨ PHÂN TÁC NGHIỆP",
    "meaning": "phân loại hành lý ký gửi"
   },
   {
    "word": "給油作業",
    "reading": "きゅうゆさぎょう",
+   "hanViet": "CẤP DU TÁC NGHIỆP",
    "meaning": "cấp nhiên liệu cho máy bay"
   },
   {
@@ -2589,11 +3003,13 @@ window.VOCAB_SPEC = {
   {
    "word": "工程管理",
    "reading": "こうていかんり",
+   "hanViet": "CÔNG TRÌNH QUẢN LÍ",
    "meaning": "quản lý tiến độ và trình tự công việc"
   },
   {
    "word": "情報の入手",
    "reading": "じょうほうのにゅうしゅ",
+   "hanViet": "TÌNH BÁO NHẬP THỦ",
    "meaning": "thu thập thông tin chuyến bay"
   },
   {
@@ -2619,26 +3035,31 @@ window.VOCAB_SPEC = {
   {
    "word": "コンテナ室",
    "reading": "こんてなしつ",
+   "hanViet": "THẤT",
    "meaning": "khoang hàng chứa container ULD"
   },
   {
    "word": "搭載物",
    "reading": "とうさいぶつ",
+   "hanViet": "ĐÁP TÁI VẬT",
    "meaning": "hàng hóa được chất lên máy bay"
   },
   {
    "word": "特殊搭載物",
    "reading": "とくしゅとうさいぶつ",
+   "hanViet": "ĐẶC THÙ ĐÁP TÁI VẬT",
    "meaning": "hàng hóa đặc biệt (hàng nguy hiểm…)"
   },
   {
    "word": "機移し搭載物",
    "reading": "きうつしとうさいぶつ",
+   "hanViet": "CƠ DI ĐÁP TÁI VẬT",
    "meaning": "hàng chuyển thẳng sang máy bay khác"
   },
   {
    "word": "乗り継ぎ搭載物",
    "reading": "のりつぎとうさいぶつ",
+   "hanViet": "THỪA KẾ ĐÁP TÁI VẬT",
    "meaning": "hàng hóa nối chuyến"
   },
   {
@@ -2659,21 +3080,25 @@ window.VOCAB_SPEC = {
   {
    "word": "給水車",
    "reading": "きゅうすいしゃ",
+   "hanViet": "CẤP THỦY XA",
    "meaning": "xe cấp nước uống cho máy bay"
   },
   {
    "word": "排水車",
    "reading": "はいすいしゃ",
+   "hanViet": "BÀI THỦY XA",
    "meaning": "xe xả nước uống cũ khỏi máy bay"
   },
   {
    "word": "汚水車",
    "reading": "おすいしゃ",
+   "hanViet": "Ô THỦY XA",
    "meaning": "xe hút nước thải nhà vệ sinh máy bay"
   },
   {
    "word": "地上空調供給設備",
    "reading": "ちじょうくうちょうきょうきゅうせつび",
+   "hanViet": "ĐỊA THƯỢNG KHÔNG ĐIỀU CUNG CẤP THIẾT BỊ",
    "meaning": "thiết bị cấp điều hòa từ mặt đất"
   },
   {
@@ -2689,16 +3114,19 @@ window.VOCAB_SPEC = {
   {
    "word": "特殊手荷物タグ",
    "reading": "とくしゅてにもつたぐ",
+   "hanViet": "ĐẶC THÙ THỦ HÀ VẬT",
    "meaning": "thẻ hành lý đặc biệt (nặng, dễ vỡ, thú cưng…)"
   },
   {
    "word": "貨物仕分け作業",
    "reading": "かもつしわけさぎょう",
+   "hanViet": "HÓA VẬT SĨ PHÂN TÁC NGHIỆP",
    "meaning": "phân loại hàng hóa"
   },
   {
    "word": "特殊貨物タグ",
    "reading": "とくしゅかもつたぐ",
+   "hanViet": "ĐẶC THÙ HÓA VẬT",
    "meaning": "thẻ hàng hóa đặc biệt (động vật sống, hàng tươi…)"
   },
   {
@@ -2714,16 +3142,19 @@ window.VOCAB_SPEC = {
   {
    "word": "通関",
    "reading": "つうかん",
+   "hanViet": "THÔNG QUAN",
    "meaning": "thủ tục thông quan hải quan"
   },
   {
    "word": "機内清掃作業",
    "reading": "きないせいそうさぎょう",
+   "hanViet": "CƠ NỘI THANH TẢO TÁC NGHIỆP",
    "meaning": "dọn vệ sinh trong khoang máy bay"
   },
   {
    "word": "客室サービス車",
    "reading": "きゃくしつさーびすしゃ",
+   "hanViet": "KHÁCH THẤT XA",
    "meaning": "xe phục vụ vệ sinh khoang hành khách"
   },
   {
@@ -2734,21 +3165,25 @@ window.VOCAB_SPEC = {
   {
    "word": "飛行間作業",
    "reading": "ひこうかんさぎょう",
+   "hanViet": "PHI HÀNH GIAN TÁC NGHIỆP",
    "meaning": "vệ sinh máy bay giữa các chuyến bay"
   },
   {
    "word": "飛行後作業",
    "reading": "ひこうごさぎょう",
+   "hanViet": "PHI HÀNH HẬU TÁC NGHIỆP",
    "meaning": "vệ sinh máy bay sau chuyến bay cuối ngày"
   },
   {
    "word": "国際線作業",
    "reading": "こくさいせんさぎょう",
+   "hanViet": "QUỐC TẾ TUYẾN TÁC NGHIỆP",
    "meaning": "vệ sinh máy bay chuyến bay quốc tế"
   },
   {
    "word": "機用品",
    "reading": "きようひん",
+   "hanViet": "CƠ DỤNG PHẨM",
    "meaning": "vật dụng phục vụ trên máy bay"
   },
   {
@@ -2774,66 +3209,79 @@ window.VOCAB_SPEC = {
   {
    "word": "イレギュラー作業",
    "reading": "いれぎゅらーさぎょう",
+   "hanViet": "TÁC NGHIỆP",
    "meaning": "công việc phát sinh bất thường"
   },
   {
    "word": "指差呼称",
    "reading": "ゆびさしこしょう",
+   "hanViet": "CHỈ SAI HÔ XƯNG",
    "meaning": "chỉ tay và đọc to để xác nhận an toàn"
   },
   {
    "word": "保税運送",
    "reading": "ほぜいうんそう",
+   "hanViet": "BẢO THUẾ VẬN TỐNG",
    "meaning": "vận chuyển hàng trong khu vực quản lý hải quan"
   },
   {
    "word": "仮陸揚げ貨物",
    "reading": "かりりくあげかもつ",
+   "hanViet": "GIẢ LỤC DƯƠNG HÓA VẬT",
    "meaning": "hàng dỡ tạm để chuyển sang chuyến khác"
   },
   {
    "word": "航空運送状",
    "reading": "こうくううんそうじょう",
+   "hanViet": "HÀNG KHÔNG VẬN TỐNG TRẠNG",
    "meaning": "vận đơn hàng không"
   },
   {
    "word": "行先タグ",
    "reading": "いきさきたぐ",
+   "hanViet": "HÀNH TIÊN",
    "meaning": "thẻ ghi điểm đến của hàng hóa"
   },
   {
    "word": "航空貨物",
    "reading": "こうくうかもつ",
+   "hanViet": "HÀNG KHÔNG HÓA VẬT",
    "meaning": "hàng hóa vận chuyển bằng đường hàng không"
   },
   {
    "word": "出発作業",
    "reading": "しゅっぱつさぎょう",
+   "hanViet": "XUẤT PHÁT TÁC NGHIỆP",
    "meaning": "công việc phục vụ chuyến bay đi"
   },
   {
    "word": "到着作業",
    "reading": "とうちゃくさぎょう",
+   "hanViet": "ĐÁO TRƯỚC TÁC NGHIỆP",
    "meaning": "công việc phục vụ chuyến bay đến"
   },
   {
    "word": "機体作業",
    "reading": "きたいさぎょう",
+   "hanViet": "CƠ THỂ TÁC NGHIỆP",
    "meaning": "công việc phục vụ thân máy bay"
   },
   {
    "word": "事前準備",
    "reading": "じぜんじゅんび",
+   "hanViet": "SỰ TIỀN CHUẨN BỊ",
    "meaning": "chuẩn bị trước khi làm việc"
   },
   {
    "word": "搭載作業",
    "reading": "とうさいさぎょう",
+   "hanViet": "ĐÁP TÁI TÁC NGHIỆP",
    "meaning": "công việc chất hàng lên máy bay"
   },
   {
    "word": "庫内作業",
    "reading": "こないさぎょう",
+   "hanViet": "KHỐ NỘI TÁC NGHIỆP",
    "meaning": "công việc trong kho vật dụng máy bay"
   },
   {
@@ -2879,6 +3327,7 @@ window.VOCAB_SPEC = {
   {
    "word": "パッセンジャーステップ車",
    "reading": "ぱっせんじゃーすてっぷしゃ",
+   "hanViet": "XA",
    "meaning": "xe thang cho hành khách lên xuống máy bay"
   },
   {
@@ -2919,31 +3368,37 @@ window.VOCAB_SPEC = {
   {
    "word": "ハインリッヒの法則",
    "reading": "はいんりっひのほうそく",
+   "hanViet": "PHÁP TẮC",
    "meaning": "quy luật Heinrich (1 tai nạn : 29 sự cố : 300 suýt xảy ra)"
   },
   {
    "word": "保護具",
    "reading": "ほごぐ",
+   "hanViet": "BẢO HỘ CỤ",
    "meaning": "đồ bảo hộ lao động"
   },
   {
    "word": "整理整頓",
    "reading": "せいりせいとん",
+   "hanViet": "CHỈNH LÍ ĐỐN",
    "meaning": "sắp xếp, dọn dẹp gọn gàng nơi làm việc"
   },
   {
    "word": "定時性",
    "reading": "ていじせい",
+   "hanViet": "ĐỊNH THÌ TÍNH",
    "meaning": "tính đúng giờ của chuyến bay"
   },
   {
    "word": "安全性",
    "reading": "あんぜんせい",
+   "hanViet": "AN TOÀN TÍNH",
    "meaning": "tính an toàn"
   },
   {
    "word": "快適性",
    "reading": "かいてきせい",
+   "hanViet": "KHOÁI THÍCH TÍNH",
    "meaning": "sự thoải mái của hành khách"
   }
  ],
@@ -2951,26 +3406,31 @@ window.VOCAB_SPEC = {
   {
    "word": "宿泊施設",
    "reading": "しゅくはくしせつ",
+   "hanViet": "TÚC BẠC THI THIẾT",
    "meaning": "cơ sở lưu trú (khách sạn, nhà trọ)"
   },
   {
    "word": "宿泊者名簿",
    "reading": "しゅくはくしゃめいぼ",
+   "hanViet": "TÚC BẠC GIẢ DANH BỘ",
    "meaning": "sổ đăng ký khách lưu trú"
   },
   {
    "word": "宿泊税",
    "reading": "しゅくはくぜい",
+   "hanViet": "TÚC BẠC THUẾ",
    "meaning": "thuế lưu trú"
   },
   {
    "word": "宿泊約款",
    "reading": "しゅくはくやっかん",
+   "hanViet": "TÚC BẠC ƯỚC KHOẢN",
    "meaning": "điều khoản hợp đồng lưu trú"
   },
   {
    "word": "仲居",
    "reading": "なかい",
+   "hanViet": "TRỌNG CƯ",
    "meaning": "nữ phục vụ phòng (ryokan)"
   },
   {
@@ -2981,36 +3441,43 @@ window.VOCAB_SPEC = {
   {
    "word": "敬語",
    "reading": "けいご",
+   "hanViet": "KÍNH NGỮ",
    "meaning": "kính ngữ"
   },
   {
    "word": "空室",
    "reading": "くうしつ",
+   "hanViet": "KHÔNG THẤT",
    "meaning": "phòng trống"
   },
   {
    "word": "満室",
    "reading": "まんしつ",
+   "hanViet": "MÃN THẤT",
    "meaning": "hết phòng"
   },
   {
    "word": "連泊",
    "reading": "れんぱく",
+   "hanViet": "LIÊN BẠC",
    "meaning": "ở liên tiếp nhiều đêm"
   },
   {
    "word": "1泊2食",
    "reading": "いっぱくにしょく",
+   "hanViet": "BẠC THỰC",
    "meaning": "gói 1 đêm gồm bữa tối + bữa sáng"
   },
   {
    "word": "一汁三菜",
    "reading": "いちじゅうさんさい",
+   "hanViet": "NHẤT TRẤP TAM THÁI",
    "meaning": "bữa truyền thống một canh ba món"
   },
   {
    "word": "預り金",
    "reading": "あずかりきん",
+   "hanViet": "DỰ KIM",
    "meaning": "tiền đặt cọc của khách"
   },
   {
@@ -3036,26 +3503,31 @@ window.VOCAB_SPEC = {
   {
    "word": "営業許可",
    "reading": "えいぎょうきょか",
+   "hanViet": "DOANH NGHIỆP HỨA KHẢ",
    "meaning": "giấy phép kinh doanh lưu trú"
   },
   {
    "word": "非常口",
    "reading": "ひじょうぐち",
+   "hanViet": "PHI THƯỜNG KHẨU",
    "meaning": "cửa thoát hiểm"
   },
   {
    "word": "避難経路",
    "reading": "ひなんけいろ",
+   "hanViet": "TỊ NAN KINH LỘ",
    "meaning": "lối thoát nạn"
   },
   {
    "word": "自動火災報知設備",
    "reading": "じどうかさいほうちせつび",
+   "hanViet": "TỰ ĐỘNG HỎA TAI BÁO TRI THIẾT BỊ",
    "meaning": "hệ thống báo cháy tự động"
   },
   {
    "word": "入湯税",
    "reading": "にゅうとうぜい",
+   "hanViet": "NHẬP THANG THUẾ",
    "meaning": "thuế tắm suối nước nóng"
   },
   {
@@ -3086,11 +3558,13 @@ window.VOCAB_SPEC = {
   {
    "word": "予約",
    "reading": "よやく",
+   "hanViet": "DỰ ƯỚC",
    "meaning": "đặt phòng, đặt trước"
   },
   {
    "word": "予約管理",
    "reading": "よやくかんり",
+   "hanViet": "DỰ ƯỚC QUẢN LÝ",
    "meaning": "quản lý đặt phòng"
   },
   {
@@ -3106,36 +3580,43 @@ window.VOCAB_SPEC = {
   {
    "word": "キャンセル料",
    "reading": "きゃんせるりょう",
+   "hanViet": "LIỆU",
    "meaning": "phí hủy đặt phòng"
   },
   {
    "word": "宿泊料金",
    "reading": "しゅくはくりょうきん",
+   "hanViet": "TÚC BẠC LIỆU KIM",
    "meaning": "giá phòng"
   },
   {
    "word": "宿泊プラン",
    "reading": "しゅくはくぷらん",
+   "hanViet": "TÚC BẠC",
    "meaning": "gói lưu trú"
   },
   {
    "word": "会計",
    "reading": "かいけい",
+   "hanViet": "HỘI KẾ",
    "meaning": "thanh toán, tính tiền"
   },
   {
    "word": "請求明細書",
    "reading": "せいきゅうめいさいしょ",
+   "hanViet": "THỈNH CẦU MINH TẾ THƯ",
    "meaning": "bảng kê chi tiết phí"
   },
   {
    "word": "領収書",
    "reading": "りょうしゅうしょ",
+   "hanViet": "LĨNH THU THƯ",
    "meaning": "biên lai, hóa đơn"
   },
   {
    "word": "サービス料",
    "reading": "さーびすりょう",
+   "hanViet": "LIỆU",
    "meaning": "phí dịch vụ"
   },
   {
@@ -3161,6 +3642,7 @@ window.VOCAB_SPEC = {
   {
    "word": "客室",
    "reading": "きゃくしつ",
+   "hanViet": "KHÁCH THẤT",
    "meaning": "phòng khách"
   },
   {
@@ -3171,6 +3653,7 @@ window.VOCAB_SPEC = {
   {
    "word": "客室清掃",
    "reading": "きゃくしつせいそう",
+   "hanViet": "KHÁCH THẤT THANH TẢO",
    "meaning": "dọn dẹp phòng khách"
   },
   {
@@ -3181,116 +3664,139 @@ window.VOCAB_SPEC = {
   {
    "word": "旅館",
    "reading": "りょかん",
+   "hanViet": "LỮ QUÁN",
    "meaning": "nhà trọ truyền thống Nhật (ryokan)"
   },
   {
    "word": "旅館業法",
    "reading": "りょかんぎょうほう",
+   "hanViet": "LỮ QUÁN NGHIỆP PHÁP",
    "meaning": "Luật Kinh doanh nhà trọ"
   },
   {
    "word": "温泉",
    "reading": "おんせん",
+   "hanViet": "ÔN TUYỀN",
    "meaning": "suối nước nóng"
   },
   {
    "word": "大浴場",
    "reading": "だいよくじょう",
+   "hanViet": "ĐẠI DỤC TRÀNG",
    "meaning": "nhà tắm chung lớn"
   },
   {
    "word": "露天風呂",
    "reading": "ろてんぶろ",
+   "hanViet": "LỘ THIÊN PHONG LỮ",
    "meaning": "bồn tắm ngoài trời"
   },
   {
    "word": "浴衣",
    "reading": "ゆかた",
+   "hanViet": "DỤC Y",
    "meaning": "áo yukata"
   },
   {
    "word": "布団",
    "reading": "ふとん",
+   "hanViet": "BỐ ĐOÀN",
    "meaning": "nệm futon"
   },
   {
    "word": "畳",
    "reading": "たたみ",
+   "hanViet": "ĐIỆP",
    "meaning": "chiếu tatami"
   },
   {
    "word": "和室",
    "reading": "わしつ",
+   "hanViet": "HÒA THẤT",
    "meaning": "phòng kiểu Nhật"
   },
   {
    "word": "洋室",
    "reading": "ようしつ",
+   "hanViet": "DƯƠNG THẤT",
    "meaning": "phòng kiểu Tây"
   },
   {
    "word": "懐石料理",
    "reading": "かいせきりょうり",
+   "hanViet": "HOÀI THẠCH LIỆU LÝ",
    "meaning": "ẩm thực kaiseki truyền thống"
   },
   {
    "word": "和食",
    "reading": "わしょく",
+   "hanViet": "HÒA THỰC",
    "meaning": "món ăn Nhật"
   },
   {
    "word": "洋食",
    "reading": "ようしょく",
+   "hanViet": "DƯƠNG THỰC",
    "meaning": "món ăn Tây"
   },
   {
    "word": "前菜",
    "reading": "ぜんさい",
+   "hanViet": "TIỀN THÁI",
    "meaning": "món khai vị"
   },
   {
    "word": "椀盛",
    "reading": "わんもり",
+   "hanViet": "OẢN THỊNH",
    "meaning": "món canh, súp (trong kaiseki)"
   },
   {
    "word": "お造り",
    "reading": "おつくり",
+   "hanViet": "TẠO",
    "meaning": "sashimi"
   },
   {
    "word": "焼き物",
    "reading": "やきもの",
+   "hanViet": "THIÊU VẬT",
    "meaning": "món nướng"
   },
   {
    "word": "煮物",
    "reading": "にもの",
+   "hanViet": "CHỬ VẬT",
    "meaning": "món ninh, hầm"
   },
   {
    "word": "揚物",
    "reading": "あげもの",
+   "hanViet": "DƯƠNG VẬT",
    "meaning": "món chiên, rán"
   },
   {
    "word": "酢の物",
    "reading": "すのもの",
+   "hanViet": "THỐ VẬT",
    "meaning": "món trộn giấm"
   },
   {
    "word": "魚料理",
    "reading": "さかなりょうり",
+   "hanViet": "NGƯ LIỆU LÝ",
    "meaning": "món cá"
   },
   {
    "word": "肉料理",
    "reading": "にくりょうり",
+   "hanViet": "NHỤC LIỆU LÝ",
    "meaning": "món thịt"
   },
   {
    "word": "配膳",
    "reading": "はいぜん",
+   "hanViet": "PHỐI THIỆN",
    "meaning": "dọn món, phục vụ món ăn"
   },
   {
@@ -3306,6 +3812,7 @@ window.VOCAB_SPEC = {
   {
    "word": "ブッフェ料理",
    "reading": "ぶっふぇりょうり",
+   "hanViet": "LIỆU LÝ",
    "meaning": "tiệc buffet"
   },
   {
@@ -3326,16 +3833,19 @@ window.VOCAB_SPEC = {
   {
    "word": "朝食",
    "reading": "ちょうしょく",
+   "hanViet": "TRIÊU THỰC",
    "meaning": "bữa sáng"
   },
   {
    "word": "夕食",
    "reading": "ゆうしょく",
+   "hanViet": "TỊCH THỰC",
    "meaning": "bữa tối"
   },
   {
    "word": "食物アレルギー",
    "reading": "しょくもつあれるぎー",
+   "hanViet": "THỰC VẬT",
    "meaning": "dị ứng thực phẩm"
   },
   {
@@ -3346,36 +3856,43 @@ window.VOCAB_SPEC = {
   {
    "word": "接客",
    "reading": "せっきゃく",
+   "hanViet": "TIẾP KHÁCH",
    "meaning": "tiếp khách, phục vụ khách"
   },
   {
    "word": "身だしなみ",
    "reading": "みだしなみ",
+   "hanViet": "THÂN",
    "meaning": "tác phong, vẻ ngoài gọn gàng"
   },
   {
    "word": "会釈",
    "reading": "えしゃく",
+   "hanViet": "HỘI THÍCH",
    "meaning": "cúi chào nhẹ"
   },
   {
    "word": "最敬礼",
    "reading": "さいけいれい",
+   "hanViet": "TỐI KÍNH LỄ",
    "meaning": "cúi chào sâu nhất"
   },
   {
    "word": "尊敬語",
    "reading": "そんけいご",
+   "hanViet": "TÔN KÍNH NGỮ",
    "meaning": "kính ngữ tôn kính (nói về người trên)"
   },
   {
    "word": "謙譲語",
    "reading": "けんじょうご",
+   "hanViet": "KHIÊM NHƯỢNG NGỮ",
    "meaning": "kính ngữ khiêm nhường (nói về bản thân)"
   },
   {
    "word": "丁寧語",
    "reading": "ていねいご",
+   "hanViet": "ĐINH NINH NGỮ",
    "meaning": "kính ngữ lịch sự (です・ます)"
   },
   {
@@ -3386,61 +3903,73 @@ window.VOCAB_SPEC = {
   {
    "word": "車いす",
    "reading": "くるまいす",
+   "hanViet": "XA",
    "meaning": "xe lăn"
   },
   {
    "word": "避難訓練",
    "reading": "ひなんくんれん",
+   "hanViet": "TỊ NAN HUẤN LUYỆN",
    "meaning": "diễn tập sơ tán"
   },
   {
    "word": "火災報知器",
    "reading": "かさいほうちき",
+   "hanViet": "HỎA TAI BÁO TRI KHÍ",
    "meaning": "thiết bị báo cháy"
   },
   {
    "word": "消火器",
    "reading": "しょうかき",
+   "hanViet": "TIÊU HỎA KHÍ",
    "meaning": "bình chữa cháy"
   },
   {
    "word": "非常階段",
    "reading": "ひじょうかいだん",
+   "hanViet": "PHI THƯỜNG GIAI ĐOẠN",
    "meaning": "cầu thang thoát hiểm"
   },
   {
    "word": "初期消火",
    "reading": "しょきしょうか",
+   "hanViet": "SƠ KỲ TIÊU HỎA",
    "meaning": "chữa cháy ban đầu"
   },
   {
    "word": "急病人",
    "reading": "きゅうびょうにん",
+   "hanViet": "CẤP BỆNH NHÂN",
    "meaning": "người đột ngột bị bệnh"
   },
   {
    "word": "食中毒",
    "reading": "しょくちゅうどく",
+   "hanViet": "THỰC TRUNG ĐỘC",
    "meaning": "ngộ độc thực phẩm"
   },
   {
    "word": "感染症",
    "reading": "かんせんしょう",
+   "hanViet": "CẢM NHIỄM CHỨNG",
    "meaning": "bệnh truyền nhiễm"
   },
   {
    "word": "衛生管理",
    "reading": "えいせいかんり",
+   "hanViet": "VỆ SINH QUẢN LÝ",
    "meaning": "quản lý vệ sinh"
   },
   {
    "word": "消防署",
    "reading": "しょうぼうしょ",
+   "hanViet": "TIÊU PHÒNG THỰ",
    "meaning": "sở cứu hỏa"
   },
   {
    "word": "稼働率",
    "reading": "かどうりつ",
+   "hanViet": "GIÁ ĐỘNG SUẤT",
    "meaning": "tỷ lệ lấp đầy phòng"
   },
   {
@@ -3453,66 +3982,79 @@ window.VOCAB_SPEC = {
   {
    "word": "造船",
    "reading": "ぞうせん",
+   "hanViet": "TẠO THUYỀN",
    "meaning": "đóng tàu"
   },
   {
    "word": "造船所",
    "reading": "ぞうせんじょ",
+   "hanViet": "TẠO THUYỀN SỞ",
    "meaning": "xưởng đóng tàu"
   },
   {
    "word": "船体",
    "reading": "せんたい",
+   "hanViet": "THUYỀN THỂ",
    "meaning": "thân tàu"
   },
   {
    "word": "船首",
    "reading": "せんしゅ",
+   "hanViet": "THUYỀN THỦ",
    "meaning": "mũi tàu"
   },
   {
    "word": "船尾",
    "reading": "せんび",
+   "hanViet": "THUYỀN VĨ",
    "meaning": "đuôi tàu"
   },
   {
    "word": "船底",
    "reading": "せんてい",
+   "hanViet": "THUYỀN ĐẾ",
    "meaning": "đáy tàu"
   },
   {
    "word": "甲板",
    "reading": "かんぱん",
+   "hanViet": "GIÁP BẢN",
    "meaning": "boong tàu"
   },
   {
    "word": "船倉",
    "reading": "せんそう",
+   "hanViet": "THUYỀN THƯƠNG",
    "meaning": "khoang hàng"
   },
   {
    "word": "竜骨",
    "reading": "りゅうこつ",
+   "hanViet": "LONG CỐT",
    "meaning": "sống tàu"
   },
   {
    "word": "船橋",
    "reading": "せんきょう",
+   "hanViet": "THUYỀN KIỀU",
    "meaning": "buồng lái (cầu tàu)"
   },
   {
    "word": "機関室",
    "reading": "きかんしつ",
+   "hanViet": "CƠ QUAN THẤT",
    "meaning": "buồng máy"
   },
   {
    "word": "二重底",
    "reading": "にじゅうぞこ",
+   "hanViet": "NHỊ TRỌNG ĐẾ",
    "meaning": "đáy đôi"
   },
   {
    "word": "喫水",
    "reading": "きっすい",
+   "hanViet": "KHẤT THỦY",
    "meaning": "mớn nước"
   },
   {
@@ -3528,46 +4070,55 @@ window.VOCAB_SPEC = {
   {
    "word": "排水量",
    "reading": "はいすいりょう",
+   "hanViet": "BÀI THỦY LƯỢNG",
    "meaning": "lượng giãn nước"
   },
   {
    "word": "総トン数",
    "reading": "そうとんすう",
+   "hanViet": "TỔNG SỐ",
    "meaning": "tổng dung tích (GT)"
   },
   {
    "word": "建造",
    "reading": "けんぞう",
+   "hanViet": "KIẾN TẠO",
    "meaning": "đóng mới (tàu)"
   },
   {
    "word": "起工",
    "reading": "きこう",
+   "hanViet": "KHỞI CÔNG",
    "meaning": "khởi công đóng tàu"
   },
   {
    "word": "進水",
    "reading": "しんすい",
+   "hanViet": "TIẾN THỦY",
    "meaning": "hạ thủy"
   },
   {
    "word": "艤装",
    "reading": "ぎそう",
+   "hanViet": "NGHĨ TRANG",
    "meaning": "trang bị hoàn thiện tàu"
   },
   {
    "word": "試運転",
    "reading": "しうんてん",
+   "hanViet": "THÍ VẬN CHUYỂN",
    "meaning": "chạy thử"
   },
   {
    "word": "引き渡し",
    "reading": "ひきわたし",
+   "hanViet": "DẪN ĐỘ",
    "meaning": "bàn giao (tàu)"
   },
   {
    "word": "修理",
    "reading": "しゅうり",
+   "hanViet": "TU LÍ",
    "meaning": "sửa chữa"
   },
   {
@@ -3578,91 +4129,109 @@ window.VOCAB_SPEC = {
   {
    "word": "組立",
    "reading": "くみたて",
+   "hanViet": "TỔ LẬP",
    "meaning": "lắp ráp"
   },
   {
    "word": "溶接",
    "reading": "ようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn"
   },
   {
    "word": "アーク溶接",
    "reading": "あーくようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn hồ quang"
   },
   {
    "word": "半自動溶接",
    "reading": "はんじどうようせつ",
+   "hanViet": "BÁN TỰ ĐỘNG DUNG TIẾP",
    "meaning": "hàn bán tự động"
   },
   {
    "word": "溶接棒",
    "reading": "ようせつぼう",
+   "hanViet": "DUNG TIẾP BỔNG",
    "meaning": "que hàn"
   },
   {
    "word": "切断",
    "reading": "せつだん",
+   "hanViet": "THIẾT ĐOẠN",
    "meaning": "cắt"
   },
   {
    "word": "ガス切断",
    "reading": "がすせつだん",
+   "hanViet": "THIẾT ĐOẠN",
    "meaning": "cắt bằng gas"
   },
   {
    "word": "塗装",
    "reading": "とそう",
+   "hanViet": "ĐỒ TRANG",
    "meaning": "sơn phủ"
   },
   {
    "word": "塗料",
    "reading": "とりょう",
+   "hanViet": "ĐỒ LIỆU",
    "meaning": "sơn (vật liệu sơn)"
   },
   {
    "word": "機械加工",
    "reading": "きかいかこう",
+   "hanViet": "CƠ GIỚI GIA CÔNG",
    "meaning": "gia công cơ khí"
   },
   {
    "word": "鉄工",
    "reading": "てっこう",
+   "hanViet": "THIẾT CÔNG",
    "meaning": "gia công sắt"
   },
   {
    "word": "仕上げ",
    "reading": "しあげ",
+   "hanViet": "SĨ",
    "meaning": "hoàn thiện"
   },
   {
    "word": "配管",
    "reading": "はいかん",
+   "hanViet": "PHỐI QUẢN",
    "meaning": "đường ống"
   },
   {
    "word": "配線",
    "reading": "はいせん",
+   "hanViet": "PHỐI TUYẾN",
    "meaning": "dây điện"
   },
   {
    "word": "検査",
    "reading": "けんさ",
+   "hanViet": "KIỂM TRA",
    "meaning": "kiểm tra"
   },
   {
    "word": "水密検査",
    "reading": "すいみつけんさ",
+   "hanViet": "THỦY MẬT KIỂM TRA",
    "meaning": "kiểm tra kín nước"
   },
   {
    "word": "非破壊検査",
    "reading": "ひはかいけんさ",
+   "hanViet": "PHI PHÁ HOẠI KIỂM TRA",
    "meaning": "kiểm tra không phá hủy"
   },
   {
    "word": "主機関",
    "reading": "しゅきかん",
+   "hanViet": "CHỦ CƠ QUAN",
    "meaning": "máy chính"
   },
   {
@@ -3678,21 +4247,25 @@ window.VOCAB_SPEC = {
   {
    "word": "舵",
    "reading": "かじ",
+   "hanViet": "ĐÀ",
    "meaning": "bánh lái"
   },
   {
    "word": "錨",
    "reading": "いかり",
+   "hanViet": "MIÊU",
    "meaning": "neo"
   },
   {
    "word": "発電機",
    "reading": "はつでんき",
+   "hanViet": "PHÁT ĐIỆN CƠ",
    "meaning": "máy phát điện"
   },
   {
    "word": "配電盤",
    "reading": "はいでんばん",
+   "hanViet": "PHỐI ĐIỆN BÀN",
    "meaning": "tủ phân phối điện"
   },
   {
@@ -3718,31 +4291,37 @@ window.VOCAB_SPEC = {
   {
    "word": "救命艇",
    "reading": "きゅうめいてい",
+   "hanViet": "CỨU MỆNH ĐĨNH",
    "meaning": "xuồng cứu sinh"
   },
   {
    "word": "救命胴衣",
    "reading": "きゅうめいどうい",
+   "hanViet": "CỨU MỆNH ĐỒNG Y",
    "meaning": "áo phao cứu sinh"
   },
   {
    "word": "消火器",
    "reading": "しょうかき",
+   "hanViet": "TIÊU HỎA KHÍ",
    "meaning": "bình chữa cháy"
   },
   {
    "word": "乾ドック",
    "reading": "かんどっく",
+   "hanViet": "CAN",
    "meaning": "ụ khô"
   },
   {
    "word": "鋼材",
    "reading": "こうざい",
+   "hanViet": "CƯƠNG TÀI",
    "meaning": "thép (vật liệu thép)"
   },
   {
    "word": "鋼板",
    "reading": "こうはん",
+   "hanViet": "CƯƠNG BẢN",
    "meaning": "tấm thép"
   },
   {
@@ -3753,26 +4332,31 @@ window.VOCAB_SPEC = {
   {
    "word": "腐食",
    "reading": "ふしょく",
+   "hanViet": "HỦ THỰC",
    "meaning": "ăn mòn"
   },
   {
    "word": "隔壁",
    "reading": "かくへき",
+   "hanViet": "CÁCH BÍCH",
    "meaning": "vách ngăn"
   },
   {
    "word": "足場",
    "reading": "あしば",
+   "hanViet": "TÚC TRƯỜNG",
    "meaning": "giàn giáo"
   },
   {
    "word": "安全帯",
    "reading": "あんぜんたい",
+   "hanViet": "AN TOÀN ĐỚI",
    "meaning": "dây an toàn"
   },
   {
    "word": "安全靴",
    "reading": "あんぜんぐつ",
+   "hanViet": "AN TOÀN NGOA",
    "meaning": "giày bảo hộ"
   },
   {
@@ -3783,36 +4367,43 @@ window.VOCAB_SPEC = {
   {
    "word": "保護メガネ",
    "reading": "ほごめがね",
+   "hanViet": "BẢO HỘ",
    "meaning": "kính bảo hộ"
   },
   {
    "word": "感電",
    "reading": "かんでん",
+   "hanViet": "CẢM ĐIỆN",
    "meaning": "điện giật"
   },
   {
    "word": "墜落",
    "reading": "ついらく",
+   "hanViet": "TRỤY LẠC",
    "meaning": "ngã từ trên cao"
   },
   {
    "word": "酸素欠乏",
    "reading": "さんそけつぼう",
+   "hanViet": "TOAN TỐ KHUYẾT PHẠP",
    "meaning": "thiếu oxy"
   },
   {
    "word": "高所作業",
    "reading": "こうしょさぎょう",
+   "hanViet": "CAO SỞ TÁC NGHIỆP",
    "meaning": "làm việc trên cao"
   },
   {
    "word": "危険予知",
    "reading": "きけんよち",
+   "hanViet": "NGUY HIỂM DỰ TRI",
    "meaning": "dự đoán nguy hiểm"
   },
   {
    "word": "指差し呼称",
    "reading": "ゆびさしこしょう",
+   "hanViet": "CHỈ SAI HÔ XƯNG",
    "meaning": "chỉ tay gọi tên (xác nhận an toàn)"
   },
   {
@@ -3823,6 +4414,7 @@ window.VOCAB_SPEC = {
   {
    "word": "整理整頓",
    "reading": "せいりせいとん",
+   "hanViet": "CHỈNH LÍ ĐỐN",
    "meaning": "sắp xếp gọn gàng"
   }
  ],
@@ -3830,11 +4422,13 @@ window.VOCAB_SPEC = {
   {
    "word": "鋳造",
    "reading": "ちゅうぞう",
+   "hanViet": "CHÚ TẠO",
    "meaning": "đúc (rót kim loại nóng chảy vào khuôn)"
   },
   {
    "word": "鍛造",
    "reading": "たんぞう",
+   "hanViet": "ĐOÁN TẠO",
    "meaning": "rèn"
   },
   {
@@ -3845,16 +4439,19 @@ window.VOCAB_SPEC = {
   {
    "word": "機械加工",
    "reading": "きかいかこう",
+   "hanViet": "CƠ GIỚI GIA CÔNG",
    "meaning": "gia công cơ khí"
   },
   {
    "word": "金属プレス加工",
    "reading": "きんぞくぷれすかこう",
+   "hanViet": "KIM THUỘC GIA CÔNG",
    "meaning": "gia công dập kim loại"
   },
   {
    "word": "工場板金",
    "reading": "こうじょうばんきん",
+   "hanViet": "CÔNG TRƯỜNG BẢN KIM",
    "meaning": "gia công tấm kim loại"
   },
   {
@@ -3865,236 +4462,283 @@ window.VOCAB_SPEC = {
   {
    "word": "仕上げ",
    "reading": "しあげ",
+   "hanViet": "SĨ",
    "meaning": "gia công hoàn thiện"
   },
   {
    "word": "塗装",
    "reading": "とそう",
+   "hanViet": "ĐỒ TRANG",
    "meaning": "sơn phủ"
   },
   {
    "word": "鉄工",
    "reading": "てっこう",
+   "hanViet": "THIẾT CÔNG",
    "meaning": "gia công sắt thép"
   },
   {
    "word": "機械検査",
    "reading": "きかいけんさ",
+   "hanViet": "CƠ GIỚI KIỂM TRA",
    "meaning": "kiểm tra cơ khí"
   },
   {
    "word": "機械保全",
    "reading": "きかいほぜん",
+   "hanViet": "CƠ GIỚI BẢO TOÀN",
    "meaning": "bảo trì máy móc"
   },
   {
    "word": "電気機器組立て",
    "reading": "でんきききくみたて",
+   "hanViet": "ĐIỆN KHÍ CƠ KHÍ TỔ",
    "meaning": "lắp ráp thiết bị điện"
   },
   {
    "word": "電子機器組立て",
    "reading": "でんしききくみたて",
+   "hanViet": "ĐIỆN TỬ CƠ KHÍ TỔ",
    "meaning": "lắp ráp thiết bị điện tử"
   },
   {
    "word": "プリント配線板製造",
    "reading": "ぷりんとはいせんばんせいぞう",
+   "hanViet": "PHỐI TUYẾN BẢN CHẾ TẠO",
    "meaning": "sản xuất bảng mạch in"
   },
   {
    "word": "プラスチック成形",
    "reading": "ぷらすちっくせいけい",
+   "hanViet": "THÀNH HÌNH",
    "meaning": "đúc, ép nhựa"
   },
   {
    "word": "工業包装",
    "reading": "こうぎょうほうそう",
+   "hanViet": "CÔNG NGHIỆP BAO TRANG",
    "meaning": "đóng gói công nghiệp"
   },
   {
    "word": "金属熱処理",
    "reading": "きんぞくねつしょり",
+   "hanViet": "KIM THUỘC NHIỆT XỬ LÍ",
    "meaning": "xử lý nhiệt kim loại"
   },
   {
    "word": "切削",
    "reading": "せっさく",
+   "hanViet": "THIẾT TIÊU",
    "meaning": "cắt gọt"
   },
   {
    "word": "研削",
    "reading": "けんさく",
+   "hanViet": "NGHIÊN TIÊU",
    "meaning": "mài"
   },
   {
    "word": "研磨",
    "reading": "けんま",
+   "hanViet": "NGHIÊN MA",
    "meaning": "đánh bóng; mài tinh"
   },
   {
    "word": "旋削",
    "reading": "せんさく",
+   "hanViet": "TUYỀN TIÊU",
    "meaning": "tiện"
   },
   {
    "word": "フライス加工",
    "reading": "ふらいすかこう",
+   "hanViet": "GIA CÔNG",
    "meaning": "phay"
   },
   {
    "word": "穴あけ",
    "reading": "あなあけ",
+   "hanViet": "HUYỆT",
    "meaning": "khoan lỗ"
   },
   {
    "word": "中ぐり",
    "reading": "なかぐり",
-   "meaning": "khoét lỗ; doa lỗ"
+   "hanViet": "TRUNG",
+   "meaning": "khoét lỗ (mở rộng lỗ có sẵn)"
   },
   {
    "word": "ねじ切り",
    "reading": "ねじきり",
+   "hanViet": "THIẾT",
    "meaning": "cắt ren"
   },
   {
    "word": "曲げ加工",
    "reading": "まげかこう",
+   "hanViet": "KHÚC GIA CÔNG",
    "meaning": "gia công uốn"
   },
   {
    "word": "絞り加工",
    "reading": "しぼりかこう",
+   "hanViet": "GIẢO GIA CÔNG",
    "meaning": "dập vuốt (kéo sâu)"
   },
   {
    "word": "せん断加工",
    "reading": "せんだんかこう",
+   "hanViet": "ĐOẠN GIA CÔNG",
    "meaning": "cắt (tôn, thép tấm)"
   },
   {
    "word": "圧延",
    "reading": "あつえん",
+   "hanViet": "ÁP DIÊN",
    "meaning": "cán (kim loại)"
   },
   {
    "word": "押出し",
    "reading": "おしだし",
+   "hanViet": "ÁP XUẤT",
    "meaning": "đùn ép"
   },
   {
    "word": "熱間鍛造",
    "reading": "ねっかんたんぞう",
+   "hanViet": "NHIỆT GIAN ĐOÁN TẠO",
    "meaning": "rèn nóng"
   },
   {
    "word": "砂型鋳造",
    "reading": "すながたちゅうぞう",
+   "hanViet": "SA HÌNH CHÚ TẠO",
    "meaning": "đúc khuôn cát"
   },
   {
    "word": "放電加工",
    "reading": "ほうでんかこう",
+   "hanViet": "PHÓNG ĐIỆN GIA CÔNG",
    "meaning": "gia công tia lửa điện"
   },
   {
    "word": "レーザー加工",
    "reading": "れーざーかこう",
+   "hanViet": "GIA CÔNG",
    "meaning": "gia công bằng laser"
   },
   {
    "word": "焼入れ",
    "reading": "やきいれ",
+   "hanViet": "THIÊU",
    "meaning": "tôi (làm cứng thép)"
   },
   {
    "word": "焼戻し",
    "reading": "やきもどし",
+   "hanViet": "THIÊU LỆ",
    "meaning": "ram (sau tôi)"
   },
   {
    "word": "焼なまし",
    "reading": "やきなまし",
+   "hanViet": "THIÊU",
    "meaning": "ủ (làm mềm kim loại)"
   },
   {
    "word": "浸炭焼入れ",
    "reading": "しんたんやきいれ",
+   "hanViet": "TẨM THÁN THIÊU",
    "meaning": "thấm cacbon rồi tôi"
   },
   {
    "word": "電気めっき",
    "reading": "でんきめっき",
+   "hanViet": "ĐIỆN KHÍ",
    "meaning": "mạ điện"
   },
   {
    "word": "陽極酸化",
    "reading": "ようきょくさんか",
+   "hanViet": "DƯƠNG CỰC TOAN HÓA",
    "meaning": "oxy hóa anot (anodizing)"
   },
   {
    "word": "溶射",
    "reading": "ようしゃ",
+   "hanViet": "DUNG XẠ",
    "meaning": "phun phủ bề mặt"
   },
   {
    "word": "溶接",
    "reading": "ようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn"
   },
   {
    "word": "アーク溶接",
    "reading": "あーくようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn hồ quang"
   },
   {
    "word": "ガス溶接",
    "reading": "がすようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn khí"
   },
   {
    "word": "スポット溶接",
    "reading": "すぽっとようせつ",
+   "hanViet": "DUNG TIẾP",
    "meaning": "hàn điểm"
   },
   {
    "word": "ろう付け",
    "reading": "ろうづけ",
+   "hanViet": "PHÓ",
    "meaning": "hàn vảy (brazing)"
   },
   {
    "word": "溶断",
    "reading": "ようだん",
+   "hanViet": "DUNG ĐOẠN",
    "meaning": "cắt bằng nhiệt"
   },
   {
    "word": "工作機械",
    "reading": "こうさくきかい",
+   "hanViet": "CÔNG TÁC CƠ GIỚI",
    "meaning": "máy công cụ"
   },
   {
    "word": "旋盤",
    "reading": "せんばん",
+   "hanViet": "TUYỀN BÀN",
    "meaning": "máy tiện"
   },
   {
    "word": "フライス盤",
    "reading": "ふらいすばん",
+   "hanViet": "BÀN",
    "meaning": "máy phay"
   },
   {
    "word": "ボール盤",
    "reading": "ぼーるばん",
+   "hanViet": "BÀN",
    "meaning": "máy khoan bàn"
   },
   {
    "word": "研削盤",
    "reading": "けんさくばん",
+   "hanViet": "NGHIÊN TIÊU BÀN",
    "meaning": "máy mài"
   },
   {
    "word": "プレス機",
    "reading": "ぷれすき",
+   "hanViet": "CƠ",
    "meaning": "máy dập"
   },
   {
@@ -4105,11 +4749,13 @@ window.VOCAB_SPEC = {
   {
    "word": "数値制御",
    "reading": "すうちせいぎょ",
+   "hanViet": "SỐ TRỊ CHẾ NGỰ",
    "meaning": "điều khiển số (NC)"
   },
   {
    "word": "切削工具",
    "reading": "せっさくこうぐ",
+   "hanViet": "THIẾT TIÊU CÔNG CỤ",
    "meaning": "dụng cụ cắt gọt"
   },
   {
@@ -4125,11 +4771,13 @@ window.VOCAB_SPEC = {
   {
    "word": "砥石",
    "reading": "といし",
+   "hanViet": "CHỈ THẠCH",
    "meaning": "đá mài"
   },
   {
    "word": "切粉",
    "reading": "きりこ",
+   "hanViet": "THIẾT PHẤN",
    "meaning": "phoi (mạt kim loại)"
   },
   {
@@ -4150,51 +4798,61 @@ window.VOCAB_SPEC = {
   {
    "word": "寸法",
    "reading": "すんぽう",
+   "hanViet": "THỐN PHÁP",
    "meaning": "kích thước"
   },
   {
    "word": "公差",
    "reading": "こうさ",
+   "hanViet": "CÔNG SAI",
    "meaning": "dung sai"
   },
   {
    "word": "製図",
    "reading": "せいず",
+   "hanViet": "CHẾ ĐỒ",
    "meaning": "vẽ kỹ thuật"
   },
   {
    "word": "断面図",
    "reading": "だんめんず",
+   "hanViet": "ĐOẠN DIỆN ĐỒ",
    "meaning": "mặt cắt; hình cắt"
   },
   {
    "word": "組立",
    "reading": "くみたて",
+   "hanViet": "TỔ LẬP",
    "meaning": "lắp ráp"
   },
   {
    "word": "治具",
    "reading": "じぐ",
+   "hanViet": "TRỊ CỤ",
    "meaning": "đồ gá"
   },
   {
    "word": "金型",
    "reading": "かながた",
+   "hanViet": "KIM HÌNH",
    "meaning": "khuôn (dập, đúc)"
   },
   {
    "word": "段取り替え",
    "reading": "だんどりがえ",
+   "hanViet": "ĐOẠN THỦ",
    "meaning": "đổi gá; chuẩn bị chuyển lô"
   },
   {
    "word": "仕掛品",
    "reading": "しかかりひん",
+   "hanViet": "SĨ QUÁI PHẨM",
    "meaning": "bán thành phẩm (đang gia công dở)"
   },
   {
    "word": "歩留まり",
    "reading": "ぶどまり",
+   "hanViet": "BỘ LƯU",
    "meaning": "tỷ lệ thành phẩm"
   },
   {
@@ -4205,6 +4863,7 @@ window.VOCAB_SPEC = {
   {
    "word": "稼働率",
    "reading": "かどうりつ",
+   "hanViet": "GIÁ ĐỘNG SUẤT",
    "meaning": "tỷ lệ vận hành máy"
   },
   {
@@ -4215,16 +4874,19 @@ window.VOCAB_SPEC = {
   {
    "word": "品質管理",
    "reading": "ひんしつかんり",
+   "hanViet": "PHẨM CHẤT QUẢN LÍ",
    "meaning": "quản lý chất lượng"
   },
   {
    "word": "生産管理",
    "reading": "せいさんかんり",
+   "hanViet": "SINH SẢN QUẢN LÍ",
    "meaning": "quản lý sản xuất"
   },
   {
    "word": "不良品",
    "reading": "ふりょうひん",
+   "hanViet": "BẤT LƯƠNG PHẨM",
    "meaning": "hàng lỗi; phế phẩm"
   },
   {
@@ -4235,16 +4897,19 @@ window.VOCAB_SPEC = {
   {
    "word": "全数検査",
    "reading": "ぜんすうけんさ",
+   "hanViet": "TOÀN SỐ KIỂM TRA",
    "meaning": "kiểm tra toàn bộ"
   },
   {
    "word": "抜き取り検査",
    "reading": "ぬきとりけんさ",
+   "hanViet": "BẠT THỦ KIỂM TRA",
    "meaning": "kiểm tra lấy mẫu"
   },
   {
    "word": "予防保全",
    "reading": "よぼうほぜん",
+   "hanViet": "DỰ PHÒNG BẢO TOÀN",
    "meaning": "bảo trì phòng ngừa"
   },
   {
@@ -4255,26 +4920,31 @@ window.VOCAB_SPEC = {
   {
    "word": "安全衛生",
    "reading": "あんぜんえいせい",
+   "hanViet": "AN TOÀN VỆ SINH",
    "meaning": "an toàn vệ sinh lao động"
   },
   {
    "word": "保護具",
    "reading": "ほごぐ",
+   "hanViet": "BẢO HỘ CỤ",
    "meaning": "đồ bảo hộ"
   },
   {
    "word": "安全靴",
    "reading": "あんぜんぐつ",
+   "hanViet": "AN TOÀN NGOA",
    "meaning": "giày bảo hộ"
   },
   {
    "word": "保護メガネ",
    "reading": "ほごめがね",
+   "hanViet": "BẢO HỘ",
    "meaning": "kính bảo hộ"
   },
   {
    "word": "防塵マスク",
    "reading": "ぼうじんますく",
+   "hanViet": "PHÒNG TRẦN",
    "meaning": "khẩu trang chống bụi"
   },
   {
@@ -4285,11 +4955,13 @@ window.VOCAB_SPEC = {
   {
    "word": "危険予知訓練",
    "reading": "きけんよちくんれん",
+   "hanViet": "NGUY HIỂM DỰ TRI HUẤN LUYỆN",
    "meaning": "huấn luyện dự đoán nguy hiểm (KYT)"
   },
   {
    "word": "指差呼称",
    "reading": "ゆびさしこしょう",
+   "hanViet": "CHỈ SAI HÔ XƯNG",
    "meaning": "chỉ tay gọi tên (xác nhận bằng tay và miệng)"
   },
   {
@@ -4300,16 +4972,19 @@ window.VOCAB_SPEC = {
   {
    "word": "巻き込まれ",
    "reading": "まきこまれ",
+   "hanViet": "QUYỂN",
    "meaning": "bị cuốn vào (máy)"
   },
   {
    "word": "挟まれ",
    "reading": "はさまれ",
+   "hanViet": "HIỆP",
    "meaning": "bị kẹp (vào máy)"
   },
   {
    "word": "鉄鋼",
    "reading": "てっこう",
+   "hanViet": "THIẾT CƯƠNG",
    "meaning": "thép; gang thép"
   },
   {
@@ -4325,6 +5000,7 @@ window.VOCAB_SPEC = {
   {
    "word": "改善",
    "reading": "かいぜん",
+   "hanViet": "CẢI THIỆN",
    "meaning": "cải tiến (kaizen)"
   }
  ],
@@ -4332,221 +5008,265 @@ window.VOCAB_SPEC = {
   {
    "word": "林業",
    "reading": "りんぎょう",
+   "hanViet": "LÂM NGHIỆP",
    "meaning": "lâm nghiệp"
   },
   {
    "word": "森林",
    "reading": "しんりん",
+   "hanViet": "SÂM LÂM",
    "meaning": "rừng"
   },
   {
    "word": "森林組合",
    "reading": "しんりんくみあい",
+   "hanViet": "SÂM LÂM TỔ HỢP",
    "meaning": "hợp tác xã lâm nghiệp"
   },
   {
    "word": "保安林",
    "reading": "ほあんりん",
+   "hanViet": "BẢO AN LÂM",
    "meaning": "rừng phòng hộ"
   },
   {
    "word": "森林施業",
    "reading": "しんりんせぎょう",
+   "hanViet": "SÂM LÂM THI NGHIỆP",
    "meaning": "quản lý và tác động vào rừng (trồng, chăm sóc, khai thác)"
   },
   {
    "word": "林分",
    "reading": "りんぶん",
+   "hanViet": "LÂM PHÂN",
    "meaning": "lô rừng; lâm phần"
   },
   {
    "word": "人工林",
    "reading": "じんこうりん",
+   "hanViet": "NHÂN CÔNG LÂM",
    "meaning": "rừng trồng (rừng nhân tạo)"
   },
   {
    "word": "天然林",
    "reading": "てんねんりん",
+   "hanViet": "THIÊN NHIÊN LÂM",
    "meaning": "rừng tự nhiên"
   },
   {
    "word": "造林",
    "reading": "ぞうりん",
+   "hanViet": "TẠO LÂM",
    "meaning": "trồng rừng; gây rừng"
   },
   {
    "word": "育林",
    "reading": "いくりん",
+   "hanViet": "DỤC LÂM",
    "meaning": "nuôi dưỡng, chăm sóc rừng"
   },
   {
    "word": "植栽",
    "reading": "しょくさい",
+   "hanViet": "THỰC TÀI",
    "meaning": "trồng cây"
   },
   {
    "word": "苗木",
    "reading": "なえぎ",
+   "hanViet": "MIÊU MỘC",
    "meaning": "cây giống; cây con"
   },
   {
    "word": "コンテナ苗",
    "reading": "こんてななえ",
+   "hanViet": "MIÊU",
    "meaning": "cây giống trong chậu (container)"
   },
   {
    "word": "補植",
    "reading": "ほしょく",
+   "hanViet": "BỔ THỰC",
    "meaning": "trồng dặm; trồng bổ sung"
   },
   {
    "word": "地拵え",
    "reading": "じごしらえ",
+   "hanViet": "ĐỊA",
    "meaning": "dọn dẹp mặt bằng trước khi trồng rừng"
   },
   {
    "word": "下刈り",
    "reading": "したかり",
+   "hanViet": "HẠ NGẢI",
    "meaning": "phát cỏ dại quanh cây trồng"
   },
   {
    "word": "つる切り",
    "reading": "つるきり",
+   "hanViet": "THIẾT",
    "meaning": "cắt dây leo quấn cây"
   },
   {
    "word": "除伐",
    "reading": "じょばつ",
+   "hanViet": "TRỪ PHẠT",
    "meaning": "chặt bỏ cây xấu, cây không cần thiết"
   },
   {
    "word": "枝打ち",
    "reading": "えだうち",
+   "hanViet": "CHI ĐẢ",
    "meaning": "cắt tỉa cành dưới của cây đứng"
   },
   {
    "word": "間伐",
    "reading": "かんばつ",
+   "hanViet": "GIAN PHẠT",
    "meaning": "tỉa thưa"
   },
   {
    "word": "雪起こし",
    "reading": "ゆきおこし",
+   "hanViet": "TUYẾT KHỞI",
    "meaning": "dựng lại cây bị tuyết đè"
   },
   {
    "word": "人工造林",
    "reading": "じんこうぞうりん",
+   "hanViet": "NHÂN CÔNG TẠO LÂM",
    "meaning": "trồng rừng nhân tạo"
   },
   {
    "word": "天然更新",
    "reading": "てんねんこうしん",
+   "hanViet": "THIÊN NHIÊN CANH TÂN",
    "meaning": "tái sinh tự nhiên của rừng"
   },
   {
    "word": "再造林",
    "reading": "さいぞうりん",
+   "hanViet": "TÁI TẠO LÂM",
    "meaning": "trồng lại rừng sau khai thác"
   },
   {
    "word": "伐期",
    "reading": "ばっき",
+   "hanViet": "PHẠT KỲ",
    "meaning": "tuổi khai thác; thời kỳ khai thác chính"
   },
   {
    "word": "伐採",
    "reading": "ばっさい",
+   "hanViet": "PHẠT THÁI",
    "meaning": "chặt hạ; khai thác gỗ"
   },
   {
    "word": "伐倒",
    "reading": "ばっとう",
+   "hanViet": "PHẠT ĐẢO",
    "meaning": "đốn hạ cây"
   },
   {
    "word": "伐木",
    "reading": "ばつぼく",
+   "hanViet": "PHẠT MỘC",
    "meaning": "đốn cây; công việc đốn hạ"
   },
   {
    "word": "主伐",
    "reading": "しゅばつ",
+   "hanViet": "CHỦ PHẠT",
    "meaning": "khai thác chính"
   },
   {
    "word": "皆伐",
    "reading": "かいばつ",
+   "hanViet": "GIAI PHẠT",
    "meaning": "chặt trắng (chặt toàn bộ một khu rừng)"
   },
   {
    "word": "択伐",
    "reading": "たくばつ",
+   "hanViet": "TRẠCH PHẠT",
    "meaning": "chặt chọn lọc (chỉ chặt một số cây)"
   },
   {
    "word": "受け口",
    "reading": "うけぐち",
+   "hanViet": "THỤ KHẨU",
    "meaning": "vết cắt đón (phía cây sẽ đổ)"
   },
   {
    "word": "追い口",
    "reading": "おいぐち",
+   "hanViet": "TRUY KHẨU",
    "meaning": "vết cắt đuổi (phía đối diện vết cắt đón)"
   },
   {
    "word": "追いづる",
    "reading": "おいづる",
+   "hanViet": "TRUY",
    "meaning": "phần gỗ giữ lại giữa vết cắt đón và vết cắt đuổi"
   },
   {
    "word": "芯切り",
    "reading": "しんぎり",
+   "hanViet": "TÂM THIẾT",
    "meaning": "cắt lõi khi đốn cây to"
   },
   {
    "word": "突っ込み切り",
    "reading": "つっこみぎり",
+   "hanViet": "ĐỘT THIẾT",
    "meaning": "cắt đâm xuyên (cắt chìm lưỡi cưa vào thân)"
   },
   {
    "word": "楔",
    "reading": "くさび",
+   "hanViet": "TIẾT",
    "meaning": "nêm (đóng vào vết cắt để điều hướng cây đổ)"
   },
   {
    "word": "かかり木",
    "reading": "かかりぎ",
+   "hanViet": "MỘC",
    "meaning": "cây bị mắc kẹt (đốn rồi nhưng mắc vào cây khác)"
   },
   {
    "word": "枝払い",
    "reading": "えだはらい",
+   "hanViet": "CHI PHẤT",
    "meaning": "cắt cành của cây đã đốn"
   },
   {
    "word": "玉切り",
    "reading": "たまきり",
+   "hanViet": "NGỌC THIẾT",
    "meaning": "cắt khúc gỗ theo độ dài quy định"
   },
   {
    "word": "造材",
    "reading": "ぞうざい",
+   "hanViet": "TẠO TÀI",
    "meaning": "xẻ, cắt gỗ thành khúc theo quy cách"
   },
   {
    "word": "検尺",
    "reading": "けんしゃく",
+   "hanViet": "KIỂM XÍCH",
    "meaning": "đo đường kính và chiều dài gỗ"
   },
   {
    "word": "集材",
    "reading": "しゅうざい",
+   "hanViet": "TẬP TÀI",
    "meaning": "tập kết gỗ (đưa gỗ về bãi)"
   },
   {
    "word": "木寄せ",
    "reading": "きよせ",
+   "hanViet": "MỘC KÝ",
    "meaning": "gom gỗ rải rác trong rừng về ven đường"
   },
   {
@@ -4557,76 +5277,91 @@ window.VOCAB_SPEC = {
   {
    "word": "搬出",
    "reading": "はんしゅつ",
+   "hanViet": "BAN XUẤT",
    "meaning": "vận chuyển gỗ ra khỏi rừng"
   },
   {
    "word": "搬出間伐",
    "reading": "はんしゅつかんばつ",
+   "hanViet": "BAN XUẤT GIAN PHẠT",
    "meaning": "tỉa thưa có đưa gỗ ra khỏi rừng"
   },
   {
    "word": "素材生産",
    "reading": "そざいせいさん",
+   "hanViet": "TỐ TÀI SINH SẢN",
    "meaning": "sản xuất gỗ tròn (nguyên liệu)"
   },
   {
    "word": "立木",
    "reading": "りゅうぼく",
+   "hanViet": "LẬP MỘC",
    "meaning": "cây đứng (cây chưa đốn)"
   },
   {
    "word": "丸太",
    "reading": "まるた",
+   "hanViet": "HOÀN THÁI",
    "meaning": "khúc gỗ tròn"
   },
   {
    "word": "原木",
    "reading": "げんぼく",
+   "hanViet": "NGUYÊN MỘC",
    "meaning": "gỗ tròn nguyên liệu (chưa chế biến)"
   },
   {
    "word": "伐根",
    "reading": "ばっこん",
+   "hanViet": "PHẠT CĂN",
    "meaning": "gốc cây sau khi chặt"
   },
   {
    "word": "元口",
    "reading": "もとぐち",
+   "hanViet": "NGUYÊN KHẨU",
    "meaning": "đầu gốc (đầu to của khúc gỗ)"
   },
   {
    "word": "材積",
    "reading": "ざいせき",
+   "hanViet": "TÀI TÍCH",
    "meaning": "thể tích gỗ"
   },
   {
    "word": "材長",
    "reading": "ざいちょう",
+   "hanViet": "TÀI TRƯỜNG",
    "meaning": "chiều dài khúc gỗ"
   },
   {
    "word": "土場",
    "reading": "どば",
+   "hanViet": "THỔ TRÀNG",
    "meaning": "bãi tập kết gỗ ven đường rừng"
   },
   {
    "word": "森林調査",
    "reading": "しんりんちょうさ",
+   "hanViet": "SÂM LÂM ĐIỀU TRA",
    "meaning": "điều tra rừng"
   },
   {
    "word": "樹高",
    "reading": "じゅこう",
+   "hanViet": "THỤ CAO",
    "meaning": "chiều cao cây"
   },
   {
    "word": "樹種",
    "reading": "じゅしゅ",
+   "hanViet": "THỤ CHỦNG",
    "meaning": "loài cây"
   },
   {
    "word": "胸高直径",
    "reading": "きょうこうちょっけい",
+   "hanViet": "HUNG CAO TRỰC KÍNH",
    "meaning": "đường kính thân cây đo ở ngang ngực"
   },
   {
@@ -4637,11 +5372,13 @@ window.VOCAB_SPEC = {
   {
    "word": "刈払機",
    "reading": "かりはらいき",
+   "hanViet": "NGẢI PHẤT CƠ",
    "meaning": "máy cắt cỏ; máy phát cỏ"
   },
   {
    "word": "高性能林業機械",
    "reading": "こうせいのうりんぎょうきかい",
+   "hanViet": "CAO TÍNH NĂNG LÂM NGHIỆP CƠ GIỚI",
    "meaning": "máy lâm nghiệp hiệu suất cao"
   },
   {
@@ -4667,66 +5404,79 @@ window.VOCAB_SPEC = {
   {
    "word": "架線",
    "reading": "かせん",
+   "hanViet": "GIÁ TUYẾN",
    "meaning": "hệ thống cáp treo (kéo gỗ)"
   },
   {
    "word": "林道",
    "reading": "りんどう",
+   "hanViet": "LÂM ĐẠO",
    "meaning": "đường lâm nghiệp"
   },
   {
    "word": "林業専用道",
    "reading": "りんぎょうせんようどう",
+   "hanViet": "LÂM NGHIỆP CHUYÊN DỤNG ĐẠO",
    "meaning": "đường chuyên dụng lâm nghiệp"
   },
   {
    "word": "森林作業道",
    "reading": "しんりんさぎょうどう",
+   "hanViet": "SÂM LÂM TÁC NGHIỆP ĐẠO",
    "meaning": "đường tác nghiệp trong rừng"
   },
   {
    "word": "保護具",
    "reading": "ほごぐ",
+   "hanViet": "BẢO HỘ CỤ",
    "meaning": "đồ bảo hộ lao động"
   },
   {
    "word": "保護帽",
    "reading": "ほごぼう",
+   "hanViet": "BẢO HỘ MẠO",
    "meaning": "mũ bảo hộ"
   },
   {
    "word": "安全靴",
    "reading": "あんぜんぐつ",
+   "hanViet": "AN TOÀN NGOA",
    "meaning": "giày an toàn"
   },
   {
    "word": "保護眼鏡",
    "reading": "ほごがんきょう",
+   "hanViet": "BẢO HỘ NHÃN KÍNH",
    "meaning": "kính bảo hộ"
   },
   {
    "word": "防音保護具",
    "reading": "ぼうおんほごぐ",
+   "hanViet": "PHÒNG ÂM BẢO HỘ CỤ",
    "meaning": "đồ bảo vệ thính giác (chống ồn)"
   },
   {
    "word": "防護ズボン",
    "reading": "ぼうごずぼん",
+   "hanViet": "PHÒNG HỘ",
    "meaning": "quần bảo hộ chống cưa xích"
   },
   {
    "word": "退避",
    "reading": "たいひ",
+   "hanViet": "THOÁI TỊ",
    "meaning": "rút lui, tránh xa (khi cây đổ)"
   },
   {
    "word": "退避場所",
    "reading": "たいひばしょ",
+   "hanViet": "THOÁI TỊ TRÀNG SỞ",
    "meaning": "nơi lánh nạn an toàn"
   },
   {
    "word": "危険予知活動",
    "reading": "きけんよちかつどう",
+   "hanViet": "NGUY HIỂM DỰ TRI HOẠT ĐỘNG",
    "meaning": "hoạt động dự đoán nguy hiểm (KYT)"
   },
   {
@@ -4737,6 +5487,7 @@ window.VOCAB_SPEC = {
   {
    "word": "作業計画",
    "reading": "さぎょうけいかく",
+   "hanViet": "TÁC NGHIỆP KẾ HOẠCH",
    "meaning": "kế hoạch công việc"
   },
   {
@@ -4747,21 +5498,25 @@ window.VOCAB_SPEC = {
   {
    "word": "熱中症",
    "reading": "ねっちゅうしょう",
+   "hanViet": "NHIỆT TRUNG CHỨNG",
    "meaning": "say nắng; sốc nhiệt"
   },
   {
    "word": "振動障害",
    "reading": "しんどうしょうがい",
+   "hanViet": "CHẤN ĐỘNG CHƯỚNG NGẠI",
    "meaning": "bệnh do rung động (khi dùng máy lâu ngày)"
   },
   {
    "word": "応急処置",
    "reading": "おうきゅうしょち",
+   "hanViet": "ỨNG CẤP XỬ TRÍ",
    "meaning": "sơ cứu ban đầu"
   },
   {
    "word": "蜂刺され",
    "reading": "はちさされ",
+   "hanViet": "PHONG THÍCH",
    "meaning": "bị ong đốt"
   },
   {
@@ -4782,6 +5537,7 @@ window.VOCAB_SPEC = {
   {
    "word": "杉",
    "reading": "すぎ",
+   "hanViet": "SAM",
    "meaning": "cây tuyết tùng Nhật (sugi)"
   },
   {
@@ -4792,21 +5548,25 @@ window.VOCAB_SPEC = {
   {
    "word": "松",
    "reading": "まつ",
+   "hanViet": "TÙNG",
    "meaning": "cây thông"
   },
   {
    "word": "唐松",
    "reading": "からまつ",
+   "hanViet": "ĐƯỜNG TÙNG",
    "meaning": "thông rụng lá (karamatsu)"
   },
   {
    "word": "赤松",
    "reading": "あかまつ",
+   "hanViet": "XÍCH TÙNG",
    "meaning": "thông đỏ Nhật"
   },
   {
    "word": "黒松",
    "reading": "くろまつ",
+   "hanViet": "HẮC TÙNG",
    "meaning": "thông đen Nhật"
   },
   {
@@ -4834,56 +5594,67 @@ window.VOCAB_SPEC = {
   {
    "word": "木材",
    "reading": "もくざい",
+   "hanViet": "MỘC TÀI",
    "meaning": "gỗ; vật liệu gỗ"
   },
   {
    "word": "木材産業",
    "reading": "もくざいさんぎょう",
+   "hanViet": "MỘC TÀI SẢN NGHIỆP",
    "meaning": "ngành công nghiệp gỗ"
   },
   {
    "word": "製材",
    "reading": "せいざい",
+   "hanViet": "CHẾ TÀI",
    "meaning": "xẻ gỗ; gỗ xẻ"
   },
   {
    "word": "製材業",
    "reading": "せいざいぎょう",
+   "hanViet": "CHẾ TÀI NGHIỆP",
    "meaning": "ngành xẻ gỗ"
   },
   {
    "word": "製材品",
    "reading": "せいざいひん",
+   "hanViet": "CHẾ TÀI PHẨM",
    "meaning": "sản phẩm gỗ xẻ"
   },
   {
    "word": "原木",
    "reading": "げんぼく",
+   "hanViet": "NGUYÊN MỘC",
    "meaning": "gỗ tròn nguyên cây; khúc gỗ"
   },
   {
    "word": "丸太",
    "reading": "まるた",
+   "hanViet": "HOÀN THÁI",
    "meaning": "khúc gỗ tròn (đã đốn)"
   },
   {
    "word": "樹皮",
    "reading": "じゅひ",
+   "hanViet": "THỤ BÌ",
    "meaning": "vỏ cây"
   },
   {
    "word": "針葉樹",
    "reading": "しんようじゅ",
+   "hanViet": "CHÂM DIỆP THỤ",
    "meaning": "cây lá kim"
   },
   {
    "word": "広葉樹",
    "reading": "こうようじゅ",
+   "hanViet": "QUẢNG DIỆP THỤ",
    "meaning": "cây lá rộng"
   },
   {
    "word": "樹種",
    "reading": "じゅしゅ",
+   "hanViet": "THỤ CHỦNG",
    "meaning": "loài cây; chủng loại gỗ"
   },
   {
@@ -4904,176 +5675,211 @@ window.VOCAB_SPEC = {
   {
    "word": "森林",
    "reading": "しんりん",
+   "hanViet": "SÂM LÂM",
    "meaning": "rừng"
   },
   {
    "word": "心材",
    "reading": "しんざい",
+   "hanViet": "TÂM TÀI",
    "meaning": "lõi gỗ; tâm gỗ"
   },
   {
    "word": "辺材",
    "reading": "へんざい",
+   "hanViet": "BIÊN TÀI",
    "meaning": "dác gỗ"
   },
   {
    "word": "木口面",
    "reading": "こぐちめん",
+   "hanViet": "MỘC KHẨU DIỆN",
    "meaning": "mặt cắt ngang (mặt đầu gỗ)"
   },
   {
    "word": "柾目面",
    "reading": "まさめめん",
+   "hanViet": "MỤC DIỆN",
    "meaning": "mặt cắt dọc xuyên tâm"
   },
   {
    "word": "板目面",
    "reading": "いためめん",
+   "hanViet": "BẢN MỤC DIỆN",
    "meaning": "mặt cắt dọc tiếp tuyến"
   },
   {
    "word": "木表",
    "reading": "きおもて",
+   "hanViet": "MỘC BIỂU",
    "meaning": "mặt ngoài (phía vỏ) của ván"
   },
   {
    "word": "木裏",
    "reading": "きうら",
+   "hanViet": "MỘC LÍ",
    "meaning": "mặt trong (phía tâm) của ván"
   },
   {
    "word": "末口",
    "reading": "すえくち",
+   "hanViet": "MẠT KHẨU",
    "meaning": "đầu nhỏ (đầu ngọn) của khúc gỗ"
   },
   {
    "word": "元口",
    "reading": "もとくち",
+   "hanViet": "NGUYÊN KHẨU",
    "meaning": "đầu to (đầu gốc) của khúc gỗ"
   },
   {
    "word": "年輪",
    "reading": "ねんりん",
+   "hanViet": "NIÊN LUÂN",
    "meaning": "vòng tuổi; vòng năm"
   },
   {
    "word": "木目",
    "reading": "もくめ",
+   "hanViet": "MỘC MỤC",
    "meaning": "vân gỗ"
   },
   {
    "word": "繊維方向",
    "reading": "せんいほうこう",
+   "hanViet": "TIÊM DUY PHƯƠNG HƯỚNG",
    "meaning": "hướng thớ gỗ"
   },
   {
    "word": "密度",
    "reading": "みつど",
+   "hanViet": "MẬT ĐỘ",
    "meaning": "mật độ; khối lượng riêng"
   },
   {
    "word": "含水率",
    "reading": "がんすいりつ",
+   "hanViet": "HÀM THỦY SUẤT",
    "meaning": "độ ẩm (tỉ lệ nước) của gỗ"
   },
   {
    "word": "節",
    "reading": "ふし",
+   "hanViet": "TIẾT",
    "meaning": "mắt gỗ"
   },
   {
    "word": "角材",
    "reading": "かくざい",
+   "hanViet": "GIÁC TÀI",
    "meaning": "gỗ vuông; thanh gỗ vuông"
   },
   {
    "word": "板材",
    "reading": "いたざい",
+   "hanViet": "BẢN TÀI",
    "meaning": "ván; tấm gỗ"
   },
   {
    "word": "造作用製材",
    "reading": "ぞうさくようせいざい",
+   "hanViet": "TẠO TÁC DỤNG CHẾ TÀI",
    "meaning": "gỗ xẻ làm đồ mộc, trang trí nội thất"
   },
   {
    "word": "構造用製材",
    "reading": "こうぞうようせいざい",
+   "hanViet": "KẾT CẤU DỤNG CHẾ TÀI",
    "meaning": "gỗ xẻ kết cấu"
   },
   {
    "word": "下地用製材",
    "reading": "したじようせいざい",
+   "hanViet": "HẠ ĐỊA DỤNG CHẾ TÀI",
    "meaning": "gỗ xẻ làm lớp nền, lớp lót"
   },
   {
    "word": "広葉樹製材",
    "reading": "こうようじゅせいざい",
+   "hanViet": "QUẢNG DIỆP THỤ CHẾ TÀI",
    "meaning": "gỗ xẻ từ cây lá rộng"
   },
   {
    "word": "羽柄材",
    "reading": "はがらざい",
+   "hanViet": "VŨ BÍNH TÀI",
    "meaning": "gỗ phụ (dầm nhỏ, xà, ván lót)"
   },
   {
    "word": "大角",
    "reading": "だいかく",
+   "hanViet": "ĐẠI GIÁC",
    "meaning": "gỗ vuông lớn (từ 18 inch trở lên, gỗ nhập)"
   },
   {
    "word": "小角",
    "reading": "こかく",
+   "hanViet": "TIỂU GIÁC",
    "meaning": "gỗ vuông nhỏ (dưới 5 inch, gỗ nhập)"
   },
   {
    "word": "集成材",
    "reading": "しゅうせいざい",
+   "hanViet": "TẬP THÀNH TÀI",
    "meaning": "gỗ ghép thanh; gỗ dán ghép"
   },
   {
    "word": "構造用集成材",
    "reading": "こうぞうようしゅうせいざい",
+   "hanViet": "KẾT CẤU DỤNG TẬP THÀNH TÀI",
    "meaning": "gỗ ghép thanh kết cấu"
   },
   {
    "word": "造作用集成材",
    "reading": "ぞうさくようしゅうせいざい",
+   "hanViet": "TẠO TÁC DỤNG TẬP THÀNH TÀI",
    "meaning": "gỗ ghép thanh trang trí"
   },
   {
    "word": "合板",
    "reading": "ごうはん",
+   "hanViet": "HỢP BẢN",
    "meaning": "ván ép (plywood)"
   },
   {
    "word": "普通合板",
    "reading": "ふつうごうはん",
+   "hanViet": "PHỔ THÔNG HỢP BẢN",
    "meaning": "ván ép thông thường"
   },
   {
    "word": "構造用合板",
    "reading": "こうぞうようごうはん",
+   "hanViet": "KẾT CẤU DỤNG HỢP BẢN",
    "meaning": "ván ép kết cấu"
   },
   {
    "word": "コンクリート型枠用合板",
    "reading": "こんくりーとかたわくようごうはん",
+   "hanViet": "HÌNH DỤNG HỢP BẢN",
    "meaning": "ván ép làm cốp pha bê tông"
   },
   {
    "word": "単板",
    "reading": "たんぱん",
+   "hanViet": "ĐƠN BẢN",
    "meaning": "ván mỏng (veneer)"
   },
   {
    "word": "単板積層材",
    "reading": "たんぱんせきそうざい",
+   "hanViet": "ĐƠN BẢN TÍCH TẦNG TÀI",
    "meaning": "gỗ dán nhiều lớp ván mỏng (LVL)"
   },
   {
    "word": "ツキ板",
    "reading": "つきいた",
+   "hanViet": "BẢN",
    "meaning": "ván lạng trang trí"
   },
   {
@@ -5084,11 +5890,13 @@ window.VOCAB_SPEC = {
   {
    "word": "単層フローリング",
    "reading": "たんそうふろーりんぐ",
+   "hanViet": "ĐƠN TẦNG",
    "meaning": "sàn gỗ một lớp"
   },
   {
    "word": "複合フローリング",
    "reading": "ふくごうふろーりんぐ",
+   "hanViet": "PHỨC HỢP",
    "meaning": "sàn gỗ nhiều lớp"
   },
   {
@@ -5104,166 +5912,199 @@ window.VOCAB_SPEC = {
   {
    "word": "はく皮",
    "reading": "はくひ",
+   "hanViet": "BÌ",
    "meaning": "bóc vỏ (gỗ)"
   },
   {
    "word": "木取り",
    "reading": "きどり",
+   "hanViet": "MỘC",
    "meaning": "pha gỗ; chọn cách xẻ gỗ"
   },
   {
    "word": "歩止り",
    "reading": "ぶどまり",
+   "hanViet": "BỘ CHỈ",
    "meaning": "tỉ lệ thu hồi gỗ (hiệu suất xẻ)"
   },
   {
    "word": "大割り",
    "reading": "おおわり",
+   "hanViet": "ĐẠI",
    "meaning": "xẻ phá (xẻ thô lần đầu)"
   },
   {
    "word": "中割り",
    "reading": "ちゅうわり",
+   "hanViet": "TRUNG",
    "meaning": "xẻ giữa"
   },
   {
    "word": "小割り",
    "reading": "こわり",
+   "hanViet": "TIỂU",
    "meaning": "xẻ nhỏ (xẻ tinh)"
   },
   {
    "word": "耳すり",
    "reading": "みみすり",
+   "hanViet": "NHĨ",
    "meaning": "cắt bỏ rìa cong của ván"
   },
   {
    "word": "横切り",
    "reading": "よこぎり",
-   "meaning": "cắt ngang; cắt theo chiều dài"
+   "hanViet": "HOÀNH THIẾT",
+   "meaning": "cắt ngang (vuông góc với thớ gỗ)"
   },
   {
    "word": "乾燥",
    "reading": "かんそう",
+   "hanViet": "CAN TÁO",
    "meaning": "sấy khô; làm khô gỗ"
   },
   {
    "word": "天然乾燥",
    "reading": "てんねんかんそう",
+   "hanViet": "THIÊN NHIÊN CAN TÁO",
    "meaning": "phơi khô tự nhiên"
   },
   {
    "word": "人工乾燥",
    "reading": "じんこうかんそう",
+   "hanViet": "NHÂN CÔNG CAN TÁO",
    "meaning": "sấy nhân tạo (bằng máy sấy)"
   },
   {
    "word": "乾燥機",
    "reading": "かんそうき",
+   "hanViet": "CAN TÁO CƠ",
    "meaning": "máy sấy gỗ"
   },
   {
    "word": "切削",
    "reading": "せっさく",
+   "hanViet": "THIẾT TIÊU",
    "meaning": "cắt gọt; gia công cắt"
   },
   {
    "word": "研磨",
    "reading": "けんま",
+   "hanViet": "NGHIÊN MA",
    "meaning": "mài; chà nhám"
   },
   {
    "word": "接着",
    "reading": "せっちゃく",
+   "hanViet": "TIẾP TRƯỚC",
    "meaning": "dán; kết dính"
   },
   {
    "word": "接着剤",
    "reading": "せっちゃくざい",
+   "hanViet": "TIẾP TRƯỚC TỀ",
    "meaning": "keo dán"
   },
   {
    "word": "圧締",
    "reading": "あってい",
+   "hanViet": "ÁP ĐẾ",
    "meaning": "ép chặt (ép keo)"
   },
   {
    "word": "積層接着",
    "reading": "せきそうせっちゃく",
+   "hanViet": "TÍCH TẦNG TIẾP TRƯỚC",
    "meaning": "dán xếp lớp"
   },
   {
    "word": "仕組み",
    "reading": "しぐみ",
+   "hanViet": "SĨ TỔ",
    "meaning": "sắp xếp, xếp lớp (lamina/ván mỏng)"
   },
   {
    "word": "仕上げ",
    "reading": "しあげ",
+   "hanViet": "SĨ",
    "meaning": "hoàn thiện; gia công hoàn thiện"
   },
   {
    "word": "塗装",
    "reading": "とそう",
+   "hanViet": "ĐỒ TRANG",
    "meaning": "sơn phủ"
   },
   {
    "word": "着色",
    "reading": "ちゃくしょく",
+   "hanViet": "TRƯỚC SẮC",
    "meaning": "nhuộm màu; tạo màu bề mặt"
   },
   {
    "word": "塗料",
    "reading": "とりょう",
+   "hanViet": "ĐỒ LIỆU",
    "meaning": "sơn; chất phủ"
   },
   {
    "word": "たて継ぎ",
    "reading": "たてつぎ",
+   "hanViet": "KẾ",
    "meaning": "nối dài (nối theo chiều dài)"
   },
   {
    "word": "幅はぎ",
    "reading": "はばはぎ",
+   "hanViet": "PHÚC",
    "meaning": "ghép rộng (ghép theo chiều rộng)"
   },
   {
    "word": "寸法",
    "reading": "すんぽう",
+   "hanViet": "THỐN PHÁP",
    "meaning": "kích thước; số đo"
   },
   {
    "word": "等級",
    "reading": "とうきゅう",
+   "hanViet": "ĐẲNG CẤP",
    "meaning": "cấp; hạng (chất lượng)"
   },
   {
    "word": "等級区分",
    "reading": "とうきゅうくぶん",
+   "hanViet": "ĐẲNG CẤP KHU PHÂN",
    "meaning": "phân cấp; phân hạng chất lượng"
   },
   {
    "word": "選別",
    "reading": "せんべつ",
+   "hanViet": "TUYỂN BIỆT",
    "meaning": "phân loại; chọn lọc"
   },
   {
    "word": "結束",
    "reading": "けっそく",
+   "hanViet": "KẾT THÚC",
    "meaning": "bó; đóng kiện"
   },
   {
    "word": "検品",
    "reading": "けんぴん",
+   "hanViet": "KIỂM PHẨM",
    "meaning": "kiểm tra hàng; kiểm phẩm"
   },
   {
    "word": "梱包",
    "reading": "こんぽう",
+   "hanViet": "KHỔN BAO",
    "meaning": "đóng gói"
   },
   {
    "word": "出荷",
    "reading": "しゅっか",
+   "hanViet": "XUẤT HÀ",
    "meaning": "xuất hàng"
   },
   {
@@ -5274,16 +6115,19 @@ window.VOCAB_SPEC = {
   {
    "word": "丸のこ盤",
    "reading": "まるのこばん",
+   "hanViet": "HOÀN BÀN",
    "meaning": "máy cưa đĩa (cưa tròn)"
   },
   {
    "word": "帯のこ盤",
    "reading": "おびのこばん",
+   "hanViet": "ĐỚI BÀN",
    "meaning": "máy cưa vòng (cưa đai)"
   },
   {
    "word": "集じん機",
    "reading": "しゅうじんき",
+   "hanViet": "TẬP CƠ",
    "meaning": "máy hút bụi, mùn cưa"
   },
   {
@@ -5309,11 +6153,13 @@ window.VOCAB_SPEC = {
   {
    "word": "保護具",
    "reading": "ほごぐ",
+   "hanViet": "BẢO HỘ CỤ",
    "meaning": "đồ bảo hộ (lao động)"
   },
   {
    "word": "安全靴",
    "reading": "あんぜんぐつ",
+   "hanViet": "AN TOÀN NGOA",
    "meaning": "giày bảo hộ"
   },
   {
@@ -5324,11 +6170,13 @@ window.VOCAB_SPEC = {
   {
    "word": "粉塵",
    "reading": "ふんじん",
+   "hanViet": "PHẤN TRẦN",
    "meaning": "bụi (bụi gỗ)"
   },
   {
    "word": "点検",
    "reading": "てんけん",
+   "hanViet": "ĐIỂM KIỂM",
    "meaning": "kiểm tra; kiểm tra định kỳ"
   }
  ]
