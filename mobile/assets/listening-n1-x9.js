@@ -15,7 +15,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Giao su muon xem bang du lieu co giai thich ngan truoc khi quyet dinh trinh tu thuyet trinh, va sinh vien se gui truoc thu Nam. Lam lai thi nghiem, hoan lich hay tu quyet dinh deu khong duoc noi den.",
+   "exp": "Giáo sư muốn xem bảng dữ liệu có giải thích ngắn trước khi quyết định trình tự thuyết trình, và sinh viên sẽ gửi trước thứ Năm. Làm lại thí nghiệm, hoãn lịch hay tự quyết định đều không được nói đến.",
    "dlg": [
     {
      "sp": "女",
@@ -56,7 +56,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Phong nho thi qua chat cho 20 nguoi nen hai nguoi chon doi lich sang 4 gio chieu de dung phong lon con trong. Hoan lich, dung phong nho hay giam so nguoi deu khong phai phuong an duoc chon.",
+   "exp": "Phòng nhỏ thì quá chật cho 20 người nên hai người chọn đổi lịch sang 4 giờ chiều để dùng phòng lớn còn trống. Hoãn lịch, dùng phòng nhỏ hay giảm số người đều không phải phương án được chọn.",
    "dlg": [
     {
      "sp": "男",
@@ -97,7 +97,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi dan ong se cap nhat tai lieu cu roi thuyet trinh vao thu Tu. Hoan lich, phat tai lieu cu nguyen ven hay tu viet lai toan bo deu khong dung.",
+   "exp": "Người đàn ông sẽ cập nhật tài liệu cũ rồi thuyết trình vào thứ Tư. Hoãn lịch, phát tài liệu cũ nguyên vẹn hay tự viết lại toàn bộ đều không đúng.",
    "dlg": [
     {
      "sp": "女",
@@ -138,7 +138,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nu sinh vien chua doc xong va can sach cho bao cao nen se lam thu tuc gia han qua trang web vao toi nay. Tra sach ngay mai, mua sach hay doi de tai deu khong phai lua chon cua co.",
+   "exp": "Nữ sinh viên chưa đọc xong và cần sách cho báo cáo nên sẽ làm thủ tục gia hạn qua trang web vào tối nay. Trả sách ngày mai, mua sách hay đổi đề tài đều không phải lựa chọn của cô.",
    "dlg": [
     {
      "sp": "男",
@@ -179,7 +179,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Giao vien chi tham du duoc vao sang thu Sau nen lich hop doi sang sang thu Sau. Hoan sang tuan sau, hop khong co giao vien hay huy hop deu khong dung.",
+   "exp": "Giáo viên chỉ tham dự được vào sáng thứ Sáu nên lịch họp đổi sang sáng thứ Sáu. Hoãn sang tuần sau, họp không có giáo viên hay hủy họp đều không đúng.",
    "dlg": [
     {
      "sp": "女",
@@ -220,7 +220,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "May bay mat thoi gian di chuyen ra san bay, trong khi tau cao toc gan dia diem hop nen nguoi dan ong chon tau cao toc. May bay, o to hay xe buyt deu khong duoc chon.",
+   "exp": "Máy bay mất thời gian di chuyển ra sân bay, trong khi tàu cao tốc gần địa điểm họp nên người đàn ông chọn tàu cao tốc. Máy bay, ô tô hay xe buýt đều không được chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -266,7 +266,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi nhan manh rang chi co che do la chua du, dieu quyet dinh la nguoi chuyen den co dinh cu duoc o dia phuong hay khong. Pha bo nha trong, giam so luong hay quang cao deu khong phai trong tam.",
+   "exp": "Người nói nhấn mạnh rằng chỉ có chế độ là chưa đủ, điều quyết định là người chuyển đến có định cư được ở địa phương hay không. Phá bỏ nhà trống, giảm số lượng hay quảng cáo đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -302,7 +302,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nghe nhan ket hop ky thuat truyen thong voi hinh dang va mau sac phu hop doi song hien dai, va khach nuoc ngoai bi thu hut boi truyen thong song dong trong doi song. Chi giu truyen thong, giam gia hay quang cao deu khong phai ly do.",
+   "exp": "Nghệ nhân kết hợp kỹ thuật truyền thống với hình dáng và màu sắc phù hợp đời sống hiện đại, và khách nước ngoài bị thu hút bởi truyền thống sống động trong đời sống. Chỉ giữ truyền thống, giảm giá hay quảng cáo đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -348,7 +348,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do lon nhat la pham vi tuyen dung mo rong, co the tuyen nhan tai o dia phuong. Giam tien thue van phong, giam nhan su hay bo tro cap di lai deu khong duoc neu la ly do.",
+   "exp": "Lý do lớn nhất là phạm vi tuyển dụng mở rộng, có thể tuyển nhân tài ở địa phương. Giảm tiền thuê văn phòng, giảm nhân sự hay bỏ trợ cấp đi lại đều không được nêu là lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -394,7 +394,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi chi ro nguyen nhan la nhieu nguoi hieu sai han su dung ngon, cho rang qua han la nguy hiem nen vut bo. San xuat thua, so luong sieu thi hay khong nau an deu khong duoc de cap.",
+   "exp": "Người nói chỉ rõ nguyên nhân là nhiều người hiểu sai hạn dùng ngon nhất, cho rằng quá hạn là nguy hiểm nên vứt bỏ. Sản xuất thừa, số lượng siêu thị hay không nấu ăn đều không được đề cập.",
    "dlg": [
     {
      "sp": "男",
@@ -430,7 +430,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Gia xe cao co duoc neu nhung van de lon hon la thieu tram sac, nhat la voi nguoi song o chung cu kho sac tai nha. Hieu nang thap, xe xang mat gia hay gia dien re deu khong phai ly do.",
+   "exp": "Giá xe cao có được nêu nhưng vấn đề lớn hơn là thiếu trạm sạc, nhất là với người sống ở chung cư khó sạc tại nhà. Hiệu năng thấp, xe xăng mất giá hay giá điện rẻ đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -466,7 +466,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Ly do la o dia phuong de tuyen nhan tai tre hon va co ho tro tu chinh quyen nhu cung cap dat va uu dai thue. Dat o thanh pho re, chi phi van chuyen re hay khong co canh tranh deu khong dung.",
+   "exp": "Lý do là ở địa phương dễ tuyển nhân tài trẻ hơn và có hỗ trợ từ chính quyền như cung cấp đất và ưu đãi thuế. Đất ở thành phố rẻ, chi phí vận chuyển rẻ hay không có cạnh tranh đều không đúng.",
    "dlg": [
     {
      "sp": "男",
@@ -512,7 +512,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi tap luyen manh trong ngan han khong duy tri duoc hieu qua, ma chia khoa la thoi quen vua suc co the duy tri moi ngay. Tap nang ngan han, an khem cuc doan hay den benh vien thuong xuyen deu khong phai chia khoa.",
+   "exp": "Người nói nói tập luyện mạnh trong ngắn hạn không duy trì được hiệu quả, mà chìa khóa là thói quen vừa sức có thể duy trì mỗi ngày. Tập nặng ngắn hạn, ăn kiêng cực đoan hay đến bệnh viện thường xuyên đều không phải chìa khóa.",
    "dlg": [
     {
      "sp": "女",
@@ -548,7 +548,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi thua nhan su tien loi nhung canh bao nguoi cao tuoi co the bi bo lai, nen can co che ai cung yen tam su dung. Cam tien mat, bo qua nguoi cao tuoi hay chi nghi den hieu qua cua cua hang deu khong phai quan diem cua nguoi noi.",
+   "exp": "Người nói thừa nhận sự tiện lợi nhưng cảnh báo người cao tuổi có thể bị bỏ lại, nên cần cơ chế ai cũng yên tâm sử dụng. Cấm tiền mặt, bỏ qua người cao tuổi hay chỉ nghĩ đến hiệu quả của cửa hàng đều không phải quan điểm của người nói.",
    "dlg": [
     {
      "sp": "女",
@@ -569,7 +569,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi chi doanh nghiep cung cap dao tao la chua du, can co y muon hoc cua ban than va cach lam viec dam bao thoi gian hoc. Chi doanh nghiep lo, khong can hoc lai hay chi nguoi tre hoc deu khong dung.",
+   "exp": "Người nói nói chỉ doanh nghiệp cung cấp đào tạo là chưa đủ, cần có ý muốn học của bản thân và cách làm việc đảm bảo thời gian học. Chỉ doanh nghiệp lo, không cần học lại hay chỉ người trẻ học đều không đúng.",
    "dlg": [
     {
      "sp": "男",
@@ -590,7 +590,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi kien thuc tren man hinh khong the thay cam nhan thuc te, va trai nghiem thien nhien truc tiep la nen tang hoc tap nuoi duong cam xuc va to mo. Chi hoc tren man hinh, tranh thien nhien hay xem do chi la choi deu nguoc voi quan diem cua nguoi noi.",
+   "exp": "Người nói nói kiến thức trên màn hình không thể thay cảm nhận thực tế, và trải nghiệm thiên nhiên trực tiếp là nền tảng học tập nuôi dưỡng cảm xúc và tò mò. Chỉ học trên màn hình, tránh thiên nhiên hay xem đó chỉ là chơi đều ngược với quan điểm của người nói.",
    "dlg": [
     {
      "sp": "女",
@@ -611,7 +611,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi canh bao bien le hoi thanh man trinh dien cho du lich se lam mat y nghia goc, nen can su tham gia cua dan dia phuong va y muon truyen lai cho the he sau. Chi lam du lich, tu nhien tiep tuc hay huy bo deu khong phai quan diem cua nguoi noi.",
+   "exp": "Người nói cảnh báo biến lễ hội thành màn trình diễn cho du lịch sẽ làm mất ý nghĩa gốc, nên cần sự tham gia của dân địa phương và ý muốn truyền lại cho thế hệ sau. Chỉ làm du lịch, tự nhiên tiếp tục hay hủy bỏ đều không phải quan điểm của người nói.",
    "dlg": [
     {
      "sp": "男",
@@ -632,7 +632,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi chi ro nguyen nhan la thieu hieu biet ve thoi gian, chi phi va tuoi tho truoc khi nuoi, nen can suy nghi ky ve trach nhiem truoc khi nuoi. Chi vi de thuong, chap nhan bo roi hay chi tang so nguoi nuoi deu khong phai quan diem cua nguoi noi.",
+   "exp": "Người nói chỉ rõ nguyên nhân là thiếu hiểu biết về thời gian, chi phí và tuổi thọ trước khi nuôi, nên cần suy nghĩ kỹ về trách nhiệm trước khi nuôi. Chỉ vì dễ thương, chấp nhận bỏ rơi hay chỉ tăng số người nuôi đều không phải quan điểm của người nói.",
    "dlg": [
     {
      "sp": "女",
@@ -653,7 +653,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi ngon ngu luon thay doi theo thoi dai, nen thay vi phu dinh su thay doi can ren kha nang dung tu phu hop hoan canh. Cam thay doi, cho moi cach noi cua gioi tre deu dung hay noi ngon ngu khong duoc thay doi deu khong phai quan diem cua nguoi noi.",
+   "exp": "Người nói nói ngôn ngữ luôn thay đổi theo thời đại, nên thay vì phủ định sự thay đổi cần rèn khả năng dùng từ phù hợp hoàn cảnh. Cấm thay đổi, cho mọi cách nói của giới trẻ đều đúng hay nói ngôn ngữ không được thay đổi đều không phải quan điểm của người nói.",
    "dlg": [
     {
      "sp": "男",
@@ -673,7 +673,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi la da gui tai lieu hay chua nen dap an da gui vao toi hom qua moi phu hop. Chi noi lich cong tac hay noi tai lieu la cong tac deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là đã gửi tài liệu hay chưa nên đáp án đã gửi vào tối hôm qua mới phù hợp. Chỉ nói lịch công tác hay nói tài liệu là công tác đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "女",
@@ -693,7 +693,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau giai thich ky hon can duoc chap nhan lich su va hen ngay mai giai thich. Noi ban ke hoach da chi tiet hay noi loi giai thich la ban ke hoach deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu giải thích kỹ hơn cần được chấp nhận lịch sự và hẹn ngày mai giải thích. Nói bản kế hoạch đã chi tiết hay nói lời giải thích là bản kế hoạch đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "男",
@@ -713,7 +713,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi tham tinh trang met moi vi tang ca nen dap an muon nghi ngoi mot chut moi tu nhien. Chi lap lai tang ca nhieu hay noi su met moi la tang ca deu khong phai cau tra loi.",
+   "exp": "Câu hỏi thăm tình trạng mệt mỏi vì tăng ca nên đáp án muốn nghỉ ngơi một chút mới tự nhiên. Chỉ lặp lại tăng ca nhiều hay nói sự mệt mỏi là tăng ca đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "女",
@@ -733,7 +733,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Xin phep doi lich hop som hon 30 phut can duoc dong y kem theo viec lien lac nguoi tham du. Chi noi thoi luong hop hay noi thoi gian la cuoc hop deu khong tra loi loi xin phep.",
+   "exp": "Xin phép đổi lịch họp sớm hơn 30 phút cần được đồng ý kèm theo việc liên lạc người tham dự. Chỉ nói thời lượng họp hay nói thời gian là cuộc họp đều không trả lời lời xin phép.",
    "dlg": [
     {
      "sp": "男",
@@ -753,7 +753,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi dang gap kho khan voi he thong moi nen de nghi cung kiem tra ngay moi la phan hoi giup do phu hop. Chi noi he thong moi hay lap lai la khong hieu deu khong giup duoc.",
+   "exp": "Người nói đang gặp khó khăn với hệ thống mới nên đề nghị cùng kiểm tra ngay mới là phản hồi giúp đỡ phù hợp. Chỉ nói hệ thống mới hay lặp lại là không hiểu đều không giúp được.",
    "dlg": [
     {
      "sp": "女",
@@ -774,7 +774,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi thua nhan loi ich hoc theo nhip do rieng va xem lai bai giang nhung cung neu han che ve giao luu va dat cau hoi, nen ket luan can ket hop truc tuyen voi truc tiep. Chi hoc truc tuyen, huy bo hay noi bai giang ghi hinh chi co hai deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận lợi ích học theo nhịp độ riêng và xem lại bài giảng nhưng cũng nêu hạn chế về giao lưu và đặt câu hỏi, nên kết luận cần kết hợp trực tuyến với trực tiếp. Chỉ học trực tuyến, hủy bỏ hay nói bài giảng ghi hình chỉ có hại đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -820,7 +820,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi chi thuc day tra bang lai la chua du vi o dia phuong khong co xe se kho mua sam va kham benh, nen chia khoa la dam bao phuong tien di lai sau khi tra bang. Ep buoc theo tuoi, cam hoan toan hay bo xe buyt deu nguoc voi quan diem.",
+   "exp": "Người nói nói chỉ thúc đẩy trả bằng lái là chưa đủ vì ở địa phương không có xe sẽ khó mua sắm và khám bệnh, nên chìa khóa là đảm bảo phương tiện đi lại sau khi trả bằng. Ép buộc theo tuổi, cấm hoàn toàn hay bỏ xe buýt đều ngược với quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -856,7 +856,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi duong sat la nen tang doi song nhu di hoc, kham benh va mua sam, nen truoc khi bo tuyen can thu cach khai thac du lich hay chia se chi phi. Bo tuyen ngay khi lo, xem duong sat chi la phuong tien hay noi chinh quyen khong nen tham gia deu khong phai quan diem.",
+   "exp": "Người nói nói đường sắt là nền tảng đời sống như đi học, khám bệnh và mua sắm, nên trước khi bỏ tuyến cần thử cách khai thác du lịch hay chia sẻ chi phí. Bỏ tuyến ngay khi lỗ, xem đường sắt chỉ là phương tiện hay nói chính quyền không nên tham gia đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -892,7 +892,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi deu noi chi xin loi la chua du, can lam ro nguyen nhan, xay dung co che ngan tai dien va moi truong de nhan vien de noi. Xin loi la du, che giau hay khong nen len tieng deu nguoc voi ket luan.",
+   "exp": "Hai người đều nói chỉ xin lỗi là chưa đủ, cần làm rõ nguyên nhân, xây dựng cơ chế ngăn tái diễn và môi trường để nhân viên dễ nói. Xin lỗi là đủ, che giấu hay không nên lên tiếng đều ngược với kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -938,7 +938,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi lo ngai chi hinh thuc duoc bat chuoc ma huong vi va boi canh goc khong duoc truyen tai, nen can truyen cam nhan ve mua va tam huyet voi nguyen lieu. Chi quang ba hinh thuc, xem su noi tieng la van de hay khong nen gioi thieu deu khong phai quan diem.",
+   "exp": "Người nói lo ngại chỉ hình thức được bắt chước mà hương vị và bối cảnh gốc không được truyền tải, nên cần truyền cảm nhận về mùa và tâm huyết với nguyên liệu. Chỉ quảng bá hình thức, xem sự nổi tiếng là vấn đề hay không nên giới thiệu đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -974,7 +974,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi thua nhan tro cap tien giup gia dinh nhung khong giai quyet duoc tinh trang thieu cho gui tre va lo ngai chat luong, nen van de la dam bao so luong va chat luong cham soc. Chi tang tien, noi khong can nha tre hay cam tro cap tien deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận trợ cấp tiền giúp gia đình nhưng không giải quyết được tình trạng thiếu chỗ gửi trẻ và lo ngại chất lượng, nên vấn đề là đảm bảo số lượng và chất lượng chăm sóc. Chỉ tăng tiền, nói không cần nhà trẻ hay cấm trợ cấp tiền đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -1020,7 +1020,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi canh bao thong tin chua xac minh co the can tro so tan, nen can vua nhanh vua chinh xac, phan biet dieu da biet voi dieu dang xac minh va kiem tra nguon tin. Chi chay theo toc do, phat tan tin chua xac minh hay noi nguoi nhan khong co trach nhiem deu khong phai quan diem.",
+   "exp": "Người nói cảnh báo thông tin chưa xác minh có thể cản trở sơ tán, nên cần vừa nhanh vừa chính xác, phân biệt điều đã biết với điều đang xác minh và kiểm tra nguồn tin. Chỉ chạy theo tốc độ, phát tán tin chưa xác minh hay nói người nhận không có trách nhiệm đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -1056,7 +1056,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi thua nhan tu do chon thoi gian va noi lam viec nhung cung neu thu nhap bat on va bao dam xa hoi yeu, nen van de la hoan thien co che bao dam. Chi thay tu do, cam lam tu do hay noi khong can bao dam deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận tự do chọn thời gian và nơi làm việc nhưng cũng nêu thu nhập bất ổn và bảo đảm xã hội yếu, nên vấn đề là hoàn thiện cơ chế bảo đảm. Chỉ thấy tự do, cấm làm tự do hay nói không cần bảo đảm đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -1097,7 +1097,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi quy dinh la chua du, can xem lai luong nhua dung trong doi song va chon do dung duoc lap lai. Chi dua vao quy dinh, noi nhua khong phai van de hay noi sinh vat bien khong bi anh huong deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ quy định là chưa đủ, cần xem lại lượng nhựa dùng trong đời sống và chọn đồ dùng được lặp lại. Chỉ dựa vào quy định, nói nhựa không phải vấn đề hay nói sinh vật biển không bị ảnh hưởng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -1133,7 +1133,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi nhan thay luot muon sach giam nhung thu vien dang duoc dung lam noi tra cuu, hoc tap va giao luu cua dan dia phuong, nen vai tro da chuyen sang noi hoc tap va giao luu. Chi la noi muon sach, khong can thiet hay giam nguoi dung khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người nhận thấy lượt mượn sách giảm nhưng thư viện đang được dùng làm nơi tra cứu, học tập và giao lưu của dân địa phương, nên vai trò đã chuyển sang nơi học tập và giao lưu. Chỉ là nơi mượn sách, không cần thiết hay giảm người dùng không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -1179,7 +1179,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi hoan nghenh toc do tien bo ky thuat nhung neu rac vu tru, an toan va ke hoach lieu linh vi loi nhuan, nen can tieu chuan an toan va quy tac quoc te. Chi thay doi moi, cam doanh nghiep tu nhan hay noi rac vu tru khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói hoan nghênh tốc độ tiến bộ kỹ thuật nhưng nêu rác vũ trụ, an toàn và kế hoạch liều lĩnh vì lợi nhuận, nên cần tiêu chuẩn an toàn và quy tắc quốc tế. Chỉ thấy đổi mới, cấm doanh nghiệp tư nhân hay nói rác vũ trụ không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -1215,7 +1215,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro gioi tre co quan tam den moi truong va giao duc nhung thay co che chinh tri va thu tuc bau cu kho hieu, nen can giao duc o truong va thong tin de hieu de tao moi truong de tham gia. Noi gioi tre khong quan tam, ty le bau cu khong phai van de hay khong can tham gia deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ giới trẻ có quan tâm đến môi trường và giáo dục nhưng thấy cơ chế chính trị và thủ tục bầu cử khó hiểu, nên cần giáo dục ở trường và thông tin dễ hiểu để tạo môi trường để tham gia. Nói giới trẻ không quan tâm, tỷ lệ bầu cử không phải vấn đề hay không cần tham gia đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -1261,7 +1261,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi quy dinh qua chat se gay bat tien cho doi song, con bo qua bao ton de phat trien se lam mat suc hap dan, nen can su dong thuan cua dan cu qua thao luan. Chi siet quy dinh, uu tien phat trien hay noi y kien dan cu khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói quy định quá chặt sẽ gây bất tiện cho đời sống, còn bỏ qua bảo tồn để phát triển sẽ làm mất sức hấp dẫn, nên cần sự đồng thuận của dân cư qua thảo luận. Chỉ siết quy định, ưu tiên phát triển hay nói ý kiến dân cư không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -1299,7 +1299,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Giao su muon xem danh sach tai lieu tham khao da sap xep truoc khi quyet dinh cau truc luan van, va sinh vien se gui truoc cuoi tuan. Viet xong toan bo, mua lai tai lieu hay tu quyet dinh cau truc deu khong dung.",
+   "exp": "Giáo sư muốn xem danh sách tài liệu tham khảo đã sắp xếp trước khi quyết định cấu trúc luận văn, và sinh viên sẽ gửi trước cuối tuần. Viết xong toàn bộ, mua lại tài liệu hay tự quyết định cấu trúc đều không đúng.",
    "dlg": [
     {
      "sp": "女",
@@ -1340,7 +1340,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chon quan gan ga vi tien di lai cho dong nguoi, va se lien lac trong hom nay de xac nhan dat cho. Hoan lich, to chuc o nha hay den khong dat truoc deu khong phai phuong an.",
+   "exp": "Hai người chọn quán gần ga vì tiện đi lại cho đông người, và sẽ liên lạc trong hôm nay để xác nhận đặt chỗ. Hoãn lịch, tổ chức ở nhà hay đến không đặt trước đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -1381,7 +1381,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cap tren yeu cau nop ban nhap truoc thu Sau roi nop ban chinh thuc sau khi tong hop xong so lieu. Hoan sang thang sau, nop khong co so lieu hay khong nop deu khong dung.",
+   "exp": "Cấp trên yêu cầu nộp bản nháp trước thứ Sáu rồi nộp bản chính thức sau khi tổng hợp xong số liệu. Hoãn sang tháng sau, nộp không có số liệu hay không nộp đều không đúng.",
    "dlg": [
     {
      "sp": "男",
@@ -1417,7 +1417,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Sinh vien co the lam xong bao cao vao buoi sang nen dong y lam ca chieu thu Bay. Tu choi, doi sang Chu nhat hay nghi viec deu khong phai lua chon.",
+   "exp": "Sinh viên có thể làm xong báo cáo vào buổi sáng nên đồng ý làm ca chiều thứ Bảy. Từ chối, đổi sang Chủ nhật hay nghỉ việc đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -1453,7 +1453,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Vi noi dung phuc tap nen hai nguoi chon phat tai lieu truoc cuoc hop 1 tuan de moi nguoi doc truoc. Phat trong ngay hop, khong lam tai lieu hay huy hop deu khong phai phuong an.",
+   "exp": "Vì nội dung phức tạp nên hai người chọn phát tài liệu trước cuộc họp 1 tuần để mọi người đọc trước. Phát trong ngày họp, không làm tài liệu hay hủy họp đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -1494,7 +1494,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi dan ong khong tu sua duoc nen se lien lac don vi sua chua lay bao gia roi moi quyet dinh dua tren ngan sach. Tu sua, mua moi ngay hay tiep tuc khong co thiet bi deu khong dung.",
+   "exp": "Người đàn ông không tự sửa được nên sẽ liên lạc đơn vị sửa chữa lấy báo giá rồi mới quyết định dựa trên ngân sách. Tự sửa, mua mới ngay hay tiếp tục không có thiết bị đều không đúng.",
    "dlg": [
     {
      "sp": "女",
@@ -1535,7 +1535,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi nhan manh gia dinh thu nhap thap chiu ganh nang nang nhat vi ty trong chi phi an uong cao, nen can ho tro co muc tieu. Anh huong dong deu, giam chung loai thuc pham hay giam doanh thu sieu thi deu khong phai trong tam.",
+   "exp": "Người nói nhấn mạnh gia đình thu nhập thấp chịu gánh nặng nặng nhất vì tỷ trọng chi phí ăn uống cao, nên cần hỗ trợ có mục tiêu. Ảnh hưởng đồng đều, giảm chủng loại thực phẩm hay giảm doanh thu siêu thị đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -1571,7 +1571,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Ly do la phong canh dia phuong ma thanh pho khong co tao chieu sau cho cau chuyen, cong voi su hop tac cua dan dia phuong. Chi phi re, bi cam quay o thanh pho hay nhieu rap chieu deu khong phai ly do.",
+   "exp": "Lý do là phong cảnh địa phương mà thành phố không có tạo chiều sâu cho câu chuyện, cộng với sự hợp tác của dân địa phương. Chi phí rẻ, bị cấm quay ở thành phố hay nhiều rạp chiếu đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -1617,7 +1617,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Chi phi phat dien da giam nhung van de la luoi truyen tai khong du suc de dua dien da phat den noi can. Chi phi cao, thieu anh nang hay thiet bi cu deu khong phai van de duoc neu.",
+   "exp": "Chi phí phát điện đã giảm nhưng vấn đề là lưới truyền tải không đủ sức để đưa điện đã phát đến nơi cần. Chi phí cao, thiếu ánh nắng hay thiết bị cũ đều không phải vấn đề được nêu.",
    "dlg": [
     {
      "sp": "男",
@@ -1653,7 +1653,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Ly do lon la truong tang cuong cac khoa hoc giang day bang tieng Anh nen sinh vien chua biet tieng Nhat cung co the hoc, cong voi ho tro doi song. Bo ky thi, mien hoc phi hay giam sinh vien Nhat deu khong phai ly do.",
+   "exp": "Lý do lớn là trường tăng cường các khóa học giảng dạy bằng tiếng Anh nên sinh viên chưa biết tiếng Nhật cũng có thể học, cộng với hỗ trợ đời sống. Bỏ kỳ thi, miễn học phí hay giảm sinh viên Nhật đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -1699,7 +1699,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi chi keo dai thoi gian ngu la chua du, vi neu khong ngu sau thi met moi khong het, nen chia khoa la thoi quen giup ngu chat luong. Ngu that dai, ngu trua dai hay dung thuoc ngu deu khong phai trong tam.",
+   "exp": "Người nói nói chỉ kéo dài thời gian ngủ là chưa đủ, vì nếu không ngủ sâu thì mệt mỏi không hết, nên chìa khóa là thói quen giúp ngủ chất lượng. Ngủ thật dài, ngủ trưa dài hay dùng thuốc ngủ đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -1735,7 +1735,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do la go co tai trong moi truong thap va viec dung go dia phuong se ho tro nghe rung va kinh te dia phuong. Chi phi re, ky thuat don gian hay be tong bi cam deu khong phai ly do.",
+   "exp": "Lý do là gỗ có gánh nặng môi trường thấp và việc dùng gỗ địa phương sẽ hỗ trợ nghề rừng và kinh tế địa phương. Chi phí rẻ, kỹ thuật đơn giản hay bê tông bị cấm đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -1781,7 +1781,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi chi co che giam sat cua chinh quyen la chua du, chia khoa la moi quan he lang gieng hang ngay nhu chao hoi va hoi tham. Chi tang giam sat, han che ra ngoai hay cam song mot minh deu khong phai chia khoa.",
+   "exp": "Người nói nói chỉ cơ chế giám sát của chính quyền là chưa đủ, chìa khóa là mối quan hệ láng giềng hằng ngày như chào hỏi và hỏi thăm. Chỉ tăng giám sát, hạn chế ra ngoài hay cấm sống một mình đều không phải chìa khóa.",
    "dlg": [
     {
      "sp": "女",
@@ -1817,7 +1817,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi thua nhan quang cao tien loi nhung canh bao chi hien thong tin hop so thich se lam giam co hoi tiep xuc y kien khac, nen can y thuc dieu do va chu dong tiep can thong tin rong. Chi thay tien loi, cam quang cao hay khong can y kien khac deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận quảng cáo tiện lợi nhưng cảnh báo chỉ hiện thông tin hợp sở thích sẽ làm giảm cơ hội tiếp xúc ý kiến khác, nên cần ý thức điều đó và chủ động tiếp cận thông tin rộng. Chỉ thấy tiện lợi, cấm quảng cáo hay không cần ý kiến khác đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -1838,7 +1838,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi thong cam mong muon cua phu huynh nhung canh bao qua nhieu lop hoc se lay mat thoi gian choi tu do, nen khi chon lop can ton trong y muon va niem vui cua tre. Cang nhieu cang tot, khong nen hoc them hay khong can thoi gian choi deu khong phai quan diem.",
+   "exp": "Người nói thông cảm mong muốn của phụ huynh nhưng cảnh báo quá nhiều lớp học sẽ lấy mất thời gian chơi tự do, nên khi chọn lớp cần tôn trọng ý muốn và niềm vui của trẻ. Càng nhiều càng tốt, không nên học thêm hay không cần thời gian chơi đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -1859,7 +1859,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi che do da duoc hoan thien nhung ty le nghi van thap do bau khong khi noi lam viec, nen can xay dung su thong cam va coi viec nghi la binh thuong. Chi can che do, noi nam gioi khong nen nghi hay khong can che do deu khong phai quan diem.",
+   "exp": "Người nói nói chế độ đã được hoàn thiện nhưng tỷ lệ nghỉ vẫn thấp do bầu không khí nơi làm việc, nên cần xây dựng sự thông cảm và coi việc nghỉ là bình thường. Chỉ cần chế độ, nói nam giới không nên nghỉ hay không cần chế độ đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -1880,7 +1880,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi dua ky thuat vao thi chua du, can ho tro thu nhap on dinh va co hoi dao tao de nguoi tre de tham gia nong nghiep. Chi ky thuat, noi thieu nhan luc khong phai van de hay nguoi tre khong nen tham gia deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ đưa kỹ thuật vào thì chưa đủ, cần hỗ trợ thu nhập ổn định và cơ hội đào tạo để người trẻ dễ tham gia nông nghiệp. Chỉ kỹ thuật, nói thiếu nhân lực không phải vấn đề hay người trẻ không nên tham gia đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -1901,7 +1901,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi khong chi do y thuc nguoi dung ma con do duong xa chua theo kip thuc te, nen can vua pho bien quy tac vua xay dung duong an toan cho xe dap. Chi do y thuc, cam xe dap hay noi nguoi di bo khong nen dung duong deu khong phai quan diem.",
+   "exp": "Người nói nói không chỉ do ý thức người dùng mà còn do đường xá chưa theo kịp thực tế, nên cần vừa phổ biến quy tắc vừa xây dựng đường an toàn cho xe đạp. Chỉ do ý thức, cấm xe đạp hay nói người đi bộ không nên dùng đường đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -1922,7 +1922,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi tang hieu qua dieu tri la chua du, can kham suc khoe dinh ky va xem lai loi song de phong benh nang, nen dau tu cho phong benh moi thuc su kiem che chi phi y te. Chi hieu qua dieu tri, khong can kham dinh ky hay noi tang chi phi khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ tăng hiệu quả điều trị là chưa đủ, cần khám sức khỏe định kỳ và xem lại lối sống để phòng bệnh nặng, nên đầu tư cho phòng bệnh mới thực sự kiềm chế chi phí y tế. Chỉ hiệu quả điều trị, không cần khám định kỳ hay nói tăng chi phí không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -1942,7 +1942,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau xep lich trao doi vao thu Sau can duoc dong y kem theo xac nhan thu Sau duoc. Chi noi lich trao doi la thu Sau hay noi thu Sau la lich trao doi deu khong tra loi loi xin phep.",
+   "exp": "Yêu cầu xếp lịch trao đổi vào thứ Sáu cần được đồng ý kèm theo xác nhận thứ Sáu được. Chỉ nói lịch trao đổi là thứ Sáu hay nói thứ Sáu là lịch trao đổi đều không trả lời lời xin phép.",
    "dlg": [
     {
      "sp": "女",
@@ -1962,7 +1962,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau kiem tra lai so lieu can duoc chap nhan lich su kem theo thoi gian kiem tra vao buoi chieu. Noi so lieu la viec kiem tra hay so lieu la mot lan deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu kiểm tra lại số liệu cần được chấp nhận lịch sự kèm theo thời gian kiểm tra vào buổi chiều. Nói số liệu là việc kiểm tra hay số liệu là một lần đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "女",
@@ -1982,7 +1982,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Cau hoi tham tinh hinh suc khoe gan day nen dap an nho su quan tam va bao da khoe han moi tu nhien. Chi noi thoi gian hay chi noi suc khoe kem deu khong phai cau tra loi hoan chinh.",
+   "exp": "Câu hỏi thăm tình hình sức khỏe gần đây nên đáp án nhờ sự quan tâm và bảo đã khỏe hẳn mới tự nhiên. Chỉ nói thời gian hay chỉ nói sức khỏe kém đều không phải câu trả lời hoàn chỉnh.",
    "dlg": [
     {
      "sp": "男",
@@ -2002,7 +2002,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la co the tham du truc tuyen hay khong nen dap an dong y kem theo viec gui duong dan moi phu hop. Chi noi lich hop hay noi truc tuyen la cuoc hop deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là có thể tham dự trực tuyến hay không nên đáp án đồng ý kèm theo việc gửi đường dẫn mới phù hợp. Chỉ nói lịch họp hay nói trực tuyến là cuộc họp đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "女",
@@ -2022,7 +2022,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Yeu cau cho y kien ve ke hoach moi can duoc dap ung bang cach hen trao doi vao buoi chieu. Chi noi ke hoach moi hay noi y kien la ke hoach deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu cho ý kiến về kế hoạch mới cần được đáp ứng bằng cách hẹn trao đổi vào buổi chiều. Chỉ nói kế hoạch mới hay nói ý kiến là kế hoạch đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "男",
@@ -2043,7 +2043,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi thua nhan danh gia theo thoi gian khong do duoc chat luong nhung cung canh bao danh gia chi theo thanh qua se bo sot dong gop kho dinh luong nhu hop tac nhom va dao tao cap duoi. Chi theo thoi gian, giu nguyen che do hay chi do bang con so deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận đánh giá theo thời gian không đo được chất lượng nhưng cũng cảnh báo đánh giá chỉ theo thành quả sẽ bỏ sót đóng góp khó định lượng như hợp tác nhóm và đào tạo cấp dưới. Chỉ theo thời gian, giữ nguyên chế độ hay chỉ đo bằng con số đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -2079,7 +2079,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi hoan nghenh mien phi giup giam ganh nang gia dinh nhung neu rang chat luong nguyen lieu va ung pho di ung van con, nen can vua mien phi vua dam bao chat luong va ung pho di ung. Chi mien phi, khong nen mien phi hay noi chat luong khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người hoan nghênh miễn phí giúp giảm gánh nặng gia đình nhưng nêu rằng chất lượng nguyên liệu và ứng phó dị ứng vẫn còn, nên cần vừa miễn phí vừa đảm bảo chất lượng và ứng phó dị ứng. Chỉ miễn phí, không nên miễn phí hay nói chất lượng không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -2120,7 +2120,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi rung thieu cham soc do nghe rung suy yeu, va chi ngung khai thac la chua du ma can khai thac vua phai ket hop trong moi de rung khoe manh. Ngung khai thac hoan toan, khong can cham soc hay noi dung go chi pha rung deu khong phai quan diem.",
+   "exp": "Người nói nói rừng thiếu chăm sóc do nghề rừng suy yếu, và chỉ ngừng khai thác là chưa đủ mà cần khai thác vừa phải kết hợp trồng mới để rừng khỏe mạnh. Ngừng khai thác hoàn toàn, không cần chăm sóc hay nói dùng gỗ chỉ phá rừng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -2156,7 +2156,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi thua nhan camera co tac dung ran de nhung neu dan cu thieu quan tam se phat hien cham, nen can ket hop giam sat cua dan cu qua chao hoi hang ngay. Chi camera, khong can phong chong hay noi dan cu khong nen tham gia deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận camera có tác dụng răn đe nhưng nếu dân cư thiếu quan tâm sẽ phát hiện chậm, nên cần kết hợp giám sát của dân cư qua chào hỏi hằng ngày. Chỉ camera, không cần phòng chống hay nói dân cư không nên tham gia đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -2202,7 +2202,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi khong the ngan tien bo ky thuat, nen can xa hoi cung thao luan ai chiu trach nhiem va cho phep su dung den dau de xay dung quy tac. Ngung tien bo, khong can quy tac hay chi ky su thao luan deu khong phai quan diem.",
+   "exp": "Người nói nói không thể ngăn tiến bộ kỹ thuật, nên cần xã hội cùng thảo luận ai chịu trách nhiệm và cho phép sử dụng đến đâu để xây dựng quy tắc. Ngừng tiến bộ, không cần quy tắc hay chỉ kỹ sư thảo luận đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -2238,7 +2238,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi thua nhan tang luong quan trong nhung van de lam ca dem nhieu va kho nghi phep van con, nen can vua tang luong vua cai thien moi truong de nguoi lao dong gan bo lau dai. Chi tang luong, noi thieu nhan luc khong phai van de hay noi doi sach vo nghia deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận tăng lương quan trọng nhưng vấn đề làm ca đêm nhiều và khó nghỉ phép vẫn còn, nên cần vừa tăng lương vừa cải thiện môi trường để người lao động gắn bó lâu dài. Chỉ tăng lương, nói thiếu nhân lực không phải vấn đề hay nói đổi sách vô nghĩa đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -2284,7 +2284,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nhan hang la co so de nguoi tieu dung lua chon, nen neu noi dung kho hieu hay gay hieu lam se khong the phan doan dung, vi vay can quy tac ro rang va co che kiem tra. Khong can nhan hang, kho hieu cung duoc hay noi nguoi tieu dung khong nen dua vao nhan hang deu khong phai quan diem.",
+   "exp": "Người nói nói nhãn hàng là cơ sở để người tiêu dùng lựa chọn, nên nếu nội dung khó hiểu hay gây hiểu lầm sẽ không thể phán đoán đúng, vì vậy cần quy tắc rõ ràng và cơ chế kiểm tra. Không cần nhãn hàng, khó hiểu cũng được hay nói người tiêu dùng không nên dựa vào nhãn hàng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -2320,7 +2320,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi thua nhan ho tro nha nghien cuu co thanh tich quan trong nhung chi tap trung se kho co y tuong moi, nen can can bang voi ho tro nha nghien cuu tre kem theo co che danh gia va ho tro. Chi tap trung nha nghien cuu noi tieng, khong can ho tro tre hay noi phan bo khong co van de deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận hỗ trợ nhà nghiên cứu có thành tích quan trọng nhưng chỉ tập trung sẽ khó có ý tưởng mới, nên cần cân bằng với hỗ trợ nhà nghiên cứu trẻ kèm theo cơ chế đánh giá và hỗ trợ. Chỉ tập trung nhà nghiên cứu nổi tiếng, không cần hỗ trợ trẻ hay nói phân bổ không có vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -2366,7 +2366,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi chi han che o to la chua du vi co nguoi bat buoc phai dung xe, nen can ket hop han che voi viec lam xe buyt va tau tien loi hon de tu nhien giam luong xe. Chi han che, noi tac duong khong phai van de hay khong can cai thien giao thong cong cong deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ hạn chế ô tô là chưa đủ vì có người bắt buộc phải dùng xe, nên cần kết hợp hạn chế với việc làm xe buýt và tàu tiện lợi hơn để tự nhiên giảm lượng xe. Chỉ hạn chế, nói tắc đường không phải vấn đề hay không cần cải thiện giao thông công cộng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -2402,7 +2402,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi thua nhan cung cap viec lam quan trong nhung tham gia xa hoi khong chi la lam viec, ma can noi co vai tro nhu hoat dong dia phuong va tinh nguyen de phat huy kinh nghiem. Chi cung cap viec lam, khong can tham gia hay noi kinh nghiem khong co ich deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận cung cấp việc làm quan trọng nhưng tham gia xã hội không chỉ là làm việc, mà cần nơi có vai trò như hoạt động địa phương và tình nguyện để phát huy kinh nghiệm. Chỉ cung cấp việc làm, không cần tham gia hay nói kinh nghiệm không có ích đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -2448,7 +2448,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi ep buoc chi lam tre them ngai sach, nen can tao trai nghiem thu vi qua doc to va gap quyen sach yeu thich lam diem khoi dau thoi quen doc. Ep buoc, noi doc sach khong can thiet hay noi doc to khong hieu qua deu khong phai quan diem.",
+   "exp": "Người nói nói ép buộc chỉ làm trẻ thêm ngại sách, nên cần tạo trải nghiệm thú vị qua đọc to và gặp quyển sách yêu thích làm điểm khởi đầu thói quen đọc. Ép buộc, nói đọc sách không cần thiết hay nói đọc to không hiệu quả đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -2484,7 +2484,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi canh bao co truong hop chi lam ra ve bao ve moi truong ma thuc te khong co, nen can muc tieu ro rang va cong bo tien do de danh gia bang ket qua thuc te. Chi quang ba, khong can doi sach hay khong can cong bo ket qua deu khong phai ket luan.",
+   "exp": "Hai người cảnh báo có trường hợp chỉ làm ra vẻ bảo vệ môi trường mà thực tế không có, nên cần mục tiêu rõ ràng và công bố tiến độ để đánh giá bằng kết quả thực tế. Chỉ quảng bá, không cần đối sách hay không cần công bố kết quả đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -2530,7 +2530,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi tang so luong cong vien la quan trong nhung neu thieu cham soc cay xanh se hoang hoa, nen can vua chu trong chat luong vua co co che duy tri va su tham gia cua dan cu. Chi tang so luong, khong can cay xanh hay khong can cham soc deu khong phai quan diem.",
+   "exp": "Người nói nói tăng số lượng công viên là quan trọng nhưng nếu thiếu chăm sóc cây xanh sẽ hoang hóa, nên cần vừa chú trọng chất lượng vừa có cơ chế duy trì và sự tham gia của dân cư. Chỉ tăng số lượng, không cần cây xanh hay không cần chăm sóc đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -2568,7 +2568,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cap tren yeu cau tom tat bien ban truoc ngay mai roi moi phan phoi cho lien quan, va nhan vien se gui truoc ngay mai. Khong lam bien ban, hop lai hay giai thich truc tiep deu khong phai phuong an.",
+   "exp": "Cấp trên yêu cầu tóm tắt biên bản trước ngày mai rồi mới phân phối cho liên quan, và nhân viên sẽ gửi trước ngày mai. Không làm biên bản, họp lại hay giải thích trực tiếp đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -2604,7 +2604,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nu sinh vien muon thuyet trinh truoc de nhe nhom, nam sinh vien muon thuyet trinh sau de tham khao nguoi khac, nen hai nguoi chon nu truoc nam sau. Boc tham, nam truoc hay hoan lich deu khong phai phuong an.",
+   "exp": "Nữ sinh viên muốn thuyết trình trước để nhẹ nhõm, nam sinh viên muốn thuyết trình sau để tham khảo người khác, nên hai người chọn nữ trước nam sau. Bốc thăm, nam trước hay hoãn lịch đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -2645,7 +2645,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Giao su yeu cau co du lieu bo sung truoc buoi thuyet trinh tuan sau, va nu sinh vien se lay du lieu bo sung truoc tuan sau. Bo thi nghiem bo sung, hoan lich hay dung ket qua cu deu khong phai lua chon.",
+   "exp": "Giáo sư yêu cầu có dữ liệu bổ sung trước buổi thuyết trình tuần sau, và nữ sinh viên sẽ lấy dữ liệu bổ sung trước tuần sau. Bỏ thí nghiệm bổ sung, hoãn lịch hay dùng kết quả cũ đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "男",
@@ -2681,7 +2681,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Thang sau la thoi ky ban ron kho tap hop nguoi tham gia nen hai nguoi doi sang ky nghi dai thang 10. Di vao cuoi tuan thang sau, huy chuyen hay doi sang di trong ngay deu khong phai phuong an.",
+   "exp": "Tháng sau là thời kỳ bận rộn khó tập hợp người tham gia nên hai người đổi sang kỳ nghỉ dài tháng 10. Đi vào cuối tuần tháng sau, hủy chuyến hay đổi sang đi trong ngày đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -2717,7 +2717,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Thu Ba tuan sau co the chuan bi nguyen lieu va quan ly cung tham du duoc nen hai nguoi chon mo buoi dung thu vao thu Ba tuan sau. Khong mo, khong ban mon moi hay hoan sang thang sau deu khong phai phuong an.",
+   "exp": "Thứ Ba tuần sau có thể chuẩn bị nguyên liệu và quản lý cũng tham dự được nên hai người chọn mở buổi dùng thử vào thứ Ba tuần sau. Không mở, không bán món mới hay hoãn sang tháng sau đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -2753,7 +2753,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Chu tren ap phich qua nho kho doc nen hai nguoi se phong to chu, sua thiet ke roi moi in. In nguyen ban, khong lam ap phich hay huy trien lam deu khong phai phuong an.",
+   "exp": "Chữ trên áp phích quá nhỏ khó đọc nên hai người sẽ phóng to chữ, sửa thiết kế rồi mới in. In nguyên bản, không làm áp phích hay hủy triển lãm đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -2789,7 +2789,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi co che do hoc bong la chua du, can moi truong lam viec thuan loi va ho tro doi song de bac si dinh cu o dia phuong. Chi tang so luong, giam benh vien hay ep buoc chuyen cong tac deu khong phai trong tam.",
+   "exp": "Người nói nói chỉ có chế độ học bổng là chưa đủ, cần môi trường làm việc thuận lợi và hỗ trợ đời sống để bác sĩ định cư ở địa phương. Chỉ tăng số lượng, giảm bệnh viện hay ép buộc chuyển công tác đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -2825,7 +2825,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi nhieu chan thuong do dong dat do do dac do, nen co dinh do dac se giam dang ke chan thuong va la buoc dau tien quan trong nhat. Chi chuan bi luong thuc, chi xac nhan noi so tan hay dua vao du bao deu khong phai trong tam.",
+   "exp": "Người nói nói nhiều chấn thương do động đất do đồ đạc đổ, nên cố định đồ đạc sẽ giảm đáng kể chấn thương và là bước đầu tiên quan trọng nhất. Chỉ chuẩn bị lương thực, chỉ xác nhận nơi sơ tán hay dựa vào dự báo đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -2861,7 +2861,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Dong luc lon nhat la thu cua doc gia cho thay tac pham da cham den tam hon ai do, do la niem vui lon nhat. Doat giai, thu nhap cao hay bien tap vien khuyen deu khong phai ly do.",
+   "exp": "Động lực lớn nhất là thư của độc giả cho thấy tác phẩm đã chạm đến tâm hồn ai đó, đó là niềm vui lớn nhất. Đoạt giải, thu nhập cao hay biên tập viên khuyên đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -2907,7 +2907,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Ly do la niem tu hao ve ky thuat ke thua tu doi cha va khong muon de no dut doan o doi minh, cong voi su ho tro cua dan dia phuong va doi tac. Kinh doanh de dang, khong co viec khac hay chi do duoc khuyen deu khong phai ly do.",
+   "exp": "Lý do là niềm tự hào về kỹ thuật kế thừa từ đời cha và không muốn để nó đứt đoạn ở đời mình, cộng với sự hỗ trợ của dân địa phương và đối tác. Kinh doanh dễ dàng, không có việc khác hay chỉ do được khuyên đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -2953,7 +2953,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Chia khoa la ket hop kiem tra o noi san xuat va khi nhap khau, cong voi cong khai thong tin nhanh khi co su co. Cam nhap khau, tang gia hay noi nguoi tieu dung tranh thuc pham deu khong phai chia khoa.",
+   "exp": "Chìa khóa là kết hợp kiểm tra ở nơi sản xuất và khi nhập khẩu, cộng với công khai thông tin nhanh khi có sự cố. Cấm nhập khẩu, tăng giá hay nói người tiêu dùng tránh thực phẩm đều không phải chìa khóa.",
    "dlg": [
     {
      "sp": "女",
@@ -2989,7 +2989,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi thua nhan tat den thuong xuyen quan trong nhung hieu qua nhat la doi sang thiet bi tiet kiem dien vi thiet bi cu tieu thu nhieu dien. Chi tat den, ngung dung thiet bi hay khong quan tam tien dien deu khong phai trong tam.",
+   "exp": "Người nói thừa nhận tắt đèn thường xuyên quan trọng nhưng hiệu quả nhất là đổi sang thiết bị tiết kiệm điện vì thiết bị cũ tiêu thụ nhiều điện. Chỉ tắt đèn, ngừng dùng thiết bị hay không quan tâm tiền điện đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -3025,7 +3025,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi chi tang phi bao hiem la chua du, van de lon nhat la so nguoi lao dong giam se lam yeu nen tang chong do ca he thong. Chi tang phi, bo he thong hay chi ngan giam dan so deu khong phai trong tam.",
+   "exp": "Người nói nói chỉ tăng phí bảo hiểm là chưa đủ, vấn đề lớn nhất là số người lao động giảm sẽ làm yếu nền tảng chống đỡ cả hệ thống. Chỉ tăng phí, bỏ hệ thống hay chỉ ngăn giảm dân số đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -3061,7 +3061,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi chi xoa bai va tang quy dinh thi chua dut goc van de, can giao duc dao duc thong tin de tre hieu loi noi cua minh anh huong den nguoi khac ra sao. Chi tang quy dinh, cam internet hay noi dang bai tu do hoan toan deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ xóa bài và tăng quy định thì chưa dứt gốc vấn đề, cần giáo dục đạo đức thông tin để trẻ hiểu lời nói của mình ảnh hưởng đến người khác ra sao. Chỉ tăng quy định, cấm internet hay nói đăng bài tự do hoàn toàn đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -3082,7 +3082,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi truong dai hoc dia phuong can mo cua voi dia phuong bang cach lay van de dia phuong lam de tai nghien cuu va tao co hoi hoc cung dan dia phuong, gia tri nam o do sau gan ket chu khong phai quy mo. Tang quy mo, noi khong can thiet hay khong nen gan ket deu khong phai quan diem.",
+   "exp": "Người nói nói trường đại học địa phương cần mở cửa với địa phương bằng cách lấy vấn đề địa phương làm đề tài nghiên cứu và tạo cơ hội học cùng dân địa phương, giá trị nằm ở độ sâu gắn kết chứ không phải quy mô. Tăng quy mô, nói không cần thiết hay không nên gắn kết đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3103,7 +3103,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi chi han che thi tre khong hoc duoc cach dung dung, nen can huong dan va cung tre thao luan de xay dung quy tac ve thong tin can chu y va thoi gian su dung. Chi han che, khong cho tre dung hay de tre tu do hoan toan deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ hạn chế thì trẻ không học được cách dùng đúng, nên cần hướng dẫn và cùng trẻ thảo luận để xây dựng quy tắc về thông tin cần chú ý và thời gian sử dụng. Chỉ hạn chế, không cho trẻ dùng hay để trẻ tự do hoàn toàn đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -3124,7 +3124,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi chi giam gio lam them la chua du vi neu ngay nghi van nghi ve cong viec thi met moi khong het, nen can dam bao thoi gian tach khoi cong viec de nghi ngoi tam than va the chat. Chi giam gio lam them, noi do la van de ca nhan hay lam viec ca ngay nghi deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ giảm giờ làm thêm là chưa đủ vì nếu ngày nghỉ vẫn nghĩ về công việc thì mệt mỏi không hết, nên cần đảm bảo thời gian tách khỏi công việc để nghỉ ngơi tâm thần và thể chất. Chỉ giảm giờ làm thêm, nói đó là vấn đề cá nhân hay làm việc cả ngày nghỉ đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3145,7 +3145,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi chi phan loai ky thi luong rac khong giam, can giam do dung mot lan va chon do dung duoc lap lai, coi tai che la bien phap cuoi cung. Chi phan loai, khong can tai che hay tang do dung mot lan deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ phân loại kỹ thì lượng rác không giảm, cần giảm đồ dùng một lần và chọn đồ dùng được lặp lại, coi tái chế là biện pháp cuối cùng. Chỉ phân loại, không cần tái chế hay tăng đồ dùng một lần đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -3166,7 +3166,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi so hoa giup nhieu nguoi xem duoc tai lieu co nguy co xuong cap nhung khong truyen tai duoc chat lieu va suc nang lich su cua hien vat, nen can vua bao ton hien vat vua so hoa de truyen rong. Chi so hoa, khong can bao ton hien vat hay khong nen cong khai deu khong phai quan diem.",
+   "exp": "Người nói nói số hóa giúp nhiều người xem được tài liệu có nguy cơ xuống cấp nhưng không truyền tải được chất liệu và sức nặng lịch sử của hiện vật, nên cần vừa bảo tồn hiện vật vừa số hóa để truyền rộng. Chỉ số hóa, không cần bảo tồn hiện vật hay không nên công khai đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3186,7 +3186,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la dia diem hop tuan sau da quyet dinh chua nen dap an da dat phong hop gan ga moi phu hop. Chi noi lich hop hay noi dia diem la cuoc hop deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là địa điểm họp tuần sau đã quyết định chưa nên đáp án đã đặt phòng họp gần ga mới phù hợp. Chỉ nói lịch họp hay nói địa điểm là cuộc họp đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
@@ -3206,7 +3206,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Yeu cau sao luu tai lieu can duoc chap nhan va lam ngay. Noi tai lieu la ban sao hay noi ban sao la tai lieu deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu sao lưu tài liệu cần được chấp nhận và làm ngay. Nói tài liệu là bản sao hay nói bản sao là tài liệu đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "女",
@@ -3226,7 +3226,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Loi chia se ve su ban ron gan day can duoc dap lai bang nhan dinh sang tuan se on dinh lai. Chi noi thoi gian ban ron hay noi vat va la ban ron deu khong phai cau tra loi tu nhien.",
+   "exp": "Lời chia sẻ về sự bận rộn gần đây cần được đáp lại bằng nhận định sang tuần sẽ ổn định lại. Chỉ nói thời gian bận rộn hay nói vất vả là bận rộn đều không phải câu trả lời tự nhiên.",
    "dlg": [
     {
      "sp": "男",
@@ -3246,7 +3246,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi la da xem du bao thoi tiet ngay mai chua nen dap an da xem va bao troi nang moi phu hop. Chi noi thoi tiet la ngay mai hay noi du bao la thoi tiet deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là đã xem dự báo thời tiết ngày mai chưa nên đáp án đã xem và bảo trời nắng mới phù hợp. Chỉ nói thời tiết là ngày mai hay nói dự báo là thời tiết đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "女",
@@ -3266,7 +3266,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Yeu cau giup cai dat may tinh moi can duoc chap nhan lich su kem theo thoi gian giup vao buoi chieu. Chi noi may tinh moi hay noi cai dat la may tinh deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu giúp cài đặt máy tính mới cần được chấp nhận lịch sự kèm theo thời gian giúp vào buổi chiều. Chỉ nói máy tính mới hay nói cài đặt là máy tính đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "男",
@@ -3287,7 +3287,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi neu bau khong khi kho chia se thi du co cua so tu van cung khong duoc dung, nen can cap tren va dong nghiep chu dong hoi tham va pho bien nhan thuc rang xin tu van khong phai yeu duoi. Chi lap cua so, noi do la van de ca nhan hay khong nen tu van deu khong phai quan diem.",
+   "exp": "Người nói nói nếu bầu không khí khó chia sẻ thì dù có cửa sổ tư vấn cũng không được dùng, nên cần cấp trên và đồng nghiệp chủ động hỏi thăm và phổ biến nhận thức rằng xin tư vấn không phải yếu đuối. Chỉ lập cửa sổ, nói đó là vấn đề cá nhân hay không nên tư vấn đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -3323,7 +3323,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro lien lac cong viec van co nhung co hoi tro chuyen va tu van giam, nen can tao co hoi giao luu co chu dich nhu gap dinh ky va thoi gian tro chuyen thoai mai. Chi nghi den hieu qua, huy bo lam viec tu xa hay noi co lap khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ liên lạc công việc vẫn có nhưng cơ hội trò chuyện và tư vấn giảm, nên cần tạo cơ hội giao lưu có chủ đích như gặp định kỳ và thời gian trò chuyện thoải mái. Chỉ nghĩ đến hiệu quả, hủy bỏ làm việc từ xa hay nói cô lập không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -3369,7 +3369,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi chi dao tao nguoi ke thua la chua du vi khong co khan gia thi nghe thuat khong ton tai, nen can vua truyen suc hap dan cho the he tre vua tang co hoi thuong thuc o truong. Chi dao tao nguoi ke thua, khong nen ke thua hay noi giam khan gia khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ đào tạo người kế thừa là chưa đủ vì không có khán giả thì nghệ thuật không tồn tại, nên cần vừa truyền sức hấp dẫn cho thế hệ trẻ vừa tăng cơ hội thưởng thức ở trường. Chỉ đào tạo người kế thừa, không nên kế thừa hay nói giảm khán giả không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3405,7 +3405,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi hoan nghenh chuyen doi giup giam ganh nang giao vien nhung neu khong co nguoi huong dan thi hoat dong khong the dien ra, nen can vua chuyen doi vua xay dung co che dao tao va dam bao nguoi huong dan. Chi chuyen doi, huy bo hoat dong hay noi dam bao nguoi huong dan khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người hoan nghênh chuyển đổi giúp giảm gánh nặng giáo viên nhưng nếu không có người hướng dẫn thì hoạt động không thể diễn ra, nên cần vừa chuyển đổi vừa xây dựng cơ chế đào tạo và đảm bảo người hướng dẫn. Chỉ chuyển đổi, hủy bỏ hoạt động hay nói đảm bảo người hướng dẫn không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -3451,7 +3451,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi nuoi trong giup cung cap on dinh nhung van can quan ly tai nguyen tu nhien nhu han che san luong danh bat va tuan thu mua cam danh bat, nen tuong lai mo ra khi tien ca hai huong. Chi nuoi trong, khong can han che hay noi doi sach vo nghia deu khong phai quan diem.",
+   "exp": "Người nói nói nuôi trồng giúp cung cấp ổn định nhưng vẫn cần quản lý tài nguyên tự nhiên như hạn chế sản lượng đánh bắt và tuân thủ mùa cấm đánh bắt, nên tương lai mở ra khi tiến cả hai hướng. Chỉ nuôi trồng, không cần hạn chế hay nói đối sách vô nghĩa đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -3487,7 +3487,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro ten truong khong do duoc nang luc lam viec, tuyen dung dang chuyen sang danh gia nang luc thuc te qua thuc tap va thu thach thuc te, dong thoi can dam bao tinh cong bang cua cach do. Chi xem hoc van, khong can do nang luc thuc te hay giu nguyen tieu chi deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ tên trường không đo được năng lực làm việc, tuyển dụng đang chuyển sang đánh giá năng lực thực tế qua thực tập và thử thách thực tế, đồng thời cần đảm bảo tính công bằng của cách đo. Chỉ xem học vấn, không cần đo năng lực thực tế hay giữ nguyên tiêu chí đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -3533,7 +3533,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi ngoai thieu vat tu, viec thieu noi thay do va cho con bu cung nhu ve sinh nha ve sinh xuong cap moi la van de lon hon, nen can vua cung cap vat tu vua bo tri vach ngan va thiet bi ve sinh. Chi cung cap vat tu, noi ve sinh khong phai van de hay khong can rieng tu deu khong phai quan diem.",
+   "exp": "Người nói nói ngoài thiếu vật tư, việc thiếu nơi thay đồ và cho con bú cũng như vệ sinh nhà vệ sinh xuống cấp mới là vấn đề lớn hơn, nên cần vừa cung cấp vật tư vừa bố trí vách ngăn và thiết bị vệ sinh. Chỉ cung cấp vật tư, nói vệ sinh không phải vấn đề hay không cần riêng tư đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3569,7 +3569,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi chi ro sau giai dau su quan tam se nhat dan, nen can co moi truong tap luyen hang ngay gan gui de the thao an sau vao doi song. Chi to chuc su kien, khong can phat trien the thao hay noi thoi quen van dong hang ngay khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ sau giải đấu sự quan tâm sẽ nhạt dần, nên cần có môi trường tập luyện hằng ngày gần gũi để thể thao ăn sâu vào đời sống. Chỉ tổ chức sự kiện, không cần phát triển thể thao hay nói thói quen vận động hằng ngày không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -3615,7 +3615,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi nong san Nhat duoc danh gia cao ve chat luong nhung gia cao va cung cap khong on dinh se can tro xuat khau, nen can vua phat huy chat luong vua giam chi phi va xay dung he thong cung cap. Chi dua vao chat luong, khong nen xuat khau hay noi gia cao khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói nông sản Nhật được đánh giá cao về chất lượng nhưng giá cao và cung cấp không ổn định sẽ cản trở xuất khẩu, nên cần vừa phát huy chất lượng vừa giảm chi phí và xây dựng hệ thống cung cấp. Chỉ dựa vào chất lượng, không nên xuất khẩu hay nói giá cao không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3651,7 +3651,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro chi xu ly sau khi bat nat xay ra la chua du, can moi truong de tre de chia se va su phoi hop giua giao vien va phu huynh de phat hien som, toan truong cung vao cuoc. Chi xu ly sau su viec, khong can doi sach hay noi tre khong nen chia se deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ chỉ xử lý sau khi bắt nạt xảy ra là chưa đủ, cần môi trường để trẻ dễ chia sẻ và sự phối hợp giữa giáo viên và phụ huynh để phát hiện sớm, toàn trường cùng vào cuộc. Chỉ xử lý sau sự việc, không cần đối sách hay nói trẻ không nên chia sẻ đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -3697,7 +3697,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi neu loi ich la giam that thoat truyen tai va vung manh khi thien tai, dong thoi gan voi kinh te dia phuong, nhung van co van de ve on dinh theo thoi tiet va chi phi thiet bi, nen can pin luu tru va hop tac dia phuong. Chi san xuat tai cho, khong can mo hinh nay hay noi anh huong thoi tiet khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nêu lợi ích là giảm thất thoát truyền tải và vững mạnh khi thiên tai, đồng thời gắn với kinh tế địa phương, nhưng vẫn có vấn đề về ổn định theo thời tiết và chi phí thiết bị, nên cần pin lưu trữ và hợp tác địa phương. Chỉ sản xuất tại chỗ, không cần mô hình này hay nói ảnh hưởng thời tiết không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3733,7 +3733,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro ngoai chi phi cao, gioi tre con lo lang ve ngoai ngu va thieu thong tin ve y nghia va thu tuc du hoc nen ngai thu thach, vi vay can vua ho tro chi phi vua giam lo lang va truyen tai thong tin de hieu. Chi ho tro chi phi, khong can du hoc hay noi thieu thong tin khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ ngoài chi phí cao, giới trẻ còn lo lắng về ngoại ngữ và thiếu thông tin về ý nghĩa và thủ tục du học nên ngại thử thách, vì vậy cần vừa hỗ trợ chi phí vừa giảm lo lắng và truyền tải thông tin dễ hiểu. Chỉ hỗ trợ chi phí, không cần du học hay nói thiếu thông tin không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -3779,7 +3779,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi thang may va duong doc giup nguoi dung xe lan di lai de hon nhung neu nhan vien ga va hanh khach khong thong cam va hop tac thi he thong khong hoat dong, nen can mo rong y thuc chu dong hoi tham va giup do. Chi trang bi thiet bi, khong can tiep can khong rao can hay noi su thong cam khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói thang máy và đường dốc giúp người dùng xe lăn đi lại dễ hơn nhưng nếu nhân viên ga và hành khách không thông cảm và hợp tác thì hệ thống không hoạt động, nên cần mở rộng ý thức chủ động hỏi thăm và giúp đỡ. Chỉ trang bị thiết bị, không cần tiếp cận không rào cản hay nói sự thông cảm không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -3817,7 +3817,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Giao su cho biet kich co pho bien la A1 va sinh vien se in theo kho A1. Viet lai ban thao, huy thuyet trinh hay in kho A4 deu khong phai phuong an.",
+   "exp": "Giáo sư cho biết kích cỡ phổ biến là A1 và sinh viên sẽ in theo khổ A1. Viết lại bản thảo, hủy thuyết trình hay in khổ A4 đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -3858,7 +3858,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nam nhan vien da lam truong ban nam ngoai va dong y tiep tuc lam truong ban nam nay kem theo dat cho. Huy tiec, nu nhan vien lam truong ban hay luan phien deu khong phai phuong an.",
+   "exp": "Nam nhân viên đã làm trưởng ban năm ngoái và đồng ý tiếp tục làm trưởng ban năm nay kèm theo đặt chỗ. Hủy tiệc, nữ nhân viên làm trưởng ban hay luân phiên đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -3894,7 +3894,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cap tren yeu cau tra loi trong hom nay vi cham tre se gay phien cho khach hang, va nu nhan vien se tra loi trong hom nay. Tra loi ngay mai, khong tra loi hay goi dien deu khong phai phuong an.",
+   "exp": "Cấp trên yêu cầu trả lời trong hôm nay vì chậm trễ sẽ gây phiền cho khách hàng, và nữ nhân viên sẽ trả lời trong hôm nay. Trả lời ngày mai, không trả lời hay gọi điện đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -3930,7 +3930,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Han nop la ngay kia nhung sinh vien chua du giay to, nen giao vien yeu cau chuan bi xong truoc ngay mai roi nop. Nop vao ngay kia, bo don hay nop khi thieu giay to deu khong phai phuong an.",
+   "exp": "Hạn nộp là ngày kia nhưng sinh viên chưa đủ giấy tờ, nên giáo viên yêu cầu chuẩn bị xong trước ngày mai rồi nộp. Nộp vào ngày kia, bỏ đơn hay nộp khi thiếu giấy tờ đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -3966,7 +3966,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi dan ong ngai nhac nho truc tiep vi kho xu nen chon nho cong ty quan ly nhac nho ho. Nhac truc tiep, chuyen nha hay chiu dung deu khong phai lua chon.",
+   "exp": "Người đàn ông ngại nhắc nhở trực tiếp vì khó xử nên chọn nhờ công ty quản lý nhắc nhở hộ. Nhắc trực tiếp, chuyển nhà hay chịu đựng đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -4002,7 +4002,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Khach hang muon doi sang co lon hon cua cung san pham vi khong vua kich co, va cua hang dong y xu ly bang doi hang. Hoan tien, bo tra hang hay mua san pham khac deu khong phai phuong an.",
+   "exp": "Khách hàng muốn đổi sang cỡ lớn hơn của cùng sản phẩm vì không vừa kích cỡ, và cửa hàng đồng ý xử lý bằng đổi hàng. Hoàn tiền, bỏ trả hàng hay mua sản phẩm khác đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -4038,7 +4038,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do la nha may moi di vao hoat dong lam tang cung ung, dong thoi cac don dat hang thua cung lang xuong. Tang nhap khau, nhu cau bien mat hay dong cua nha may deu khong phai ly do.",
+   "exp": "Lý do là nhà máy mới đi vào hoạt động làm tăng cung ứng, đồng thời các đơn đặt hàng thừa cũng lắng xuống. Tăng nhập khẩu, nhu cầu biến mất hay đóng cửa nhà máy đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -4074,7 +4074,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Ly do la cam giac su menh ghi lai phong canh dang thay doi do phat trien va giam dan so, de anh tro thanh manh moi nho ve phong canh da mat. Mai giua ky thuat, quang ba du lich hay doat giai deu khong phai ly do.",
+   "exp": "Lý do là cảm giác sứ mệnh ghi lại phong cảnh đang thay đổi do phát triển và giảm dân số, để ảnh trở thành manh mối nhớ về phong cảnh đã mất. Mài giũa kỹ thuật, quảng bá du lịch hay đoạt giải đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -4120,7 +4120,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi ngoai bat an kinh te, su da dang hoa gia tri song khien nguoi tre co the chon cach song cua minh ma khong can ket hon. Chi bat an kinh te, khong yeu duong hay che do hon nhan bien mat deu khong phai ly do.",
+   "exp": "Người nói nói ngoài bất an kinh tế, sự đa dạng hóa giá trị sống khiến người trẻ có thể chọn cách sống của mình mà không cần kết hôn. Chỉ bất an kinh tế, không yêu đương hay chế độ hôn nhân biến mất đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -4156,7 +4156,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do la su quan tam den van hoa Nhat qua phim hoat hinh va am nhac tang, dong thoi co hoi lam viec tai Nhat nhieu hon lam tang nhu cau tieng Nhat. Ky thi de hon, tai lieu mien phi hay mon bat buoc deu khong phai ly do.",
+   "exp": "Lý do là sự quan tâm đến văn hóa Nhật qua phim hoạt hình và âm nhạc tăng, đồng thời cơ hội làm việc tại Nhật nhiều hơn làm tăng nhu cầu tiếng Nhật. Kỳ thi dễ hơn, tài liệu miễn phí hay môn bắt buộc đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -4202,7 +4202,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Ly do la nhieu nguoi thay ganh nang chuc vu va su kien qua lon, dong thoi nhieu nguoi khong biet hoi khu pho lam nhung hoat dong gi. Hoat dong bien mat, nguoi tre khong song o dia phuong hay hoi phi cao deu khong phai ly do.",
+   "exp": "Lý do là nhiều người thấy gánh nặng chức vụ và sự kiện quá lớn, đồng thời nhiều người không biết hội khu phố làm những hoạt động gì. Hoạt động biến mất, người trẻ không sống ở địa phương hay hội phí cao đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -4238,7 +4238,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi ngoai gio lam dai, viec dung dien thoai vao ban dem khien giac ngu nong cung la nguyen nhan lon. Chi gio lam dai, noi dung cong viec kho hay day som deu khong phai nguyen nhan duoc neu.",
+   "exp": "Người nói nói ngoài giờ làm dài, việc dùng điện thoại vào ban đêm khiến giấc ngủ nông cũng là nguyên nhân lớn. Chỉ giờ làm dài, nội dung công việc khó hay dậy sớm đều không phải nguyên nhân được nêu.",
    "dlg": [
     {
      "sp": "男",
@@ -4274,7 +4274,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Ly do la kinh nghiem tai nan trong qua khu khi xem nhe thay doi thoi tiet da tro thanh bai hoc, nen tu do chu trong xac nhan thoi tiet va khong lap ke hoach lieu linh. Mai giua ky thuat, tang khach leo nui hay luat thay doi deu khong phai ly do.",
+   "exp": "Lý do là kinh nghiệm tai nạn trong quá khứ khi xem nhẹ thay đổi thời tiết đã trở thành bài học, nên từ đó chú trọng xác nhận thời tiết và không lập kế hoạch liều lĩnh. Mài giũa kỹ thuật, tăng khách leo núi hay luật thay đổi đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -4320,7 +4320,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi tim noi phat huy nang luc la tu nhien, nen quan trong khong phai so lan chuyen viec ma la hoc duoc gi va truong thanh ra sao qua chuyen viec. Cho chuyen viec la xau, tro lai lam viec tron doi hay cam chuyen viec deu khong phai quan diem.",
+   "exp": "Người nói nói tìm nơi phát huy năng lực là tự nhiên, nên quan trọng không phải số lần chuyển việc mà là học được gì và trưởng thành ra sao qua chuyển việc. Cho chuyển việc là xấu, trở lại làm việc trọn đời hay cấm chuyển việc đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -4341,7 +4341,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi thua nhan dam bao an toan quan trong nhung quy tac qua chat se lay mat co hoi hoc qua choi, nen can can bang an toan va tu do de giu lai noi tre duoc choi tu do. Quy dinh het, noi choi khong can thiet hay bo het quy tac deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận đảm bảo an toàn quan trọng nhưng quy tắc quá chặt sẽ lấy mất cơ hội học qua chơi, nên cần cân bằng an toàn và tự do để giữ lại nơi trẻ được chơi tự do. Quy định hết, nói chơi không cần thiết hay bỏ hết quy tắc đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -4362,7 +4362,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi muc dich khong phai chi to chuc ma la khi can co the hanh dong thuc su, nen can lich de tham gia va noi dung thuc tien de nguoi dan muon tham gia. Chi to chuc la muc dich, khong can tap luyen hay noi ty le tham gia khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói mục đích không phải chỉ tổ chức mà là khi cần có thể hành động thực sự, nên cần lịch để tham gia và nội dung thực tiễn để người dân muốn tham gia. Chỉ tổ chức là mục đích, không cần tập luyện hay nói tỷ lệ tham gia không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -4383,7 +4383,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi neu loi ich la tuoi ngon, giam ganh nang van chuyen va ho tro nong nghiep dia phuong, nhung chi dung nguyen lieu dia phuong se thieu chung loai va so luong, nen can can bang bo sung tu vung khac. Chi dung dia phuong, khong can mo hinh nay hay khong can ho tro nong nghiep deu khong phai quan diem.",
+   "exp": "Người nói nêu lợi ích là tươi ngon, giảm gánh nặng vận chuyển và hỗ trợ nông nghiệp địa phương, nhưng chỉ dùng nguyên liệu địa phương sẽ thiếu chủng loại và số lượng, nên cần cân bằng bổ sung từ vùng khác. Chỉ dùng địa phương, không cần mô hình này hay không cần hỗ trợ nông nghiệp đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -4404,7 +4404,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi gia tri cua rap chieu nam o man hinh lon, am thanh va trai nghiem xem cung khan gia khac, do la dieu dich vu phat truc khong co. Thay rap bang phat truc, noi khong can rap hay chi nen xem o nha deu khong phai quan diem.",
+   "exp": "Người nói nói giá trị của rạp chiếu nằm ở màn hình lớn, âm thanh và trải nghiệm xem cùng khán giả khác, đó là điều dịch vụ phát trực không có. Thay rạp bằng phát trực, nói không cần rạp hay chỉ nên xem ở nhà đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -4425,7 +4425,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi thoi dai internet lam kho phan biet do tin cay cua thong tin, nen thu vien khong chi cho muon sach ma con chon loc thong tin dang tin va ho tro nguoi dung, vai tro vi the tang len. Khong can thu vien, chi cho muon sach hay noi do tin cay khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói thời đại internet làm khó phân biệt độ tin cậy của thông tin, nên thư viện không chỉ cho mượn sách mà còn chọn lọc thông tin đáng tin và hỗ trợ người dùng, vai trò vì thế tăng lên. Không cần thư viện, chỉ cho mượn sách hay nói độ tin cậy không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -4445,7 +4445,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau giup chuyen nha vao Chu nhat can duoc chap nhan kem theo xac nhan se giup vao Chu nhat. Chi noi chuyen nha la Chu nhat hay noi giup do la chuyen nha deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu giúp chuyển nhà vào Chủ nhật cần được chấp nhận kèm theo xác nhận sẽ giúp vào Chủ nhật. Chỉ nói chuyển nhà là Chủ nhật hay nói giúp đỡ là chuyển nhà đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "男",
@@ -4465,7 +4465,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la da doc xong sach chua nen dap an chua xong, moi doc duoc khoang mot nua moi phu hop. Noi sach la da doc xong hay noi sach la roi deu khong phai cau tra loi tu nhien.",
+   "exp": "Câu hỏi là đã đọc xong sách chưa nên đáp án chưa xong, mới đọc được khoảng một nửa mới phù hợp. Nói sách là đã đọc xong hay nói sách là rồi đều không phải câu trả lời tự nhiên.",
    "dlg": [
     {
      "sp": "女",
@@ -4485,7 +4485,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi ngay tra luong thang sau la khi nao nen dap an ngay 25 moi phu hop. Chi noi luong la thang sau hay noi ngay tra luong la thang sau deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi ngày trả lương tháng sau là khi nào nên đáp án ngày 25 mới phù hợp. Chỉ nói lương là tháng sau hay nói ngày trả lương là tháng sau đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
@@ -4505,7 +4505,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la co the tham du cuoc hop ve ke hoach moi hay khong nen dap an dong y kem theo dieu kien buoi chieu moi phu hop. Chi noi cuoc hop moi hay noi ke hoach la cuoc hop deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là có thể tham dự cuộc họp về kế hoạch mới hay không nên đáp án đồng ý kèm theo điều kiện buổi chiều mới phù hợp. Chỉ nói cuộc họp mới hay nói kế hoạch là cuộc họp đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "女",
@@ -4525,7 +4525,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi la gan day co tap the duc hay khong nen dap an moi sang deu chay bo moi tu nhien. Chi noi tap the duc la gan day hay noi gan day la tap the duc deu khong phai cau tra loi.",
+   "exp": "Câu hỏi là gần đây có tập thể dục hay không nên đáp án mỗi sáng đều chạy bộ mới tự nhiên. Chỉ nói tập thể dục là gần đây hay nói gần đây là tập thể dục đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "男",
@@ -4546,7 +4546,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi tang luong thi chua tao ra cam giac dang lam viec, can cam nhan cong viec co ich cho ai do va co quyen tu quyet trong cach lam viec. Chi tang luong, khong can cam giac dang lam viec hay noi y nghia cong viec khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ tăng lương thì chưa tạo ra cảm giác đáng làm việc, cần cảm nhận công việc có ích cho ai đó và có quyền tự quyết trong cách làm việc. Chỉ tăng lương, không cần cảm giác đáng làm việc hay nói ý nghĩa công việc không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -4582,7 +4582,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro bep an tre em khong chi la noi cung cap bua an ma con la noi tre an tam giao luu voi nguoi lon dia phuong, gia tri nam o moi quan he dia phuong. Chi cung cap bua an, khong can bep an hay noi ket noi dia phuong khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ bếp ăn trẻ em không chỉ là nơi cung cấp bữa ăn mà còn là nơi trẻ an tâm giao lưu với người lớn địa phương, giá trị nằm ở mối quan hệ địa phương. Chỉ cung cấp bữa ăn, không cần bếp ăn hay nói kết nối địa phương không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -4628,7 +4628,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi quy dinh qua chat se lam nha kho o va thuc day pha bo, nen can cho phep cai tao cach nhiet va chong dong dat de co the tiep tuc sinh song. Chi siet quy dinh, pha bo het hay noi de o khong lien quan den bao ton deu khong phai quan diem.",
+   "exp": "Người nói nói quy định quá chặt sẽ làm nhà khó ở và thúc đẩy phá bỏ, nên cần cho phép cải tạo cách nhiệt và chống động đất để có thể tiếp tục sinh sống. Chỉ siết quy định, phá bỏ hết hay nói dễ ở không liên quan đến bảo tồn đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -4664,7 +4664,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi thua nhan giam hoc sinh la nguyen nhan nhung truong trung hoc con la noi tap hop thanh nien dia phuong, nen can vua xem xet sap nhap vua suy nghi gia tri thong qua gan ket dia phuong. Chi sap nhap, huy bo het hay noi gan ket dia phuong khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận giảm học sinh là nguyên nhân nhưng trường trung học còn là nơi tập hợp thanh niên địa phương, nên cần vừa xem xét sáp nhập vừa suy nghĩ giá trị thông qua gắn kết địa phương. Chỉ sáp nhập, hủy bỏ hết hay nói gắn kết địa phương không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -4710,7 +4710,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi tang dieu hoa se lam tang nhiet thai va khien do thi nong hon, nen can cay xanh tren mai va tuong cung nhu cai thien cach nhiet de lam mat chinh do thi. Chi tang dieu hoa, khong can doi sach hay noi cay xanh khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói tăng điều hòa sẽ làm tăng nhiệt thải và khiến đô thị nóng hơn, nên cần cây xanh trên mái và tường cũng như cải thiện cách nhiệt để làm mát chính đô thị. Chỉ tăng điều hòa, không cần đối sách hay nói cây xanh không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -4746,7 +4746,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi thua nhan cam bien phat hien thay doi sinh hoat la loi ich lon nhung neu khong co nguoi chay den thi vo nghia, nen cong nghe la cong cu ho tro chu khong thay the su quan tam cua con nguoi. Chi dung thiet bi, khong can giam sat hay khong nen dung cong nghe deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận cảm biến phát hiện thay đổi sinh hoạt là lợi ích lớn nhưng nếu không có người chạy đến thì vô nghĩa, nên công nghệ là công cụ hỗ trợ chứ không thay thế sự quan tâm của con người. Chỉ dùng thiết bị, không cần giám sát hay không nên dùng công nghệ đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -4797,7 +4797,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi ban hang luu dong va ho tro mua sam dang duoc trien khai nhung cua hang con la noi nguoi cao tuoi gap go moi nguoi, nen can vua ho tro mua sam vua giu gin ket noi dia phuong. Chi giao hang, khong can cua hang dia phuong hay noi mua sam cua nguoi cao tuoi khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói bán hàng lưu động và hỗ trợ mua sắm đang được triển khai nhưng cửa hàng còn là nơi người cao tuổi gặp gỡ mọi người, nên cần vừa hỗ trợ mua sắm vừa giữ gìn kết nối địa phương. Chỉ giao hàng, không cần cửa hàng địa phương hay nói mua sắm của người cao tuổi không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -4833,7 +4833,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro neu thong tin cong bo khong phan anh thuc te thi vo nghia, nen can co che xac nhan cua ben thu ba de dam bao do tin cay. Chi bat buoc cong bo, khong nen cong bo hay noi do tin cay khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ nếu thông tin công bố không phản ánh thực tế thì vô nghĩa, nên cần cơ chế xác nhận của bên thứ ba để đảm bảo độ tin cậy. Chỉ bắt buộc công bố, không nên công bố hay nói độ tin cậy không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -4879,7 +4879,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi dich ngon ngu thi khong truyen tai duoc van hoa va tap quan phia sau, nen can bo sung boi canh van hoa trong phu de va quang ba. Chi chat luong tac pham, khong nen mo rong ra nuoc ngoai hay khong can dich deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ dịch ngôn ngữ thì không truyền tải được văn hóa và tập quán phía sau, nên cần bổ sung bối cảnh văn hóa trong phụ đề và quảng bá. Chỉ chất lượng tác phẩm, không nên mở rộng ra nước ngoài hay không cần dịch đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -4915,7 +4915,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro chi cong bo luan van thi khong den duoc xa hoi, can co che ket noi ket qua nghien cuu voi giai quyet van de xa hoi thong qua hop tac voi doanh nghiep va chinh quyen. Chi cong bo luan van, khong nen tra lai cho xa hoi hay noi lien ket khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ chỉ công bố luận văn thì không đến được xã hội, cần cơ chế kết nối kết quả nghiên cứu với giải quyết vấn đề xã hội thông qua hợp tác với doanh nghiệp và chính quyền. Chỉ công bố luận văn, không nên trả lại cho xã hội hay nói liên kết không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -4961,7 +4961,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi chi luyen nao la chua du, can ket hop van dong giup duy tri chuc nang nao va giao luu xa hoi tao kich thich, dong thoi thoi quen song tu khi tre cung quan trong. Chi luyen nao, khong can phong ngua hay noi tham gia xa hoi khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ luyện não là chưa đủ, cần kết hợp vận động giúp duy trì chức năng não và giao lưu xã hội tạo kích thích, đồng thời thói quen sống từ khi trẻ cũng quan trọng. Chỉ luyện não, không cần phòng ngừa hay nói tham gia xã hội không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -4997,7 +4997,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi thua nhan che do da duoc hoan thien nhung neu noi lam viec khong thong cam thi kho su dung, nen can vua hoan thien che do vua co su thong cam va cach lam viec linh hoat. Chi hoan thien che do, khong can can bang hay noi su thong cam khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận chế độ đã được hoàn thiện nhưng nếu nơi làm việc không thông cảm thì khó sử dụng, nên cần vừa hoàn thiện chế độ vừa có sự thông cảm và cách làm việc linh hoạt. Chỉ hoàn thiện chế độ, không cần cân bằng hay nói sự thông cảm không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -5043,7 +5043,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi tau du lich duoc yeu thich vi phong canh qua cua so va bua an tren tau tro thanh muc dich chuyen di, nhung chi tau du lich thi khong chong do duoc tuong lai duong sat, van can vai tro phuong tien hang ngay. Chi tau du lich, noi duong sat chi la phuong tien hay noi nguoi dung hang ngay khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói tàu du lịch được yêu thích vì phong cảnh qua cửa sổ và bữa ăn trên tàu trở thành mục đích chuyến đi, nhưng chỉ tàu du lịch thì không chống đỡ được tương lai đường sắt, vẫn cần vai trò phương tiện hằng ngày. Chỉ tàu du lịch, nói đường sắt chỉ là phương tiện hay nói người dùng hằng ngày không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -5081,7 +5081,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Giao su nhan xet hinh qua nho kho nhin nen sinh vien se phong to hinh va sua slide. Viet lai slide, huy thuyet trinh hay xoa hinh deu khong phai phuong an.",
+   "exp": "Giáo sư nhận xét hình quá nhỏ khó nhìn nên sinh viên sẽ phóng to hình và sửa slide. Viết lại slide, hủy thuyết trình hay xóa hình đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -5117,7 +5117,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Tai lieu qua lon nen gui mail khong tien, hai nguoi chon tai len dam may va gui duong dan cho nguoi tham du truoc ngay hop mot ngay. Gui mail, phat trong ngay hop hay khong chia se deu khong phai phuong an.",
+   "exp": "Tài liệu quá lớn nên gửi mail không tiện, hai người chọn tải lên đám mây và gửi đường dẫn cho người tham dự trước ngày họp một ngày. Gửi mail, phát trong ngày họp hay không chia sẻ đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -5153,7 +5153,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cap tren yeu cau nop don xin lam them truoc ngay mai, va nu nhan vien se nop truoc ngay mai. Nop thang sau, khong nop hay nop bang mieng deu khong phai phuong an.",
+   "exp": "Cấp trên yêu cầu nộp đơn xin làm thêm trước ngày mai, và nữ nhân viên sẽ nộp trước ngày mai. Nộp tháng sau, không nộp hay nộp bằng miệng đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -5189,7 +5189,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Sach dang duoc muon nen sinh vien dang ky truoc va se cho thu vien lien lac qua mail khi co sach. Mua sach, muon sach khac hay khong dang ky deu khong phai lua chon.",
+   "exp": "Sách đang được mượn nên sinh viên đăng ký trước và sẽ chờ thư viện liên lạc qua mail khi có sách. Mua sách, mượn sách khác hay không đăng ký đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -5225,7 +5225,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi cho rang quyet dinh noi o truoc se de lap lich trinh hon nen se chon noi o truoc. Lap lich truoc, huy chuyen hay khong quyet dinh diem den deu khong phai phuong an.",
+   "exp": "Hai người cho rằng quyết định nơi ở trước sẽ dễ lập lịch trình hơn nên sẽ chọn nơi ở trước. Lập lịch trước, hủy chuyến hay không quyết định điểm đến đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -5261,7 +5261,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nam nhan vien ban thoi gian co viec vao Chu nhat nhung co the doi sang thu Bay nen hai nguoi chon doi ca Chu nhat sang thu Bay. Tu choi ca, nghi viec hay nghi Chu nhat deu khong phai lua chon.",
+   "exp": "Nam nhân viên bận thời gian có việc vào Chủ nhật nhưng có thể đổi sang thứ Bảy nên hai người chọn đổi ca Chủ nhật sang thứ Bảy. Từ chối ca, nghỉ việc hay nghỉ Chủ nhật đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -5297,7 +5297,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi doanh nghiep khong nhin ro trien vong kinh te nen than trong tang luong, dong thoi nhieu doanh nghiep uu tien dau tu thiet bi. Loi nhuan giam, giam lao dong hay thieu luat deu khong phai ly do.",
+   "exp": "Người nói nói doanh nghiệp không nhìn rõ triển vọng kinh tế nên thận trọng tăng lương, đồng thời nhiều doanh nghiệp ưu tiên đầu tư thiết bị. Lợi nhuận giảm, giảm lao động hay thiếu luật đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -5333,7 +5333,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi neu moi truong sach se lam thay doi hoat dong mien dich va su gia tang thuc pham che bien cung lien quan, nen tang di ung la ket qua chong lap cua moi truong va an uong. Chi di truyen, thieu van dong hay chi moi truong truong hoc deu khong phai nguyen nhan.",
+   "exp": "Người nói nêu môi trường sạch sẽ làm thay đổi hoạt động miễn dịch và sự gia tăng thực phẩm chế biến cũng liên quan, nên tăng dị ứng là kết quả chồng lấp của môi trường và ăn uống. Chỉ di truyền, thiếu vận động hay chỉ môi trường trường học đều không phải nguyên nhân.",
    "dlg": [
     {
      "sp": "男",
@@ -5369,7 +5369,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Ky si noi cang thang se khong phat huy duoc suc manh binh thuong, nen can giu tam binh thuong bang cach hit tho sau va tin vao nuoc di cua minh. Chap vao thang thua, chi nghien cuu doi thu hay dua vao may man deu khong phai trong tam.",
+   "exp": "Kỳ sĩ nói căng thẳng sẽ không phát huy được sức mạnh bình thường, nên cần giữ tâm bình thường bằng cách hít thở sâu và tin vào nước đi của mình. Chấp vào thắng thua, chỉ nghiên cứu đối thủ hay dựa vào may mắn đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -5415,7 +5415,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Ly do la co the tuyen nhan tai xuat sac song o dia phuong va khi tru so chinh bi thien tai thi van phong dia phuong van duy tri nghiep vu. Giam tien thue, dong cua tru so chinh hay giam nhan su deu khong phai ly do.",
+   "exp": "Lý do là có thể tuyển nhân tài xuất sắc sống ở địa phương và khi trụ sở chính bị thiên tai thì văn phòng địa phương vẫn duy trì nghiệp vụ. Giảm tiền thuê, đóng cửa trụ sở chính hay giảm nhân sự đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -5461,7 +5461,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nhieu nguoi kho danh thoi gian tap sau gio lam, nhung tap ngan vao gio nghi trua se nang cao kha nang tap trung buoi chieu, nen nen bat dau tu tap ngan gio trua. Tap dai sau gio lam, khong tap hay chi tap ngay nghi deu khong phai trong tam.",
+   "exp": "Người nói nói nhiều người khó dành thời gian tập sau giờ làm, nhưng tập ngắn vào giờ nghỉ trưa sẽ nâng cao khả năng tập trung buổi chiều, nên nên bắt đầu từ tập ngắn giờ trưa. Tập dài sau giờ làm, không tập hay chỉ tập ngày nghỉ đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -5497,7 +5497,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi neu ky vong tang khach du lich va thu hut doanh nghiep, nhung cung canh bao vung xa ga co the suy yeu trong khi quanh ga phat trien, nen can giao thong noi ga voi vung xung quanh. Chi tang khach, khong can mo rong hay chi phat trien quanh ga deu khong phai noi dung.",
+   "exp": "Người nói nêu kỳ vọng tăng khách du lịch và thu hút doanh nghiệp, nhưng cũng cảnh báo vùng xa ga có thể suy yếu trong khi quanh ga phát triển, nên cần giao thông nối ga với vùng xung quanh. Chỉ tăng khách, không cần mở rộng hay chỉ phát triển quanh ga đều không phải nội dung.",
    "dlg": [
     {
      "sp": "男",
@@ -5533,7 +5533,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Ly do la nguyen lieu dia phuong ngon nhat vao dung mua va viec nhin thay mat nguoi san xuat lam sau them hieu biet ve nguyen lieu. Gia re, chi quang ba dia phuong hay khong co nguyen lieu khac deu khong phai ly do.",
+   "exp": "Lý do là nguyên liệu địa phương ngon nhất vào đúng mùa và việc nhìn thấy mặt người sản xuất làm sâu thêm hiểu biết về nguyên liệu. Giá rẻ, chỉ quảng bá địa phương hay không có nguyên liệu khác đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -5579,7 +5579,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi an danh giup noi y kien kho noi nhung cung de viet loi gay ton thuong, nen van de nam o cach dung an danh, can y thuc ca tu do va trach nhiem. Cam an danh, chi thay tu do hay cho moi bai an danh deu duoc phep deu khong phai quan diem.",
+   "exp": "Người nói nói ẩn danh giúp nói ý kiến khó nói nhưng cũng dễ viết lời gây tổn thương, nên vấn đề nằm ở cách dùng ẩn danh, cần ý thức cả tự do và trách nhiệm. Cấm ẩn danh, chỉ thấy tự do hay cho mọi bài ẩn danh đều được phép đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -5600,7 +5600,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi nguyen nhan thieu nguoi la co che kho tham gia do thoi gian dai va vai tro nang, nen can cho phep tham gia tu thoi gian ngan va chia nho vai tro. Khong can tinh nguyen, ep buoc tap hop hay vai tro cang nang cang tot deu khong phai quan diem.",
+   "exp": "Người nói nói nguyên nhân thiếu người là cơ chế khó tham gia do thời gian dài và vai trò nặng, nên cần cho phép tham gia từ thời gian ngắn và chia nhỏ vai trò. Không cần tình nguyện, ép buộc tập hợp hay vai trò càng nặng càng tốt đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -5621,7 +5621,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi hinh thuc ngay cang kho giu nhung dieu quan trong la y nghia phia sau va moi quan he gia dinh dia phuong, nen du hinh thuc thay doi ma y nghia duoc truyen thi van la ke thua. Bat buoc giu hinh thuc nghiem ngat, khong nen don gian hoa hay bo le hoi deu khong phai quan diem.",
+   "exp": "Người nói nói hình thức ngày càng khó giữ nhưng điều quan trọng là ý nghĩa phía sau và mối quan hệ gia đình địa phương, nên dù hình thức thay đổi mà ý nghĩa được truyền thì vẫn là kế thừa. Bắt buộc giữ hình thức nghiêm ngặt, không nên đơn giản hóa hay bỏ lễ hội đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -5642,7 +5642,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi ngoai van de nhan thuc, cong viec ban ron khien khong co thoi gian lam viec nha, nen can vua nang cao nhan thuc vua xem lai cach lam viec de dam bao thoi gian. Chi nang cao nhan thuc, noi nam gioi khong nen tham gia hay noi khong phai van de thoi gian deu khong phai quan diem.",
+   "exp": "Người nói nói ngoài vấn đề nhận thức, công việc bận rộn khiến không có thời gian làm việc nhà, nên cần vừa nâng cao nhận thức vừa xem lại cách làm việc để đảm bảo thời gian. Chỉ nâng cao nhận thức, nói nam giới không nên tham gia hay nói không phải vấn đề thời gian đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -5663,7 +5663,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi chi ro nhieu thuc pham thua o gia dinh do mua qua nhieu khi giam gia roi khong dung het phai vut, nen can kiem tra tu lanh truoc khi mua va chi mua du can. Noi khong phai van de gia dinh, mua nhieu do giam gia hay khong can giam deu khong phai quan diem.",
+   "exp": "Người nói chỉ rõ nhiều thực phẩm thừa ở gia đình do mua quá nhiều khi giảm giá rồi không dùng hết phải vứt, nên cần kiểm tra tủ lạnh trước khi mua và chỉ mua đủ cần. Nói không phải vấn đề gia đình, mua nhiều do giảm giá hay không cần giảm đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -5684,7 +5684,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi chi hoc thuoc nam thang va su kien thi khong hieu y nghia lich su, nen can ren kha nang suy nghi ve boi canh va ly do su kien xay ra. Chi hoc thuoc, khong can giao duc lich su hay noi khong nen hoc thuoc deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ học thuộc năm tháng và sự kiện thì không hiểu ý nghĩa lịch sử, nên cần rèn khả năng suy nghĩ về bối cảnh và lý do sự kiện xảy ra. Chỉ học thuộc, không cần giáo dục lịch sử hay nói không nên học thuộc đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -5704,7 +5704,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau danh thoi gian gap vao thu Hai tuan sau can duoc dong y kem theo xac nhan buoi chieu thu Hai duoc. Chi noi gap la tuan sau hay noi thoi gian la gap deu khong tra loi loi xin.",
+   "exp": "Yêu cầu dành thời gian gặp vào thứ Hai tuần sau cần được đồng ý kèm theo xác nhận buổi chiều thứ Hai được. Chỉ nói gặp là tuần sau hay nói thời gian là gặp đều không trả lời lời xin.",
    "dlg": [
     {
      "sp": "女",
@@ -5724,7 +5724,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi la co biet cach dung may in moi hay khong nen dap an da doc sach huong dan moi phu hop. Chi noi may in moi hay noi cach dung la may in deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là có biết cách dùng máy in mới hay không nên đáp án đã đọc sách hướng dẫn mới phù hợp. Chỉ nói máy in mới hay nói cách dùng là máy in đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
@@ -5744,7 +5744,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la chieu mai co chut thoi gian hay khong nen dap an dong y kem theo moc tu 3 gio moi phu hop. Chi noi buoi chieu la ngay mai hay noi thoi gian la buoi chieu deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là chiều mai có chút thời gian hay không nên đáp án đồng ý kèm theo mốc từ 3 giờ mới phù hợp. Chỉ nói buổi chiều là ngày mai hay nói thời gian là buổi chiều đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "女",
@@ -5764,7 +5764,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi tham gan day co om dau hay khong nen dap an phu dinh kem theo bao dang khoe manh moi tu nhien. Chi noi suc khoe la gan day hay noi khoe manh la suc khoe deu khong phai cau tra loi.",
+   "exp": "Câu hỏi thăm gần đây có ốm đau hay không nên đáp án phủ định kèm theo bảo đang khỏe mạnh mới tự nhiên. Chỉ nói sức khỏe là gần đây hay nói khỏe mạnh là sức khỏe đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "男",
@@ -5784,7 +5784,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la ke hoach du lich thang sau da lap chua nen dap an moi quyet dinh noi o moi phu hop. Chi noi chuyen du lich la thang sau hay noi ke hoach la chuyen du lich deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là kế hoạch du lịch tháng sau đã lập chưa nên đáp án mới quyết định nơi ở mới phù hợp. Chỉ nói chuyến du lịch là tháng sau hay nói kế hoạch là chuyến du lịch đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "女",
@@ -5805,7 +5805,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi rac vu tru tang se can tro phong ve tinh moi, nen can vua thiet ke khong thai rac vua co ky thuat thu gom. Chi mo rong phat trien, noi rac khong phai van de hay ngung phong ve tinh deu khong phai quan diem.",
+   "exp": "Người nói nói rác vũ trụ tăng sẽ cản trở phóng vệ tinh mới, nên cần vừa thiết kế không thải rác vừa có kỹ thuật thu gom. Chỉ mở rộng phát triển, nói rác không phải vấn đề hay ngừng phóng vệ tinh đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -5841,7 +5841,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro phong van khong thay duoc su phu hop, nhung neu noi dung thuc tap xa roi cong viec thuc te thi cung khong co ich, nen can dua noi dung thuc tap gan voi cong viec thuc te. Chi phong van, khong can thuc tap hay noi lech lac tuyen dung khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ phỏng vấn không thấy được sự phù hợp, nhưng nếu nội dung thực tập xa rời công việc thực tế thì cũng không có ích, nên cần đưa nội dung thực tập gần với công việc thực tế. Chỉ phỏng vấn, không cần thực tập hay nói lệch lạc tuyển dụng không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -5887,7 +5887,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi neu mon an Nhat duoc chu y vi lay ca va rau lam trung tam, it dung dau mo, nhung bua an hien dai dang xa roi mon Nhat voi thuc pham che bien nhieu muoi va thit, nen can xem lai cai hay cua mon Nhat. Noi mon Nhat khong lien quan suc khoe, thit tot hon hay tang thuc pham che bien deu khong phai quan diem.",
+   "exp": "Người nói nêu món ăn Nhật được chú ý vì lấy cá và rau làm trung tâm, ít dùng dầu mỡ, nhưng bữa ăn hiện đại đang xa rời món Nhật với thực phẩm chế biến nhiều muối và thịt, nên cần xem lại cái hay của món Nhật. Nói món Nhật không liên quan sức khỏe, thịt tốt hơn hay tăng thực phẩm chế biến đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -5923,7 +5923,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro nguoi cao tuoi cam thay y nghia song khi giao luu voi nguoi tre, va nguoi tre hoc duoc nhieu tu kinh nghiem cua nguoi cao tuoi, nen viec tao noi giao luu xuyen the he se tang cuong ket noi dia phuong. Khong can giao luu, chi nguoi tre hoc hay nguoi cao tuoi khong nen giao luu deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ người cao tuổi cảm thấy ý nghĩa sống khi giao lưu với người trẻ, và người trẻ học được nhiều từ kinh nghiệm của người cao tuổi, nên việc tạo nơi giao lưu xuyên thế hệ sẽ tăng cường kết nối địa phương. Không cần giao lưu, chỉ người trẻ học hay người cao tuổi không nên giao lưu đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -5969,7 +5969,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi neu cam bien va thiet bi bay khong nguoi lai giup nang cao hieu qua va on dinh san luong, nhung chi phi thiet bi cao va thieu nhan luc thanh thao cong nghe, nen can vua ho tro chi phi vua dao tao nhan luc. Chi dua cong nghe, khong can nong nghiep thong minh hay noi du nhan luc deu khong phai quan diem.",
+   "exp": "Người nói nêu cảm biến và thiết bị bay không người lái giúp nâng cao hiệu quả và ổn định sản lượng, nhưng chi phí thiết bị cao và thiếu nhân lực thành thạo công nghệ, nên cần vừa hỗ trợ chi phí vừa đào tạo nhân lực. Chỉ dựa công nghệ, không cần nông nghiệp thông minh hay nói đủ nhân lực đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -6005,7 +6005,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi thua nhan tang khach du lich tot cho kinh te dia phuong nhung tang ganh nang cho thien nhien, nen can han che so nguoi vao va dung doanh thu du lich chi cho bao ton. Chi tang khach, bo du lich dia phuong hay noi anh huong moi truong khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận tăng khách du lịch tốt cho kinh tế địa phương nhưng tăng gánh nặng cho thiên nhiên, nên cần hạn chế số người vào và dùng doanh thu du lịch chi cho bảo tồn. Chỉ tăng khách, bỏ du lịch địa phương hay nói ảnh hưởng môi trường không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -6051,7 +6051,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nguoi cao tuoi khong dung dien thoai thong minh se khong nhan duoc thong tin ung dung, nen can ket hop loa phong chong thien tai va loi nhac cua hang xom de thong tin den duoc moi nguoi. Chi cong nghe moi, khong can thong tin cho nguoi cao tuoi hay noi khong dung dien thoai khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói người cao tuổi không dùng điện thoại thông minh sẽ không nhận được thông tin ứng dụng, nên cần kết hợp loa phòng chống thiên tai và lời nhắc của hàng xóm để thông tin đến được mọi người. Chỉ công nghệ mới, không cần thông tin cho người cao tuổi hay nói không dùng điện thoại không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -6087,7 +6087,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro so nguoi lam viec cho doanh nghiep thanh pho nhung song o dia phuong tang, nhung chi chuyen den la chua du ma can tham gia hoat dong dia phuong va an re tai dia phuong. Chi mo rong lam viec tu xa, khong can chuyen den hay noi moi quan he khong phai van de deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ số người làm việc cho doanh nghiệp thành phố nhưng sống ở địa phương tăng, nhưng chỉ chuyển đến là chưa đủ mà cần tham gia hoạt động địa phương và ăn rẻ tại địa phương. Chỉ mở rộng làm việc từ xa, không cần chuyển đến hay nói mối quan hệ không phải vấn đề đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -6133,7 +6133,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi nghe nhan tre vua hoc ky thuat truyen thong vua thu thach bieu dat moi, nhung van can thay truyen nghe va thi truong danh gia tac pham, ca ba yeu to moi mo ra tuong lai. Chi nghe nhan tre, khong nen bao ton hay khong can thu thach deu khong phai quan diem.",
+   "exp": "Người nói nói nghệ nhân trẻ vừa học kỹ thuật truyền thống vừa thử thách biểu đạt mới, nhưng vẫn cần thầy truyền nghề và thị trường đánh giá tác phẩm, cả ba yếu tố mới mở ra tương lai. Chỉ nghệ nhân trẻ, không nên bảo tồn hay không cần thử thách đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -6169,7 +6169,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi giai thich tu cuu la tu bao ve ban than, tuong tro la dan dia phuong giup nhau, va chi chuan bi ca nhan thi co gioi han nen can ket hop ca hai. Chi tu cuu, chi chinh quyen lam hay khong can hop tac dan cu deu khong phai ket luan.",
+   "exp": "Hai người giải thích tự cứu là tự bảo vệ bản thân, tương trợ là dân địa phương giúp nhau, và chỉ chuẩn bị cá nhân thì có giới hạn nên cần kết hợp cả hai. Chỉ tự cứu, chỉ chính quyền làm hay không cần hợp tác dân cư đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -6215,7 +6215,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi thiet bi dung tu dong giup ngan tai nan nhung nhieu tai nan do thieu chu y cua con nguoi va xem nhe quy tac, nen an toan duong sat duoc chong do boi ca tien bo ky thuat va su chu y cua con nguoi. Chi ky thuat, khong can doi sach hay noi y thuc hanh khach khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói thiết bị dừng tự động giúp ngăn tai nạn nhưng nhiều tai nạn do thiếu chú ý của con người và xem nhẹ quy tắc, nên an toàn đường sắt được chống đỡ bởi cả tiến bộ kỹ thuật và sự chú ý của con người. Chỉ kỹ thuật, không cần đối sách hay nói ý thức hành khách không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -6251,7 +6251,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi chi ro chi gioi han thoi gian thi tre khong tam phuc neu quy tac do nguoi lon ap dat mot chieu, nen can vua gioi han vua thao luan voi tre de xay dung quy tac ma tre de tuan thu. Chi gioi han, khong can quy tac hay noi tre khong can tuan thu deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ chỉ giới hạn thời gian thì trẻ không tâm phục nếu quy tắc do người lớn áp đặt một chiều, nên cần vừa giới hạn vừa thảo luận với trẻ để xây dựng quy tắc mà trẻ dễ tuân thủ. Chỉ giới hạn, không cần quy tắc hay nói trẻ không cần tuân thủ đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -6297,7 +6297,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi xe dap tang do it tai trong moi truong va tot cho suc khoe nhung moi truong chay an toan chua du va tai nan voi nguoi di bo van xay ra, nen can khong gian chay rieng de tach dong di chuyen. Cam xe dap, giu xe hoi lam trung tam hay noi tai nan khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói xe đạp tăng do ít tải trọng môi trường và tốt cho sức khỏe nhưng môi trường chạy an toàn chưa đủ và tai nạn với người đi bộ vẫn xảy ra, nên cần không gian chạy riêng để tách dòng di chuyển. Cấm xe đạp, giữ xe hơi làm trung tâm hay nói tai nạn không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -6335,7 +6335,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Giao su yeu cau lam ban nhap phan ket luan truoc de xem, va nu sinh vien se lam ban nhap truoc tuan sau. Bo nop luan van, xoa ket luan hay chi hoan thanh vao cuoi thang sau deu khong phai phuong an.",
+   "exp": "Giáo sư yêu cầu làm bản nháp phần kết luận trước để xem, và nữ sinh viên sẽ làm bản nháp trước tuần sau. Bỏ nộp luận văn, xóa kết luận hay chỉ hoàn thành vào cuối tháng sau đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -6371,7 +6371,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi thich hoi truong gan ga vi tien di lai nhung lo phi thue cao nen se lien lac hoi truong xac nhan phi truoc. Huy su kien, dung phong hop cong ty hay dat khong xac nhan phi deu khong phai phuong an.",
+   "exp": "Hai người thích hội trường gần ga vì tiện đi lại nhưng lo phí thuê cao nên sẽ liên lạc hội trường xác nhận phí trước. Hủy sự kiện, dùng phòng họp công ty hay đặt không xác nhận phí đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -6412,7 +6412,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Tai lieu bi nhan xet qua chuyen mon nen nam nhan vien se giam thuat ngu chuyen mon va sua sang cach dien dat de hieu. Tang thuat ngu, khong sua hay bo giai thich deu khong phai phuong an.",
+   "exp": "Tài liệu bị nhận xét quá chuyên môn nên nam nhân viên sẽ giảm thuật ngữ chuyên môn và sửa sang cách diễn đạt dễ hiểu. Tăng thuật ngữ, không sửa hay bỏ giải thích đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -6448,7 +6448,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Lich phong van trung voi gio hoc nen nu sinh vien se lien lac cua hang trong hom nay de xin doi gio phong van. Tu choi phong van, nghi hoc hay giu nguyen gio deu khong phai lua chon.",
+   "exp": "Lịch phỏng vấn trùng với giờ học nên nữ sinh viên sẽ liên lạc cửa hàng trong hôm nay để xin đổi giờ phỏng vấn. Từ chối phỏng vấn, nghỉ học hay giữ nguyên giờ đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "男",
@@ -6484,7 +6484,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Dau thang sau kho dat lich don vi chuyen nha nen hai nguoi doi sang giua thang sau de de dat lich hon. Chuyen dau thang, huy chuyen hay khong lien lac deu khong phai phuong an.",
+   "exp": "Đầu tháng sau khó đặt lịch đơn vị chuyển nhà nên hai người đổi sang giữa tháng sau để dễ đặt lịch hơn. Chuyển đầu tháng, hủy chuyến hay không liên lạc đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -6520,7 +6520,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi dan ong da quyet dinh di tai kham vao thu Sau tuan sau va duoc dan an uong can than vao ngay truoc. Khong tai kham, hoan sang thang sau hay kham lai tu dau deu khong phai lua chon.",
+   "exp": "Người đàn ông đã quyết định đi tái khám vào thứ Sáu tuần sau và được dặn ăn uống cẩn thận vào ngày trước. Không tái khám, hoãn sang tháng sau hay khám lại từ đầu đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -6561,7 +6561,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi neu viec tan dung cua hang trong lam quan cua doanh nhan tre va noi giao luu dang duoc trien khai, nhung can ca co che de dan dia phuong ghe tham hang ngay. Giong cua hang lon, pha bo het hay chi to chuc su kien deu khong phai trong tam.",
+   "exp": "Người nói nêu việc tận dụng cửa hàng trống làm quán của doanh nhân trẻ và nơi giao lưu đang được triển khai, nhưng cần cả cơ chế để dân địa phương ghé thăm hằng ngày. Giống cửa hàng lớn, phá bỏ hết hay chỉ tổ chức sự kiện đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -6597,7 +6597,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Tac gia muon truyen tai niem vui nho trong doi song hang ngay nhu tach ca phe buoi sang va cuoc tro chuyen gia dinh, cho rang su phong phu cua cuoc song nam trong doi thuong. Su kien lon, kien thuc lich su hay cach viet tieu thuyet deu khong phai trong tam.",
+   "exp": "Tác giả muốn truyền tải niềm vui nhỏ trong đời sống hằng ngày như tách cà phê buổi sáng và cuộc trò chuyện gia đình, cho rằng sự phong phú của cuộc sống nằm trong đời thường. Sự kiện lớn, kiến thức lịch sử hay cách viết tiểu thuyết đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -6643,7 +6643,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi chi bien phap ky thuat la chua du, can giao duc triet de ve xu ly thong tin de moi nhan vien hieu tam quan trong cua thong tin. Chi ky thuat, cam su dung thong tin hay giam nhan su deu khong phai trong tam.",
+   "exp": "Người nói nói chỉ biện pháp kỹ thuật là chưa đủ, cần giáo dục triệt để về xử lý thông tin để mỗi nhân viên hiểu tầm quan trọng của thông tin. Chỉ kỹ thuật, cấm sử dụng thông tin hay giảm nhân sự đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -6679,7 +6679,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi ngoai muc do quan tam thap, co che bau cu va thong tin ung cu vien kho hieu cung la ly do, nen can vua goi mo quan tam vua cung cap thong tin de hieu. Chi thieu quan tam, so lan bau cu nhieu hay giam so nguoi tre deu khong phai ly do.",
+   "exp": "Người nói nói ngoài mức độ quan tâm thấp, cơ chế bầu cử và thông tin ứng cử viên khó hiểu cũng là lý do, nên cần vừa gợi mở quan tâm vừa cung cấp thông tin dễ hiểu. Chỉ thiếu quan tâm, số lần bầu cử nhiều hay giảm số người trẻ đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -6715,7 +6715,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi thua nhan giam so lan mua sam co ich nhung hieu qua nhat la ghi chep chi tieu de nhin thay khoan chi lang phi. Chi giam mua sam, chi tang thu nhap hay ngung mua sam deu khong phai trong tam.",
+   "exp": "Người nói thừa nhận giảm số lần mua sắm có ích nhưng hiệu quả nhất là ghi chép chi tiêu để nhìn thấy khoản chi lãng phí. Chỉ giảm mua sắm, chỉ tăng thu nhập hay ngừng mua sắm đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -6751,7 +6751,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Ly do la toa nha mang lich su va ky uc cua nhung nguoi tung song o do, pha bo se lam mat ca ky uc. Chi phi re, khong xay duoc nha moi hay nha cu ben hon deu khong phai ly do.",
+   "exp": "Lý do là tòa nhà mang lịch sử và ký ức của những người từng sống ở đó, phá bỏ sẽ làm mất cả ký ức. Chi phí rẻ, không xây được nhà mới hay nhà cũ bền hơn đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -6797,7 +6797,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi neu giam san choi va tang lop hoc them lam giam co hoi van dong ngoai troi, dong thoi can moi truong tap luyen vui ve chu khong chi van dong don thuan. Giam so tre, chi giam gio the duc hay tre ghet van dong deu khong phai nguyen nhan duoc neu.",
+   "exp": "Người nói nêu giảm sân chơi và tăng lớp học thêm làm giảm cơ hội vận động ngoài trời, đồng thời cần môi trường tập luyện vui vẻ chứ không chỉ vận động đơn thuần. Giảm số trẻ, chỉ giảm giờ thể dục hay trẻ ghét vận động đều không phải nguyên nhân được nêu.",
    "dlg": [
     {
      "sp": "男",
@@ -6833,7 +6833,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi nguyen nhan tang ca la khoi luong nghiep vu lon khien ganh nang moi nguoi qua nang, nen can xem lai khoi luong, dam bao nhan su va phan chia nghiep vu, coi day la van de co che noi lam viec chu khong phai no luc ca nhan. Chi la van de ca nhan, chi gioi han thoi gian hay noi tang ca can thiet deu khong phai quan diem.",
+   "exp": "Người nói nói nguyên nhân tăng ca là khối lượng nghiệp vụ lớn khiến gánh nặng mỗi người quá nặng, nên cần xem lại khối lượng, đảm bảo nhân sự và phân chia nghiệp vụ, coi đây là vấn đề cơ chế nơi làm việc chứ không phải nỗ lực cá nhân. Chỉ là vấn đề cá nhân, chỉ giới hạn thời gian hay nói tăng ca cần thiết đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -6854,7 +6854,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi cua hang dia phuong giam doanh thu do mua sam truc tuyen, nhung diem manh la phuc vu truc tiep va ket noi dia phuong nhu tu van va truyen thong tin vung. Thay bang mua truc tuyen, khong can cua hang hay chi nghi den tien loi deu khong phai quan diem.",
+   "exp": "Người nói nói cửa hàng địa phương giảm doanh thu do mua sắm trực tuyến, nhưng điểm mạnh là phục vụ trực tiếp và kết nối địa phương như tư vấn và truyền thông tin vùng. Thay bằng mua trực tuyến, không cần cửa hàng hay chỉ nghĩ đến tiện lợi đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -6875,7 +6875,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi thua nhan dam bao an toan quan trong nhung loai bo het nguy hiem se khien tre khong ren duoc kha nang phan doan nguy hiem, nen can vua giam sat vua de tre tu phan doan. Loai bo het nguy hiem, bo trai nghiem thien nhien hay khong can an toan deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận đảm bảo an toàn quan trọng nhưng loại bỏ hết nguy hiểm sẽ khiến trẻ không rèn được khả năng phán đoán nguy hiểm, nên cần vừa giám sát vừa để trẻ tự phán đoán. Loại bỏ hết nguy hiểm, bỏ trải nghiệm thiên nhiên hay không cần an toàn đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -6896,7 +6896,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi thu cung gia di se can dieu tri va cham soc voi chi phi y te khong he re, nen nuoi thu cung can tinh ca viec cham soc khi gia va chuan bi chi phi y te. Noi khong phai van de, chi phi re hay khong nen nuoi thu cung gia deu khong phai quan diem.",
+   "exp": "Người nói nói thú cưng già đi sẽ cần điều trị và chăm sóc với chi phí y tế không hề rẻ, nên nuôi thú cưng cần tính cả việc chăm sóc khi già và chuẩn bị chi phí y tế. Nói không phải vấn đề, chi phí rẻ hay không nên nuôi thú cưng già đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -6917,7 +6917,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nhan hang giup nguoi tieu dung yen tam chon thuc pham nhung qua nhieu thong tin se kho hieu, nen can vua du thong tin vua de hieu nhung gi nguoi tieu dung thuc su muon biet. Chi tang luong thong tin, khong can nhan hang hay noi nguoi tieu dung khong nen xem nhan hang deu khong phai quan diem.",
+   "exp": "Người nói nói nhãn hàng giúp người tiêu dùng yên tâm chọn thực phẩm nhưng quá nhiều thông tin sẽ khó hiểu, nên cần vừa đủ thông tin vừa dễ hiểu những gì người tiêu dùng thực sự muốn biết. Chỉ tăng lượng thông tin, không cần nhãn hàng hay nói người tiêu dùng không nên xem nhãn hàng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -6938,7 +6938,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi de truyen suc hap dan cua dac san thi chat luong cao la chua du, can ke cau chuyen ve vung dat va con nguoi lam ra no. Chi chat luong, khong nen xay dung thuong hieu hay khong can cau chuyen deu khong phai quan diem.",
+   "exp": "Người nói nói để truyền sức hấp dẫn của đặc sản thì chất lượng cao là chưa đủ, cần kể câu chuyện về vùng đất và con người làm ra nó. Chỉ chất lượng, không nên xây dựng thương hiệu hay không cần câu chuyện đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -6958,7 +6958,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "De nghi to chuc tiec chia tay vao thu Sau can duoc dong y nhiet tinh. Chi noi tiec chia tay la thu Sau hay noi thu Sau la tiec chia tay deu khong tra loi loi de nghi.",
+   "exp": "Đề nghị tổ chức tiệc chia tay vào thứ Sáu cần được đồng ý nhiệt tình. Chỉ nói tiệc chia tay là thứ Sáu hay nói thứ Sáu là tiệc chia tay đều không trả lời lời đề nghị.",
    "dlg": [
     {
      "sp": "女",
@@ -6978,7 +6978,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la dem qua co ngu ngon hay khong nen dap an ngu say moi tu nhien. Chi noi ban dem la hom qua hay noi ngu la ban dem deu khong phai cau tra loi.",
+   "exp": "Câu hỏi là đêm qua có ngủ ngon hay không nên đáp án ngủ say mới tự nhiên. Chỉ nói ban đêm là hôm qua hay nói ngủ là ban đêm đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "男",
@@ -6998,7 +6998,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Cau hoi tham vi ban ron gan day co ngu duoc hay khong nen dap an ngu ngon moi tu nhien. Chi noi ban ron la gan day hay noi ngu la ban ron deu khong phai cau tra loi.",
+   "exp": "Câu hỏi thăm vì bận rộn gần đây có ngủ được hay không nên đáp án ngủ ngon mới tự nhiên. Chỉ nói bận rộn là gần đây hay nói ngủ là bận rộn đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "男",
@@ -7018,7 +7018,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau den som hon vao sang mai can duoc dong y kem theo muc som hon 30 phut. Chi noi buoi sang la ngay mai hay noi som la buoi sang deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu đến sớm hơn vào sáng mai cần được đồng ý kèm theo mức sớm hơn 30 phút. Chỉ nói buổi sáng là ngày mai hay nói sớm là buổi sáng đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "女",
@@ -7038,7 +7038,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Loi ru di xem phim vao thu Bay can duoc dong y nhiet tinh. Chi noi phim la thu Bay hay noi thu Bay la phim deu khong tra loi loi ru.",
+   "exp": "Lời rủ đi xem phim vào thứ Bảy cần được đồng ý nhiệt tình. Chỉ nói phim là thứ Bảy hay nói thứ Bảy là phim đều không trả lời lời rủ.",
    "dlg": [
     {
      "sp": "男",
@@ -7059,7 +7059,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi xa hoi lam viec dai gio khien kho can bang nuoi con va cong viec, nen can cai cach gio lam va mo rong nghi cham soc con, nhung dong thoi can giam ganh nang chi phi nuoi con va dam bao cho gui tre. Chi cai cach gio lam, khong can doi sach hay khong nen nghi cham soc con deu khong phai quan diem.",
+   "exp": "Người nói nói xã hội làm việc dài giờ khiến khó cân bằng nuôi con và công việc, nên cần cải cách giờ làm và mở rộng nghỉ chăm sóc con, nhưng đồng thời cần giảm gánh nặng chi phí nuôi con và đảm bảo chỗ gửi trẻ. Chỉ cải cách giờ làm, không cần đối sách hay không nên nghỉ chăm sóc con đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -7100,7 +7100,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi chi ro bep an tre em khong chi cung cap bua an ma con giup bai tap va tao noi hoc tap, mo ra co hoi hoc tap khong phu thuoc vao kinh te gia dinh. Chi cung cap bua an, khong can bep an hay noi ho tro hoc tap khong phai vai tro deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ bếp ăn trẻ em không chỉ cung cấp bữa ăn mà còn giúp bài tập và tạo nơi học tập, mở ra cơ hội học tập không phụ thuộc vào kinh tế gia đình. Chỉ cung cấp bữa ăn, không cần bếp ăn hay nói hỗ trợ học tập không phải vai trò đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -7146,7 +7146,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi thua nhan tang khach du lich tot cho kinh te dia phuong nhung anh huong doi song dan cu, nen can dung doanh thu du lich cho sua chua nha va bao ton canh quan kem theo giao duc y thuc cho khach. Chi tang khach, khong nen du lich hoa hay noi doi song dan cu khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận tăng khách du lịch tốt cho kinh tế địa phương nhưng ảnh hưởng đời sống dân cư, nên cần dùng doanh thu du lịch cho sửa chữa nhà và bảo tồn cảnh quan kèm theo giáo dục ý thức cho khách. Chỉ tăng khách, không nên du lịch hóa hay nói đời sống dân cư không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -7182,7 +7182,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro nghien cuu dai hoc dang duoc ung dung giai quyet van de dia phuong, dong thoi sinh vien hoc tai hien truong dia phuong se ren duoc nang luc thuc tien. Chi chat luong nghien cuu, khong can lien ket hay noi phat trien sinh vien khong phai vai tro deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ nghiên cứu đại học đang được ứng dụng giải quyết vấn đề địa phương, đồng thời sinh viên học tại hiện trường địa phương sẽ rèn được năng lực thực tiễn. Chỉ chất lượng nghiên cứu, không cần liên kết hay nói phát triển sinh viên không phải vai trò đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -7228,7 +7228,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi neu nong dan tre dang thu thach cong nghe moi va cach ban hang, nhung van can co che dam bao dat nong nghiep va thu nhap on dinh de ho tro tham gia. Chi su tham gia cua nguoi tre, khong can nguoi tre hay noi thu thach khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nêu nông dân trẻ đang thử thách công nghệ mới và cách bán hàng, nhưng vẫn cần cơ chế đảm bảo đất nông nghiệp và thu nhập ổn định để hỗ trợ tham gia. Chỉ sự tham gia của người trẻ, không cần người trẻ hay nói thử thách không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -7264,7 +7264,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro giam sat cua chinh quyen chu yeu la tham dinh ky nen kho phat hien thay doi hang ngay, nen can ket hop loi hoi tham hang ngay cua hang xom. Chi giam sat hanh chinh, khong can giam sat hay noi loi hoi tham khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ giám sát của chính quyền chủ yếu là thẩm định kỳ nên khó phát hiện thay đổi hằng ngày, nên cần kết hợp lời hỏi thăm hằng ngày của hàng xóm. Chỉ giám sát hành chính, không cần giám sát hay nói lời hỏi thăm không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -7310,7 +7310,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi go nhap khau gia re lam giam nhu cau go noi dia, nen can mo rong su dung go noi dia trong nha o va cong trinh cong cong dong thoi dao tao nguoi ke thua nghe rung. Chi tang go nhap khau, khong can phuc hoi hay noi go noi dia khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói gỗ nhập khẩu giá rẻ làm giảm nhu cầu gỗ nội địa, nên cần mở rộng sử dụng gỗ nội địa trong nhà ở và công trình công cộng đồng thời đào tạo người kế thừa nghề rừng. Chỉ tăng gỗ nhập khẩu, không cần phục hồi hay nói gỗ nội địa không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -7346,7 +7346,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro ngoai ho tro von, nguoi tre thieu kinh nghiem khoi nghiep can nguoi tu van va dam bao kenh ban hang, ca ba yeu to moi giup khoi nghiep thanh hinh. Chi ho tro von, khong nen ho tro hay noi chi von la du deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ ngoài hỗ trợ vốn, người trẻ thiếu kinh nghiệm khởi nghiệp cần người tư vấn và đảm bảo kênh bán hàng, cả ba yếu tố mới giúp khởi nghiệp thành hình. Chỉ hỗ trợ vốn, không nên hỗ trợ hay nói chỉ vốn là đủ đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -7392,7 +7392,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro cau lac bo the thao dia phuong giup tre ren the luc dong thoi nuoi duong tinh hop tac, kien nhan va ky nang xa hoi khi tre khac tuoi cung hoat dong. Chi ren the luc, khong can cau lac bo hay noi chi truong hoc lo deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ câu lạc bộ thể thao địa phương giúp trẻ rèn thể lực đồng thời nuôi dưỡng tính hợp tác, kiên nhẫn và kỹ năng xã hội khi trẻ khác tuổi cùng hoạt động. Chỉ rèn thể lực, không cần câu lạc bộ hay nói chỉ trường học lo đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -7438,7 +7438,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi chi ro hoc truc tuyen co loi ich hoc theo nhip do rieng, hoc truc tiep quan trong nhu noi thao luan va giao luu, nen ket hop ca hai se nang cao chat luong giang day. Chi truc tuyen, khong can truc tiep hay huy hoc truc tuyen deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ học trực tuyến có lợi ích học theo nhịp độ riêng, học trực tiếp quan trọng như nơi thảo luận và giao lưu, nên kết hợp cả hai sẽ nâng cao chất lượng giảng dạy. Chỉ trực tuyến, không cần trực tiếp hay hủy học trực tuyến đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -7484,7 +7484,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi neu tau du lich va hop tac voi chinh quyen dang duoc trien khai nhung chi tau du lich thi khong bao ve duoc phuong tien hang ngay cua nguoi dung, nen can vua khai thac du lich vua giu vai tro giao thong hang ngay. Chi tau du lich, huy bo het hay noi nguoi dung hang ngay khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nêu tàu du lịch và hợp tác với chính quyền đang được triển khai nhưng chỉ tàu du lịch thì không bảo vệ được phương tiện hằng ngày của người dùng, nên cần vừa khai thác du lịch vừa giữ vai trò giao thông hằng ngày. Chỉ tàu du lịch, hủy bỏ hết hay nói người dùng hằng ngày không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -7525,7 +7525,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro dien thoai thong minh lay mat thoi gian doc sach, nhung chi cam thi chua du vi co the doc sach tren dien thoai, nen can vua han che vua truyen niem vui doc sach. Chi cam, khong can doc sach hay noi khong the doc tren dien thoai deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ điện thoại thông minh lấy mất thời gian đọc sách, nhưng chỉ cấm thì chưa đủ vì có thể đọc sách trên điện thoại, nên cần vừa hạn chế vừa truyền niềm vui đọc sách. Chỉ cấm, không cần đọc sách hay nói không thể đọc trên điện thoại đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -7571,7 +7571,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nghe nhan co ky thuat dang gia hoa va ky thuat khong the truyen chi bang loi noi, nen can vua ghi lai bang hinh anh va van ban vua tang co hoi cho nghe nhan tre hoc tai hien truong. Chi ghi chep, khong nen ke thua hay noi dao tao tre khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói nghệ nhân có kỹ thuật đang già hoá và kỹ thuật không thể truyền chỉ bằng lời nói, nên cần vừa ghi lại bằng hình ảnh và văn bản vừa tăng cơ hội cho nghệ nhân trẻ học tại hiện trường. Chỉ ghi chép, không nên kế thừa hay nói đào tạo trẻ không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -7609,7 +7609,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Giao su yeu cau sap xep tat ca nhan xet va xep thu tu uu tien truoc, va sinh vien se sap xep roi tien hanh sua chua. Viet lai luan van, bo qua nhan xet hay bo nop deu khong phai phuong an.",
+   "exp": "Giáo sư yêu cầu sắp xếp tất cả nhận xét và xếp thứ tự ưu tiên trước, và sinh viên sẽ sắp xếp rồi tiến hành sửa chữa. Viết lại luận văn, bỏ qua nhận xét hay bỏ nộp đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -7645,7 +7645,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chon thu Sau tuan sau vi de tap hop nguoi tham du, va se lien lac nguoi tham du. Huy tiec, chon thu Sau tuan nay hay khong quyet dinh deu khong phai phuong an.",
+   "exp": "Hai người chọn thứ Sáu tuần sau vì dễ tập hợp người tham dự, và sẽ liên lạc người tham dự. Hủy tiệc, chọn thứ Sáu tuần này hay không quyết định đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -7681,7 +7681,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "May photo hong nen khong in duoc tai lieu, cap tren yeu cau lien lac don vi sua chua, va nu nhan vien se lien lac de yeu cau sua chua. Khong in, huy hop hay tu sua deu khong phai phuong an.",
+   "exp": "Máy photo hỏng nên không in được tài liệu, cấp trên yêu cầu liên lạc đơn vị sửa chữa, và nữ nhân viên sẽ liên lạc để yêu cầu sửa chữa. Không in, hủy họp hay tự sửa đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -7717,7 +7717,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Sinh vien co the tham du vao thu Ba nen se tham du buoi dao tao thu Ba. Tu choi, tham du thu Tu hay nghi viec deu khong phai lua chon.",
+   "exp": "Sinh viên có thể tham dự vào thứ Ba nên sẽ tham dự buổi đào tạo thứ Ba. Từ chối, tham dự thứ Tư hay nghỉ việc đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -7753,7 +7753,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chon phat to roi o truoc ga vao thu Bay tuan sau vi nhieu nguoi se nhan duoc. Khong phat, phat o cong ty hay khong lam to roi deu khong phai phuong an.",
+   "exp": "Hai người chọn phát tờ rơi ở trước ga vào thứ Bảy tuần sau vì nhiều người sẽ nhận được. Không phát, phát ở công ty hay không làm tờ rơi đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -7789,7 +7789,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Khach hang muon giu hang den thu Hai tuan sau va se den lay vao thu Hai, cua hang dong y giu den thu Hai. Mua ngay, bo giu hang hay giu den thu Sau deu khong phai phuong an.",
+   "exp": "Khách hàng muốn giữ hàng đến thứ Hai tuần sau và sẽ đến lấy vào thứ Hai, cửa hàng đồng ý giữ đến thứ Hai. Mua ngay, bỏ giữ hàng hay giữ đến thứ Sáu đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -7825,7 +7825,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi neu gia nguyen lieu tang cao va thieu nhan luc khien kho duy tri kinh doanh, su tang pha san la ket qua chong lap cua hai yeu to. Loi nhuan tang, tang so doanh nghiep hay kinh te tot len deu khong phai ly do.",
+   "exp": "Người nói nêu giá nguyên liệu tăng cao và thiếu nhân lực khiến khó duy trì kinh doanh, sự tăng phá sản là kết quả chồng lấp của hai yếu tố. Lợi nhuận tăng, tăng số doanh nghiệp hay kinh tế tốt lên đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -7861,7 +7861,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi can lien lac thuong xuyen voi gia dinh de co the tu van khi co cau chuyen dang ngo, dong thoi chia se thong tin ve thu doan lua dao. Han che ra ngoai, che giau thiet hai hay cam dung dien thoai deu khong phai bien phap.",
+   "exp": "Người nói nói cần liên lạc thường xuyên với gia đình để có thể tư vấn khi có câu chuyện đáng ngờ, đồng thời chia sẻ thông tin về thủ đoạn lừa đảo. Hạn chế ra ngoài, che giấu thiệt hại hay cấm dùng điện thoại đều không phải biện pháp.",
    "dlg": [
     {
      "sp": "男",
@@ -7897,7 +7897,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do la giao luu voi dan dia phuong va su co vu am ap tro thanh dong luc lon nhat. Thu nhap cao, bi cam dien o thanh pho hay di chuyen de dang deu khong phai ly do.",
+   "exp": "Lý do là giao lưu với dân địa phương và sự cổ vũ ấm áp trở thành động lực lớn nhất. Thu nhập cao, bị cấm diễn ở thành phố hay đi chuyển dễ dàng đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -7943,7 +7943,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi chi dat muc tieu so luong la chua du, can xem lai cach lam viec va cung cap co hoi dao tao de xay dung moi truong de lam viec. Chi muc tieu so luong, ngung tuyen nu hay giam quan ly deu khong phai bien phap.",
+   "exp": "Người nói nói chỉ đặt mục tiêu số lượng là chưa đủ, cần xem lại cách làm việc và cung cấp cơ hội đào tạo để xây dựng môi trường dễ làm việc. Chỉ mục tiêu số lượng, ngừng tuyển nữ hay giảm quản lý đều không phải biện pháp.",
    "dlg": [
     {
      "sp": "男",
@@ -7984,7 +7984,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi thua nhan giam luong dien tieu thu co ich nhung hieu qua nhat la doi sang hop dong phu hop voi cach dung cua minh de giam dang ke tien dien. Chi giam luong dung, ngung dung dien hay khong quan tam deu khong phai trong tam.",
+   "exp": "Người nói thừa nhận giảm lượng điện tiêu thụ có ích nhưng hiệu quả nhất là đổi sang hợp đồng phù hợp với cách dùng của mình để giảm đáng kể tiền điện. Chỉ giảm lượng dùng, ngừng dùng điện hay không quan tâm đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -8020,7 +8020,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do la bao ve suc khoe dat bang cach phat huy suc manh cua dat thay vi dua vao phan bon hoa hoc, dong thoi niem tin cua nguoi tieu dung vao nong san an toan tang len. Gia cao, phan bon bi cam hay nong nghiep huu co de dang deu khong phai ly do.",
+   "exp": "Lý do là bảo vệ sức khỏe đất bằng cách phát huy sức mạnh của đất thay vì dựa vào phân bón hóa học, đồng thời niềm tin của người tiêu dùng vào nông sản an toàn tăng lên. Giá cao, phân bón bị cấm hay nông nghiệp hữu cơ dễ dàng đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -8066,7 +8066,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi nghi phep giup tam than va the chat nghi ngoi va nang cao dong luc lam viec, nhung neu bau khong khi kho nghi thi ty le nghi khong tang, nen can vua hoan thien che do vua xay dung bau khong khi de nghi. Chi hoan thien che do, cam nghi phep hay noi nghi phep khong lien quan nang suat deu khong phai trong tam.",
+   "exp": "Người nói nói nghỉ phép giúp tâm thần và thể chất nghỉ ngơi và nâng cao động lực làm việc, nhưng nếu bầu không khí khó nghỉ thì tỷ lệ nghỉ không tăng, nên cần vừa hoàn thiện chế độ vừa xây dựng bầu không khí dễ nghỉ. Chỉ hoàn thiện chế độ, cấm nghỉ phép hay nói nghỉ phép không liên quan năng suất đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -8102,7 +8102,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi thay doi cach dung kinh ngu phan anh quan he noi lam viec va thay doi xa hoi chu khong chi la ngon ngu loan, nen quan trong la tam y quan tam den doi phuong chu khong chi hinh thuc. Cho thay doi la loan het, khong nen dung kinh ngu hay cho moi cach dung cua gioi tre deu dung deu khong phai quan diem.",
+   "exp": "Người nói nói thay đổi cách dùng kính ngữ phản ánh quan hệ nơi làm việc và thay đổi xã hội chứ không chỉ là ngôn ngữ loạn, nên quan trọng là tâm ý quan tâm đến đối phương chứ không chỉ hình thức. Cho thay đổi là loạn hết, không nên dùng kính ngữ hay cho mọi cách dùng của giới trẻ đều đúng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -8123,7 +8123,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nhieu nguoi khong biet thu nhap lam them can khai bao, nen truoc khi bat dau lam them can xac nhan cach khai bao va co che thue. Khong can khai bao, cam lam them hay noi thue lam them khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nói nhiều người không biết thu nhập làm thêm cần khai báo, nên trước khi bắt đầu làm thêm cần xác nhận cách khai báo và cơ chế thuế. Không cần khai báo, cấm làm thêm hay nói thuế làm thêm không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8144,7 +8144,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi thua nhan camera co tac dung ran de toi pham nhung neu khong ro hinh anh duoc quan ly ra sao thi gay lo lang, nen can lam ro muc dich lap dat va cach quan ly hinh anh de can bang an toan va rieng tu. Chi camera, khong nen lap dat hay noi rieng tu khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận camera có tác dụng răn đe tội phạm nhưng nếu không rõ hình ảnh được quản lý ra sao thì gây lo lắng, nên cần làm rõ mục đích lắp đặt và cách quản lý hình ảnh để cân bằng an toàn và riêng tư. Chỉ camera, không nên lắp đặt hay nói riêng tư không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -8165,7 +8165,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi bo bua trua hay an voi se lam giam kha nang tap trung buoi chieu, nen can an bua trua can bang dinh duong mot cach thong tha nhu buoc chuan bi cho cong viec buoi chieu. Bo bua trua, an nhanh hay noi bua trua khong lien quan nang suat deu khong phai quan diem.",
+   "exp": "Người nói nói bỏ bữa trưa hay ăn vội sẽ làm giảm khả năng tập trung buổi chiều, nên cần ăn bữa trưa cân bằng dinh dưỡng một cách thong thả như bước chuẩn bị cho công việc buổi chiều. Bỏ bữa trưa, ăn nhanh hay nói bữa trưa không liên quan năng suất đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8186,7 +8186,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi bua an tien loi tang trong doi song ban ron lam giam mon Nhat gia dinh, khien tre mat co hoi hoc huong vi va phep tac an uong, nen can cach nau mon Nhat don gian va tang co hoi ca gia dinh quay quan ban an. Khong can mon Nhat gia dinh, khong nen nau o nha hay noi tre khong can hoc deu khong phai quan diem.",
+   "exp": "Người nói nói bữa ăn tiện lợi tăng trong đời sống bận rộn làm giảm món Nhật gia đình, khiến trẻ mất cơ hội học hương vị và phép tắc ăn uống, nên cần cách nấu món Nhật đơn giản và tăng cơ hội cả gia đình quây quần bàn ăn. Không cần món Nhật gia đình, không nên nấu ở nhà hay nói trẻ không cần học đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -8207,7 +8207,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nguoi ganh vac le hoi dang gia hoa va su tham gia cua nguoi tre giam, nen can truyen y nghia le hoi va tao co hoi cho nguoi tre tham gia chuan bi va van hanh. Ton tai khong can nguoi tre, nguoi tre khong nen tham gia hay huy le hoi deu khong phai quan diem.",
+   "exp": "Người nói nói người gánh vác lễ hội đang già hóa và sự tham gia của người trẻ giảm, nên cần truyền ý nghĩa lễ hội và tạo cơ hội cho người trẻ tham gia chuẩn bị và vận hành. Tồn tại không cần người trẻ, người trẻ không nên tham gia hay hủy lễ hội đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8227,7 +8227,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau dua ra ga vao thu Tu can duoc chap nhan kem theo xac nhan se dua vao sang thu Tu. Chi noi ga la thu Tu hay noi dua la ga deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu đưa ra ga vào thứ Tư cần được chấp nhận kèm theo xác nhận sẽ đưa vào sáng thứ Tư. Chỉ nói ga là thứ Tư hay nói đưa là ga đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "男",
@@ -8247,7 +8247,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la gan day co xem phim hay khong nen dap an da xem tuan truoc moi tu nhien. Chi noi phim la gan day hay noi xem la phim deu khong phai cau tra loi.",
+   "exp": "Câu hỏi là gần đây có xem phim hay không nên đáp án đã xem tuần trước mới tự nhiên. Chỉ nói phim là gần đây hay nói xem là phim đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "女",
@@ -8267,7 +8267,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi gio bat dau cuoc hop ngay mai la may gio nen dap an 10 gio moi phu hop. Chi noi cuoc hop la ngay mai hay noi thoi gian la cuoc hop deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi giờ bắt đầu cuộc họp ngày mai là mấy giờ nên đáp án 10 giờ mới phù hợp. Chỉ nói cuộc họp là ngày mai hay nói thời gian là cuộc họp đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
@@ -8287,7 +8287,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Yeu cau gui tai lieu hop vao thu Sau can duoc chap nhan kem theo xac nhan se gui vao thu Sau. Chi noi tai lieu la thu Sau hay noi gui la tai lieu deu khong dap ung yeu cau.",
+   "exp": "Yêu cầu gửi tài liệu họp vào thứ Sáu cần được chấp nhận kèm theo xác nhận sẽ gửi vào thứ Sáu. Chỉ nói tài liệu là thứ Sáu hay nói gửi là tài liệu đều không đáp ứng yêu cầu.",
    "dlg": [
     {
      "sp": "女",
@@ -8307,7 +8307,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la noi dung hop hom qua da tong hop chua nen dap an da tong hop trong hom qua moi phu hop. Chi noi cuoc hop la hom qua hay noi tong hop la cuoc hop deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là nội dung họp hôm qua đã tổng hợp chưa nên đáp án đã tổng hợp trong hôm qua mới phù hợp. Chỉ nói cuộc họp là hôm qua hay nói tổng hợp là cuộc họp đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
@@ -8328,7 +8328,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro sinh vien nuoc ngoai tham gia su kien dia phuong se tao giao luu voi dan dia phuong va hieu sau hon ve van hoa Nhat, dong thoi kich hoat dia phuong. Khong can giao luu, chi hoc o truong hay noi dan dia phuong khong nen giao luu deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ sinh viên nước ngoài tham gia sự kiện địa phương sẽ tạo giao lưu với dân địa phương và hiểu sâu hơn về văn hóa Nhật, đồng thời kích hoạt địa phương. Không cần giao lưu, chỉ học ở trường hay nói dân địa phương không nên giao lưu đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -8374,7 +8374,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi nghi phep giup tam than va the chat nghi ngoi va nang cao kha nang tap trung, nhung neu ty le nghi thap thi hieu qua khong phat huy du, nen can vua hoan thien che do vua xay dung bau khong khi de nghi. Noi nghi phep khong lien quan nang suat, cam nghi hay chi la nghi ngoi don thuan deu khong phai quan diem.",
+   "exp": "Người nói nói nghỉ phép giúp tâm thần và thể chất nghỉ ngơi và nâng cao khả năng tập trung, nhưng nếu tỷ lệ nghỉ thấp thì hiệu quả không phát huy đủ, nên cần vừa hoàn thiện chế độ vừa xây dựng bầu không khí dễ nghỉ. Nói nghỉ phép không liên quan năng suất, cấm nghỉ hay chỉ là nghỉ ngơi đơn thuần đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8415,7 +8415,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi chi ro cha tham gia nuoi con se giam ganh nang cho me va giup cha cam nhan niem vui nuoi con qua tang tuong tac, nen can vua su thong cam noi lam viec vua ho tro dia phuong. Khong can cha tham gia, chi me nuoi con hay cha khong nen tham gia deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ cha tham gia nuôi con sẽ giảm gánh nặng cho mẹ và giúp cha cảm nhận niềm vui nuôi con qua tăng tương tác, nên cần vừa sự thông cảm nơi làm việc vừa hỗ trợ địa phương. Không cần cha tham gia, chỉ mẹ nuôi con hay cha không nên tham gia đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -8461,7 +8461,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi kien truc truyen thong duoc danh gia lai nho su thoai mai tu thong gio va cach lay anh sang tu nhien, nhung chi kien truc truyen thong thi khong dap ung doi song hien dai ma can cai tao cach nhiet va chong dong dat. Chi kien truc truyen thong, khong nen tan dung hay noi ky thuat hien dai khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói kiến trúc truyền thống được đánh giá lại nhờ sự thoải mái từ thông gió và cách lấy ánh sáng tự nhiên, nhưng chỉ kiến trúc truyền thống thì không đáp ứng đời sống hiện đại mà cần cải tạo cách nhiệt và chống động đất. Chỉ kiến trúc truyền thống, không nên tận dụng hay nói kỹ thuật hiện đại không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -8497,7 +8497,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi thua nhan tang khach du lich tot cho kinh te dia phuong nhung lam tang un tac giao thong va tieng on, nen can phan tan khach va quan tam dan cu de can bang loi ich du lich voi doi song. Chi tang khach, bo du lich hay noi doi song dan cu khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người thừa nhận tăng khách du lịch tốt cho kinh tế địa phương nhưng làm tăng ùn tắc giao thông và tiếng ồn, nên cần phân tán khách và quan tâm dân cư để cân bằng lợi ích du lịch với đời sống. Chỉ tăng khách, bỏ du lịch hay nói đời sống dân cư không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -8543,7 +8543,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi phan bon hoa hoc va thuoc tru sau anh huong moi truong, nen nong nghiep huu co va giam thuoc dang duoc trien khai, nhung chi than thien moi truong thi kho dam bao san luong. Chi bao ve moi truong, khong can nong nghiep than thien hay noi san luong khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói phân bón hóa học và thuốc trừ sâu ảnh hưởng môi trường, nên nông nghiệp hữu cơ và giảm thuốc đang được triển khai, nhưng chỉ thân thiện môi trường thì khó đảm bảo sản lượng. Chỉ bảo vệ môi trường, không cần nông nghiệp thân thiện hay nói sản lượng không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8584,7 +8584,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro tham gia noi lam viec va hoat dong dia phuong giup nguoi cao tuoi cam thay y nghia song, dong thoi ket noi xa hoi cung gan voi suc khoe tam than va the chat. Khong can tham gia, nguoi cao tuoi khong nen tham gia hay noi tham gia khong lien quan suc khoe deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ tham gia nơi làm việc và hoạt động địa phương giúp người cao tuổi cảm thấy ý nghĩa sống, đồng thời kết nối xã hội cũng gắn với sức khỏe tâm thần và thể chất. Không cần tham gia, người cao tuổi không nên tham gia hay nói tham gia không liên quan sức khỏe đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -8630,7 +8630,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi chi phi phat trien vu tru qua cao nen mot quoc gia kho tien hanh mot minh, hop tac quoc te giup chia se chi phi va ky thuat nhung can thoa thuan ve quan ly ky thuat va phan chia loi ich. Chi mot quoc gia, khong can hop tac hay khong nen chia se ky thuat deu khong phai quan diem.",
+   "exp": "Người nói nói chi phí phát triển vũ trụ quá cao nên một quốc gia khó tiến hành một mình, hợp tác quốc tế giúp chia sẻ chi phí và kỹ thuật nhưng cần thỏa thuận về quản lý kỹ thuật và phân chia lợi ích. Chỉ một quốc gia, không cần hợp tác hay không nên chia sẻ kỹ thuật đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8671,7 +8671,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro hoc trong thien nhien nuoi duong cam xuc va to mo cua tre, va hoc bang nam giac quan khac voi hoc trong lop, nen trai nghiem thien nhien cung voi hoc trong lop se ho tro phat trien. Khong can trai nghiem, chi lop hoc la du hay chi la choi deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ học trong thiên nhiên nuôi dưỡng cảm xúc và tò mò của trẻ, và học bằng năm giác quan khác với học trong lớp, nên trải nghiệm thiên nhiên cùng với học trong lớp sẽ hỗ trợ phát triển. Không cần trải nghiệm, chỉ lớp học là đủ hay chỉ là chơi đều không phải kết luận.",
    "dlg": [
     {
      "sp": "男",
@@ -8717,7 +8717,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi thong tin benh nhan chua duoc chia se day du giua benh vien va co so cham soc, nen can xay dung co che chia se tinh trang va phuong huong dieu tri dong thoi tang giao luu giua nhan vien y te va cham soc. Khong can lien ket, chi benh vien quan ly hay co so cham soc khong nen lien ket deu khong phai quan diem.",
+   "exp": "Người nói nói thông tin bệnh nhân chưa được chia sẻ đầy đủ giữa bệnh viện và cơ sở chăm sóc, nên cần xây dựng cơ chế chia sẻ tình trạng và phương hướng điều trị đồng thời tăng giao lưu giữa nhân viên y tế và chăm sóc. Không cần liên kết, chỉ bệnh viện quản lý hay cơ sở chăm sóc không nên liên kết đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -8758,7 +8758,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro chi danh gia thanh qua se lam ton hai tinh dong doi, nen can vua danh gia thanh qua vua danh gia tinh dong doi. Chi chu nghia thanh qua, khong can danh gia hay noi dong doi khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ chỉ đánh giá thành quả sẽ làm tổn hại tình đồng đội, nên cần vừa đánh giá thành quả vừa đánh giá tình đồng đội. Chỉ chủ nghĩa thành quả, không cần đánh giá hay nói đồng đội không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -8804,7 +8804,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi do nhan biet san pham truyen thong thap nen ban hang qua internet giup dua san pham den moi nguoi tren ca nuoc va nuoc ngoai, dong thoi ke cau chuyen ve tam huyet nguoi lam va suc hap dan ky thuat se dan den mua hang. Chi ban truc tuyen, khong can mo rong hay noi cau chuyen khong lien quan mua hang deu khong phai quan diem.",
+   "exp": "Người nói nói độ nhận biết sản phẩm truyền thống thấp nên bán hàng qua internet giúp đưa sản phẩm đến mọi người trên cả nước và nước ngoài, đồng thời kể câu chuyện về tâm huyết người làm và sức hấp dẫn kỹ thuật sẽ dẫn đến mua hàng. Chỉ bán trực tuyến, không cần mở rộng hay nói câu chuyện không liên quan mua hàng đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -8845,7 +8845,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro gioi tre co quan tam chinh tri nhung thay cach tham gia kho hieu, nen can truyen tai chinh sach va co che bau cu mot cach de hieu de thuc day tham gia. Khong can tham gia, gioi tre khong quan tam hay noi truyen thong khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ giới trẻ có quan tâm chính trị nhưng thấy cách tham gia khó hiểu, nên cần truyền tải chính sách và cơ chế bầu cử một cách dễ hiểu để thúc đẩy tham gia. Không cần tham gia, giới trẻ không quan tâm hay nói truyền thông không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -8893,7 +8893,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Giao su yeu cau tong hop ket qua truoc thu Hai tuan sau roi nop, va sinh vien se tong hop roi nop truoc thu Hai. Bo nop, nop khong tong hop hay xin gia han deu khong phai phuong an.",
+   "exp": "Giáo sư yêu cầu tổng hợp kết quả trước thứ Hai tuần sau rồi nộp, và sinh viên sẽ tổng hợp rồi nộp trước thứ Hai. Bỏ nộp, nộp không tổng hợp hay xin gia hạn đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -8929,7 +8929,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nu nhan vien se kiem tra bien ban truoc ngay mai, sua sai sot neu co roi moi phan phoi cho lien quan. Khong lam bien ban, phan phoi khong kiem tra hay hop lai deu khong phai phuong an.",
+   "exp": "Nữ nhân viên sẽ kiểm tra biên bản trước ngày mai, sửa sai sót nếu có rồi mới phân phối cho liên quan. Không làm biên bản, phân phối không kiểm tra hay họp lại đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -8965,7 +8965,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cap tren yeu cau quyet toan chi phi di lai trong tuan nay, va nu nhan vien se quyet toan trong tuan nay. Quyet toan tuan sau, khong quyet toan hay quyet toan khong co bien lai deu khong phai phuong an.",
+   "exp": "Cấp trên yêu cầu quyết toán chi phí đi lại trong tuần này, và nữ nhân viên sẽ quyết toán trong tuần này. Quyết toán tuần sau, không quyết toán hay quyết toán không có biên lai đều không phải phương án.",
    "dlg": [
     {
      "sp": "男",
@@ -9001,7 +9001,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Thu vien tu thang nay cho muon toi da 5 cuon nen sinh vien se muon 5 cuon va xuat the muon. Chi muon 1 cuon, khong muon hay mua sach deu khong phai lua chon.",
+   "exp": "Thư viện từ tháng này cho mượn tối đa 5 cuốn nên sinh viên sẽ mượn 5 cuốn và xuất thẻ mượn. Chỉ mượn 1 cuốn, không mượn hay mua sách đều không phải lựa chọn.",
    "dlg": [
     {
      "sp": "女",
@@ -9037,7 +9037,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi lo nha nghi noi tieng se het cho som nen chon dat truoc thu Ba tuan sau. Huy chuyen, khong quyet dinh hay dat vao thang sau deu khong phai phuong an.",
+   "exp": "Hai người lo nhà nghỉ nổi tiếng sẽ hết chỗ sớm nên chọn đặt trước thứ Ba tuần sau. Hủy chuyến, không quyết định hay đặt vào tháng sau đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -9073,7 +9073,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chon trung bay gan loi vao vi nhieu nguoi se nhin thay. Dat o ke sau, khong ban san pham moi hay de o kho deu khong phai phuong an.",
+   "exp": "Hai người chọn trưng bày gần lối vào vì nhiều người sẽ nhìn thấy. Đặt ở kệ sau, không bán sản phẩm mới hay để ở kho đều không phải phương án.",
    "dlg": [
     {
      "sp": "女",
@@ -9109,7 +9109,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi neu lam viec tu xa giup song o dia phuong trong khi lam cho doanh nghiep thanh pho, dong thoi moi truong nuoi con tot voi thien nhien phong phu va ho tro day du. Chi chi phi thanh pho cao, tang dan so hay giam doanh nghiep deu khong phai ly do.",
+   "exp": "Người nói nêu làm việc từ xa giúp sống ở địa phương trong khi làm cho doanh nghiệp thành phố, đồng thời môi trường nuôi con tốt với thiên nhiên phong phú và hỗ trợ đầy đủ. Chỉ chi phí thành phố cao, tăng dân số hay giảm doanh nghiệp đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -9145,7 +9145,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi thieu ngu se giam kha nang tap trung o lop, va neu khong ngu sau thi kien thuc kho an sau, nen can vua dam bao thoi gian ngu vua nang cao chat luong giac ngu. Chi thoi gian ngu, chi tang gio hoc hay noi giac ngu khong lien quan deu khong phai trong tam.",
+   "exp": "Người nói nói thiếu ngủ sẽ giảm khả năng tập trung ở lớp, và nếu không ngủ sâu thì kiến thức khó ăn sâu, nên cần vừa đảm bảo thời gian ngủ vừa nâng cao chất lượng giấc ngủ. Chỉ thời gian ngủ, chỉ tăng giờ học hay nói giấc ngủ không liên quan đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "男",
@@ -9181,7 +9181,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Ly do la danh bat qua muc se lam ca giam, nen muon tiep tuc nghe ca trong tuong lai thi phai bao ve tai nguyen, dong thoi can bang han che san luong voi doi song ngu dan. Tang san luong, bo nghe hay tang gia ca deu khong phai ly do.",
+   "exp": "Lý do là đánh bắt quá mức sẽ làm cá giảm, nên muốn tiếp tục nghề cá trong tương lai thì phải bảo vệ tài nguyên, đồng thời cân bằng hạn chế sản lượng với đời sống ngư dân. Tăng sản lượng, bỏ nghề hay tăng giá cá đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -9227,7 +9227,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi neu canh tranh gay gat khien phat trien ky thuat moi quyet dinh suc canh tranh, dong thoi can moi truong nghien cuu day du de thu hut nha nghien cuu gioi. Loi nhuan giam, giam nha nghien cuu hay chi menh lenh chinh phu deu khong phai ly do.",
+   "exp": "Người nói nêu cạnh tranh gay gắt khiến phát triển kỹ thuật mới quyết định sức cạnh tranh, đồng thời cần môi trường nghiên cứu đầy đủ để thu hút nhà nghiên cứu giỏi. Lợi nhuận giảm, giảm nhà nghiên cứu hay chỉ mệnh lệnh chính phủ đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -9263,7 +9263,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi di bo khong can dung cu dac biet va co the duy tri theo nhip do rieng, dong thoi di cung ban be se tao giao luu, nen suc khoe nguoi cao tuoi duoc chong do boi ca thoi quen di bo va tham gia xa hoi. Tap nang, khong tap hay chi den benh vien deu khong phai trong tam.",
+   "exp": "Người nói nói đi bộ không cần dụng cụ đặc biệt và có thể duy trì theo nhịp độ riêng, đồng thời đi cùng bạn bè sẽ tạo giao lưu, nên sức khỏe người cao tuổi được chống đỡ bởi cả thói quen đi bộ và tham gia xã hội. Tập nặng, không tập hay chỉ đến bệnh viện đều không phải trọng tâm.",
    "dlg": [
     {
      "sp": "女",
@@ -9299,7 +9299,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi neu tien thue re va dan dia phuong ung ho cua hang moi, ca hai yeu to thuc day khoi nghiep thong qua tan dung cua hang trong. Chi so luong cua hang trong, gia thue thanh pho cao hay luat thay doi deu khong phai ly do.",
+   "exp": "Người nói nêu tiền thuê rẻ và dân địa phương ủng hộ cửa hàng mới, cả hai yếu tố thúc đẩy khởi nghiệp thông qua tận dụng cửa hàng trống. Chỉ số lượng cửa hàng trống, giá thuê thành phố cao hay luật thay đổi đều không phải lý do.",
    "dlg": [
     {
      "sp": "男",
@@ -9335,7 +9335,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Ly do la cung nhau quay quan ban an se lam sau them moi quan he gia dinh, do la gia tri cua huong vi gia dinh. Mai giua ky thuat, ung ho nganh an uong ben ngoai hay ban sach deu khong phai ly do.",
+   "exp": "Lý do là cùng nhau quây quần bàn ăn sẽ làm sâu thêm mối quan hệ gia đình, đó là giá trị của hương vị gia đình. Mài giũa kỹ thuật, ủng hộ ngành ăn uống bên ngoài hay bán sách đều không phải lý do.",
    "dlg": [
     {
      "sp": "女",
@@ -9381,7 +9381,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi nguoi cao tuoi de tiep can thong tin hon nhung kho phan biet that gia va de bi thong tin sai lam lac, nen can giao duc ve kiem tra nguon tin va co che chia se thong tin voi gia dinh. Khong nen dung internet, thong tin sai khong phai van de hay khong can giao duc deu khong phai quan diem.",
+   "exp": "Người nói nói người cao tuổi dễ tiếp cận thông tin hơn nhưng khó phân biệt thật giả và dễ bị thông tin sai làm lạc, nên cần giáo dục về kiểm tra nguồn tin và cơ chế chia sẻ thông tin với gia đình. Không nên dùng internet, thông tin sai không phải vấn đề hay không cần giáo dục đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9402,7 +9402,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi thua nhan tang khach du lich tot cho kinh te dia phuong nhung co khach khong hieu y nghia le hoi ma gay on ao va xa rac, nen can truyen y nghia le hoi va quy tac dia phuong mot cach de hieu. Chi tang khach, khong nen du lich hoa hay noi y thuc khach khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói thừa nhận tăng khách du lịch tốt cho kinh tế địa phương nhưng có khách không hiểu ý nghĩa lễ hội mà gây ồn ào và xả rác, nên cần truyền ý nghĩa lễ hội và quy tắc địa phương một cách dễ hiểu. Chỉ tăng khách, không nên du lịch hóa hay nói ý thức khách không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -9423,7 +9423,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Nguoi noi noi de quang ba suc hap dan cua truong dai hoc dia phuong can lam ro dac trung nhu lay van de dia phuong lam de tai nghien cuu va lay lien ket dia phuong lam diem manh, gia tri nam o gan ket va giao duc dac sac chu khong phai quy mo. Tang quy mo, khong nen tuyen sinh hay noi suc hap dan do quy mo deu khong phai quan diem.",
+   "exp": "Người nói nói để quảng bá sức hấp dẫn của trường đại học địa phương cần làm rõ đặc trưng như lấy vấn đề địa phương làm đề tài nghiên cứu và lấy liên kết địa phương làm điểm mạnh, giá trị nằm ở gắn kết và giáo dục đặc sắc chứ không phải quy mô. Tăng quy mô, không nên tuyển sinh hay nói sức hấp dẫn do quy mô đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9444,7 +9444,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi nghi trua day du se nang cao kha nang tap trung buoi chieu, nhung nhieu nguoi van lam viec trong gio nghi trua, nen can dam bao thoi gian tach khoi cong viec de nghi ngoi tam than va the chat. Lam viec ca gio nghi, khong can nghi trua hay noi nghi ngoi khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói nghỉ trưa đầy đủ sẽ nâng cao khả năng tập trung buổi chiều, nhưng nhiều người vẫn làm việc trong giờ nghỉ trưa, nên cần đảm bảo thời gian tách khỏi công việc để nghỉ ngơi tâm thần và thể chất. Làm việc cả giờ nghỉ, không cần nghỉ trưa hay nói nghỉ ngơi không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -9465,7 +9465,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi gia dinh co sach va tre nhin thay nguoi than doc sach se goi mo su quan tam doc sach cua tre, nen thoi quen doc sach duoc chong do boi ca moi truong gia dinh va huong dan o truong. Chi truong hoc la du, khong can moi truong gia dinh hay noi tre khong can doc deu khong phai quan diem.",
+   "exp": "Người nói nói gia đình có sách và trẻ nhìn thấy người thân đọc sách sẽ gợi mở sự quan tâm đọc sách của trẻ, nên thói quen đọc sách được chống đỡ bởi cả môi trường gia đình và hướng dẫn ở trường. Chỉ trường học là đủ, không cần môi trường gia đình hay nói trẻ không cần đọc đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9486,7 +9486,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi noi co hoi trai nghiem le hoi truyen thong o truong dang giam, nhung chi hoc y nghia la chua du ma can trai nghiem thuc te nhu co hoi quy gia de tre cham vao truyen thong. Chi hoc kien thuc, khong can trai nghiem o truong hay khong nen ke thua deu khong phai quan diem.",
+   "exp": "Người nói nói cơ hội trải nghiệm lễ hội truyền thống ở trường đang giảm, nhưng chỉ học ý nghĩa là chưa đủ mà cần trải nghiệm thực tế như cơ hội quý giá để trẻ chạm vào truyền thống. Chỉ học kiến thức, không cần trải nghiệm ở trường hay không nên kế thừa đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -9506,7 +9506,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Loi chia se tiec chia tay tuan truoc rat vui can duoc dap lai bang dong tinh va nhan manh cung rat vui. Chi noi tiec chia tay la tuan truoc hay noi vui la tiec chia tay deu khong phai cau tra loi tu nhien.",
+   "exp": "Lời chia sẻ tiệc chia tay tuần trước rất vui cần được đáp lại bằng đồng tình và nhấn mạnh cùng rất vui. Chỉ nói tiệc chia tay là tuần trước hay nói vui là tiệc chia tay đều không phải câu trả lời tự nhiên.",
    "dlg": [
     {
      "sp": "男",
@@ -9526,7 +9526,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la gan day co doc sach hay khong nen dap an moi toi deu doc moi tu nhien. Chi noi doc sach la gan day hay noi doc la doc sach deu khong phai cau tra loi.",
+   "exp": "Câu hỏi là gần đây có đọc sách hay không nên đáp án mỗi tối đều đọc mới tự nhiên. Chỉ nói đọc sách là gần đây hay nói đọc là đọc sách đều không phải câu trả lời.",
    "dlg": [
     {
      "sp": "男",
@@ -9546,7 +9546,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Loi ru khoi hanh som hon vao sang mai can duoc dong y nhiet tinh. Chi noi buoi sang la ngay mai hay noi som la buoi sang deu khong tra loi loi ru.",
+   "exp": "Lời rủ khởi hành sớm hơn vào sáng mai cần được đồng ý nhiệt tình. Chỉ nói buổi sáng là ngày mai hay nói sớm là buổi sáng đều không trả lời lời rủ.",
    "dlg": [
     {
      "sp": "女",
@@ -9566,7 +9566,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Cau hoi la cai dat may tinh moi da xong chua nen dap an da xong trong hom qua moi phu hop. Chi noi may tinh moi hay noi cai dat la may tinh deu khong tra loi cau hoi.",
+   "exp": "Câu hỏi là cài đặt máy tính mới đã xong chưa nên đáp án đã xong trong hôm qua mới phù hợp. Chỉ nói máy tính mới hay nói cài đặt là máy tính đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
@@ -9586,7 +9586,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Loi chia se quyen sach rat thu vi can duoc dap lai bang dong tinh va noi minh cung thay thu vi. Chi noi sach la thu vi hay noi thu vi la sach deu khong phai cau tra loi tu nhien.",
+   "exp": "Lời chia sẻ quyển sách rất thú vị cần được đáp lại bằng đồng tình và nói mình cũng thấy thú vị. Chỉ nói sách là thú vị hay nói thú vị là sách đều không phải câu trả lời tự nhiên.",
    "dlg": [
     {
      "sp": "女",
@@ -9607,7 +9607,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi dam bao nguon tai chinh quan trong nhung chua du, can cong khai ro rang nguon tien duoc dung cho ho tro nao va bao nhieu de nguoi dan de hieu. Chi dam bao nguon tien, khong can nguon tien hay khong nen cong khai deu khong phai quan diem.",
+   "exp": "Người nói nói đảm bảo nguồn tài chính quan trọng nhưng chưa đủ, cần công khai rõ ràng nguồn tiền được dùng cho hỗ trợ nào và bao nhiêu để người dân dễ hiểu. Chỉ đảm bảo nguồn tiền, không cần nguồn tiền hay không nên công khai đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9643,7 +9643,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro ket qua nghien cuu dai hoc dang duoc ung dung vao phat trien san pham doanh nghiep, nhung truong dai hoc chu trong phat trien hoc thuat con doanh nghiep chu trong loi nhuan, nen can co che vuot qua khac biet muc dich. Khong can lien ket, khong nen ung dung hay chi nghi den loi nhuan deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ kết quả nghiên cứu đại học đang được ứng dụng vào phát triển sản phẩm doanh nghiệp, nhưng trường đại học chú trọng phát triển học thuật còn doanh nghiệp chú trọng lợi nhuận, nên cần cơ chế vượt qua khác biệt mục đích. Không cần liên kết, không nên ứng dụng hay chỉ nghĩ đến lợi nhuận đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -9689,7 +9689,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi chi truyen nghe thi chua du vi chi lam nghe truyen thong se co thu nhap bat on, nen can vua truyen nghe vua dam bao doi song on dinh cho nghe nhan tre. Chi truyen nghe, khong can dao tao tre hay noi doi song khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói chỉ truyền nghề thì chưa đủ vì chỉ làm nghề truyền thống sẽ có thu nhập bất ổn, nên cần vừa truyền nghề vừa đảm bảo đời sống ổn định cho nghệ nhân trẻ. Chỉ truyền nghề, không cần đào tạo trẻ hay nói đời sống không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9725,7 +9725,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Hai nguoi chi ro du lich trai nghiem duoc yeu thich vi duoc trai nghiem doi song dia phuong, giao luu voi dan dia phuong va cong viec truyen thong, vua kich hoat dia phuong vua lam hai long khach. Chi tham danh lam thang canh, khong can du lich hay noi trai nghiem khong lien quan khach deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ du lịch trải nghiệm được yêu thích vì được trải nghiệm đời sống địa phương, giao lưu với dân địa phương và công việc truyền thống, vừa kích hoạt địa phương vừa làm hài lòng khách. Chỉ thăm danh lam thắng cảnh, không cần du lịch hay nói trải nghiệm không liên quan khách đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -9771,7 +9771,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi luong khach suoi nuoc nong giam, nen can ket hop suc hap dan suoi nuoc nong voi trai nghiem am thuc va thien nhien dia phuong dong thoi thu hut the he tre de tao khong khi moi. Chi suc hap dan suoi nuoc nong, khong can phuc hoi hay noi thu hut gioi tre khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói lượng khách suối nước nóng giảm, nên cần kết hợp sức hấp dẫn suối nước nóng với trải nghiệm ẩm thực và thiên nhiên địa phương đồng thời thu hút thế hệ trẻ để tạo không khí mới. Chỉ sức hấp dẫn suối nước nóng, không cần phục hồi hay nói thu hút giới trẻ không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
@@ -9812,7 +9812,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 3,
-   "exp": "Hai nguoi chi ro gioi tre ngai ket hon mot phan do lo lang chi phi nuoi con va can bang voi cong viec, nen ho tro nuoi con day du se lam giam lo lang va mo rong lua chon ket hon. Noi quan niem hon nhan khong phai van de, ep ket hon hay noi ho tro khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ giới trẻ ngại kết hôn một phần do lo lắng chi phí nuôi con và cân bằng với công việc, nên hỗ trợ nuôi con đầy đủ sẽ làm giảm lo lắng và mở rộng lựa chọn kết hôn. Nói quan niệm hôn nhân không phải vấn đề, ép kết hôn hay nói hỗ trợ không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -9858,7 +9858,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi o dia phuong thieu bac si nen he thong y te chua du, can dam bao bac si, lien ket co so y te va tan dung kham truc tuyen de nguoi vung xa de gap bac si chuyen khoa. Noi chenh lech khong phai van de, he thong dia phuong da du hay kham truc tuyen khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói ở địa phương thiếu bác sĩ nên hệ thống y tế chưa đủ, cần đảm bảo bác sĩ, liên kết cơ sở y tế và tận dụng khám trực tuyến để người vùng xa dễ gặp bác sĩ chuyên khoa. Nói chênh lệch không phải vấn đề, hệ thống địa phương đã đủ hay khám trực tuyến không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9899,7 +9899,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro nguoi tieu dung chon san pham than thien moi truong ngay cang nhieu, va lua chon do thuc day doanh nghiep doi sach moi truong. Noi lua chon khong lien quan, doanh nghiep khong nen doi sach hay nguoi tieu dung khong nen chon deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ người tiêu dùng chọn sản phẩm thân thiện môi trường ngày càng nhiều, và lựa chọn đó thúc đẩy doanh nghiệp đổi sách môi trường. Nói lựa chọn không liên quan, doanh nghiệp không nên đổi sách hay người tiêu dùng không nên chọn đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -9945,7 +9945,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Nguoi noi noi dan dia phuong hop tac chuan bi va van hanh le hoi se tao ket noi, dong thoi le hoi la co hoi giao luu giua thanh nien va nguoi cao tuoi, nen can truyen y nghia le hoi va thuc day tham gia. Noi le hoi khong lien quan ket noi, huy le hoi hay noi tham gia khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói dân địa phương hợp tác chuẩn bị và vận hành lễ hội sẽ tạo kết nối, đồng thời lễ hội là cơ hội giao lưu giữa thanh niên và người cao tuổi, nên cần truyền ý nghĩa lễ hội và thúc đẩy tham gia. Nói lễ hội không liên quan kết nối, hủy lễ hội hay nói tham gia không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -9981,7 +9981,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hai nguoi chi ro gia dinh co sach va nguoi than ung ho hoc tap se ho tro nang luc hoc cua tre, nen giao duc tre duoc chong do boi ca truong hoc va gia dinh thong qua lien ket. Chi truong hoc la du, vai tro gia dinh khong lien quan hay khong can lien ket deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ gia đình có sách và người thân ủng hộ học tập sẽ hỗ trợ năng lực học của trẻ, nên giáo dục trẻ được chống đỡ bởi cả trường học và gia đình thông qua liên kết. Chỉ trường học là đủ, vai trò gia đình không liên quan hay không cần liên kết đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -10027,7 +10027,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 2,
-   "exp": "Nguoi noi noi rao can ngon ngu khien thong tin phong chong thien tai tieng Nhat kho den duoc dan cu nuoc ngoai, nen can truyen thong tin bang nhieu ngon ngu va cho dan cu nuoc ngoai tham gia tap luyen phong chong thien tai de nam cach so tan. Chi thong tin tieng Nhat, khong can thong tin hay noi tham gia tap luyen khong lien quan deu khong phai quan diem.",
+   "exp": "Người nói nói rào cản ngôn ngữ khiến thông tin phòng chống thiên tai tiếng Nhật khó đến được dân cư nước ngoài, nên cần truyền thông tin bằng nhiều ngôn ngữ và cho dân cư nước ngoài tham gia tập luyện phòng chống thiên tai để nắm cách sơ tán. Chỉ thông tin tiếng Nhật, không cần thông tin hay nói tham gia tập luyện không liên quan đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "男",
@@ -10068,7 +10068,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Hai nguoi chi ro nguoi cao tuoi tham gia tinh nguyen se cam thay y nghia song, dong thoi kinh nghiem va tri tue cua ho duoc phat huy trong hoat dong dia phuong, nen can co che de nguoi cao tuoi de tham gia. Khong can nguoi cao tuoi tham gia, chi nguoi tre lam hay noi kinh nghiem khong lien quan deu khong phai ket luan.",
+   "exp": "Hai người chỉ rõ người cao tuổi tham gia tình nguyện sẽ cảm thấy ý nghĩa sống, đồng thời kinh nghiệm và trí tuệ của họ được phát huy trong hoạt động địa phương, nên cần cơ chế để người cao tuổi dễ tham gia. Không cần người cao tuổi tham gia, chỉ người trẻ làm hay nói kinh nghiệm không liên quan đều không phải kết luận.",
    "dlg": [
     {
      "sp": "女",
@@ -10114,7 +10114,7 @@ window.LISTEN_N1_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Nguoi noi neu cua hang trong dang duoc tan dung lam noi giao luu dia phuong va quan cua doanh nhan tre, ca hai huong deu thuc day viec tan dung. Khong can tan dung, pha bo het hay noi cua hang trong khong phai van de deu khong phai quan diem.",
+   "exp": "Người nói nêu cửa hàng trống đang được tận dụng làm nơi giao lưu địa phương và quán của doanh nhân trẻ, cả hai hướng đều thúc đẩy việc tận dụng. Không cần tận dụng, phá bỏ hết hay nói cửa hàng trống không phải vấn đề đều không phải quan điểm.",
    "dlg": [
     {
      "sp": "女",
