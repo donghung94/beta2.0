@@ -279,6 +279,20 @@
   .wvsec{font-size:16.5px; font-weight:800; margin:20px 0 4px;}
   .wvsec:first-child{margin-top:0;}
   .wvinfo{font-size:13px; color:var(--ink-2); line-height:1.55; margin:0 0 12px;}
+
+  /* ---------- Tokutei: tab chọn ngành + thẻ “Đang biên soạn” ---------- */
+  .tk-tabs{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px;}
+  .tk-tab{min-height:40px; padding:0 14px; border-radius:999px; border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer;}
+  .tk-tab.on{background:var(--red); border-color:var(--red); color:#fff;}
+  .tk-panel{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px;}
+  .tk-phead{display:flex; align-items:center; gap:12px; margin-bottom:10px;}
+  .tk-glyph{flex:0 0 auto; width:46px; height:46px; border-radius:12px; background:var(--red-soft); color:var(--red); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800;}
+  .tk-pmain{display:flex; flex-direction:column; gap:1px; min-width:0;}
+  .tk-pmain b{font-size:15.5px; font-weight:800; line-height:1.3;}
+  .tk-pmain span{font-size:12.5px; color:var(--ink-2);}
+  .tk-panel p{font-size:13.5px; color:var(--ink-2); line-height:1.6; margin:0 0 8px;}
+  .tk-panel p.tk-note{margin-bottom:0;}
+  .tk-panel p b{color:var(--ink);}
   /* Trang con của mục Từ vựng xếp chồng lên trang chọn mục, chi tiết từ nằm trên cùng */
   #wvLessonsOverlay{z-index:47;}
   #wvWordsOverlay{z-index:48;}
@@ -316,6 +330,25 @@
   }
   .wv-cardspk svg{width:20px; height:20px;}
   .wv-cardspk:active{background:var(--red); color:#fff; border-color:var(--red);}
+  /* Hình minh họa từ vựng (làm mẫu ở N5 Bài 1): khung tỉ lệ cố định, ảnh
+     object-fit cover nên hình vuông/ngang/dọc đều không vỡ bố cục.
+     Nền khung giữ trắng vì hình vẽ nét đen trên nền trắng, cả 2 chế độ màu. */
+  .wordrow .wv-thumb{
+    flex:0 0 auto; width:54px; height:54px; border-radius:10px; overflow:hidden;
+    border:1px solid var(--line); background:#fff;
+  }
+  .wordrow .wv-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .wv-fimg{
+    width:100%; max-width:320px; aspect-ratio:4/3; margin:0 auto 16px;
+    border-radius:14px; overflow:hidden; border:1px solid var(--line); background:#fff;
+  }
+  .wv-fimg img{width:100%; height:100%; object-fit:cover; display:block;}
+  /* Tiêu đề nhóm trong danh sách từ (bài “Số và đếm ngày tháng”) */
+  .wv-grouphead{
+    font-size:13px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--red); padding:18px 2px 2px;
+  }
+  .wv-grouphead:first-child{padding-top:6px;}
 
   /* ---------- Game Pikachu kana ↔ kanji (bản mẫu trong mục Từ vựng) ---------- */
   #pkOverlay{z-index:50;}
@@ -458,6 +491,33 @@
     width:60px; height:60px; border-radius:50%; background:var(--red); color:#fff; flex:0 0 auto;
     display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700;
   }
+  /* Ảnh đại diện (ảnh Google / ảnh tự tải): lấp đầy vòng tròn, khung .fr-* vẫn bọc ngoài */
+  .avatar img, .l-av img, .c-av img{width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;}
+  .avwrap{position:relative; flex:0 0 auto;}
+  .avbadge{
+    position:absolute; right:-2px; bottom:-2px; width:22px; height:22px; border-radius:50%;
+    background:var(--ink); color:#fff; border:2px solid var(--card);
+    display:flex; align-items:center; justify-content:center; pointer-events:none;
+  }
+  .avbadge svg{width:12px; height:12px;}
+  #meAvatar{cursor:pointer;}
+  /* Sheet đổi ảnh đại diện */
+  #avatarSheet{overflow-y:auto;}
+  .avprev{display:flex; align-items:center; gap:13px; margin:0 0 14px;}
+  .avprev .bigav{width:64px; height:64px; font-size:27px; flex:0 0 auto;}
+  .avprev p{margin:0; font-size:13px; color:var(--ink-2); line-height:1.55;}
+  .avprev p b{color:var(--ink);}
+  .avopt{
+    width:100%; display:flex; align-items:center; gap:12px; text-align:left; min-height:56px;
+    background:var(--card); border:1.5px solid var(--line); border-radius:13px; padding:10px 14px; margin:0 0 9px;
+    font-family:inherit; font-size:14.5px; font-weight:700; color:var(--ink); cursor:pointer;
+  }
+  .avopt small{display:block; font-size:12.5px; font-weight:600; color:var(--ink-2); margin-top:2px; line-height:1.45;}
+  .avopt:disabled{opacity:.45; cursor:default;}
+  .avopt .thumb{width:38px; height:38px; border-radius:50%; object-fit:cover; flex:0 0 auto;}
+  .avopt .gic{width:38px; height:38px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center; background:var(--bg); border:1px solid var(--line); font-weight:800; font-size:17px; color:var(--ink);}
+  .avopt .gic svg{width:19px; height:19px;}
+  .avopt .on{margin-left:auto; font-size:11.5px; font-weight:800; color:var(--good); flex:0 0 auto; white-space:nowrap;}
   .prof h2{margin:0 0 2px; font-size:18px; font-weight:800;}
   .prof p{margin:0; font-size:13px; color:var(--ink-2);}
   .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;}
@@ -910,6 +970,25 @@
   @keyframes shpulse{0%,100%{box-shadow:0 0 0 0 rgba(200,16,46,.45);}50%{box-shadow:0 0 0 9px rgba(200,16,46,0);}}
   @media (prefers-reduced-motion: reduce){ .shbtn.rec{animation:none;} }
   .shstatus{font-size:13px; color:var(--ink-2); line-height:1.55; margin:12px 2px 0; min-height:20px;}
+
+  /* Bảng điểm phát âm Shadowing (nhận diện giọng nói của trình duyệt, miễn phí) */
+  .scpanel{margin-top:13px; background:var(--bg); border:1px solid var(--line); border-radius:13px; padding:12px 13px;}
+  .schead{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+  .schead span{font-size:13px; font-weight:800; letter-spacing:.04em;}
+  .schead b{font-size:27px; font-weight:800; line-height:1;}
+  .schead b small{font-size:12px; font-weight:700; color:var(--ink-3); margin-left:2px;}
+  .scverd{font-size:13px; color:var(--ink-2); line-height:1.55; margin:7px 0 2px;}
+  .scrow{display:flex; align-items:center; gap:9px; margin-top:8px; font-size:12.5px;}
+  .scrow .lb{flex:0 0 88px; font-weight:700; color:var(--ink-2);}
+  .scbar{flex:1; height:8px; border-radius:99px; background:var(--line); overflow:hidden;}
+  .scbar i{display:block; height:100%; border-radius:99px;}
+  .scrow .vl{flex:0 0 28px; text-align:right; font-weight:800;}
+  .scsent{font-size:16.5px; font-weight:600; line-height:1.85; margin-top:11px;}
+  .scsent .ok{color:var(--good);}
+  .scsent .bad{color:var(--red); background:var(--red-soft); border-radius:4px;}
+  .scheard{font-size:13px; color:var(--ink-2); line-height:1.6; margin-top:8px;}
+  .scnote{font-size:11.5px; color:var(--ink-3); line-height:1.55; margin-top:9px;}
+  .scmsg{font-size:13px; color:var(--ink-2); line-height:1.6;}
   .shnav{display:flex; gap:9px; margin-top:13px;}
 
   /* Luyện nghe: chọn cấp N5–N1 dạng lưới tab ở đầu trang chọn cấp — 5 ô nhỏ nằm chung
@@ -1250,6 +1329,71 @@
     margin-left:auto; flex:0 0 auto; background:none; border:none; color:inherit; cursor:pointer;
     font-size:17px; font-weight:800; line-height:1; padding:2px 5px; font-family:inherit;
   }
+
+  /* ---------- Đếm ngược JLPT + lộ trình ôn ---------- */
+  .jlptcd{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px; margin-top:16px;
+  }
+  .jlptcd-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .jlptcd-head h2{font-size:16px; margin:0 0 2px; font-weight:800;}
+  .jlptcd-head p{margin:0; font-size:11.5px; color:var(--ink-2); line-height:1.4;}
+  .jlptcd-count{
+    flex:0 0 auto; text-align:center; background:var(--red); color:#fff;
+    border-radius:13px; padding:7px 12px 8px; min-width:84px;
+  }
+  .jlptcd-count b{display:block; font-size:21px; line-height:1.1; font-weight:800; white-space:nowrap;}
+  .jlptcd-count span{font-size:10.5px; font-weight:700; opacity:.92;}
+  .jlptcd-lvs{margin:10px 0 0;}
+  .jlptcd-lvs .lv{flex:1 1 0; padding:0 4px; min-height:38px; font-size:13.5px;}
+  .jlptcd-lvnote{margin:6px 2px 0; font-size:11px; color:var(--ink-3); font-weight:600;}
+  .jlptcd-phases{margin-top:6px; display:flex; flex-direction:column;}
+  .jlphase{display:flex; gap:9px; padding:8px 0; border-bottom:1px solid var(--line); align-items:flex-start;}
+  .jlphase:last-child{border-bottom:none; padding-bottom:2px;}
+  .jlphase .p-ic{
+    width:30px; height:30px; flex:0 0 auto; border-radius:9px; background:var(--bg);
+    color:var(--ink-3); display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; border:1px solid var(--line);
+  }
+  .jlphase.cur .p-ic{background:var(--red); border-color:var(--red); color:#fff;}
+  .jlphase.past .p-ic{background:var(--good-soft); border-color:transparent; color:var(--good);}
+  .jlphase .p-main{flex:1; min-width:0;}
+  .jlphase .p-main b{display:block; font-size:13px; line-height:1.45;}
+  .jlphase .p-main span{display:block; font-size:11.5px; color:var(--ink-2); margin-top:1px; line-height:1.4;}
+  .jlphase.past .p-main b, .jlphase.past .p-main span{color:var(--ink-3);}
+  .jlphase .p-state{
+    flex:0 0 auto; font-size:10.5px; font-weight:800; padding:4px 8px; border-radius:999px;
+    background:var(--bg); color:var(--ink-3); border:1px solid var(--line); white-space:nowrap;
+  }
+  .jlphase.cur .p-state{background:var(--red-soft); color:var(--red); border-color:transparent;}
+  .jlphase.past .p-state{background:var(--good-soft); color:var(--good); border-color:transparent;}
+  .jlptcd-today{margin-top:10px; background:var(--bg); border:1px solid var(--line); border-radius:13px; padding:10px 11px 4px;}
+  .jlptcd-todayhead{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
+  .jlptcd-todayhead b{font-size:13.5px;}
+  .jlptcd-todayhead span{font-size:11.5px; font-weight:800; color:var(--red); white-space:nowrap;}
+  .jlptcd-bar{height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:7px;}
+  .jlptcd-bar i{display:block; height:100%; background:var(--red); border-radius:99px; transition:width .25s;}
+  .jlt-row{display:flex; align-items:center; gap:9px; padding:8px 0; border-bottom:1px solid var(--line);}
+  .jlt-row:last-child{border-bottom:none;}
+  .jlt-chk{
+    width:27px; height:27px; flex:0 0 auto; border-radius:50%; cursor:pointer; padding:0;
+    border:2px solid #C9C9C0; background:var(--card); color:#fff; font-family:inherit;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .jlt-chk svg{width:14px; height:14px; opacity:0;}
+  .jlt-chk.on{background:var(--good); border-color:var(--good);}
+  .jlt-chk.on svg{opacity:1;}
+  .jlt-go{
+    flex:1; min-width:0; display:flex; align-items:center; gap:6px; background:none; border:none;
+    font-family:inherit; color:var(--ink); text-align:left; cursor:pointer; padding:0;
+  }
+  .jlt-go .t-main{flex:1; min-width:0;}
+  .jlt-go .t-main b{display:block; font-size:13px; line-height:1.45;}
+  .jlt-go .t-main span{display:block; font-size:11.5px; color:var(--ink-2); margin-top:1px; line-height:1.35;}
+  .jlt-go .t-arrow{flex:0 0 auto; color:var(--red); font-size:19px; font-weight:800; line-height:1;}
+  .jlt-row.done .t-main b{color:var(--ink-3); text-decoration:line-through;}
+  .jlt-row.done .t-main span{color:var(--ink-3);}
+  .jlt-row.done .t-arrow{color:var(--ink-3);}
 
   /* ---------- App grid kiểu iPhone (nửa dưới trang chủ) ---------- */
   .appgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px 8px; margin-top:4px;}
@@ -1607,6 +1751,12 @@
   .pwadot.warn{background:#E3A008;}
   .pwahelp{font-size:12.5px; color:var(--ink-2); line-height:1.6; margin:10px 2px 0;}
   .pwahelp b{color:var(--ink);}
+  /* Video hướng dẫn cài app: iPhone + Android, phát ngay trong thẻ PWA của tab Cài đặt */
+  .installvids{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;}
+  .installvid h4{margin:0 0 6px; font-size:13.5px; color:var(--ink);}
+  .installvid video{display:block; width:100%; aspect-ratio:9/16; border-radius:12px; border:1px solid var(--line); background:#000;}
+  .installvid p{font-size:12px; color:var(--ink-2); line-height:1.55; margin:7px 1px 0;}
+  .installvid p b{color:var(--ink);}
   .offlinebar{
     display:none; margin:10px 0 0; background:#2A2118; color:#F5D98A; border-radius:12px;
     padding:10px 13px; font-size:12.5px; font-weight:700; line-height:1.45; align-items:center; gap:8px;
@@ -1683,17 +1833,24 @@
   .gcard .gev{font-size:13px; color:var(--ink-2); margin-top:2px;}
 
   /* ---------- Trợ lý AI Sora: nút tròn nổi + khung chat hướng dẫn dùng app ---------- */
-  .assistant-fab{
+  /* Khung bọc nút Sora: kéo thả tự do khắp màn hình, thả ra tự dính mép trái/phải (kiểu AssistiveTouch của iPhone) */
+  .assistant-fabwrap{
     position:absolute; right:16px; bottom:calc(var(--tabh) + 14px); z-index:70;
-    width:39px; height:39px; border-radius:50%; padding:0; cursor:pointer;
+    width:39px; height:39px; touch-action:none; -webkit-user-select:none; user-select:none;
+  }
+  .assistant-fabwrap.hide, .assistant-fabwrap.dismissed{display:none;}
+  .assistant-fabwrap.snapping{transition:left .26s cubic-bezier(.32,.72,.28,1), top .26s cubic-bezier(.32,.72,.28,1);}
+  .assistant-fab{
+    position:relative; width:100%; height:100%; border-radius:50%; padding:0; cursor:pointer;
     border:2px solid #C9A24B; background:#FFF8EC;
     box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18);
     display:flex; align-items:center; justify-content:center;
     animation:assistantPulse 2.6s ease-in-out infinite;
   }
+  .assistant-fabwrap.dragging .assistant-fab{animation:none; transform:scale(1.07); cursor:grabbing;}
   .assistant-fab img{
     width:100%; height:100%; border-radius:50%; display:block;
-    object-fit:cover; object-position:50% 8%;
+    object-fit:cover; object-position:50% 8%; -webkit-user-drag:none;
   }
   .assistant-fab .assistant-fab-badge{
     position:absolute; right:-2px; bottom:-2px; width:16px; height:16px; border-radius:50%;
@@ -1702,7 +1859,16 @@
   }
   .assistant-fab .assistant-fab-badge svg{width:8px; height:8px;}
   .assistant-fab:active{transform:scale(.93);}
-  .assistant-fab.hide{display:none;}
+  /* Dấu × nhỏ ở góc nút: bấm để ẩn nút Sora (mở lại trong tab Cài đặt) */
+  .assistant-fab-close{
+    position:absolute; top:-7px; right:-7px; z-index:2;
+    width:20px; height:20px; border-radius:50%; padding:0; cursor:pointer;
+    border:1.5px solid var(--card); background:#2A2118; color:#FFF8EC;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 8px rgba(20,16,10,.3);
+  }
+  .assistant-fab-close svg{width:10px; height:10px;}
+  .assistant-fab-close:active{background:var(--red);}
   @keyframes assistantPulse{
     0%,100%{box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18), 0 0 0 0 rgba(200,16,46,.28);}
     50%{box-shadow:0 10px 24px rgba(20,16,10,.28), 0 2px 6px rgba(20,16,10,.18), 0 0 0 7px rgba(200,16,46,0);}
@@ -1817,6 +1983,7 @@
   }
   @media (prefers-reduced-motion: reduce){
     .assistant-fab{animation:none;}
+    .assistant-fabwrap.snapping{transition:none;}
     .assistant-msg.typing i{animation:none;}
     .assistant-panel, .assistant-scrim{transition:none;}
   }
@@ -2123,6 +2290,22 @@
             <rect x="33.5" y="33.5" width="10.5" height="10.5" rx="2.2" fill="#C8102E" stroke="#E3A008" stroke-width="1.6"/>
             <path d="M38.7 36v5.4M36.2 38.7h5" stroke="#F5D98A" stroke-width="1.3" stroke-linecap="round"/>
           </symbol>
+          <symbol id="ic-tokutei" viewBox="0 0 48 48">
+            <path d="M13.5 44c.6-7.5 4.6-12 10.5-12s9.9 4.5 10.5 12z" fill="#C8102E"/>
+            <path d="M15.8 37.8h16.4" stroke="#F5D98A" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M24 32.6 20.9 37h6.2z" fill="#FFF3D6"/>
+            <circle cx="24" cy="20" r="12" fill="#FFE1C2"/>
+            <path d="M12.4 20.8c-.3-3.1.4-6 2-8.4.5 2.8-.1 6-1.1 8.6zM35.6 20.8c.3-3.1-.4-6-2-8.4-.5 2.8.1 6 1.1 8.6z" fill="#4A3226"/>
+            <path d="M11.2 19.2C11.2 10.8 16.9 5 24 5s12.8 5.8 12.8 14.2z" fill="#E3A008"/>
+            <path d="M24 5.2v13.8" stroke="#B97A0B" stroke-width="2"/>
+            <circle cx="24" cy="12.3" r="3.2" fill="#FFF8EC"/>
+            <text x="24" y="14.6" text-anchor="middle" font-size="5.6" font-weight="700" fill="#C8102E">特</text>
+            <rect x="8.2" y="18.4" width="31.6" height="4.2" rx="2.1" fill="#B97A0B"/>
+            <ellipse cx="19.5" cy="25.2" rx="1.8" ry="2.5" fill="#33231A"/><ellipse cx="28.5" cy="25.2" rx="1.8" ry="2.5" fill="#33231A"/>
+            <circle cx="20.1" cy="24.2" r=".7" fill="#fff"/><circle cx="29.1" cy="24.2" r=".7" fill="#fff"/>
+            <ellipse cx="16.2" cy="29" rx="2" ry="1.2" fill="#FFB3C1"/><ellipse cx="31.8" cy="29" rx="2" ry="1.2" fill="#FFB3C1"/>
+            <path d="M22.4 29.6c.9 1 2.3 1 3.2 0" stroke="#B3543F" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          </symbol>
         </svg>
 
         <div class="utilrow">
@@ -2178,6 +2361,9 @@
           <button class="appicon" data-app="read">
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-read"></use></svg></span><span>Đọc hiểu</span>
           </button>
+          <button class="appicon" data-app="tokutei">
+            <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-tokutei"></use></svg></span><span>Tokutei</span>
+          </button>
           <button class="appicon" data-app="rank">
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-rank"></use></svg></span><span>Xếp hạng</span>
           </button>
@@ -2193,6 +2379,24 @@
           <button class="appicon" data-app="admin" id="gridAdminCell" hidden>
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-admin"></use></svg></span><span>Quản trị</span>
           </button>
+        </div>
+
+        <div class="jlptcd" id="jlptCard">
+          <div class="jlptcd-head">
+            <div>
+              <h2>Đếm ngược JLPT</h2>
+              <p id="jlptExamLine">Đang tính kỳ thi gần nhất…</p>
+            </div>
+            <div class="jlptcd-count"><b id="jlptDaysLeft">– ngày</b><span>nữa là tới ngày thi</span></div>
+          </div>
+          <div class="levels jlptcd-lvs" id="jlptLvRow" role="group" aria-label="Chọn cấp mục tiêu JLPT"></div>
+          <p class="jlptcd-lvnote" id="jlptLvNote"></p>
+          <div class="jlptcd-phases" id="jlptPhases"></div>
+          <div class="jlptcd-today">
+            <div class="jlptcd-todayhead"><b>Hôm nay học gì</b><span id="jlptProgTxt"></span></div>
+            <div class="jlptcd-bar"><i id="jlptProgBar" style="width:0%"></i></div>
+            <div id="jlptTodayList"></div>
+          </div>
         </div>
 
         <div class="missions">
@@ -2347,7 +2551,10 @@
         <h1 class="tabtitle">Cá nhân</h1>
         <div class="card" style="margin-top:6px;">
           <div class="prof">
-            <div class="avatar jp">空</div>
+            <div class="avwrap">
+              <div class="avatar jp" id="meAvatar" role="button" tabindex="0" aria-label="Đổi ảnh đại diện">空</div>
+              <span class="avbadge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            </div>
             <div>
               <h2>Học viên SoraKanji</h2>
               <p id="meCourse">Đang học N4 · Mục tiêu thi 12/2026</p>
@@ -2431,6 +2638,11 @@
             Tạo phiếu luyện viết
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
+          <button class="mrow" id="meAvatarRow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.2"/></svg>
+            Ảnh đại diện — ảnh Google hoặc tự tải lên
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
           <button class="mrow" id="meSettingsRow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2.1-1.63-2-3.46-2.49 1a7 7 0 0 0-2.42-1.4L13.66 2.6h-3.32l-.39 2.51a7 7 0 0 0-2.42 1.4l-2.49-1-2 3.46L5.14 10.6a7 7 0 0 0 0 2.8l-2.1 1.63 2 3.46 2.49-1a7 7 0 0 0 2.42 1.4l.39 2.51h3.32l.39-2.51a7 7 0 0 0 2.42-1.4l2.49 1 2-3.46L18.86 13.4c.1-.45.14-.92.14-1.4Z"/></svg>
             Cài đặt
@@ -2466,7 +2678,7 @@
             <div class="leadrow"><span class="l-rank">10</span><span class="l-av">T</span><span class="l-main"><b>Thanh Tùng</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · N4</span></span><span class="l-tv">1.330 Tu vi</span></div>
             <div class="leaddots" aria-hidden="true">···</div>
           </div>
-          <div class="leadrow"><span class="l-rank">18</span><span class="l-av" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · Tầng 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 Tu vi</span></div>
+          <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Trúc Cơ · Tầng 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 Tu vi</span></div>
         </div>
         <button class="seemorebtn" id="rankMoreBtn" aria-expanded="false" aria-controls="rankMore"><span id="rankMoreLabel">Xem thêm</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:8px 2px 0;">Bảng rút gọn: mặc định chỉ hiện top 3 của tuần và vị trí của bạn — bấm “Xem thêm” để mở rộng hạng 4–10. Hạng của bạn là 18, cùng một con số với hạng ở Đấu Pháp Đài.</p>
@@ -2567,6 +2779,18 @@
           </div>
           <button class="cta" id="pwaInstallBtn2" style="margin-top:12px;">Cài SoraKanji lên màn hình chính</button>
           <p class="pwahelp" id="pwaHelp"><b>Android (Chrome):</b> bấm nút Cài ở trên, hoặc mở menu ⋮ → “Cài ứng dụng / Thêm vào Màn hình chính”.<br><b>iPhone (Safari):</b> bấm nút Chia sẻ → “Thêm vào Màn hình chính”.<br>Sau khi cài, mở SoraKanji từ icon ngoài màn hình chính để học toàn màn hình, không còn thanh trình duyệt.</p>
+          <div class="installvids">
+            <div class="installvid">
+              <h4>Video: cài trên iPhone</h4>
+              <video controls playsinline preload="metadata" poster="assets/poster-install-iphone.jpg" src="assets/iphone-cai-sorakanji.mp4" aria-label="Video hướng dẫn cài SoraKanji trên iPhone"></video>
+              <p><b>iPhone (Safari):</b> bấm nút <b>Chia sẻ</b> → <b>“Thêm vào Màn hình chính”</b> → <b>Thêm</b>. Bấm phát video để xem từng bước.</p>
+            </div>
+            <div class="installvid">
+              <h4>Video: cài trên Android</h4>
+              <video controls playsinline preload="metadata" poster="assets/poster-install-android.jpg" src="assets/android-cai-sorakanji.mp4" aria-label="Video hướng dẫn cài SoraKanji trên Android"></video>
+              <p><b>Android (Chrome):</b> mở menu <b>⋮</b> → <b>“Cài ứng dụng”</b> hoặc <b>“Thêm vào Màn hình chính”</b> → <b>Cài đặt</b>. Bấm phát video để xem từng bước.</p>
+            </div>
+          </div>
         </div>
 
         <div class="menu">
@@ -2593,6 +2817,11 @@
           <button class="mrow" data-toggle data-key="sync">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>
             Đồng bộ tiến độ <span class="soon">Sắp có</span>
+            <span class="switch on"></span>
+          </button>
+          <button class="mrow" data-toggle data-key="sora">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+            Hiện nút trợ lý Sora
             <span class="switch on"></span>
           </button>
         </div>
@@ -2637,11 +2866,16 @@
       </button>
     </nav>
 
-    <!-- ============ TRỢ LÝ AI SORA: nút tròn nổi + khung chat ============ -->
-    <button class="assistant-fab" id="assistantFab" type="button" aria-label="Mở trợ lý Sora — hướng dẫn dùng app" aria-expanded="false" aria-controls="assistantPanel">
-      <img src="assets/chibi.png" alt="" width="39" height="39" />
-      <span class="assistant-fab-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg></span>
-    </button>
+    <!-- ============ TRỢ LÝ AI SORA: nút tròn nổi (kéo thả được, có dấu × để ẩn) + khung chat ============ -->
+    <div class="assistant-fabwrap" id="assistantFabWrap">
+      <button class="assistant-fab" id="assistantFab" type="button" aria-label="Mở trợ lý Sora — hướng dẫn dùng app (kéo để di chuyển nút)" aria-expanded="false" aria-controls="assistantPanel">
+        <img src="assets/chibi.png" alt="" width="39" height="39" draggable="false" />
+        <span class="assistant-fab-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg></span>
+      </button>
+      <button class="assistant-fab-close" id="assistantFabClose" type="button" aria-label="Ẩn nút trợ lý Sora (mở lại trong tab Cài đặt)" title="Ẩn nút Sora — mở lại trong tab Cài đặt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
     <div class="assistant-scrim" id="assistantScrim" aria-hidden="true"></div>
     <section class="assistant-panel" id="assistantPanel" role="dialog" aria-label="Trợ lý Sora — hướng dẫn sử dụng app" aria-hidden="true">
       <div class="assistant-head">
@@ -2739,7 +2973,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     <div class="sheet" id="loginSheet" aria-hidden="true">
       <div class="grab"></div>
       <h3>Đăng nhập / Đổi tài khoản</h3>
-      <p class="snote">Nhập email để app nhận diện tài khoản trong phiên này. Tài khoản Admin của app là <b>nongaphao@gmail.com</b> — đăng nhập bằng email đó sẽ mở ô <b>Quản trị</b> ở Home và mục <b>Quản lý học viên</b> ở tab Cá nhân; email khác vẫn là tài khoản học viên thường.</p>
+      <p class="snote">Nhập email để app nhận diện tài khoản trong phiên này. Tài khoản Admin của app là <b>nongaphao@gmail.com</b> — đăng nhập bằng email đó sẽ mở ô <b>Quản trị</b> ở Home và mục <b>Quản lý học viên</b> ở tab Cá nhân; email khác vẫn là tài khoản học viên thường. Ảnh đại diện (ảnh tài khoản Google khi đăng nhập Google, hoặc ảnh tự tải lên) đổi ở tab Cá nhân → Ảnh đại diện.</p>
       <label class="loginfield">
         <span>EMAIL ĐĂNG NHẬP</span>
         <input class="logininput" id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="VD: nongaphao@gmail.com" aria-label="Email đăng nhập" />
@@ -2750,6 +2984,36 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="sheetbtn" id="loginGo" type="button" style="flex:1;">Đăng nhập</button>
       </div>
       <button class="acctbtn" id="loginLogout" type="button" hidden style="width:100%; margin-top:10px;">Đăng xuất khỏi tài khoản hiện tại</button>
+    </div>
+
+    <!-- đổi ảnh đại diện: ảnh Google tự lấy khi đăng nhập Gmail / tự tải ảnh lên / về mặc định -->
+    <div class="sheet" id="avatarSheet" aria-hidden="true">
+      <div class="grab"></div>
+      <h3>Ảnh đại diện</h3>
+      <p class="snote">Ảnh hiện ở tab Cá nhân, bảng Xếp hạng và Phòng chat — khung avatar mua ở Tàng Bảo Các vẫn bọc quanh ảnh như thường. Khi đăng nhập bằng Google, app lấy thẳng ảnh của chính tài khoản đó (qua Firebase) làm avatar; bản xem thử chưa nối đăng nhập Google thật — chờ domain chính thức — nên mục ảnh Google đang chờ, bạn cứ tự tải ảnh lên trước.</p>
+      <div class="avprev">
+        <div class="avatar jp bigav" id="avPreview">空</div>
+        <p>Đang dùng: <b id="avCurSrc">avatar mặc định (chữ 空)</b><br><span id="avAcctLine">Chưa đăng nhập</span></p>
+      </div>
+      <button class="avopt" id="avGoogleBtn" type="button">
+        <img class="thumb" id="avGoogleThumb" alt="" hidden>
+        <span class="gic" id="avGoogleG" aria-hidden="true">G</span>
+        <span>Dùng ảnh tài khoản Google<small id="avGoogleNote">Đăng nhập bằng tài khoản Google trước — app sẽ tự lấy ảnh của tài khoản làm avatar.</small></span>
+        <span class="on" id="avGoogleOn" hidden>ĐANG DÙNG</span>
+      </button>
+      <button class="avopt" id="avUploadBtn" type="button">
+        <span class="gic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span>
+        <span>Tải ảnh từ máy<small>Ảnh bất kỳ — app tự cắt vuông ở giữa và thu nhỏ còn 256px, lưu ngay trên máy này.</small></span>
+        <span class="on" id="avCustomOn" hidden>ĐANG DÙNG</span>
+      </button>
+      <button class="avopt" id="avDefaultBtn" type="button">
+        <span class="gic jp" aria-hidden="true">空</span>
+        <span>Về avatar mặc định<small>Bỏ ảnh đang dùng, quay lại chữ 空 như ban đầu.</small></span>
+        <span class="on" id="avDefaultOn" hidden>ĐANG DÙNG</span>
+      </button>
+      <p id="avatarMsg" style="font-size:13px; color:var(--good); font-weight:700; min-height:19px; margin:2px 0 10px; line-height:1.5;"></p>
+      <button class="ghostbtn" id="avatarClose" type="button" style="width:100%; justify-content:center; min-height:52px;">Đóng</button>
+      <input type="file" id="avatarFile" accept="image/*" hidden>
     </div>
 
     <!-- ============ KANJI DETAIL OVERLAY ============ -->
@@ -2880,6 +3144,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
               Nghe giọng mình
             </button>
           </div>
+          <div id="shScore"></div>
           <p class="shstatus" id="shStatus">Nghe câu mẫu vài lần cho quen nhịp, rồi bấm “Ghi âm nhắc lại” và nói đuổi theo ngay. Nghe lại hai bản liền nhau để so sánh phát âm và ngữ điệu của bạn với câu mẫu.</p>
           <div class="shnav">
             <button class="shbtn" id="shPrev">← Câu trước</button>
@@ -2973,7 +3238,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
           <span id="lsShPlayAllLabel">Nghe cả hội thoại (giọng đã duyệt)</span>
         </button>
-        <p class="wvinfo">Từng câu dưới đây luyện bằng giọng máy của thiết bị: nghe, nghe chậm, ghi âm nhắc lại (tối đa 30 giây) rồi nghe lại giọng mình để so sánh.</p>
+        <p class="wvinfo">Từng câu dưới đây luyện bằng giọng máy của thiết bị: nghe, nghe chậm, ghi âm nhắc lại (tối đa 30 giây) rồi nghe lại giọng mình để so sánh. Sau mỗi lần ghi âm, app chấm điểm phát âm bằng nhận diện giọng nói của trình duyệt (miễn phí) nếu thiết bị hỗ trợ.</p>
         <div id="lsShLines"></div>
         <p class="shstatus" id="lsShStatus"></p>
         <div class="wv-endpad" aria-hidden="true"></div>
@@ -3059,6 +3324,23 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <h3 class="wvsec">Đọc hiểu theo cấp JLPT</h3>
         <p class="wvinfo">200 bài đọc tự viết mới hoàn toàn theo đúng chuẩn từng cấp (chỉ dùng kanji, từ vựng và ngữ pháp đến cấp đó; furigana cho N5/N4/N3, N2/N1 đọc chữ Hán trần như đề thật) — đọc bài, trả lời câu hỏi, xem giải thích tiếng Việt và từ vựng cuối bài. N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng như đề JLPT thật; mỗi dạng 10 bài.</p>
         <div id="rdLevels"></div>
+        <div class="wv-endpad" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- ============ TOKUTEI: CHỌN NGÀNH — ĐANG BIÊN SOẠN ============ -->
+    <div class="overlay front" id="tokuteiOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeTokutei" aria-label="Quay lại — đóng Tokutei">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Tokutei · Kỹ năng đặc định</h2><span>Ôn thi 特定技能 theo từng ngành nghề</span></div>
+      </div>
+      <div class="detailbody">
+        <h3 class="wvsec">Chọn ngành Tokutei</h3>
+        <p class="wvinfo">Mục ôn thi Tokutei (kỹ năng đặc định) chia theo 14 ngành nghề. Chọn ngành của bạn để xem trạng thái — nội dung từng ngành đang được biên soạn từ tài liệu chính thức của ngành.</p>
+        <div class="tk-tabs" id="tkTabs" role="tablist" aria-label="Chọn ngành Tokutei"></div>
+        <div class="tk-panel" id="tkPanel"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -3654,7 +3936,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Lưới Pháp bảo tông môn nay 10 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu / Xếp hạng · Bảo tàng · Phòng chat · Đấu trường. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Pháp bảo và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nay đã nối theo email đăng nhập: đầu tab Cá nhân có mục Tài khoản cho đăng nhập / đổi tài khoản ngay trong phiên này, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ (bản thật còn kiểm tra thêm cờ isAdmin=true trên tài khoản Firebase). Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu tu tiên, lưới pháp bảo tông môn, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu Pháp Đài (đấu lệch giờ 10 câu, thắng cộng điểm cống hiến), ví Linh thạch trong tab Cá nhân và Tàng Bảo Các để tiêu linh thạch / đổi đồ hiếm bằng điểm cống hiến. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cảnh giới tương ứng, mỗi chặng 7 bước, đậu Thi thử mới đột phá. Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Pháp bảo và hàng tiện ích đã đổi sang phong cách chibi tu tiên (đệ tử chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Linh thạch (tinh thạch ngọc lục) và Điểm cống hiến (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Tàng Bảo Các với 6 khung kèm giá (60–250 linh thạch, khung Ngọc Bội 500 điểm cống hiến) — mua xong khung đeo luôn lên avatar; quân hàm cảnh giới kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → vương miện Đại Đế). Lưới Pháp bảo tông môn nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Bảo tàng · Phòng chat · Đấu trường. Ô Tokutei (icon đệ tử chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): 14 tab ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ) — bấm tab là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Pháp bảo và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nay đã nối theo email đăng nhập: đầu tab Cá nhân có mục Tài khoản cho đăng nhập / đổi tài khoản ngay trong phiên này, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ (bản thật còn kiểm tra thêm cờ isAdmin=true trên tài khoản Firebase). Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 linh thạch và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu Pháp Đài, Tàng Bảo Các, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Pháp bảo, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng email @gmail.com thì app tự lấy ảnh hồ sơ gắn với email làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Tàng Bảo Các vẫn bọc quanh ảnh như cũ. Phần tự lấy ảnh Google đã nối sẵn điểm lấy ảnh từ chính phiên đăng nhập (photoURL của Firebase) — đăng nhập Google thật chưa chạy được trên bản xem thử (chờ domain chính thức) nên phần đang dùng ngay được là tự tải ảnh lên.</p>
 </div>
 
   <!-- handwriting.js (MIT) — lớp gọi Google Input Tools, file nguyên bản ở assets/ -->
@@ -4269,8 +4551,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var q = base("reading", "情報検索", "info");
         q.inst = t.inst;
         q.passHtml = t.tpl;
-        q.qText = t.q; q.opts = t.opts.slice(); q.ans = t.ans;
-        q.exp = t.exp; q.correctText = t.opts[t.ans];
+        var iidx = exShuffle(t.opts.map(function(_, k){ return k; }));
+        q.qText = t.q; q.opts = iidx.map(function(x){ return t.opts[x]; }); q.ans = iidx.indexOf(t.ans);
+        q.exp = t.exp; q.correctText = q.opts[q.ans];
         qs.push(q); made++;
       });
       return made;
@@ -4485,8 +4768,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var q = base("reading", kindName, "info");
         if(it.inst) q.inst = it.inst;
         q.passHtml = it.tpl;
-        q.qText = it.q; q.opts = it.opts.slice(); q.ans = it.ans;
-        q.exp = it.exp || null; q.voc = it.voc || null; q.correctText = it.opts[it.ans];
+        var iidx = exShuffle(it.opts.map(function(_, k){ return k; }));
+        q.qText = it.q; q.opts = iidx.map(function(x){ return it.opts[x]; }); q.ans = iidx.indexOf(it.ans);
+        q.exp = it.exp || null; q.voc = it.voc || null; q.correctText = q.opts[q.ans];
         qs.push(q); made++;
       });
       return made;
@@ -4964,7 +5248,23 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     "竹": "bn36lH2pedY",
     "米": "8ktJwy09E5U",
     "耳": "I-hnM0FUtQk",
-    "肉": "etRgxIXFnh4"
+    "肉": "etRgxIXFnh4",
+    "茶": "fgQ69WZuMys",
+    "行": "fZ6JdtEkTt8",
+    "西": "JbLlRb9HirY",
+    "言": "VCmlpkIG3DI",
+    "語": "0ydNiaamlwE",
+    "足": "xZD9qd6IWz4",
+    "車": "rIKQDVwfgWg",
+    "金": "aFR2bSkmUiQ",
+    "長": "y6l4Lv7m5tQ",
+    "門": "C_mq7W61oS0",
+    "雨": "gvG4xYb113g",
+    "電": "d3tuIDOXGzI",
+    "食": "KbI7Bz40DDk",
+    "高": "KPStMyaloyQ",
+    "魚": "is6Y7ibBui0",
+    "鳥": "gSk1QAVXBbY"
   };
 
   var kdContent = document.getElementById("kdContent");
@@ -5197,8 +5497,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* ---------- Đề chuẩn N3 — cấu trúc chính thức bộ 2018: 1 đề CỐ ĐỊNH 102 câu ----------
      Viết 74 (assets/exam-n3-official.js, JLNEW_N3_OFFICIAL_WRITTEN) + Nghe 28
      (assets/listening-exam-n3.js, LISTEN_EXAM_N3; audio ở assets/listen-exam-n3/).
-     Không sinh theo seed, không dùng chung ngân hàng pool với Test 1–9; đáp án trong
-     dữ liệu nguồn giữ nguyên — phần nghe chỉ xáo thứ tự phương án khi hiển thị. */
+     Không sinh theo seed, không dùng chung ngân hàng pool với Test 1–9; dữ liệu nguồn
+     giữ nguyên — cả phần viết lẫn phần nghe chỉ xáo thứ tự HIỂN THỊ của phương án
+     (theo seed cố định 20180311) và ánh xạ lại chỉ số đáp án, nội dung đáp án đúng
+     không đổi. Riêng 即時応答 phần nghe giữ nguyên thứ tự gốc vì audio đọc đáp án. */
   var EX_OFFICIAL_BUILT = null;
   var offDataState = 0; /* 0 chưa nạp · 1 đang nạp · 2 xong · 3 lỗi */
   var offDataQueue = [];
@@ -5274,19 +5576,22 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var o4 = mkOpts(it.a, it.w); q.qText = it.s; q.uline = it.t; q.opts = o4.opts; q.ans = o4.ans; q.fullSent = it.s; q.correctText = it.a;
       } else if(it.subpart === "vocab-yoho"){
         q.qHtml = '<div class="ex-yoho-w jp">' + exEsc(it.t) + "</div>"; q.uline = it.t;
-        q.opts = it.s.slice(); q.ans = it.a; q.correctText = it.s[it.a];
+        var iy = shuf(it.s.map(function(_, k){ return k; }));
+        q.opts = iy.map(function(x){ return it.s[x]; }); q.ans = iy.indexOf(it.a); q.correctText = q.opts[q.ans];
       } else if(it.subpart === "grammar-form"){
         var o5 = mkOpts(it.a, it.w); var txt = it.d ? it.d.join("\n") : it.s;
         q.qText = txt; q.opts = o5.opts; q.ans = o5.ans; q.fullSent = txt.replace("（　）", it.a); q.correctText = it.a;
       } else if(it.subpart === "grammar-order"){
-        q.qText = it.s; q.opts = it.o.slice(); q.ans = it.a; q.correctText = it.o[it.a];
+        var io = shuf(it.o.map(function(_, k){ return k; }));
+        q.qText = it.s; q.opts = io.map(function(x){ return it.o[x]; }); q.ans = io.indexOf(it.a); q.correctText = q.opts[q.ans];
       } else if(it.subpart === "grammar-passage"){
         var o6 = mkOpts(it.a, it.w);
         q.pass = (it.intro ? it.intro + "\n" : "") + it.p;
         q.qText = "（　" + it.blank + "　）に 入る ものを えらんで ください。";
         q.opts = o6.opts; q.ans = o6.ans; q.correctText = it.a;
       } else { /* read-short / read-mid / read-long / read-info */
-        q.pass = it.p; q.qText = it.q; q.opts = it.o.slice(); q.ans = it.a; q.evi = it.e || null; q.correctText = it.o[it.a];
+        var ir = shuf(it.o.map(function(_, k){ return k; }));
+        q.pass = it.p; q.qText = it.q; q.opts = ir.map(function(x){ return it.o[x]; }); q.ans = ir.indexOf(it.a); q.evi = it.e || null; q.correctText = q.opts[q.ans];
       }
       qs.push(q);
     });
@@ -6046,7 +6351,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var settings = {
     sound: true, remind: true,
     dark: !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches),
-    recog: true, sync: true
+    recog: true, sync: true, sora: true
   };
   try{
     var savedSet = JSON.parse(window.localStorage.getItem("sk_settings") || "null");
@@ -6062,6 +6367,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var sw = row.querySelector(".switch");
       if(sw && row.dataset.key && (row.dataset.key in settings)) sw.classList.toggle("on", !!settings[row.dataset.key]);
     });
+    /* Nút trợ lý Sora nổi: tắt công tắc (hoặc bấm dấu × trên nút) thì ẩn, bật lại thì hiện */
+    var fabWrap = document.getElementById("assistantFabWrap");
+    if(fabWrap) fabWrap.classList.toggle("dismissed", !settings.sora);
     applyTheme();
   }
   document.querySelectorAll("[data-toggle]").forEach(function(row){
@@ -6078,7 +6386,18 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           : "Đã tắt nhắc nhiệm vụ 21:00 — app sẽ không hiện lời nhắc buổi tối nữa.");
         if(typeof checkRemind === "function") checkRemind();
       }
+      if(key === "sora"){
+        setMsg(settings.sora
+          ? "Đã hiện lại nút trợ lý Sora — nút tròn ảnh bé chibi nổi trên màn hình. Kéo thả nút tới vị trí nào cũng được, thả ra nút tự dính vào mép trái/phải; bấm nhanh vào nút để mở khung chat."
+          : "Đã ẩn nút trợ lý Sora. Muốn dùng lại trợ lý, bật lại công tắc “Hiện nút trợ lý Sora” này.");
+      }
     });
+  });
+  /* Dấu × ngay trên nút Sora cũng ẩn nút: đồng bộ về cùng công tắc này */
+  document.addEventListener("sk-sora-visibility", function(e){
+    settings.sora = !!(e.detail && e.detail.visible);
+    saveSettings();
+    renderSettings();
   });
   renderSettings();
 
@@ -7180,6 +7499,222 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("utilWrite").addEventListener("click", function(){ openWriting(); });
   document.getElementById("utilFlash").addEventListener("click", function(){ goTab("review"); });
 
+  /* ---------- Chấm điểm phát âm Shadowing — nhận diện giọng nói của trình duyệt (Web Speech, miễn phí) ----------
+     Chạy SpeechRecognition ja-JP song song với MediaRecorder: máy nghe ra chữ gì thì so với
+     câu mẫu (cả dạng chữ Hán jp lẫn dạng hiragana read, lấy mức khớp cao hơn) bằng căn chỉnh
+     Levenshtein trên chuỗi đã chuẩn hoá (bỏ dấu câu/khoảng trắng, katakana → hiragana);
+     ngoài ra còn so ở dạng cách đọc hiragana (quy đổi bằng từ điển furigana của app) vì máy
+     nghe thường trả chữ Hán trong khi câu mẫu viết kana — lấy kết quả khớp cao nhất.
+     Chỉ chấm mức khớp câu chữ — KHÔNG chấm ngữ điệu, trọng âm hay từng âm vị.
+     Lỗi/không hỗ trợ thì không bịa điểm: chỉ hiện thông báo tiếng Việt, ghi âm + nghe lại giữ nguyên. */
+  var SC_PUNCT = /[\s、。・,.!?！？「」『』()（）〜~…]/;
+  function scNorm(s){
+    return (s || "").replace(/[\s、。・,.!?！？「」『』()（）〜~…]/g, "").replace(/[ァ-ヶ]/g, function(c){
+      return String.fromCharCode(c.charCodeAt(0) - 0x60);
+    });
+  }
+  function scAlign(ref, heard){
+    var n = ref.length, m = heard.length, dp = [], i, j;
+    for(i = 0; i <= n; i++){ dp.push([]); for(j = 0; j <= m; j++) dp[i][j] = (i === 0 ? j : (j === 0 ? i : 0)); }
+    for(i = 1; i <= n; i++) for(j = 1; j <= m; j++){
+      var cost = ref.charAt(i - 1) === heard.charAt(j - 1) ? 0 : 1;
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+    }
+    var status = [], match = 0, sub = 0, del = 0, ins = 0;
+    i = n; j = m;
+    while(i > 0 || j > 0){
+      if(i > 0 && j > 0 && ref.charAt(i - 1) === heard.charAt(j - 1) && dp[i][j] === dp[i - 1][j - 1]){ status[i - 1] = "ok"; match++; i--; j--; }
+      else if(i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + 1){ status[i - 1] = "bad"; sub++; i--; j--; }
+      else if(i > 0 && dp[i][j] === dp[i - 1][j] + 1){ status[i - 1] = "bad"; del++; i--; }
+      else{ ins++; j--; }
+    }
+    return {status: status, match: match, sub: sub, del: del, ins: ins};
+  }
+  /* Tách câu thành từng cụm từ kèm cách đọc hiragana, dùng chính từ điển furigana của app
+     (furiDict/furiSegments/furiSingle): máy nghe hay trả chữ Hán (私) trong khi câu mẫu viết
+     kana (わたし) — quy cả hai bên về cách đọc rồi mới so thì điểm mới không bị oan. */
+  function scUnits(text){
+    var stamp = (window.KANJI_DB ? "K" : "") + (window.VOCAB_SPEC ? "S" : "");
+    if(!furiDict || stamp !== furiSrcStamp){ furiBuild(); furiSrcStamp = stamp; }
+    var units = [], i = 0, lastR = null;
+    while(i < text.length){
+      var ch0 = text.charAt(i);
+      if(SC_PUNCT.test(ch0)){ units.push({surf: ch0, read: "", punct: true}); i++; continue; }
+      var best = null, cands = (furiByFirst && furiByFirst[ch0]) || [];
+      for(var c = 0; c < cands.length; c++){
+        var segs = furiSegments(cands[c]), acc = "", used = [];
+        for(var s = 0; s < segs.length; s++){
+          var segT = segs[s].t;
+          if(text.substr(i + acc.length, segT.length) === segT){
+            acc += segT;
+            used.push(segs[s]);
+          }else{
+            if(segs[s].r) break;
+            var cp = 0;
+            while(cp < segT.length && text.charAt(i + acc.length + cp) === segT.charAt(cp)) cp++;
+            if(!cp) break;
+            acc += segT.slice(0, cp);
+            used.push({ t: segT.slice(0, cp), r: null });
+            if(used.some(function(u){ return u.r; }) && (!best || acc.length > best.len))
+              best = { segs: used.slice(), len: acc.length, full: false };
+            break;
+          }
+          var full = (acc.length === cands[c].length);
+          if(used.some(function(u){ return u.r; }) &&
+             (!best || acc.length > best.len || (acc.length === best.len && full && !best.full)))
+            best = { segs: used.slice(), len: acc.length, full: full };
+        }
+      }
+      if(best && best.len === 1 && (FURI_KANJI[ch0] || ch0 === "時")) best = null;
+      if(best){
+        var rd = "";
+        best.segs.forEach(function(sg){ rd += sg.r ? sg.r : kata2hira(sg.t); if(sg.r) lastR = sg.r; });
+        units.push({surf: text.substr(i, best.len), read: scNorm(rd)});
+        i += best.len;
+        continue;
+      }
+      var rd2;
+      if(ch0 === "々" && lastR) rd2 = lastR;
+      else if(isKanjiCh(ch0))
+        rd2 = (ch0 === "時") ? (/[0-9０-９何]/.test(text.charAt(i - 1)) ? "じ" : "とき") : (furiSingle(ch0) || ch0);
+      else rd2 = kata2hira(ch0);
+      units.push({surf: ch0, read: scNorm(rd2)});
+      i++;
+    }
+    return units;
+  }
+  function scVerdict(total){
+    return total >= 90 ? "Rất tốt — máy nghe gần như trọn câu mẫu." :
+           total >= 70 ? "Khá tốt — còn vài chỗ máy nghe chưa khớp, xem phần tô đỏ nhé." :
+           total >= 40 ? "Máy mới nghe khớp một phần. Nghe lại câu mẫu, nói chậm và rõ hơn rồi thử lại nhé." :
+                         "Máy nghe chưa khớp câu mẫu. Nghe câu mẫu vài lần rồi ghi âm lại nhé.";
+  }
+  function scEvalSurface(refOrig, heardRaw){
+    var rn = scNorm(refOrig), heard = scNorm(heardRaw);
+    if(!rn || !heard) return null;
+    var al = scAlign(rn, heard);
+    var chars = [], p = 0;
+    for(var i = 0; i < refOrig.length; i++){
+      var ch = refOrig.charAt(i);
+      if(SC_PUNCT.test(ch)) chars.push({ch: ch, st: "punct"});
+      else{ chars.push({ch: ch, st: al.status[p] || "bad"}); p++; }
+    }
+    return {
+      total: Math.round(100 * 2 * al.match / (rn.length + heard.length)),
+      acc: Math.round(100 * al.match / heard.length),
+      comp: Math.round(100 * (al.match + al.sub) / rn.length),
+      chars: chars, heardRaw: heardRaw
+    };
+  }
+  function scEvalReading(refOrig, heardRaw){
+    var ru = scUnits(refOrig), hu = scUnits(heardRaw);
+    var rRead = "", hRead = "";
+    ru.forEach(function(u){ rRead += u.read; });
+    hu.forEach(function(u){ hRead += u.read; });
+    if(!rRead || !hRead) return null;
+    if(rRead === scNorm(refOrig) && hRead === scNorm(heardRaw)) return null; /* không quy đổi được gì thêm */
+    var al = scAlign(rRead, hRead), pos = 0;
+    var units = ru.map(function(u){
+      if(u.punct) return {surf: u.surf, st: "punct"};
+      var st = "ok";
+      for(var k = 0; k < u.read.length; k++){ if(al.status[pos + k] !== "ok") st = "bad"; }
+      pos += u.read.length;
+      return {surf: u.surf, st: st};
+    });
+    return {
+      total: Math.round(100 * 2 * al.match / (rRead.length + hRead.length)),
+      acc: Math.round(100 * al.match / hRead.length),
+      comp: Math.round(100 * (al.match + al.sub) / rRead.length),
+      units: units, heardRaw: heardRaw
+    };
+  }
+  function scEvaluate(refs, heardRaw){
+    if(!scNorm(heardRaw)) return null;
+    var best = null;
+    refs.forEach(function(r){
+      [scEvalSurface(r, heardRaw), scEvalReading(r, heardRaw)].forEach(function(cand){
+        if(cand && (!best || cand.total > best.total)) best = cand;
+      });
+    });
+    if(best) best.verdict = scVerdict(best.total);
+    return best;
+  }
+  function scPanelHTML(res){
+    if(res.msg) return '<div class="scpanel"><p class="scmsg">' + esc(res.msg) + '</p></div>';
+    var col = res.total >= 80 ? "var(--good)" : (res.total >= 50 ? "var(--amber)" : "var(--red)");
+    function row(lb, v){
+      return '<div class="scrow"><span class="lb">' + lb + '</span><span class="scbar"><i style="width:' + v + '%;background:' + col + '"></i></span><span class="vl">' + v + '</span></div>';
+    }
+    var sent = res.units ? res.units.map(function(u){
+      if(u.st === "ok") return '<span class="ok">' + esc(u.surf) + '</span>';
+      if(u.st === "bad") return '<span class="bad">' + esc(u.surf) + '</span>';
+      return esc(u.surf);
+    }).join("") : res.chars.map(function(c){
+      if(c.st === "ok") return '<span class="ok">' + esc(c.ch) + '</span>';
+      if(c.st === "bad") return '<span class="bad">' + esc(c.ch) + '</span>';
+      return esc(c.ch);
+    }).join("");
+    return '<div class="scpanel">' +
+      '<div class="schead"><span>ĐIỂM PHÁT ÂM</span><b style="color:' + col + '">' + res.total + '<small>/100</small></b></div>' +
+      '<p class="scverd">' + esc(res.verdict) + '</p>' +
+      row("Tổng", res.total) + row("Độ chính xác", res.acc) + row("Độ đầy đủ", res.comp) +
+      '<p class="scsent jp">' + sent + '</p>' +
+      '<p class="scheard">Máy nghe được: 「' + esc(res.heardRaw) + '」</p>' +
+      '<p class="scnote">Chấm bằng nhận diện giọng nói của trình duyệt (miễn phí) — điểm dựa trên mức khớp giữa câu bạn nói với câu mẫu, không chấm ngữ điệu, trọng âm hay từng âm vị.</p>' +
+      '</div>';
+  }
+  function scResultFor(st, refs){
+    if(!st || !st.supported) return {msg: "Thiết bị này chưa hỗ trợ chấm điểm phát âm: trình duyệt không có nhận diện giọng nói tiếng Nhật. Bạn vẫn ghi âm và nghe lại giọng mình bình thường. Muốn có điểm, hãy mở app bằng Chrome hoặc Safari bản mới nhất — trên iPhone, bản PWA đã cài ra màn hình chính có thể không chấm được, mở bằng trình duyệt sẽ ổn hơn."};
+    if(st.err === "not-allowed" || st.err === "service-not-allowed") return {msg: "Chưa chấm được điểm vì trình duyệt chưa được cấp quyền micro cho nhận diện giọng nói. Bạn kiểm tra quyền micro rồi ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
+    if(st.err === "network") return {msg: "Chưa chấm được điểm: nhận diện giọng nói của trình duyệt cần kết nối mạng. Bạn kiểm tra mạng rồi ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
+    if(st.err && st.err !== "no-speech" && st.err !== "aborted") return {msg: "Nhận diện giọng nói bị lỗi giữa chừng nên chưa chấm được điểm lần này. Bạn ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
+    if(!st.text || !scNorm(st.text)) return {msg: "Máy chưa nghe rõ bạn nói gì nên chưa chấm được điểm. Bạn nói to, rõ và gần micro hơn rồi ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
+    return scEvaluate(refs, st.text) || {msg: "Máy chưa nghe rõ bạn nói gì nên chưa chấm được điểm. Bạn nói to, rõ và gần micro hơn rồi ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
+  }
+  function scBegin(){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR) return {supported: false};
+    var rec;
+    try{ rec = new SR(); }catch(e){ return {supported: false}; }
+    var st = {supported: true, rec: rec, text: "", err: null, active: false, ended: true, restarts: 0, cb: null};
+    rec.lang = "ja-JP"; rec.interimResults = true;
+    try{ rec.continuous = true; }catch(_){}
+    rec.onresult = function(e){
+      for(var i = e.resultIndex; i < e.results.length; i++){
+        if(e.results[i].isFinal) st.text += e.results[i][0].transcript;
+      }
+    };
+    rec.onerror = function(e){
+      st.err = e.error || "unknown";
+      if(st.err === "not-allowed" || st.err === "service-not-allowed") st.active = false;
+    };
+    rec.onend = function(){
+      st.ended = true;
+      /* Một số trình duyệt tự kết thúc phiên nghe giữa chừng — tự nối lại khi vẫn đang ghi âm */
+      if(st.active && !st.err && st.restarts < 30){
+        st.restarts++;
+        try{ rec.start(); st.ended = false; return; }catch(_){}
+      }
+      if(st.cb){ var cb = st.cb; st.cb = null; cb(); }
+    };
+    try{ rec.start(); st.active = true; st.ended = false; }
+    catch(e){ return {supported: false}; }
+    return st;
+  }
+  function scStop(st, cb){
+    if(!st || !st.supported){ if(cb) cb(st); return; }
+    st.active = false;
+    if(st.ended){ if(cb) cb(st); return; }
+    st.cb = function(){ if(cb) cb(st); };
+    try{ st.rec.stop(); }catch(_){ var c = st.cb; st.cb = null; if(c) c(); return; }
+    setTimeout(function(){ if(st.cb){ var c2 = st.cb; st.cb = null; c2(); } }, 2500);
+  }
+  function scAbort(st){
+    if(!st || !st.supported) return;
+    st.active = false; st.cb = null;
+    try{ if(st.rec.abort) st.rec.abort(); else st.rec.stop(); }catch(_){}
+  }
+
   /* ---------- Shadowing: nghe câu mẫu (TTS Nhật của máy) → ghi âm nhắc lại → nghe lại so sánh ---------- */
   var SHADOW = [
     {jp:"わたしは学生です。", read:"わたしは　がくせいです。", vi:"Tôi là học viên."},
@@ -7193,6 +7728,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   ];
   var shadowOverlay = document.getElementById("shadowOverlay");
   var shIdx = 0, shUrls = {}, shRecorder = null, shChunks = [], shStream = null, shTimer = null, shSec = 0, shRecIdx = 0;
+  var shSR = null, shScores = {};
   var shJpEl = document.getElementById("shJp"), shReadEl = document.getElementById("shRead"),
       shViEl = document.getElementById("shVi"), shCountEl = document.getElementById("shCount"),
       shStatusEl = document.getElementById("shStatus"), shRecBtn = document.getElementById("shRec"),
@@ -7204,6 +7740,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     shJpEl.textContent = s.jp; shReadEl.textContent = s.read; shViEl.textContent = s.vi;
     shCountEl.textContent = "Câu " + (shIdx + 1) + " / " + SHADOW.length;
     shMineBtn.disabled = !shUrls[shIdx];
+    document.getElementById("shScore").innerHTML = shScores[shIdx] || "";
+  }
+  function shShowScore(st, s, idx){
+    if(st && st.err === "aborted") return;
+    var html = scPanelHTML(scResultFor(st, [s.jp, s.read]));
+    shScores[idx] = html;
+    if(idx === shIdx) document.getElementById("shScore").innerHTML = html;
   }
   function shSpeak(rate){
     if(typeof settings !== "undefined" && settings && !settings.sound){
@@ -7228,21 +7771,27 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
     shAudio.pause();
+    delete shScores[shIdx];
+    document.getElementById("shScore").innerHTML = "";
     navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
       shStream = stream; shChunks = []; shRecIdx = shIdx;
+      var mySR = scBegin(); shSR = mySR;
       try{ shRecorder = new MediaRecorder(stream); }
-      catch(e){ shStopTracks(); shStatus("Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
+      catch(e){ scAbort(mySR); shStopTracks(); shStatus("Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
       shRecorder.ondataavailable = function(ev){ if(ev.data && ev.data.size) shChunks.push(ev.data); };
       shRecorder.onstop = function(){
         shStopTracks(); shFinishRecUI();
+        var rIdx = shRecIdx;
         var blob = new Blob(shChunks, {type: shRecorder.mimeType || "audio/webm"});
-        if(shUrls[shRecIdx]) URL.revokeObjectURL(shUrls[shRecIdx]);
-        shUrls[shRecIdx] = URL.createObjectURL(blob);
+        if(shUrls[rIdx]) URL.revokeObjectURL(shUrls[rIdx]);
+        shUrls[rIdx] = URL.createObjectURL(blob);
         rotActivity("shadow");
-        if(shRecIdx === shIdx){
+        if(rIdx === shIdx){
           shMineBtn.disabled = false;
           shStatus("Đã ghi xong. Bấm “Nghe giọng mình” rồi “Nghe câu mẫu” để nghe hai bản liền nhau và so sánh.");
         }
+        scStop(mySR, function(st){ shShowScore(st, SHADOW[rIdx], rIdx); });
+        if(shSR === mySR) shSR = null;
       };
       shRecorder.start();
       shSec = 0; shRecBtn.classList.add("rec"); shRecLabel.textContent = "Đang ghi… 0s — bấm để dừng";
@@ -7280,6 +7829,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("utilShadow").addEventListener("click", function(){ shRender(); showOv(shadowOverlay); });
   document.getElementById("closeShadow").addEventListener("click", function(){
     if(shRecorder && shRecorder.state === "recording") shRecorder.stop();
+    if(shSR){ scAbort(shSR); shSR = null; }
     shStopTimer(); shAudio.pause();
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
     hideOv(shadowOverlay);
@@ -7529,6 +8079,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var lsShPlayAllLabel = document.getElementById("lsShPlayAllLabel");
   var lsShStatusEl = document.getElementById("lsShStatus");
   var lsRec = null, lsChunks = [], lsStream = null, lsTimer = null, lsSec = 0, lsRecKey = null, lsUrls = {};
+  var lsSRActive = null, lsScores = {};
+  function lsShowScore(st, jp, key){
+    if(st && st.err === "aborted") return;
+    var html = scPanelHTML(scResultFor(st, [jp]));
+    lsScores[key] = html;
+    var box = document.querySelector('#lsShLines .lsscore[data-key="' + key + '"]');
+    if(box) box.innerHTML = html;
+  }
   function lsShStatus(t){ lsShStatusEl.textContent = t; }
   function lsShStopPlayAll(){
     lsShAudio.pause(); lsShPlaying = false;
@@ -7567,10 +8125,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
     lsShStopPlayAll();
+    delete lsScores[key];
+    var scBox = document.querySelector('#lsShLines .lsscore[data-key="' + key + '"]');
+    if(scBox) scBox.innerHTML = "";
     navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
       lsStream = stream; lsChunks = []; lsRecKey = key;
+      var mySR = scBegin(); lsSRActive = mySR;
       try{ lsRec = new MediaRecorder(stream); }
-      catch(e){ lsStopTracks(); lsShStatus("Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
+      catch(e){ scAbort(mySR); lsStopTracks(); lsShStatus("Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
       lsRec.ondataavailable = function(ev){ if(ev.data && ev.data.size) lsChunks.push(ev.data); };
       lsRec.onstop = function(){
         lsStopTracks(); lsStopTimer();
@@ -7580,6 +8142,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         rotActivity("shadow");
         lsRefreshRecBtns();
         lsShStatus("Đã ghi xong câu này. Bấm “Nghe giọng mình” rồi “Nghe” để so sánh với giọng máy.");
+        scStop(mySR, function(st){ lsShowScore(st, jp, key); });
+        if(lsSRActive === mySR) lsSRActive = null;
       };
       lsRec.start();
       lsSec = 0;
@@ -7620,7 +8184,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         '<div class="shbtns">' +
           '<button class="shbtn lsrec" data-key="' + key + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Ghi âm nhắc lại</span></button>' +
           '<button class="shbtn lsmine" data-key="' + key + '" disabled><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Nghe giọng mình</button>' +
-        '</div>';
+        '</div>' +
+        '<div class="lsscore" data-key="' + key + '"></div>';
       card.querySelector(".lshear").addEventListener("click", function(){ lsShSpeak(line.jp, 0.85); });
       card.querySelector(".lsslow").addEventListener("click", function(){ lsShSpeak(line.jp, 0.55); });
       card.querySelector(".lsrec").addEventListener("click", function(){
@@ -7635,6 +8200,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         lsMineAudio.play();
         lsShStatus("Đang phát giọng của bạn. Nghe xong bấm “Nghe” để so sánh ngay với câu mẫu.");
       });
+      if(lsScores[key]) card.querySelector(".lsscore").innerHTML = lsScores[key];
       box.appendChild(card);
     });
     lsShStatus("Nghe cả hội thoại bằng nút ở trên cho quen, rồi luyện từng câu ở dưới.");
@@ -7654,6 +8220,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   document.getElementById("closeLsSh").addEventListener("click", function(){
     if(lsRec && lsRec.state === "recording") lsRec.stop();
+    if(lsSRActive){ scAbort(lsSRActive); lsSRActive = null; }
     lsStopTimer(); lsShStopPlayAll(); lsMineAudio.pause();
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
     hideOv(lsShOverlay); showOv(lsN5Overlay);
@@ -8506,11 +9073,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Bài 26–50 (1.347 từ), N3 = Chūkyū 1, Bài 1–12 (881 từ),
      N2 = Chūkyū 2, Bài 13–24 (2.284 từ),
      số từ mỗi bài dài ngắn theo đúng giáo trình, gồm cả từ thuần kana.
-     N1: chưa có dữ liệu bài Minna nên giữ pool từ dựng từ
-     tài nguyên chữ của app (assets/kanji-data.js): gộp từ vựng của mọi kanji
-     trong cấp, khử trùng theo word|reading — chia thành các NHÓM ôn luyện
-     (N1 49 nhóm × 100) và ghi nhãn “Nhóm”
-     trung thực, không mạo danh bài Minna. Bấm vào 1 từ: phát âm TTS.
+     N1: không theo bài Minna — dữ liệu ở assets/vocab-n1.js
+     (window.VOCAB_N1 = [{word, reading, hanViet, meaning, lesson, img?}, …],
+     4.813 từ gộp từ bộ kanji N1, khử trùng theo word|reading, giữ nguyên
+     thứ tự gộp) chia thành 24 NHÓM ôn luyện (nhóm 1–13 × 201 từ,
+     nhóm 14–24 × 200 từ) và ghi nhãn “Nhóm” trung thực, không mạo danh
+     bài Minna. N1 và chuyên ngành đều có hình minh họa như N5–N2:
+     hình lớn trên flashcard + thumbnail trong danh sách từ (trường img
+     của từng từ; 3 từ N1 không có hình thì không có trường img).
+     Bấm vào 1 từ: phát âm TTS.
      Nhóm chuyên ngành: dữ liệu biên soạn từ tài liệu thật/chính thức
      (giáo trình OTAFF, tài liệu Tokutei, sách kaigo…) sẽ được gắn qua file
      assets/vocab-spec.js (window.VOCAB_SPEC = { "<key>": [{word, reading,
@@ -8531,6 +9102,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var wvSeen = {};         /* "N5|0|word|reading" -> 1: từ đã bấm xem trong phiên — tiến độ từng bài JLPT */
   var wvCtx = null;        /* {lv, idx} của bài JLPT đang mở ở màn danh sách từ (null khi xem từ chuyên ngành) */
   var wvDeckSrc = null;    /* {title, words} của bài JLPT đang mở — nguồn cho bộ flashcard riêng của bài */
+  var wvSpecKey = null;    /* key ngành chuyên ngành đang mở ở màn danh sách từ (null khi xem bài JLPT) */
   var WV_SPK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
 
   /* Các ngành nghề Tokutei (kỹ năng đặc định) chính */
@@ -8550,6 +9122,33 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     {key:"lam-nghiep",  name:"Lâm nghiệp",                  jp:"林業",       glyph:"林"},
     {key:"che-bien-go", name:"Chế biến gỗ",                 jp:"木材産業",   glyph:"木"}
   ];
+  /* Hình minh họa từ vựng chuyên ngành: thứ tự từ trong từng ngành khớp
+     100% manifest spec-* (đã đối chiếu bằng script) — từ thứ i của ngành
+     dùng file assets/vocab-illus/<dir>/<dir>-<số thứ tự>.jpg. Riêng 4
+     ngành nhỏ Nông nghiệp / Vệ sinh tòa nhà / Ô tô / Ăn uống dùng chung
+     thư mục spec-khac với độ lệch bắt đầu 0 / 25 / 50 / 75. */
+  var SPEC_IMG = {
+    "xay-dung":    { dir:"spec-xaydung",   off:0 },
+    "thuc-pham":   { dir:"spec-thucpham",  off:0 },
+    "kaigo":       { dir:"spec-kaigo",     off:0 },
+    "nong-nghiep": { dir:"spec-khac",      off:0 },
+    "ngu-nghiep":  { dir:"spec-ngunghiep", off:0 },
+    "ve-sinh":     { dir:"spec-khac",      off:25 },
+    "o-to":        { dir:"spec-khac",      off:50 },
+    "hang-khong":  { dir:"spec-hangkhong", off:0 },
+    "luu-tru":     { dir:"spec-luutru",    off:0 },
+    "an-uong":     { dir:"spec-khac",      off:75 },
+    "dong-tau":    { dir:"spec-dongtau",   off:0 },
+    "che-tao":     { dir:"spec-chetao",    off:0 },
+    "lam-nghiep":  { dir:"spec-lamnghiep", off:0 },
+    "che-bien-go": { dir:"spec-chebiengo", off:0 }
+  };
+  function specImg(key, i){
+    var m = SPEC_IMG[key];
+    if(!m) return null;
+    var n = m.off + i + 1;
+    return "assets/vocab-illus/" + m.dir + "/" + m.dir + "-" + (n < 10 ? "0" : "") + n + ".jpg";
+  }
   var specState = 0; /* 0 chưa nạp · 1 đang nạp · 2 xong · 3 không có file dữ liệu */
   var specQueue = [];
   function ensureSpecData(cb){
@@ -8609,6 +9208,34 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var WV_MINNA_RANGE = { N5:"Bài 1–25", N4:"Bài 26–50", N3:"Bài 1–12", N2:"Bài 13–24" };
   function wvIsMinna(lv){ return !!WV_MINNA_BOOK[lv]; }
 
+  /* Dữ liệu từ vựng N1 (24 nhóm ôn luyện) — nạp lười giống VOCAB_MINNA */
+  var n1State = 0; /* 0 chưa nạp · 1 đang nạp · 2 xong · 3 không có file dữ liệu */
+  var n1Queue = [];
+  function ensureN1Data(cb){
+    if(window.VOCAB_N1){ n1State = 2; if(cb) cb(window.VOCAB_N1); return; }
+    if(n1State === 3){ if(cb) cb(null); return; }
+    if(cb) n1Queue.push(cb);
+    if(n1State === 1) return;
+    n1State = 1;
+    var s = document.createElement("script");
+    s.src = "assets/vocab-n1.js";
+    s.onload = function(){
+      n1State = window.VOCAB_N1 ? 2 : 3;
+      var q = n1Queue; n1Queue = [];
+      q.forEach(function(f){ f(window.VOCAB_N1 || null); });
+    };
+    s.onerror = function(){
+      n1State = 3;
+      var q = n1Queue; n1Queue = [];
+      q.forEach(function(f){ f(null); });
+    };
+    document.head.appendChild(s);
+  }
+  function wvN1Words(){
+    var d = window.VOCAB_N1;
+    return (d && d.length) ? d : null;
+  }
+
   function wvBuildPools(){
     if(wvPools || !window.KANJI_DB) return;
     var seen = {}, pools = { N5:[], N4:[], N3:[], N2:[], N1:[] };
@@ -8629,6 +9256,35 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     for(var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
     return out;
   }
+  /* Bài mở đầu “Số và đếm ngày tháng” — đứng đầu danh sách bài N5, trước
+     Bài 1, cho người mới học. Nội dung theo bảng số / thứ / ngày tháng của
+     Minna no Nihongo, chia 9 nhóm hiển thị (trường group của từng từ).
+     Bài này có hình minh họa như các bài N5 khác (thư mục n5-num). */
+  var WV_INTRO_GROUPS = [
+    ["Số 0–10", [["ゼロ","zero","Số 0"],["いち","ichi","Số 1"],["に","ni","Số 2"],["さん","san","Số 3"],["よん","yon","Số 4"],["ご","go","Số 5"],["ろく","roku","Số 6"],["なな","nana","Số 7"],["はち","hachi","Số 8"],["きゅう","kyū","Số 9"],["じゅう","jū","Số 10"]]],
+    ["Số lớn", [["にじゅう","nijū","Số 20"],["さんじゅう","sanjū","Số 30"],["ひゃく","hyaku","Số 100"],["せん","sen","Số 1000"],["いちまん","ichiman","Số 10000"]]],
+    ["Đếm đồ vật", [["ひとつ","hitotsu","1 cái"],["ふたつ","futatsu","2 cái"],["みっつ","mittsu","3 cái"],["よっつ","yottsu","4 cái"],["いつつ","itsutsu","5 cái"],["むっつ","muttsu","6 cái"],["ななつ","nanatsu","7 cái"],["やっつ","yattsu","8 cái"],["ここのつ","kokonotsu","9 cái"],["とお","tō","10 cái"],["いくつ","ikutsu","Mấy cái"]]],
+    ["Đếm người", [["ひとり","hitori","1 người"],["ふたり","futari","2 người"],["～にん","~nin","~người"]]],
+    ["Đếm khác", [["～まい","~mai","~tờ (giấy)"],["～さつ","~satsu","~quyển (sách)"],["～ひき","~hiki","~con (động vật nhỏ)"],["～ほん","~hon","~cái (đồ dài)"],["～かい","~kai","~lần"],["～さい","~sai","~tuổi"]]],
+    ["Thứ trong tuần", [["月曜日","げつようび","Thứ hai"],["火曜日","かようび","Thứ ba"],["水曜日","すいようび","Thứ tư"],["木曜日","もくようび","Thứ năm"],["金曜日","きんようび","Thứ sáu"],["土曜日","どようび","Thứ bảy"],["日曜日","にちようび","Chủ nhật"]]],
+    ["Hôm nay", [["きょう","kyō","Hôm nay"],["きのう","kinō","Hôm qua"],["あした","ashita","Ngày mai"],["あさって","asatte","Ngày mốt"],["おととい","ototoi","Ngày hôm kia"],["まいにち","mainichi","Mỗi ngày"]]],
+    ["Tháng", [["一月","いちがつ","Tháng 1"],["二月","にがつ","Tháng 2"],["三月","さんがつ","Tháng 3"],["四月","しがつ","Tháng 4"],["五月","ごがつ","Tháng 5"],["六月","ろくがつ","Tháng 6"],["七月","しちがつ","Tháng 7"],["八月","はちがつ","Tháng 8"],["九月","くがつ","Tháng 9"],["十月","じゅうがつ","Tháng 10"],["十一月","じゅういちがつ","Tháng 11"],["十二月","じゅうにがつ","Tháng 12"],["今月","こんげつ","Tháng này"],["来月","らいげつ","Tháng sau"],["先月","せんげつ","Tháng trước"]]],
+    ["Ngày trong tháng", [["一日","ついたち","Ngày 1"],["二日","ふつか","Ngày 2"],["三日","みっか","Ngày 3"],["四日","よっか","Ngày 4"],["五日","いつか","Ngày 5"],["六日","むいか","Ngày 6"],["七日","なのか","Ngày 7"],["八日","ようか","Ngày 8"],["九日","ここのか","Ngày 9"],["十日","とおか","Ngày 10"],["何日","なんにち","Ngày mấy"]]]
+  ];
+  function wvIntroLesson(){
+    var words = [];
+    WV_INTRO_GROUPS.forEach(function(g){
+      g[1].forEach(function(t){
+        /* Hình minh họa theo đúng thứ tự từ (đã đối chiếu manifest
+           n5-num: 75/75 khớp) — từ thứ k dùng file
+           assets/vocab-illus/n5-num/n5-num-<k>.jpg */
+        var k = words.length + 1;
+        words.push({word:t[0], reading:t[1], hanViet:"", meaning:t[2], group:g[0],
+          img:"assets/vocab-illus/n5-num/n5-num-" + (k < 10 ? "0" : "") + k + ".jpg"});
+      });
+    });
+    return {name:"Số và đếm ngày tháng", topic:"Bài mở đầu cho người mới học · số đếm, thứ trong tuần, ngày tháng", words:words};
+  }
   function wvLessons(lv){
     if(wvLessonsCache[lv]) return wvLessonsCache[lv];
     var out = [];
@@ -8643,19 +9299,43 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         (byLesson[n] = byLesson[n] || []).push({word:v.word, reading:v.reading, hanViet:v.hanViet || "", meaning:v.meaning || ""});
       });
       Object.keys(byLesson).map(Number).sort(function(a, b){ return a - b; }).forEach(function(n){
-        out.push({name:"Bài " + n, topic:"Minna no Nihongo " + WV_MINNA_BOOK[lv], words:byLesson[n]});
+        var ws = byLesson[n];
+        /* Hình minh họa: toàn bộ N5 Bài 1–25, N4 Bài 26–50, N3 Bài 1–12
+           và N2 Bài 13–24 đều có hình. Ánh xạ theo đúng thứ tự từ trong
+           bài (đã đối chiếu manifest từng bài: khớp 100%) — từ thứ i của
+           Bài n ở cấp <lv> dùng file
+           assets/vocab-illus/<lv>-l<n>/<lv>-l<n>-<i+1>.jpg
+           (kể cả 2 từ từng phải vẽ cảnh thay thế: たばこを吸う — N4 Bài
+           36 từ thứ 51, và 火薬 — N3 Bài 11 từ thứ 64). */
+        if(lv === "N5" || lv === "N4" || lv === "N3" || lv === "N2"){
+          var pfx = lv.toLowerCase() + "-l" + n;
+          ws.forEach(function(w, i){
+            w.img = "assets/vocab-illus/" + pfx + "/" + pfx + "-" + (i + 1 < 10 ? "0" : "") + (i + 1) + ".jpg";
+          });
+        }
+        out.push({name:"Bài " + n, topic:"Minna no Nihongo " + WV_MINNA_BOOK[lv], words:ws});
       });
+      /* N5: chèn bài mở đầu “Số và đếm ngày tháng” lên đầu, trước Bài 1 */
+      if(lv === "N5") out.unshift(wvIntroLesson());
     }else{
-      /* N2/N1: không có dữ liệu bài Minna — chia pool thành NHÓM ôn
-         luyện, ghi nhãn trung thực, không mạo danh bài giáo trình. */
-      wvBuildPools();
-      if(!wvPools) return out;
-      var pool = wvPools[lv] || [];
-      if(lv === "N1"){
-        wvChunk(pool, 100).forEach(function(p, i){ out.push({name:"Nhóm " + (i + 1), topic:"Từ vựng N1 · nhóm ôn luyện theo cấp độ", words:p}); });
-      }else{
-        wvChunk(pool, 50).forEach(function(p, i){ out.push({name:"Nhóm " + (i + 1), topic:"Từ vựng " + lv + " · nhóm ôn luyện theo cấp độ", words:p}); });
-      }
+      /* N1: không có dữ liệu bài Minna — 4.813 từ ở assets/vocab-n1.js
+         chia sẵn thành 24 NHÓM ôn luyện theo trường lesson (nhóm 1–13:
+         201 từ, nhóm 14–24: 200 từ), ghi nhãn “Nhóm” trung thực, không
+         mạo danh bài giáo trình. Mỗi từ mang sẵn trường img (hình minh
+         họa) — cả 4.813 từ đều có hình (3 từ từng bị pipeline từ chối
+         vẽ trực diện đã có hình cảnh thay thế: 崖っぷち nhóm 3, 巧言
+         nhóm 7, 半裸 nhóm 23).
+         Chưa nạp dữ liệu thì trả rỗng và KHÔNG cache, chờ ensureN1Data
+         gọi lại (như nhánh Minna ở trên). */
+      var rows = wvN1Words();
+      if(!rows) return out;
+      var byGroup = {};
+      rows.forEach(function(v){
+        (byGroup[v.lesson] = byGroup[v.lesson] || []).push({word:v.word, reading:v.reading, hanViet:v.hanViet || "", meaning:v.meaning || "", img:v.img || null});
+      });
+      Object.keys(byGroup).map(Number).sort(function(a, b){ return a - b; }).forEach(function(n){
+        out.push({name:"Nhóm " + n, topic:"Từ vựng N1 · nhóm ôn luyện theo cấp độ", words:byGroup[n]});
+      });
     }
     wvLessonsCache[lv] = out;
     return out;
@@ -8664,7 +9344,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function renderWvLevels(){
     wvLevelsEl.innerHTML = WV_LEVELS.map(function(lv){
       var minna = wvIsMinna(lv);
-      var rows = minna ? wvMinnaWords(lv) : (wvPools && wvPools[lv]);
+      var rows = minna ? wvMinnaWords(lv) : (lv === "N1" ? wvN1Words() : (wvPools && wvPools[lv]));
       var cnt = rows ? rows.length + " TỪ" : "ĐANG TẢI";
       var sub = rows ? (minna
           ? (wvLessons(lv).length + " bài · Minna no Nihongo " + WV_MINNA_BOOK[lv])
@@ -8680,7 +9360,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function renderWvLessons(){
     document.getElementById("wvLessonsTitle").textContent = "Từ vựng " + wvLevel;
     var minna = wvIsMinna(wvLevel);
-    var ready = minna ? !!wvMinnaWords(wvLevel) : !!wvPools;
+    var ready = minna ? !!wvMinnaWords(wvLevel) : (wvLevel === "N1" ? !!wvN1Words() : !!wvPools);
     if(!ready){
       document.getElementById("wvLessonsSub").textContent = "Danh sách bài";
       wvLessonsInfo.textContent = "Đang tải dữ liệu từ…";
@@ -8718,6 +9398,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function wvShowHub(){
     wvView = "hub";
     wvCtx = null;
+    wvSpecKey = null;
     hideOv(wvWordsOverlay);
     hideOv(wvLessonsOverlay);
     renderWvLevels();
@@ -8729,6 +9410,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     wvLevel = lv;
     wvView = "lessons";
     wvCtx = null;
+    wvSpecKey = null;
     renderWvLessons();
     showOv(wvLessonsOverlay);
     var body = wvLessonsOverlay.querySelector(".detailbody");
@@ -8740,20 +9422,33 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("wvWordsPageSub").textContent = words && words.length ? (words.length + " từ") : "Từ vựng chuyên ngành";
     document.getElementById("wvWordsTitle").textContent = title;
     document.getElementById("wvWordsInfo").textContent = info;
-    /* Nút Flashcard chỉ hiện ở trang từ của bài JLPT (wvCtx có), không hiện ở từ chuyên ngành */
-    document.getElementById("wvFlashBtn").hidden = !(wvCtx && words && words.length);
-    if(wvCtx && words && words.length) wvDeckSrc = { title: title, words: words };
+    /* Nút Flashcard hiện ở trang từ của bài JLPT (wvCtx có) và của ngành
+       chuyên ngành (wvSpecKey có) — cả hai đều ôn bằng bộ thẻ của đúng
+       danh sách từ đang mở, hình minh họa hiện lớn trên mặt trước thẻ */
+    document.getElementById("wvFlashBtn").hidden = !((wvCtx || wvSpecKey) && words && words.length);
+    if((wvCtx || wvSpecKey) && words && words.length) wvDeckSrc = { title: title, words: words };
     var list = document.getElementById("wvWordList");
     var note = document.getElementById("wvWordsNote");
     if(words && words.length){
       note.hidden = true;
       list.style.display = "";
       list.innerHTML = "";
+      var lastGroup = null;
       words.forEach(function(v){
+        /* Bài có chia nhóm (bài “Số và đếm ngày tháng”): chèn tiêu đề nhóm
+           mỗi khi sang nhóm mới */
+        if(v.group && v.group !== lastGroup){
+          lastGroup = v.group;
+          var gh = document.createElement("div");
+          gh.className = "wv-grouphead";
+          gh.textContent = v.group;
+          list.appendChild(gh);
+        }
         var b = document.createElement("button");
         b.className = "wordrow";
         var longCls = (v.word && v.word.length >= 9) ? " long" : "";
-        b.innerHTML = '<span class="ww jp' + longCls + '">' + esc(v.word) + '</span><span class="wm"><b class="jp">' + esc(v.reading) + '</b>' + (v.hanViet ? esc(v.hanViet) + ' · ' : '') + esc(v.meaning) + '</span><span class="wv-spk">' + WV_SPK_SVG + '</span>';
+        b.innerHTML = (v.img ? '<span class="wv-thumb"><img src="' + v.img + '" alt="" loading="lazy"></span>' : '') +
+          '<span class="ww jp' + longCls + '">' + esc(v.word) + '</span><span class="wm"><b class="jp">' + esc(v.reading) + '</b>' + (v.hanViet ? esc(v.hanViet) + ' · ' : '') + esc(v.meaning) + '</span><span class="wv-spk">' + WV_SPK_SVG + '</span>';
         var hearWord = function(){
           if(wvCtx) wvSeen[wvCtx.lv + "|" + wvCtx.idx + "|" + v.word + "|" + v.reading] = 1;
           speakJP(v.reading || v.word, 0.85);
@@ -8798,6 +9493,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       renderWvLevels();
       if(wvView === "lessons" && wvIsMinna(wvLevel)) renderWvLessons();
     });
+    ensureN1Data(function(){
+      if(!wordsOverlay.classList.contains("open")) return;
+      renderWvLevels();
+      if(wvView === "lessons" && wvLevel === "N1") renderWvLessons();
+    });
   }
   wvLevelsEl.addEventListener("click", function(ev){
     var b = ev.target.closest("[data-wv-level]");
@@ -8811,6 +9511,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var ls = wvLessons(wvLevel)[idx];
     if(!ls) return;
     wvCtx = { lv: wvLevel, idx: idx };
+    wvSpecKey = null;
     wvShowWords(wvLevel + " · " + ls.name, ls.words.length + " từ — bấm vào 1 từ để nghe phát âm", ls.words, "");
   });
   wvSpecsEl.addEventListener("click", function(ev){
@@ -8820,30 +9521,35 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var f = SPEC_FIELDS.filter(function(x){ return x.key === key; })[0];
     if(!f) return;
     wvCtx = null; /* từ chuyên ngành: nút back của trang từ quay về trang chọn mục */
+    wvSpecKey = key;
     var ws = specWords(key);
     if(ws){
       wvShowWords(f.name, ws.length + " từ chuyên ngành " + f.jp + " — bấm vào 1 từ để nghe phát âm",
-        ws.map(function(v){ return {word:v.word, reading:v.reading, hanViet:v.hanViet || "", meaning:v.meaning || "", ex:v.ex || null}; }), "");
+        ws.map(function(v, i){ return {word:v.word, reading:v.reading, hanViet:v.hanViet || "", meaning:v.meaning || "", ex:v.ex || null, img:specImg(key, i)}; }), "");
     }else{
       wvShowWords(f.name, "Từ vựng chuyên ngành " + f.jp, null,
         "Bộ từ ngành " + f.name + " đang được biên soạn từ tài liệu chính thức của ngành (giáo trình và tài liệu thi Tokutei) — khi dữ liệu sẵn sàng, danh sách từ sẽ hiện ngay tại đây.");
     }
   });
-  /* ---------- Flashcard từ vựng của riêng một bài JLPT ----------
-     Mở bằng nút Flashcard ở góc phải trên trang danh sách từ của bài.
+  /* ---------- Flashcard từ vựng của riêng một bài / một ngành ----------
+     Mở bằng nút Flashcard ở góc phải trên trang danh sách từ của bài JLPT
+     hoặc của ngành chuyên ngành.
      Mặt trước hiện chữ của từ, bấm lật ra mặt sau: cách đọc + Hán Việt + nghĩa.
      Nút Đã thuộc / Chưa thuộc ghi tiến độ thuộc từ của bài trong bộ nhớ phiên. */
   var wvFlashOverlay = document.getElementById("wvFlashOverlay");
   var wvDeck = [], wvFIdx = 0, wvFFlipped = false;
   var wvKnownMap = {};     /* "lv|idx|word|reading" -> 1: từ đã đánh dấu Đã thuộc */
-  function wvFKey(v){ return wvCtx.lv + "|" + wvCtx.idx + "|" + v.word + "|" + v.reading; }
+  function wvFKey(v){
+    var ctx = wvCtx ? (wvCtx.lv + "|" + wvCtx.idx) : ("SPEC|" + wvSpecKey);
+    return ctx + "|" + v.word + "|" + v.reading;
+  }
   function wvFKnownCount(){
     var n = 0;
     wvDeck.forEach(function(v){ if(wvKnownMap[wvFKey(v)]) n++; });
     return n;
   }
   function openWvFlash(){
-    if(!wvCtx || !wvDeckSrc || !wvDeckSrc.words.length) return;
+    if(!(wvCtx || wvSpecKey) || !wvDeckSrc || !wvDeckSrc.words.length) return;
     wvDeck = wvDeckSrc.words;
     wvFIdx = 0; wvFFlipped = false;
     document.getElementById("wvFlashTitle").textContent = "Flashcard · " + wvDeckSrc.title;
@@ -8875,6 +9581,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("wvFlashBack").hidden = true;
     document.getElementById("wvFlashSpeak").hidden = true;
     document.getElementById("wvFlashFront").innerHTML =
+      (v.img ? '<div class="wv-fimg"><img src="' + v.img + '" alt="Hình minh họa: ' + esc(v.meaning) + '"></div>' : '') +
       '<div class="fw jp">' + esc(v.word) + '</div><div class="fhint">Bấm vào thẻ để lật xem cách đọc và nghĩa</div>';
     document.getElementById("wvFlashBack").innerHTML =
       '<div class="fread jp" style="font-size:26px;">' + esc(v.reading) + '</div>' +
@@ -8920,12 +9627,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(wvCtx){ wvView = "lessons"; renderWvLessons(); /* làm mới tiến độ “Đã xem … từ” của từng bài */ }
     else{ wvView = "hub"; }
     wvCtx = null;
+    wvSpecKey = null;
   });
   document.getElementById("closeWvLessons").addEventListener("click", function(){
     hideOv(wvWordsOverlay);
     hideOv(wvLessonsOverlay);
     wvView = "hub";
     wvCtx = null;
+    wvSpecKey = null;
   });
   document.getElementById("closeWords").addEventListener("click", function(){
     hideOv(wvFlashOverlay);
@@ -8934,6 +9643,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     hideOv(wordsOverlay);
     wvView = "hub";
     wvCtx = null;
+    wvSpecKey = null;
   });
 
   /* ---------- Game Pikachu kana ↔ kanji — BẢN MẪU (bảng N5, 20 cặp) ----------
@@ -10690,6 +11400,41 @@ function furiHTML(text){
   document.getElementById("closeGrLessons").addEventListener("click", function(){ hideOv(grLessonsOverlay); });
   document.getElementById("closeGrPatterns").addEventListener("click", function(){ hideOv(grPatternsOverlay); });
   document.getElementById("closeGrDetail").addEventListener("click", function(){ hideOv(grDetailOverlay); });
+  /* ---------- Tokutei (kỹ năng đặc định): tab chọn ngành — nội dung đang biên soạn ----------
+     Danh sách ngành lấy chung SPEC_FIELDS với mục Từ vựng → Chuyên ngành (14 ngành).
+     Trang này mới là trang chờ: mỗi tab hiện thẻ “Đang biên soạn”, không bịa nội dung học. */
+  var tokuteiOverlay = document.getElementById("tokuteiOverlay");
+  var tkTabsEl = document.getElementById("tkTabs");
+  var tkPanelEl = document.getElementById("tkPanel");
+  var tkCur = 0;
+  function tkRender(){
+    tkTabsEl.innerHTML = "";
+    SPEC_FIELDS.forEach(function(f, i){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "tk-tab" + (i === tkCur ? " on" : "");
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", i === tkCur ? "true" : "false");
+      b.textContent = f.name;
+      b.addEventListener("click", function(){ tkCur = i; tkRender(); });
+      tkTabsEl.appendChild(b);
+    });
+    var f = SPEC_FIELDS[tkCur];
+    tkPanelEl.innerHTML =
+      '<div class="tk-phead"><span class="tk-glyph jp">' + f.glyph + '</span>' +
+      '<span class="tk-pmain"><b>' + f.name + '</b><span class="jp">' + f.jp + '</span></span>' +
+      '<span class="badge todo">Đang biên soạn</span></div>' +
+      '<p>Nội dung ôn thi Tokutei ngành ' + f.name + ' — từ vựng chuyên ngành, câu hỏi lý thuyết và bài tập thực hành theo tài liệu chính thức của ngành — đang được biên soạn. Khi sẵn sàng, bài học và đề luyện sẽ hiện ngay tại đây.</p>' +
+      '<p class="tk-note">Trong lúc chờ, bạn có thể học trước từ vựng của ngành này ở mục <b>Từ vựng → Chuyên ngành</b> trên Home.</p>';
+  }
+  function openTokutei(){
+    tkRender();
+    var body = tokuteiOverlay.querySelector(".detailbody");
+    if(body) body.scrollTop = 0;
+    showOv(tokuteiOverlay);
+  }
+  document.getElementById("closeTokutei").addEventListener("click", function(){ hideOv(tokuteiOverlay); });
+
   document.querySelectorAll("[data-app]").forEach(function(b){
     b.addEventListener("click", function(){
       var a = b.dataset.app;
@@ -10700,6 +11445,7 @@ function furiHTML(text){
       else if(a === "jlpt") goTab("jlpt");
       else if(a === "listen") showOv(document.getElementById("listenOverlay"));
       else if(a === "read") showOv(document.getElementById("readOverlay"));
+      else if(a === "tokutei") openTokutei();
       else if(a === "review" || a === "flash") goTab("review");
       else if(a === "draw") openDraw("free", null);
       else if(a === "write") openWorksheet();
@@ -11446,11 +12192,14 @@ function furiHTML(text){
       return;
     }
     setSignedInEmail(v);
+    resolveGooglePhoto(); /* bản thật: lấy photoURL từ phiên đăng nhập Google làm avatar tại đây */
     closeLogin();
     if(isAdminAccount) openAdmin(); /* vừa cấp Admin: mở thẳng trang Quản lý học viên để thấy đã mở khóa */
   }
   function doLogout(){
     setSignedInEmail("");
+    avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
+    renderAvatarPhoto();
     closeLogin();
   }
   document.getElementById("acctLoginBtn").addEventListener("click", openLogin);
@@ -11460,6 +12209,162 @@ function furiHTML(text){
   document.getElementById("loginLogout").addEventListener("click", doLogout);
   if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLogin(); } });
   if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")) closeLogin(); });
+
+  /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
+     Nguồn ảnh, theo thứ tự người dùng chọn (lưu localStorage "sk_avatar_choice"):
+       "custom"  — ảnh tự tải từ máy, cắt vuông 256px, lưu data URL ở "sk_avatar_custom";
+       "google"  — ảnh hồ sơ của tài khoản đang đăng nhập (chỉ trong phiên);
+       "default" — chữ mặc định (空 / 築 / B).
+     Chưa chọn gì (auto): có ảnh tự tải thì dùng, không thì ảnh Google, không nữa thì mặc định.
+     Ảnh Google CHỈ lấy từ chính phiên đăng nhập của người dùng: luồng đăng nhập Google
+     (Firebase) gọi setGooglePhotoURL(user.photoURL) — app không tra cứu ảnh qua bất kỳ
+     dịch vụ bên thứ ba nào theo địa chỉ email. Bản xem thử chưa nối đăng nhập Google
+     thật (chờ domain chính thức) nên chưa có photoURL; điểm nối đã sẵn sàng. */
+  var avatarCustom = null;
+  var avatarGoogle = null;
+  var avatarChoice = "";
+  try{ avatarCustom = window.localStorage.getItem("sk_avatar_custom") || null; }catch(_){}
+  try{ avatarChoice = window.localStorage.getItem("sk_avatar_choice") || ""; }catch(_){}
+  function saveAvatarPrefs(){
+    var okCustom = true;
+    try{
+      if(avatarCustom) window.localStorage.setItem("sk_avatar_custom", avatarCustom);
+      else window.localStorage.removeItem("sk_avatar_custom");
+      window.localStorage.setItem("sk_avatar_choice", avatarChoice);
+      okCustom = !avatarCustom || window.localStorage.getItem("sk_avatar_custom") === avatarCustom;
+    }catch(_){ okCustom = !avatarCustom; }
+    return okCustom;
+  }
+  /* Điểm nối ảnh Google: luồng đăng nhập Google (Firebase) gọi hàm này với
+     user.photoURL của chính phiên đăng nhập đó. Không có photoURL (đăng nhập
+     email thường, hoặc tài khoản Google chưa đặt ảnh) thì avatarGoogle = null
+     và app dùng ảnh tự tải / avatar mặc định. */
+  function setGooglePhotoURL(url){
+    avatarGoogle = (typeof url === "string" && /^https:\/\//.test(url)) ? url : null;
+    renderAvatarPhoto();
+  }
+  function resolveGooglePhoto(){
+    /* Gọi sau mỗi lần đăng nhập / đổi tài khoản. Bản thật: tại đây đọc photoURL
+       từ user của Firebase rồi gọi setGooglePhotoURL(user.photoURL). Bản xem thử
+       đăng nhập demo theo email, chưa có phiên Google thật nên chưa có photoURL
+       để lấy — chỉ dọn ảnh Google của phiên trước nếu đã đăng xuất. */
+    if(!signedInEmail) avatarGoogle = null;
+    renderAvatarPhoto();
+  }
+  function effectiveAvatarUrl(){
+    if(avatarChoice === "default") return null;
+    if(avatarChoice === "google") return avatarGoogle || avatarCustom;
+    if(avatarChoice === "custom") return avatarCustom || avatarGoogle;
+    return avatarCustom || avatarGoogle;
+  }
+  function fillAvatarEl(el, defChar){
+    if(!el) return;
+    var url = effectiveAvatarUrl();
+    if(url){
+      el.textContent = "";
+      var img = document.createElement("img");
+      img.src = url; img.alt = "";
+      el.appendChild(img);
+    } else {
+      el.textContent = defChar;
+    }
+  }
+  function renderAvatarPhoto(){
+    document.querySelectorAll(".avatar").forEach(function(a){ fillAvatarEl(a, a.dataset.def || "空"); });
+    fillAvatarEl(document.getElementById("rankMyAv"), "B");
+    document.querySelectorAll("#chatList .chatmsg.mine .c-av").forEach(function(a){ fillAvatarEl(a, "B"); });
+    renderAvatarSheetState();
+  }
+  function renderAvatarSheetState(){
+    var eff = effectiveAvatarUrl();
+    var srcEl = document.getElementById("avCurSrc");
+    if(srcEl) srcEl.textContent = !eff ? "avatar mặc định (chữ 空)" : (eff === avatarCustom && avatarCustom ? "ảnh bạn tự tải lên" : "ảnh tài khoản Google");
+    var acct = document.getElementById("avAcctLine");
+    if(acct) acct.textContent = signedInEmail ? ("Tài khoản: " + signedInEmail) : "Chưa đăng nhập — đăng nhập bằng Gmail để app tự lấy ảnh.";
+    var gBtn = document.getElementById("avGoogleBtn"), gNote = document.getElementById("avGoogleNote");
+    var gThumb = document.getElementById("avGoogleThumb"), gG = document.getElementById("avGoogleG");
+    var isGmail = !!signedInEmail && signedInEmail.slice(-10) === "@gmail.com";
+    if(gBtn && gNote){
+      if(!signedInEmail){ gBtn.disabled = true; gNote.textContent = "Đăng nhập bằng tài khoản Google trước — app sẽ tự lấy ảnh của tài khoản làm avatar."; }
+      else if(!isGmail){ gBtn.disabled = true; gNote.textContent = "Tài khoản hiện tại (" + signedInEmail + ") không phải Gmail nên không có ảnh Google — hãy tải ảnh từ máy."; }
+      else if(avatarGoogle){ gBtn.disabled = false; gNote.textContent = "Ảnh tài khoản Google của " + signedInEmail + " — app đã tự lấy khi bạn đăng nhập."; }
+      else { gBtn.disabled = true; gNote.textContent = "Bản xem thử chưa nối đăng nhập Google thật (chờ domain chính thức) nên chưa lấy được ảnh của " + signedInEmail + " — bản thật sẽ tự lấy ngay khi đăng nhập Google. Giờ bạn tải ảnh từ máy lên nhé."; }
+    }
+    if(gThumb && gG){
+      if(avatarGoogle){ gThumb.src = avatarGoogle; gThumb.hidden = false; gG.hidden = true; }
+      else { gThumb.hidden = true; gG.hidden = false; }
+    }
+    var gOn = document.getElementById("avGoogleOn"), cOn = document.getElementById("avCustomOn"), dOn = document.getElementById("avDefaultOn");
+    if(gOn) gOn.hidden = !(eff && eff === avatarGoogle);
+    if(cOn) cOn.hidden = !(eff && eff === avatarCustom && avatarCustom);
+    if(dOn) dOn.hidden = !!eff;
+  }
+  var avatarSheet = document.getElementById("avatarSheet");
+  var avatarMsgEl = document.getElementById("avatarMsg");
+  function avatarMsg(t){ if(avatarMsgEl) avatarMsgEl.textContent = t || ""; }
+  function openAvatarSheet(){
+    avatarMsg("");
+    renderAvatarSheetState();
+    avatarSheet.classList.add("open");
+    avatarSheet.setAttribute("aria-hidden", "false");
+    if(loginScrim) loginScrim.classList.add("open");
+  }
+  function closeAvatarSheet(){
+    avatarSheet.classList.remove("open");
+    avatarSheet.setAttribute("aria-hidden", "true");
+    var ans = document.getElementById("answerSheet"), lg = document.getElementById("loginSheet");
+    if(loginScrim && !(ans && ans.classList.contains("open")) && !(lg && lg.classList.contains("open"))) loginScrim.classList.remove("open");
+  }
+  document.querySelectorAll(".avatar").forEach(function(a){ if(!a.dataset.def) a.dataset.def = a.textContent.trim(); });
+  renderAvatarPhoto();
+  var meAvatarEl = document.getElementById("meAvatar");
+  if(meAvatarEl){
+    meAvatarEl.addEventListener("click", openAvatarSheet);
+    meAvatarEl.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openAvatarSheet(); } });
+  }
+  document.getElementById("meAvatarRow").addEventListener("click", openAvatarSheet);
+  document.getElementById("avatarClose").addEventListener("click", closeAvatarSheet);
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(avatarSheet.classList.contains("open")) closeAvatarSheet(); });
+  document.getElementById("avGoogleBtn").addEventListener("click", function(){
+    if(!avatarGoogle) return;
+    avatarChoice = "google"; saveAvatarPrefs(); renderAvatarPhoto();
+    avatarMsg("Đã dùng ảnh tài khoản Google làm avatar.");
+  });
+  document.getElementById("avDefaultBtn").addEventListener("click", function(){
+    avatarChoice = "default"; saveAvatarPrefs(); renderAvatarPhoto();
+    avatarMsg("Đã về avatar mặc định. Ảnh tự tải vẫn được giữ — chọn lại bất cứ lúc nào.");
+  });
+  var avatarFileInput = document.getElementById("avatarFile");
+  document.getElementById("avUploadBtn").addEventListener("click", function(){ avatarFileInput.click(); });
+  avatarFileInput.addEventListener("change", function(){
+    var file = avatarFileInput.files && avatarFileInput.files[0];
+    avatarFileInput.value = "";
+    if(!file) return;
+    if(!/^image\//.test(file.type || "")){ avatarMsg("File này không phải ảnh — chọn ảnh JPG hoặc PNG giúp mình nhé."); return; }
+    var rd = new FileReader();
+    rd.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var S = 256, cv = document.createElement("canvas");
+        cv.width = S; cv.height = S;
+        var ctx = cv.getContext("2d");
+        var side = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
+        if(!side){ avatarMsg("Không đọc được ảnh này — thử ảnh khác nhé."); return; }
+        ctx.drawImage(img, ((img.naturalWidth || img.width) - side) / 2, ((img.naturalHeight || img.height) - side) / 2, side, side, 0, 0, S, S);
+        var data = "";
+        try{ data = cv.toDataURL("image/jpeg", 0.85); }catch(_){}
+        if(!data){ avatarMsg("Không xử lý được ảnh này — thử ảnh khác nhé."); return; }
+        avatarCustom = data; avatarChoice = "custom";
+        var kept = saveAvatarPrefs();
+        renderAvatarPhoto();
+        avatarMsg(kept ? "Đã đổi ảnh đại diện — ảnh mới hiện ở tab Cá nhân, Xếp hạng và Phòng chat." : "Đã đổi ảnh đại diện (ảnh nặng nên chỉ giữ trong phiên này, chưa lưu lâu dài trên máy).");
+      };
+      img.onerror = function(){ avatarMsg("Không đọc được ảnh này — thử ảnh khác nhé."); };
+      img.src = rd.result;
+    };
+    rd.onerror = function(){ avatarMsg("Không đọc được file này — thử ảnh khác nhé."); };
+    rd.readAsDataURL(file);
+  });
 
   /* ---------- PWA: cài lên màn hình chính + service worker + offline ---------- */
   var deferredInstall = null;
@@ -11595,7 +12500,7 @@ function furiHTML(text){
     p.textContent = t;
     bub.appendChild(who); bub.appendChild(p);
     var av = document.createElement("span");
-    av.className = "c-av"; av.textContent = "B";
+    av.className = "c-av"; fillAvatarEl(av, "B");
     wrap.appendChild(av); wrap.appendChild(bub);
     chatList.appendChild(wrap);
     chatInput.value = "";
@@ -11605,6 +12510,254 @@ function furiHTML(text){
   }
   document.getElementById("chatSend").addEventListener("click", sendChat);
   chatInput.addEventListener("keydown", function(e){ if(e.key === "Enter") sendChat(); });
+
+  /* ---------- Đếm ngược JLPT + lộ trình ôn ----------
+     Kỳ thi JLPT: Chủ nhật đầu tiên của tháng 7 và tháng 12 hằng năm — ngày thi
+     được TÍNH bằng code (không hardcode), qua kỳ là tự chuyển sang kỳ sau.
+     Lộ trình 3 giai đoạn tính trên tổng số ngày từ ngày bắt đầu lộ trình
+     (lưu ở localStorage "sk_jlpt_plan", neo theo kỳ thi) tới ngày thi:
+     Học mới 60% · Luyện đề 25% · Tổng ôn 15%, mỗi giai đoạn tối thiểu 1 ngày.
+     Cấp mục tiêu lưu ở "sk_jlpt_target"; mục hôm nay đã học lưu theo ngày
+     ở "sk_jlpt_done". Số liệu nội dung là số thật của từng cấp trong app. */
+  var JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
+  var JLPT_TOTALS = {
+    N5: { k: 126,  v: 1205, g: 84 },
+    N4: { k: 235,  v: 1347, g: 74 },
+    N3: { k: 429,  v: 881,  g: 72 },
+    N2: { k: 273,  v: 2284, g: 72 },
+    N1: { k: 1075, v: 4813, g: 72 }
+  };
+  var JLPT_PHASES = [
+    { name: "Học mới",  desc: "Học hết kanji, từ vựng và ngữ pháp của cấp — chia đều mỗi ngày một phần, kèm 1 bài nghe hoặc đọc hiểu luân phiên." },
+    { name: "Luyện đề", desc: "Mỗi ngày làm 1 đề thi thử (Test 1–9 của cấp), xem lại đáp án và ôn phần còn yếu." },
+    { name: "Tổng ôn",  desc: "Ôn lại toàn bộ kanji, từ vựng, ngữ pháp đã học; cứ 2 ngày làm 1 đề thi thử." }
+  ];
+  function jlptMidnight(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function jlptDaysBetween(a, b){ return Math.round((jlptMidnight(b) - jlptMidnight(a)) / 86400000); }
+  function jlptAddDays(d, n){ var x = jlptMidnight(d); x.setDate(x.getDate() + n); return x; }
+  /* Chủ nhật đầu tiên của tháng m (0-based) trong năm y */
+  function jlptFirstSunday(y, m){
+    var first = new Date(y, m, 1);
+    return new Date(y, m, 1 + ((7 - first.getDay()) % 7));
+  }
+  /* Kỳ thi gần nhất: Chủ nhật đầu tiên tháng 7 hoặc tháng 12, từ hôm nay trở đi */
+  function jlptNextExam(today){
+    var t = jlptMidnight(today);
+    for(var y = t.getFullYear(); y <= t.getFullYear() + 1; y++){
+      var jul = jlptFirstSunday(y, 6), dec = jlptFirstSunday(y, 11);
+      if(jul >= t) return jul;
+      if(dec >= t) return dec;
+    }
+    return jlptFirstSunday(t.getFullYear() + 2, 6);
+  }
+  function jlptPad(n){ return String(n).padStart(2, "0"); }
+  function jlptFmtFull(d){ return jlptPad(d.getDate()) + "/" + jlptPad(d.getMonth() + 1) + "/" + d.getFullYear(); }
+  function jlptFmtShort(d){ return jlptPad(d.getDate()) + "/" + jlptPad(d.getMonth() + 1); }
+  function jlptParseKey(s){
+    var p = String(s || "").split("-");
+    if(p.length !== 3) return null;
+    var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+    return isNaN(d.getTime()) ? null : d;
+  }
+  /* Chia tổng T ngày thành 3 giai đoạn 60% / 25% / 15%, tối thiểu 1 ngày/giai đoạn.
+     T < 3 ngày: dồn hết vào Tổng ôn (sát ngày thi chỉ còn tổng ôn). */
+  function jlptPhaseLens(T){
+    if(T <= 0) return [0, 0, 0];
+    if(T < 3) return [0, 0, T];
+    var n1 = Math.round(T * 0.6), n2 = Math.round(T * 0.85) - n1, n3 = T - n1 - n2;
+    if(n1 < 1) n1 = 1;
+    if(n2 < 1) n2 = 1;
+    if(n3 < 1) n3 = 1;
+    var diff = n1 + n2 + n3 - T;
+    while(diff > 0){
+      if(n1 >= n2 && n1 >= n3 && n1 > 1) n1--;
+      else if(n2 >= n3 && n2 > 1) n2--;
+      else if(n3 > 1) n3--;
+      else break;
+      diff--;
+    }
+    while(diff < 0){ n1++; diff++; }
+    return [n1, n2, n3];
+  }
+  function jlptTarget(){
+    try{
+      var saved = window.localStorage.getItem("sk_jlpt_target");
+      if(JLPT_LEVELS.indexOf(saved) >= 0) return saved;
+    }catch(_){}
+    /* Mặc định: cấp người dùng đã khai trong app (dùng để xếp cảnh giới), chưa khai thì N5 */
+    if(typeof appliedLv === "number" && appliedLv >= 1 && appliedLv <= 5) return LV_NAMES[appliedLv];
+    return "N5";
+  }
+  function jlptLoadDone(){
+    try{
+      var d = JSON.parse(window.localStorage.getItem("sk_jlpt_done") || "{}");
+      return (d && typeof d === "object") ? d : {};
+    }catch(_){ return {}; }
+  }
+  function jlptNav(kind, lv){
+    if(kind === "kanji") kjOpenLevel(lv);
+    else if(kind === "vocab"){ openWords(); wvOpenLessons(lv); }
+    else if(kind === "grammar"){ openGrammar(); grOpenLessons(lv); }
+    else if(kind === "exam"){
+      goTab("jlpt");
+      var b = document.querySelector('#lvRow .lv[data-lv="' + lv + '"]');
+      if(b) b.click();
+    }
+    else if(kind === "listen") showOv(document.getElementById("listenOverlay"));
+    else if(kind === "read") showOv(document.getElementById("readOverlay"));
+  }
+  function renderJlptCard(){
+    var card = document.getElementById("jlptCard");
+    if(!card) return;
+    var today = new Date();
+    var exam = jlptNextExam(today);
+    var daysLeft = jlptDaysBetween(today, exam);
+    var lv = jlptTarget();
+    var tot = JLPT_TOTALS[lv];
+
+    /* Neo lộ trình: ngày bắt đầu = lần đầu mở thẻ cho kỳ thi này (lưu localStorage) */
+    var plan = null;
+    try{ plan = JSON.parse(window.localStorage.getItem("sk_jlpt_plan") || "null"); }catch(_){}
+    var start = (plan && plan.exam === dayKeyOf(exam)) ? jlptParseKey(plan.start) : null;
+    if(!start || start > jlptMidnight(today)){
+      start = jlptMidnight(today);
+      try{ window.localStorage.setItem("sk_jlpt_plan", JSON.stringify({ exam: dayKeyOf(exam), start: dayKeyOf(start) })); }catch(_){}
+    }
+    var T = jlptDaysBetween(start, exam);
+    var dayIndex = Math.max(0, jlptDaysBetween(start, today));
+    var lens = jlptPhaseLens(T);
+    var offs = [0, lens[0], lens[0] + lens[1]];
+    var curPhase = 2;
+    for(var pi = 0; pi < 3; pi++){
+      if(lens[pi] > 0 && dayIndex >= offs[pi] && dayIndex < offs[pi] + lens[pi]){ curPhase = pi; break; }
+    }
+    if(T <= 0) curPhase = 2;
+
+    /* Đầu thẻ: đếm ngược + ngày thi */
+    document.getElementById("jlptDaysLeft").textContent = daysLeft + " ngày";
+    document.getElementById("jlptExamLine").textContent = daysLeft === 0
+      ? "Hôm nay là ngày thi JLPT — chúc bạn thi tốt!"
+      : "Kỳ thi gần nhất: Chủ nhật " + jlptFmtFull(exam) + " · Mục tiêu " + lv;
+
+    /* Hàng chip chọn cấp mục tiêu */
+    var lvRow = document.getElementById("jlptLvRow");
+    lvRow.innerHTML = "";
+    JLPT_LEVELS.forEach(function(L){
+      var b = document.createElement("button");
+      b.className = "lv" + (L === lv ? " on" : "");
+      b.textContent = L;
+      b.setAttribute("aria-pressed", L === lv ? "true" : "false");
+      b.addEventListener("click", function(){
+        try{ window.localStorage.setItem("sk_jlpt_target", L); }catch(_){}
+        renderJlptCard();
+      });
+      lvRow.appendChild(b);
+    });
+    document.getElementById("jlptLvNote").textContent =
+      "Mục tiêu " + lv + ": " + fmtN(tot.k) + " kanji · " + fmtN(tot.v) + " từ vựng · " + tot.g + " mẫu ngữ pháp" +
+      (curPhase === 0 && lens[0] > 0 ? " — giai đoạn Học mới còn " + (offs[0] + lens[0] - dayIndex) + " ngày" : "");
+
+    /* 3 giai đoạn của lộ trình */
+    var ph = document.getElementById("jlptPhases");
+    ph.innerHTML = "";
+    JLPT_PHASES.forEach(function(P, i){
+      var row = document.createElement("div");
+      var isPast = lens[i] > 0 && dayIndex >= offs[i] + lens[i];
+      row.className = "jlphase" + (i === curPhase && T > 0 ? " cur" : (isPast ? " past" : ""));
+      var rangeTxt, stateTxt;
+      if(lens[i] <= 0){ rangeTxt = "Đã qua"; stateTxt = "Đã qua"; }
+      else{
+        rangeTxt = jlptFmtShort(jlptAddDays(start, offs[i])) + "–" + jlptFmtShort(jlptAddDays(start, offs[i] + lens[i] - 1)) +
+          " · " + lens[i] + " ngày";
+        stateTxt = i === curPhase ? "Đang học" : (isPast ? "Đã xong" : "Sắp tới");
+      }
+      row.innerHTML =
+        '<span class="p-ic">' + (isPast ? "✓" : (i + 1)) + "</span>" +
+        '<span class="p-main"><b>Giai đoạn ' + (i + 1) + " · " + P.name + "</b>" +
+        "<span>" + rangeTxt + " — " + P.desc + "</span></span>" +
+        '<span class="p-state">' + stateTxt + "</span>";
+      ph.appendChild(row);
+    });
+
+    /* Kế hoạch hôm nay theo giai đoạn hiện tại */
+    var items = [];
+    if(daysLeft === 0){
+      items.push({ id: "examday", t: "Ôn nhẹ và chuẩn bị đi thi",
+        s: "Lướt lại kanji / từ vựng hay sai của " + lv + ", mang đủ giấy tờ, ngủ sớm", nav: "vocab" });
+    }else if(curPhase === 0){
+      var n1 = Math.max(1, lens[0]);
+      items.push({ id: "k", t: "Học " + Math.ceil(tot.k / n1) + " chữ kanji " + lv,
+        s: "Trong tổng " + fmtN(tot.k) + " chữ của cấp — mở lưới Kanji " + lv, nav: "kanji" });
+      items.push({ id: "v", t: "Học " + fmtN(Math.ceil(tot.v / n1)) + " từ vựng " + lv,
+        s: "Trong tổng " + fmtN(tot.v) + " từ của cấp — theo bài Minna", nav: "vocab" });
+      items.push({ id: "g", t: "Học " + Math.ceil(tot.g / n1) + " mẫu ngữ pháp " + lv,
+        s: "Trong tổng " + tot.g + " mẫu của cấp — xem cấu trúc, giải nghĩa, làm bài tập", nav: "grammar" });
+      if(dayIndex % 2 === 0)
+        items.push({ id: "alt", t: "Làm 1 bài Luyện nghe " + lv,
+          s: "Hội thoại Part 3 có file nghe và giải thích", nav: "listen" });
+      else
+        items.push({ id: "alt", t: "Làm 1 bài Đọc hiểu " + lv,
+          s: "Đọc bài, trả lời câu hỏi và xem giải thích", nav: "read" });
+    }else if(curPhase === 1){
+      var testNo2 = ((dayIndex - offs[1]) % 9) + 1;
+      items.push({ id: "exam", t: "Làm đề thi thử Test " + testNo2 + " · " + lv,
+        s: "Đề đầy đủ trong mục Luyện thi — tính giờ và chấm điểm như thi thật", nav: "exam" });
+      items.push({ id: "weak", t: "Ôn lại phần yếu",
+        s: "Xem lại đáp án + giải thích của các đề đã làm, ghi lại câu hay sai", nav: "exam" });
+    }else{
+      items.push({ id: "rk", t: "Ôn tập kanji " + lv,
+        s: "Lướt lại " + fmtN(tot.k) + " chữ của cấp — ưu tiên chữ chưa thuộc", nav: "kanji" });
+      items.push({ id: "rv", t: "Ôn tập từ vựng " + lv,
+        s: "Lướt lại " + fmtN(tot.v) + " từ của cấp — ưu tiên từ hay quên", nav: "vocab" });
+      items.push({ id: "rg", t: "Ôn tập ngữ pháp " + lv,
+        s: "Lướt lại " + tot.g + " mẫu của cấp — chú ý mẫu hay nhầm", nav: "grammar" });
+      if((dayIndex - offs[2]) % 2 === 0){
+        var testNo3 = ((dayIndex - offs[2]) % 9) + 1;
+        items.push({ id: "exam", t: "Làm đề thi thử Test " + testNo3 + " · " + lv,
+          s: "Hôm nay là ngày làm đề trong giai đoạn Tổng ôn (2 ngày 1 đề)", nav: "exam" });
+      }
+    }
+
+    /* Danh sách hôm nay + đánh dấu đã học (lưu theo ngày) */
+    var doneMap = jlptLoadDone();
+    var todayDone = doneMap[dayKeyOf(today)] || {};
+    var listEl = document.getElementById("jlptTodayList");
+    listEl.innerHTML = "";
+    var doneCount = 0;
+    items.forEach(function(it){
+      var isDone = !!todayDone[it.id];
+      if(isDone) doneCount++;
+      var row = document.createElement("div");
+      row.className = "jlt-row" + (isDone ? " done" : "");
+      var chk = document.createElement("button");
+      chk.className = "jlt-chk" + (isDone ? " on" : "");
+      chk.setAttribute("aria-label", isDone ? "Bỏ đánh dấu đã học: " + it.t : "Đánh dấu đã học: " + it.t);
+      chk.setAttribute("aria-pressed", isDone ? "true" : "false");
+      chk.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>';
+      chk.addEventListener("click", function(){
+        var all = jlptLoadDone();
+        var dk = dayKeyOf(new Date());
+        if(!all[dk]) all[dk] = {};
+        if(all[dk][it.id]) delete all[dk][it.id]; else all[dk][it.id] = 1;
+        try{ window.localStorage.setItem("sk_jlpt_done", JSON.stringify(all)); }catch(_){}
+        renderJlptCard();
+      });
+      var go = document.createElement("button");
+      go.className = "jlt-go";
+      go.innerHTML = '<span class="t-main"><b></b><span></span></span><span class="t-arrow">›</span>';
+      go.querySelector("b").textContent = it.t;
+      go.querySelector(".t-main > span").textContent = it.s;
+      go.addEventListener("click", function(){ jlptNav(it.nav, lv); });
+      row.appendChild(chk);
+      row.appendChild(go);
+      listEl.appendChild(row);
+    });
+    document.getElementById("jlptProgTxt").textContent =
+      "Giai đoạn " + (curPhase + 1) + " · Đã xong " + doneCount + "/" + items.length;
+    document.getElementById("jlptProgBar").style.width =
+      (items.length ? Math.round(doneCount / items.length * 100) : 0) + "%";
+  }
+  renderJlptCard();
 })();
 </script>
 <script>
@@ -11614,6 +12767,8 @@ function furiHTML(text){
    Không gửi dữ liệu đi đâu, không lưu lịch sử chat — đóng trang là mất. */
 (function(){
   var fab = document.getElementById("assistantFab");
+  var fabWrap = document.getElementById("assistantFabWrap");
+  var fabClose = document.getElementById("assistantFabClose");
   var panel = document.getElementById("assistantPanel");
   var scrim = document.getElementById("assistantScrim");
   var closeBtn = document.getElementById("assistantClose");
@@ -11637,7 +12792,7 @@ function furiHTML(text){
     panel.classList.add("open");
     panel.setAttribute("aria-hidden", "false");
     scrim.classList.add("open");
-    fab.classList.add("hide");
+    (fabWrap || fab).classList.add("hide");
     fab.setAttribute("aria-expanded", "true");
     setTimeout(function(){ try{ input.focus(); }catch(e){} }, 80);
   }
@@ -11647,7 +12802,7 @@ function furiHTML(text){
     panel.classList.remove("open");
     panel.setAttribute("aria-hidden", "true");
     scrim.classList.remove("open");
-    fab.classList.remove("hide");
+    (fabWrap || fab).classList.remove("hide");
     fab.setAttribute("aria-expanded", "false");
     try{ fab.focus(); }catch(e){}
   }
@@ -11657,6 +12812,69 @@ function furiHTML(text){
   document.addEventListener("keydown", function(e){
     if(e.key === "Escape" && isOpen) closeAssistant();
   });
+
+  /* ----- Kéo thả nút Sora kiểu AssistiveTouch: kéo đâu theo đó, thả ra tự dính mép trái/phải gần nhất.
+     Chỉ bấm nhanh (không kéo) mới mở khung chat — sau một lần kéo, cú click đi kèm bị chặn để khỏi mở nhầm.
+     Dấu × trên nút: ẩn hẳn nút, đồng bộ công tắc “Hiện nút trợ lý Sora” trong tab Cài đặt để mở lại. ----- */
+  var suppressFabClick = false;
+  if(fabWrap){
+    fabWrap.addEventListener("click", function(e){
+      if(suppressFabClick){
+        e.stopPropagation(); e.preventDefault(); suppressFabClick = false;
+      }
+    }, true);
+    var dragState = null;
+    fabWrap.addEventListener("pointerdown", function(e){
+      if(fabClose && e.target && e.target.closest && e.target.closest("#assistantFabClose")) return;
+      dragState = { id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, l: 0, t: 0 };
+    });
+    fabWrap.addEventListener("pointermove", function(e){
+      if(!dragState || e.pointerId !== dragState.id) return;
+      var parent = fabWrap.offsetParent;
+      if(!parent) return;
+      var dx = e.clientX - dragState.sx, dy = e.clientY - dragState.sy;
+      if(!dragState.moved){
+        if(Math.abs(dx) + Math.abs(dy) < 8) return;
+        dragState.moved = true;
+        var pr = parent.getBoundingClientRect(), wr = fabWrap.getBoundingClientRect();
+        dragState.l = wr.left - pr.left; dragState.t = wr.top - pr.top;
+        fabWrap.style.right = "auto"; fabWrap.style.bottom = "auto";
+        fabWrap.style.left = dragState.l + "px"; fabWrap.style.top = dragState.t + "px";
+        fabWrap.classList.add("dragging");
+        try{ fabWrap.setPointerCapture(e.pointerId); }catch(_){}
+      }
+      var pw = parent.clientWidth, ph = parent.clientHeight;
+      var w = fabWrap.offsetWidth, h = fabWrap.offsetHeight, m = 6;
+      var nl = Math.min(Math.max(dragState.l + dx, m), Math.max(m, pw - w - m));
+      var nt = Math.min(Math.max(dragState.t + dy, m), Math.max(m, ph - h - m));
+      fabWrap.style.left = nl + "px"; fabWrap.style.top = nt + "px";
+      if(e.cancelable) e.preventDefault();
+    });
+    var endFabDrag = function(e){
+      if(!dragState || e.pointerId !== dragState.id) return;
+      var wasMoved = dragState.moved; dragState = null;
+      fabWrap.classList.remove("dragging");
+      if(!wasMoved) return;
+      suppressFabClick = true;
+      setTimeout(function(){ suppressFabClick = false; }, 400);
+      var parent = fabWrap.offsetParent;
+      if(!parent) return;
+      var pw = parent.clientWidth, w = fabWrap.offsetWidth, m = 12;
+      var cur = parseFloat(fabWrap.style.left) || 0;
+      var target = (cur + w / 2 < pw / 2) ? m : Math.max(m, pw - w - m);
+      fabWrap.classList.add("snapping");
+      fabWrap.style.left = target + "px";
+      setTimeout(function(){ fabWrap.classList.remove("snapping"); }, 320);
+    };
+    fabWrap.addEventListener("pointerup", endFabDrag);
+    fabWrap.addEventListener("pointercancel", endFabDrag);
+    if(fabClose){
+      fabClose.addEventListener("click", function(e){
+        e.stopPropagation();
+        document.dispatchEvent(new CustomEvent("sk-sora-visibility", { detail: { visible: false } }));
+      });
+    }
+  }
 
   /* ----- Điều hướng thật: bấm vào phần tử có sẵn của app ----- */
   function clickTab(name){
@@ -11784,7 +13002,7 @@ function furiHTML(text){
       actions:[{label:"Tới ô tìm kiếm", action:"search"},{label:"Vẽ kanji để tra", action:"draw"}] },
     { id:"settings", label:"Cài đặt, âm thanh, giao diện tối ở đâu?",
       keywords:["cai dat","am thanh","khong nghe thay","giong doc","giao dien toi","dark","sao luu","tat tieng"],
-      answer:"Bấm tab “Cài đặt” ở thanh dưới cùng (icon bánh răng). Trong đó có:\n\n• Âm thanh & giọng đọc: tắt thì các câu mẫu Shadowing và tiếng đọc từ sẽ im — không nghe thấy tiếng Nhật thì kiểm tra công tắc này đầu tiên, và kiểm tra máy đã có giọng đọc tiếng Nhật chưa.\n• Giao diện tối: bật/tắt thủ công, ghi đè theo hệ thống.\n• Tự nhận diện khi vẽ kanji: bật để gợi ý hiện ngay sau mỗi nét ở màn Vẽ kanji.\n• Mục “App trên điện thoại (PWA)”: trạng thái cài đặt / kết nối / service worker và hướng dẫn cài cho Android + iPhone.\n• “Sao lưu dữ liệu học” và “Giới thiệu SoraKanji” ở khối dưới cùng.",
+      answer:"Bấm tab “Cài đặt” ở thanh dưới cùng (icon bánh răng). Trong đó có:\n\n• Âm thanh & giọng đọc: tắt thì các câu mẫu Shadowing và tiếng đọc từ sẽ im — không nghe thấy tiếng Nhật thì kiểm tra công tắc này đầu tiên, và kiểm tra máy đã có giọng đọc tiếng Nhật chưa.\n• Giao diện tối: bật/tắt thủ công, ghi đè theo hệ thống.\n• Tự nhận diện khi vẽ kanji: bật để gợi ý hiện ngay sau mỗi nét ở màn Vẽ kanji.\n• Hiện nút trợ lý Sora: tắt thì nút tròn của mình ẩn đi — hoặc bấm dấu × ngay trên nút cũng ẩn được; bật lại ở đây là nút hiện lại. Nút kéo thả được tới bất cứ đâu trên màn hình, thả ra tự dính vào mép trái/phải gần nhất.\n• Mục “App trên điện thoại (PWA)”: trạng thái cài đặt / kết nối / service worker và hướng dẫn cài cho Android + iPhone.\n• “Sao lưu dữ liệu học” và “Giới thiệu SoraKanji” ở khối dưới cùng.",
       actions:[{label:"Mở Cài đặt", action:"settings"}] },
     { id:"start", label:"Mới học thì bắt đầu từ đâu?",
       keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
