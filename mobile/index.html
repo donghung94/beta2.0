@@ -9919,10 +9919,31 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     return {error: "Không tìm thấy ID video trong link này. Hãy dán link YouTube dạng youtube.com/watch?v=... hoặc youtu.be/..."};
   }
-  /* Firebase callable — khởi tạo lười khi bấm Tạo bài học lần đầu */
+  /* Gọi callable — ưu tiên fetch trực tiếp tới endpoint HTTPS, không phụ
+     thuộc thư viện Firebase compat: trên điện thoại script gstatic đôi khi
+     tải không được, app báo nhầm "function chưa được deploy" dù function
+     vẫn chạy tốt (đã gặp 2026-11-13). Giao thức y hệt SDK: POST
+     {"data": {...}} → {"result": {...}} hoặc {"error": {...}}. Chỉ dùng
+     SDK khi trình duyệt không có fetch mà SDK đã tải sẵn. */
+  var SVU_FN_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/makeLessonFromVideo";
+  function svuFetchFn(payload){
+    return fetch(SVU_FN_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({data: payload})
+    }).then(function(r){
+      return r.json().then(function(j){
+        if(j && j.result) return {data: j.result};
+        var e = (j && j.error) || {};
+        var st = String(e.status || "INTERNAL").toLowerCase().replace(/_/g, "-");
+        throw {code: "functions/" + st, message: e.message || ""};
+      });
+    });
+  }
   var svuFn = null, svuFnFailed = false;
   function svuGetFn(){
     if(svuFn) return svuFn;
+    if(typeof fetch !== "undefined"){ svuFn = svuFetchFn; return svuFn; }
     if(svuFnFailed) return null;
     try{
       if(typeof firebase === "undefined" || !firebase.initializeApp || !firebase.functions){
