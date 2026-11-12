@@ -9983,12 +9983,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var noVi = meta.translationStatus && meta.translationStatus !== "ok";
     var subs = (lesson.lines || []).map(function(l){
       return {
-        t: Math.round(l.start || 0),
+        /* Giữ nguyên mốc giây thập phân backend trả về — bản cũ làm tròn
+           Math.round nên karaoke lệch tới 0,5s, lúc đúng lúc chậm. */
+        t: (typeof l.start === "number" ? l.start : 0),
         ja: l.jp || "",
         fj: svuFjFromTokens(l),
         furi: l.reading || l.jp || "",
         romaji: l.romaji || "",
-        vi: l.vi ? l.vi : "(chưa dịch được)"
+        vi: l.vi ? l.vi : "(chưa dịch được)",
+        /* Ghi chú giải thích do AI sinh (backend) — bấm vào câu sẽ hiện
+           bong bóng giải thích như bài có sẵn; không có thì để trống. */
+        exp: l.notes || ""
       };
     });
     var lastEnd = lesson.lines && lesson.lines.length ? (lesson.lines[lesson.lines.length - 1].end || 0) : 0;
@@ -9996,7 +10001,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(subs.length && dur <= subs[subs.length - 1].t) dur = subs[subs.length - 1].t + 1;
     if(dur < 1) dur = 1;
     var note = "Bài tạo từ link bạn dán · phụ đề tiếng Nhật lấy từ YouTube" +
-      (lesson.source === "auto" ? " — phụ đề TỰ ĐỘNG của YouTube, có thể có lỗi nhận dạng, cần soát tay khi học." : ".");
+      (lesson.source === "auto" ? " — phụ đề TỰ ĐỘNG của YouTube, có thể có lỗi nhận dạng, cần soát tay khi học." : ".") +
+      (lesson.source === "gemini" ? " Lời thoại và ghi chú giải thích do AI (Gemini) tạo ra — có thể sai vài chỗ, cần soát tay khi học." : "");
     if(noVi && meta.translationError) note = meta.translationError + " " + note;
     var title = lesson.title || "Video bạn dán";
     return {
