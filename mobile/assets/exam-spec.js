@@ -65,4 +65,4 @@ window.EXAM_INFO = [
 window.EXAM_INFO_IDX = {"N5":[0,18,19,20,21,22,23,24,25],"N4":[0,1,8,9,10,11,12,13,14,15,16,17],"N3":[2,3],"N2":[4,5],"N1":[6,7]};
 window.EXAM_MOBILE_MINUTES = {"N5":60,"N4":80,"N3":100,"N2":105,"N1":110};
 window.EXAM_PASS180 = {"N5":80,"N4":90,"N3":95,"N2":90,"N1":100};
-window.EXAM_OPEN_TESTS = {"N5":9,"N4":9,"N3":2,"N2":2,"N1":2};
+window.EXAM_OPEN_TESTS = {"N5":9,"N4":9,"N3":9,"N2":9,"N1":9};
