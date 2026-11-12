@@ -4324,7 +4324,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   <script src="assets/exam-bank-n3.js"></script>
   <script src="assets/exam-bank-n2.js"></script>
   <script src="assets/exam-bank-n1.js"></script>
-  <!-- Firebase compat SDK — CHỈ để gọi callable makeLessonFromVideoFree (tính năng dán link YouTube tự tạo bài shadowing); app không dùng Firebase cho việc gì khác trong bản này -->
+  <!-- Firebase compat SDK — CHỈ để gọi callable makeLessonFromVideo (tính năng dán link YouTube tự tạo bài shadowing); app không dùng Firebase cho việc gì khác trong bản này -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 <script>
@@ -9739,7 +9739,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* ---------- Dán link YouTube → tự tạo bài shadowing (bài của người học) ----------
      Ô nhập nằm ở đầu mục "Shadowing bằng video" (trang Luyện nghe). Luồng:
      validate link ngay ở client theo đúng luật parse của backend
-     (functions/src/videoId.js) → gọi Firebase callable makeLessonFromVideoFree
+     (functions/src/videoId.js) → gọi Firebase callable makeLessonFromVideo
      (region asia-northeast1, project donghung-3208d) → nạp lesson JSON trả về
      vào ĐÚNG cấu trúc SV2_* mà player bài 2 đang dùng rồi mở bằng chính
      sv2OpenLesson() — không có player riêng cho bài tự tạo.
@@ -9929,7 +9929,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         svuFnFailed = true; return null;
       }
       if(!firebase.apps || !firebase.apps.length) firebase.initializeApp(SVU_FB_CONFIG);
-      svuFn = firebase.functions("asia-northeast1").httpsCallable("makeLessonFromVideoFree");
+      svuFn = firebase.functions("asia-northeast1").httpsCallable("makeLessonFromVideo");
       return svuFn;
     }catch(e){ svuFnFailed = true; return null; }
   }
