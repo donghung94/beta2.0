@@ -1283,6 +1283,8 @@
   .sv2-sub.active{background:var(--red-soft);}
   /* Karaoke như bài 1: cụm từ đã đọc / đang đọc trong câu đang phát tô đỏ + gạch chân */
   .sv2-sub .sv-w.done, .sv2-sub .sv-w.now{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
+  /* Cụm đang quét mượt: màu chạy bằng gradient nên bỏ gạch chân (gạch cả cụm sẽ sai tiến độ) */
+  .sv-line .sv-w.sweep, .sv2-sub .sv-w.sweep{text-decoration:none;}
   .sv2-sub.unclear{cursor:pointer;}
   .sv2-sub .unclearnote{display:block; font-size:13px; font-style:italic; color:var(--ink-3); line-height:1.6; padding-top:2px;}
   .sv2-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 15px 15px;}
@@ -8674,6 +8676,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     showOv(svOverlay);
     if(svTimer) clearInterval(svTimer);
     svTimer = setInterval(svTick, 120);
+    svStartKaraLoop();
   }
   function svRenderList(){
     var box = document.getElementById("svList");
@@ -8804,6 +8807,48 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(svExpIdx >= 0) svPlaceExp();
     }
   }
+  /* Quét karaoke mượt (dùng chung cho cả 2 player video): tô đỏ từng cụm từ
+     theo tỉ lệ ký tự đã qua — màu đỏ chạy trôi liên tục trong câu như
+     karaoke thật, thay vì tô đỏ cả cụm một lúc. Dùng gradient +
+     background-clip:text trên từng span .sv-w; cụm chưa tới / đã qua thì
+     xóa style inline, chỉ giữ class .done. Thời điểm từng cụm vẫn nội suy
+     theo số ký tự (phụ đề chỉ có mốc đầu/cuối câu) nên vệt chạy mượt nhưng
+     độ khớp từng từ chỉ là ước lượng. */
+  function svSweepFill(spans, info, frac){
+    var target = frac * info.total;
+    spans.forEach(function(wd, j){
+      var s0 = j === 0 ? 0 : info.cum[j - 1];
+      var s1 = info.cum[j];
+      var fill = (target - s0) / Math.max(1, s1 - s0);
+      if(fill <= 0){
+        wd.classList.remove("done"); wd.classList.remove("now"); wd.classList.remove("sweep");
+        wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
+        wd.style.webkitTextFillColor = ""; wd.style.color = "";
+      } else if(fill >= 1){
+        wd.classList.add("done"); wd.classList.remove("now"); wd.classList.remove("sweep");
+        wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
+        wd.style.webkitTextFillColor = ""; wd.style.color = "";
+      } else {
+        wd.classList.remove("done"); wd.classList.add("now"); wd.classList.add("sweep");
+        var pct = (fill * 100).toFixed(1);
+        wd.style.backgroundImage = "linear-gradient(to right, var(--red) " + pct + "%, var(--ink) " + pct + "%)";
+        wd.style.webkitBackgroundClip = "text";
+        wd.style.backgroundClip = "text";
+        wd.style.webkitTextFillColor = "transparent";
+        wd.style.color = "transparent";
+      }
+    });
+  }
+  /* Xóa sạch trạng thái karaoke trong 1 khung (khi đổi câu / đóng bài) —
+     cả class lẫn style inline của vệt quét, không thì vệt đỏ còn sót lại. */
+  function svClearSweep(root){
+    if(!root) return;
+    root.querySelectorAll(".sv-w").forEach(function(wd){
+      wd.classList.remove("done"); wd.classList.remove("now"); wd.classList.remove("sweep");
+      wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
+      wd.style.webkitTextFillColor = ""; wd.style.color = "";
+    });
+  }
   /* Karaoke: tỉ lệ thời gian đã qua trong câu → các cụm từ đã đọc được tô đỏ +
      gạch chân, cụm đang đọc cũng vậy (gạch chân chạy dần như app mẫu). Thời điểm
      từng cụm từ nội suy đều theo số ký tự vì phụ đề viết sẵn chỉ có mốc đầu/cuối câu */
@@ -8812,18 +8857,22 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var s = SV_SUBS[svCur], info = svSegs[svCur];
     var frac = (t - s.start) / Math.max(0.01, s.end - s.start);
     if(frac < 0) frac = 0; if(frac > 1) frac = 1;
-    var target = frac * info.total, now = -1, k;
-    for(k = 0; k < info.cum.length; k++){ if(info.cum[k] > target){ now = k; break; } }
-    if(frac >= 1) now = -1;
-    var key = svCur + "|" + now + "|" + (frac >= 1 ? 1 : 0);
-    if(key === svKaraKey) return;
-    svKaraKey = key;
     var line = document.querySelectorAll("#svLines .sv-line")[svCur];
     if(!line) return;
-    line.querySelectorAll(".sv-w").forEach(function(w, j){
-      w.classList.toggle("done", frac >= 1 || (now >= 0 && j < now));
-      w.classList.toggle("now", j === now);
-    });
+    svSweepFill(line.querySelectorAll(".sv-w"), info, frac);
+  }
+  /* Vòng lặp quét mượt: cập nhật vệt đỏ mỗi khung hình (~60fps) thay vì
+     120ms một lần. Tự dừng khi đóng trang; mở lại thì svOpenLesson khởi
+     động lại. Tick 120ms vẫn gọi svKaraoke như cũ để dự phòng. */
+  var svKaraRaf = 0;
+  function svKaraLoop(){
+    svKaraRaf = 0;
+    if(!svOverlay.classList.contains("open")) return;
+    if(svPlayer && svReady && svPlayer.getCurrentTime) svKaraoke(svPlayer.getCurrentTime());
+    svKaraRaf = requestAnimationFrame(svKaraLoop);
+  }
+  function svStartKaraLoop(){
+    if(!svKaraRaf && typeof requestAnimationFrame === "function") svKaraRaf = requestAnimationFrame(svKaraLoop);
   }
   function svCapUpdate(){
     var cap = document.getElementById("svCap");
@@ -8835,7 +8884,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(i === svCur) return;
     svCur = i;
     document.querySelectorAll("#svLines .sv-line").forEach(function(el, j){ el.classList.toggle("active", j === i); });
-    document.querySelectorAll("#svLines .sv-w").forEach(function(w){ w.classList.remove("done"); w.classList.remove("now"); });
+    svClearSweep(document.getElementById("svLines"));
     svKaraKey = "";
     svCapUpdate();
     /* Chữ sub trong khung cuộn: đọc tới đâu, khung tự cuộn lên tới đó —
@@ -9316,7 +9365,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       sv2CurSub = idx;
       var rows = document.querySelectorAll("#sv2Subs .sv2-sub");
       rows.forEach(function(el, j){ el.classList.toggle("active", j === idx); });
-      document.querySelectorAll("#sv2Subs .sv-w").forEach(function(wd){ wd.classList.remove("done"); wd.classList.remove("now"); });
+      svClearSweep(document.getElementById("sv2Subs"));
       sv2KaraKey = "";
       var act = rows[idx], frame = document.getElementById("sv2Subs");
       if(act && frame && document.getElementById("sv2PanelSubs").classList.contains("on")){
@@ -9343,27 +9392,28 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
   }
   /* ----- Tab Phụ đề ----- */
-  /* Karaoke như bài 1: tỉ lệ thời gian đã qua trong khung của câu → các cụm
-     từ đã đọc được tô đỏ + gạch chân, cụm đang đọc cũng vậy. Từng cụm từ nội
-     suy đều theo số ký tự vì phụ đề chỉ có mốc theo giây */
+  /* Karaoke như bài 1: vệt đỏ quét trôi liên tục trong câu đang phát
+     (xem svSweepFill) — tỉ lệ thời gian đã qua trong khung của câu. */
   function sv2Karaoke(t){
     if(sv2CurSub < 0 || !sv2Segs[sv2CurSub]) return;
     var w = SV2_WIN[sv2CurSub], info = sv2Segs[sv2CurSub];
     if(!w || !info) return;
     var frac = (t - w.start) / Math.max(0.01, w.end - w.start);
     if(frac < 0) frac = 0; if(frac > 1) frac = 1;
-    var target = frac * info.total, now = -1, k;
-    for(k = 0; k < info.cum.length; k++){ if(info.cum[k] > target){ now = k; break; } }
-    if(frac >= 1) now = -1;
-    var key = sv2CurSub + "|" + now + "|" + (frac >= 1 ? 1 : 0);
-    if(key === sv2KaraKey) return;
-    sv2KaraKey = key;
     var row = document.querySelectorAll("#sv2Subs .sv2-sub")[sv2CurSub];
     if(!row) return;
-    row.querySelectorAll(".sv-w").forEach(function(wd, j){
-      wd.classList.toggle("done", frac >= 1 || (now >= 0 && j < now));
-      wd.classList.toggle("now", j === now);
-    });
+    svSweepFill(row.querySelectorAll(".sv-w"), info, frac);
+  }
+  /* Vòng lặp quét mượt cho player 2 (như svKaraLoop của bài 1). */
+  var sv2KaraRaf = 0;
+  function sv2KaraLoop(){
+    sv2KaraRaf = 0;
+    if(!sv2Overlay.classList.contains("open")) return;
+    if(sv2Player && sv2Ready && sv2Player.getCurrentTime) sv2Karaoke(sv2Player.getCurrentTime());
+    sv2KaraRaf = requestAnimationFrame(sv2KaraLoop);
+  }
+  function sv2StartKaraLoop(){
+    if(!sv2KaraRaf && typeof requestAnimationFrame === "function") sv2KaraRaf = requestAnimationFrame(sv2KaraLoop);
   }
   /* Bong bóng giải thích như bài 1: gắn vào trong khung cuộn phụ đề rồi ghim
      ngay dưới câu được bấm (đuôi nhọn chĩa lên câu); gần cuối danh sách thì
@@ -9644,6 +9694,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     showOv(sv2Overlay);
     if(sv2Timer) clearInterval(sv2Timer);
     sv2Timer = setInterval(sv2Tick, 120);
+    sv2StartKaraLoop();
   }
   document.getElementById("sv2ExpClose").addEventListener("click", function(e){ e.stopPropagation(); sv2HideExp(); });
   document.getElementById("sv2Facade").addEventListener("click", function(){ sv2LoadPlayer(true); });
