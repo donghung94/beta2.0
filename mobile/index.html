@@ -8748,6 +8748,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      phần kana/ký tự còn lại cắt nhỏ tại dấu câu, sau trợ từ, tối đa 5 ký tự */
   function svSegments(s){
     var segs = [], src = s.furi, plain = "", i = 0;
+    function isKana(ch){
+      var c = ch.charCodeAt(0);
+      return (c >= 0x3041 && c <= 0x3096) || (c >= 0x30a1 && c <= 0x30fa) || c === 0x30fc;
+    }
     function pushPlain(txt){
       var buf = "";
       for(var k = 0; k < txt.length; k++){
@@ -8765,7 +8769,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var j = src.indexOf("]", i);
         if(j < 0){ plain += src[i]; i++; continue; }
         var k = plain.length;
-        while(k > 0 && plain.charCodeAt(k - 1) >= 0x4e00 && plain.charCodeAt(k - 1) <= 0x9faf) k--;
+        /* Bracket gắn với cả cụm từ: lùi qua okurigana (kana sau chữ Hán:
+           足り, 取っ...) rồi qua cụm chữ Hán — bản cũ chỉ lùi qua chữ Hán
+           nên cách đọc của cụm tận cùng bằng kana bị bỏ mất, chữ Hán đó
+           không hiện furigana. */
+        while(k > 0 && isKana(plain.charAt(k - 1))) k--;
+        var kb = k;
+        while(kb > 0 && plain.charCodeAt(kb - 1) >= 0x4e00 && plain.charCodeAt(kb - 1) <= 0x9faf) kb--;
+        if(kb < k) k = kb; else k = plain.length;
         var kanji = plain.slice(k);
         plain = plain.slice(0, k);
         flushPlain();
@@ -9195,6 +9206,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      còn lại cắt nhỏ tại dấu câu, sau trợ từ, tối đa 5 ký tự) */
   function sv2Segments(fj){
     var segs = [], plain = "", i = 0;
+    function isKana(ch){
+      var c = ch.charCodeAt(0);
+      return (c >= 0x3041 && c <= 0x3096) || (c >= 0x30a1 && c <= 0x30fa) || c === 0x30fc;
+    }
     function isBase(ch){
       var c = ch.charCodeAt(0);
       return (c >= 0x4e00 && c <= 0x9faf) || (c >= 0x30 && c <= 0x39) || (c >= 0xff10 && c <= 0xff19) || ch === "々" || ch === "ヶ";
@@ -9216,7 +9231,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var j = fj.indexOf("]", i);
         if(j < 0){ plain += fj[i]; i++; continue; }
         var k = plain.length;
-        while(k > 0 && isBase(plain.charAt(k - 1))) k--;
+        /* Như svSegments: bracket gắn với cả cụm từ — lùi qua okurigana
+           (足り, 取っ...) rồi qua cụm chữ Hán/số. */
+        while(k > 0 && isKana(plain.charAt(k - 1))) k--;
+        var kb = k;
+        while(kb > 0 && isBase(plain.charAt(kb - 1))) kb--;
+        if(kb < k) k = kb; else k = plain.length;
         var base = plain.slice(k);
         plain = plain.slice(0, k);
         flushPlain();
@@ -9232,6 +9252,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      trước "[" là phần chữ, trong [] là cách đọc — cùng định dạng với svSegments */
   function sv2Ruby(fj){
     var out = "", plain = "", i = 0;
+    function isKana(ch){
+      var c = ch.charCodeAt(0);
+      return (c >= 0x3041 && c <= 0x3096) || (c >= 0x30a1 && c <= 0x30fa) || c === 0x30fc;
+    }
     function isBase(ch){
       var c = ch.charCodeAt(0);
       return (c >= 0x4e00 && c <= 0x9faf) || (c >= 0x30 && c <= 0x39) || (c >= 0xff10 && c <= 0xff19) || ch === "々" || ch === "ヶ";
@@ -9242,7 +9266,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         var j = fj.indexOf("]", i);
         if(j < 0){ plain += fj[i]; i++; continue; }
         var k = plain.length;
-        while(k > 0 && isBase(plain.charAt(k - 1))) k--;
+        /* Như sv2Segments: bracket gắn với cả cụm từ — lùi qua okurigana
+           (足り, 取っ...) rồi qua cụm chữ Hán/số. */
+        while(k > 0 && isKana(plain.charAt(k - 1))) k--;
+        var kb = k;
+        while(kb > 0 && isBase(plain.charAt(kb - 1))) kb--;
+        if(kb < k) k = kb; else k = plain.length;
         var base = plain.slice(k); plain = plain.slice(0, k);
         flush();
         if(base) out += "<ruby>" + svEsc(base) + "<rt>" + svEsc(fj.slice(i + 1, j)) + "</rt></ruby>";
@@ -10022,7 +10051,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     line.tokens.forEach(function(tk){
       var surf = tk.surface || "";
       var rd = tk.reading || "";
-      if(rd && rd !== surf && /[一-鿿々ヶ0-9０-９]/.test(surf)) out += surf + "[" + rd + "]";
+      /* Chỉ gắn cách đọc khi mặt chữ có chữ Hán — token chỉ có số/chữ Latin
+         (N3, N5) hay bị tách từ đọc sai (N3[さん], N5[ご]). */
+      if(rd && rd !== surf && /[一-鿿々ヶ]/.test(surf)) out += surf + "[" + rd + "]";
       else out += surf;
     });
     return out || line.jp;
