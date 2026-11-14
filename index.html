@@ -3,6 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+/* Điện thoại/máy tính bảng mở sorakanji.com thì sang bản mobile (/mobile/).
+   Chỉ chạy trên domain thật (không chạy ở bản xem trước githack/localhost).
+   Ngoại lệ: ?desktop=1, localStorage sk_view=desktop, hoặc bot tìm kiếm. */
+(function(){try{
+  var h=window.location.hostname;
+  if(h!=="sorakanji.com"&&h!=="www.sorakanji.com")return;
+  if((window.location.search||"").indexOf("desktop")!==-1)return;
+  if(window.localStorage&&localStorage.getItem("sk_view")==="desktop")return;
+  var ua=navigator.userAgent||"";
+  if(/bot|crawl|spider|slurp|facebookexternalhit/i.test(ua))return;
+  var isiPad=navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1;
+  if(/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||isiPad)window.location.replace("/mobile/");
+}catch(e){}})();
+</script>
 <title>SoraKanji — Bầu trời Kanji cho người Việt</title>
 <meta name="description" content="SoraKanji — học Kanji, từ vựng, ngữ pháp và luyện thi JLPT N5–N1 cho người Việt: 2.138 kanji có chiết tự và thứ tự nét, từ vựng Minna no Nihongo kèm hình minh họa, 374 mẫu ngữ pháp, đề thi viết và nghe Test 1–9.">
 <link rel="icon" href="mobile/assets/icon-192.png">
