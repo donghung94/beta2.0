@@ -26,6 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 :root{
   color-scheme: light dark;
@@ -338,6 +339,28 @@ table.kv tr:last-child td{border-bottom:none}
 .lesson-card b{font-size:16.5px; font-weight:800}
 .lesson-card span{display:block; color:var(--muted); font-size:13px; margin-top:2px}
 .lesson-card .ldone{color:#14713c; font-weight:800; font-size:12.5px; margin-top:5px}
+/* ----- Nâng cấp Premium / thanh toán ----- */
+.pkg-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:18px 0}
+@media (max-width:700px){ .pkg-grid{grid-template-columns:1fr} }
+.pkg-card{position:relative; background:var(--card); border:2px solid var(--line); border-radius:16px; padding:22px 20px; box-shadow:var(--shadow)}
+.pkg-card.hot{border-color:var(--red)}
+.pkg-badge{position:absolute; top:-12px; right:16px; background:var(--red); color:#fff; font-size:12.5px; font-weight:800; padding:4px 12px; border-radius:99px}
+.pkg-card h3{margin:0 0 4px; font-size:19px}
+.pkg-price{font-size:30px; font-weight:900; color:var(--red); margin:8px 0 2px}
+.pkg-old{color:var(--faint); text-decoration:line-through; font-size:15px; font-weight:600}
+.pkg-save{display:inline-block; background:var(--ok-bg); color:var(--ok); font-weight:800; font-size:13px; padding:3px 10px; border-radius:99px; margin:6px 0}
+.pkg-card ul{margin:12px 0 16px; padding-left:20px; line-height:1.8; font-size:14.5px; color:var(--muted)}
+.pkg-card .btn{width:100%}
+.sale-bar{background:var(--red-soft); border:1px solid var(--red); border-radius:12px; padding:12px 16px; margin:16px 0; font-weight:700; color:var(--red-dark); text-align:center}
+.sale-bar .cd{font-variant-numeric:tabular-nums}
+.qr-box{text-align:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 14px; margin:16px 0}
+.qr-box img{width:230px; height:230px; max-width:100%}
+.code-box{display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; background:var(--card2); border:1.5px dashed var(--line-strong); border-radius:12px; padding:14px; margin:14px 0}
+.code-box .code{font-size:26px; font-weight:900; letter-spacing:.12em}
+.bank-rows{width:100%; border-collapse:collapse; margin:10px 0}
+.bank-rows td{padding:8px 4px; border-bottom:1px solid var(--line); font-size:15px}
+.bank-rows td:first-child{color:var(--muted); width:130px}
+.bank-rows td:last-child{font-weight:700}
 /* Thẻ tiến độ học ở trang cấp Từ vựng */
 .prog-card{margin-top:18px; padding:18px 20px}
 .prog-top{display:flex; justify-content:space-between; align-items:baseline; gap:12px}
@@ -1074,7 +1097,7 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
   .ptq-actions{flex-direction:column}
 }
 
-/* ===== Xếp hạng / cảnh giới ===== */
+/* ===== Xếp hạng / cấp bậc ===== */
 .leadrow{display:flex; align-items:center; gap:12px; padding:11px 4px; border-bottom:1px solid var(--line)}
 .leadrow:last-child{border-bottom:0}
 .l-rank{flex:none; width:30px; text-align:center; font-weight:900; font-size:16px; color:var(--muted)}
@@ -1329,7 +1352,7 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
     <button class="x" id="soraClose" type="button" aria-label="Đóng trợ lý">✕</button>
   </div>
   <div class="sora-msgs" id="soraMsgs">
-    <div class="sora-msg bot">Chào đạo hữu, mình là Sora — trợ lý của SoraKanji. Mình hướng dẫn cách dùng mọi tính năng trên bản web: học từ vựng, ngữ pháp, kanji, luyện thi, luyện nghe, đọc hiểu…
+    <div class="sora-msg bot">Chào bạn, mình là Sora — trợ lý của SoraKanji. Mình hướng dẫn cách dùng mọi tính năng trên bản web: học từ vựng, ngữ pháp, kanji, luyện thi, luyện nghe, đọc hiểu…
 
 Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của bạn nhé.</div>
   </div>
@@ -1830,6 +1853,8 @@ function kanjiCell(e){
 var homeState = {lv: "N5", shown: 110, target: "N5", kcInit: false};
 
 function renderHome(){
+  /* Trạng thái cấp cũ còn sót (vd: vừa đăng xuất khi đang xem N4) thì về N5. */
+  if(skLevelLocked(homeState.lv)){ homeState.lv = "N5"; homeState.shown = 110; }
   document.title = "SoraKanji — Bầu trời Kanji cho người Việt";
   document.body.classList.remove("plain");
   var D = daysToJlpt(), examD = nextJlpt();
@@ -1871,9 +1896,9 @@ function renderHome(){
   h += '<h2 class="blk-title" style="margin-top:0">Khám phá Kanji theo trình độ</h2>' +
     '<div class="lv-row" id="lvPills">' +
     LEVELS.map(function(lv){
-      return '<button class="pill' + (lv === homeState.lv ? " on" : "") + '" data-lv="' + lv + '">' + lv + "</button>";
+      return '<button class="pill' + (lv === homeState.lv ? " on" : "") + '" data-lv="' + lv + '">' + lv + (skLevelLocked(lv) ? " 🔒" : "") + "</button>";
     }).join("") +
-    '<button class="pill' + (homeState.lv === "ALL" ? " on" : "") + '" data-lv="ALL">Tất cả</button>' +
+    '<button class="pill' + (homeState.lv === "ALL" ? " on" : "") + '" data-lv="ALL">Tất cả' + (skIsPremium() ? "" : " 🔒") + "</button>" +
     '<button class="rad-btn" id="radBtn" type="button">214 Bộ thủ</button></div>' +
     '<div class="kg-title" id="kgTitle"></div>' +
     '<div class="kscroll"><div class="kgrid wide" id="kGrid"></div></div>' +
@@ -1905,7 +1930,7 @@ function renderHome(){
     '<div class="exam-grid">' +
     LEVELS.map(function(lv){
       var t = EXAM_TOTALS[lv];
-      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + "</b>" +
+      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + "</b>" +
         "<span>" + (t[0] + t[1]) + " câu · " + t[2] + " phút<br>9 đề viết + 9 đề nghe</span></a>";
     }).join("") + "</div></section>";
   $app.innerHTML = h;
@@ -1985,7 +2010,9 @@ function bindHome(){
   document.getElementById("lvPills").addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("[data-lv]") : null;
     if(!b) return;
-    homeState.lv = b.getAttribute("data-lv"); homeState.shown = 110;
+    var lv = b.getAttribute("data-lv");
+    if(skLevelLocked(lv)){ skLockedPrompt(lv === "ALL" ? "Tất cả các cấp" : "Kanji " + lv); return; }
+    homeState.lv = lv; homeState.shown = 110;
     this.querySelectorAll(".pill").forEach(function(p){ p.classList.toggle("on", p.getAttribute("data-lv") === homeState.lv); });
     renderKGrid();
   });
@@ -2009,6 +2036,7 @@ function bindHome(){
   });
   var rad = document.getElementById("radBtn");
   if(rad) rad.addEventListener("click", function(){
+    if(skLevelLocked("ALL")){ skLockedPrompt("Tất cả các cấp"); return; }
     homeState.lv = "ALL"; homeState.shown = 110;
     document.querySelectorAll("#lvPills .pill").forEach(function(p){ p.classList.toggle("on", p.getAttribute("data-lv") === "ALL"); });
     renderKGrid();
@@ -2460,6 +2488,8 @@ var kanjiPageState = {lv: "N5", shown: 120};
 function renderKanjiPage(lv){
   document.body.classList.remove("plain");
   if(lv && LEVELS.indexOf(lv) >= 0){ kanjiPageState.lv = lv; kanjiPageState.shown = 120; }
+  /* Trạng thái cấp cũ còn sót (vd: vừa đăng xuất khi đang xem N4) thì về N5. */
+  if(skLevelLocked(kanjiPageState.lv)){ kanjiPageState.lv = "N5"; kanjiPageState.shown = 120; }
   document.title = "Kanji " + kanjiPageState.lv + " — Tra cứu Kanji | SoraKanji";
   var byLv = kanjiByLevel();
   $app.innerHTML =
@@ -2471,7 +2501,7 @@ function renderKanjiPage(lv){
     '<button class="btn" id="kpSearchBtn">Tìm</button></div><div class="sres" id="kpResults"></div></div>' +
     '<div class="pills" id="kpPills">' +
     LEVELS.map(function(l){
-      return '<button class="pill' + (l === kanjiPageState.lv ? " on" : "") + '" data-lv="' + l + '">' + l +
+      return '<button class="pill' + (l === kanjiPageState.lv ? " on" : "") + '" data-lv="' + l + '">' + l + (skLevelLocked(l) ? " 🔒" : "") +
         "<small>" + byLv[l].length + " chữ</small></button>";
     }).join("") + "</div>" +
     '<div class="kgrid" id="kpGrid" style="padding-bottom:6px"></div>' +
@@ -2487,7 +2517,9 @@ function renderKanjiPage(lv){
   document.getElementById("kpPills").addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("[data-lv]") : null;
     if(!b) return;
-    kanjiPageState.lv = b.getAttribute("data-lv"); kanjiPageState.shown = 120;
+    var lv = b.getAttribute("data-lv");
+    if(skLevelLocked(lv)){ skLockedPrompt("Kanji " + lv); return; }
+    kanjiPageState.lv = lv; kanjiPageState.shown = 120;
     this.querySelectorAll(".pill").forEach(function(p){ p.classList.toggle("on", p.getAttribute("data-lv") === kanjiPageState.lv); });
     try{ history.replaceState(null, "", "#/kanji?lv=" + kanjiPageState.lv); }catch(e){}
     document.title = "Kanji " + kanjiPageState.lv + " — Tra cứu Kanji | SoraKanji";
@@ -2577,8 +2609,9 @@ function renderVocabHome(){
     ["N5", "N4", "N3", "N2", "N1"].forEach(function(lv){
       var lessons = vocabLessons(lv);
       var total = lv === "N1" ? (window.VOCAB_N1 || []).length : (window.VOCAB_MINNA[lv] || []).length;
-      h += '<a class="lesson-card" href="#/tuvung/' + lv + '"><b>' + lv + " — " + lessons.length + (lv === "N1" ? " nhóm</b>" : " bài</b>") +
-        "<span>" + esc(VOCAB_BOOK[lv]) + " · " + total.toLocaleString("vi-VN") + " từ</span></a>";
+      var lk = skLevelLocked(lv);
+      h += '<a class="lesson-card" href="#/tuvung/' + lv + '"><b>' + (lk ? "🔒 " : "") + lv + " — " + lessons.length + (lv === "N1" ? " nhóm</b>" : " bài</b>") +
+        "<span>" + esc(VOCAB_BOOK[lv]) + " · " + total.toLocaleString("vi-VN") + " từ" + (lk ? " · Premium" : "") + "</span></a>";
     });
     h += '<a class="lesson-card" href="#/tuvung/cn"><b>Chuyên ngành Tokutei</b>' +
       "<span>14 ngành nghề · 1.056 từ</span></a></div>";
@@ -3314,7 +3347,7 @@ var GR_MINNA_W = {
   },
   N4: { lessons: [
     {n:26, pats:["V-る/ない + んです","V-て いただけませんか"]},
-    {n:27, pats:["Động từ thể khả năng (V-れる/られる)","N が 見えます / 聞こえます","〜しか + phủ định","は (đối比)"]},
+    {n:27, pats:["Động từ thể khả năng (V-れる/られる)","N が 見えます / 聞こえます","〜しか + phủ định","は (対比)"]},
     {n:28, pats:["V-ます + ながら","V-て います (thói quen)","〜し、〜し"]},
     {n:29, pats:["Tự động từ + て います (trạng thái)","Tự động từ chỉ kết quả (割れる・壊れる…)"]},
     {n:30, pats:["V-て おきます","Tha động từ + て あります"]},
@@ -3412,7 +3445,8 @@ function renderGrammarHome(){
     LEVELS.forEach(function(lv){
       var n = (window.GRAMMAR_DATA[lv] || []).length;
       var note = lv === "N5" ? "Minna Sơ cấp 1 · 25 bài" : lv === "N4" ? "Minna Sơ cấp 2 · Bài 26–50" : "6 nhóm chủ đề";
-      h += '<a class="lesson-card" href="#/nguphap/' + lv + '"><b>Ngữ pháp ' + lv + "</b><span>" + n + " mẫu · " + note + "</span></a>";
+      var lk = skLevelLocked(lv);
+      h += '<a class="lesson-card" href="#/nguphap/' + lv + '"><b>' + (lk ? "🔒 " : "") + "Ngữ pháp " + lv + "</b><span>" + n + " mẫu · " + note + (lk ? " · Premium" : "") + "</span></a>";
     });
     h += "</div>";
     $app.innerHTML = h;
@@ -4494,14 +4528,14 @@ function renderExamHome(){
     '<div class="exam-grid" style="padding:20px 0 4px">' +
     LEVELS.map(function(lv){
       var t = EXAM_TOTALS[lv];
-      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + "</b><span>" +
+      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + "</b><span>" +
         (t[0] + t[1]) + " câu · " + t[2] + " phút<br>Điểm đậu tham chiếu: " + t[3] + "/180</span></a>";
     }).join("") + "</div>" +
     '<h2 class="secttl">Luyện nghe JLPT</h2>' +
     "<p style=\"color:var(--muted);font-size:14.5px;line-height:1.6;max-width:760px;margin:0\">Nghe hội thoại theo đúng 4 dạng câu hỏi của JLPT, có file audio, câu hỏi kiểm tra và lời thoại kèm bản dịch — chọn cấp để mở danh sách hội thoại của cấp đó.</p>" +
     '<div class="exam-grid" style="padding:14px 0 36px">' +
     LEVELS.map(function(lv){
-      return '<a class="exam-lv" href="#/nghe/' + lv + '"><b>' + lv + '</b><span data-ln="' + lv + '"></span></a>';
+      return '<a class="exam-lv" href="#/nghe/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + '</b><span data-ln="' + lv + '"></span></a>';
     }).join("") + "</div>";
   LEVELS.forEach(function(lv){
     ensureListen(lv).then(function(){
@@ -4831,7 +4865,8 @@ function renderListenHome(){
       '<div class="lesson-grid" style="padding:18px 0 34px">';
     LEVELS.forEach(function(lv){
       var n = (window["LISTEN_" + lv] || []).length;
-      h += '<a class="lesson-card" href="#/nghe/' + lv + '"><b>Luyện nghe ' + lv + "</b><span>" + n + " hội thoại</span></a>";
+      var lk = skLevelLocked(lv);
+      h += '<a class="lesson-card" href="#/nghe/' + lv + '"><b>' + (lk ? "🔒 " : "") + "Luyện nghe " + lv + "</b><span>" + n + " hội thoại" + (lk ? " · Premium" : "") + "</span></a>";
     });
     h += "</div>";
     $app.innerHTML = h;
@@ -5032,8 +5067,9 @@ function renderReadHome(){
     '<div class="lesson-grid" style="padding:18px 0 34px">' +
     LEVELS.map(function(lv){
       var ks = readKinds(lv);
-      return '<a class="lesson-card" href="#/doc/' + lv + "/" + ks[0] + '"><b>Đọc hiểu ' + lv + "</b><span>" +
-        (ks.length * 10) + " bài · " + ks.map(function(k){ return READ_KIND_LABEL[k]; }).join(", ") + "</span></a>";
+      var lk = skLevelLocked(lv);
+      return '<a class="lesson-card" href="#/doc/' + lv + "/" + ks[0] + '"><b>' + (lk ? "🔒 " : "") + "Đọc hiểu " + lv + "</b><span>" +
+        (ks.length * 10) + " bài · " + ks.map(function(k){ return READ_KIND_LABEL[k]; }).join(", ") + (lk ? " · Premium" : "") + "</span></a>";
     }).join("") + "</div>";
 }
 function renderReadList(lv, kind){
@@ -5125,75 +5161,75 @@ function renderReadItem(lv, kind, idx){
 
 /* ================= XẾP HẠNG ================= */
 var REALM_LADDER = [ /* cao → thấp, cùng thang với bản mobile */
-  {n: "Đại Đế", k: "帝", tv: "80.000 Tu vi · Đỉnh phong SoraKanji"},
-  {n: "Độ Kiếp", k: "劫", tv: "50.000 Tu vi"},
-  {n: "Đại Thừa", k: "乗", tv: "32.000 Tu vi"},
-  {n: "Hợp Thể", k: "合", tv: "20.000 Tu vi"},
-  {n: "Luyện Hư", k: "虚", tv: "12.000 Tu vi"},
-  {n: "Hóa Thần", k: "神", tv: "7.000 Tu vi"},
-  {n: "Nguyên Anh", k: "嬰", tv: "4.000 Tu vi"},
-  {n: "Kim Đan", k: "丹", tv: "2.000 Tu vi"},
-  {n: "Trúc Cơ", k: "築", tv: "1.000 Tu vi"},
-  {n: "Luyện Khí", k: "気", tv: "0 Tu vi · Cảnh giới khởi đầu"}
+  {n: "Tướng", k: "10", tv: "80.000 EXP · Đỉnh cao SoraKanji"},
+  {n: "Thượng úy", k: "9", tv: "50.000 EXP"},
+  {n: "Trung úy", k: "8", tv: "32.000 EXP"},
+  {n: "Thiếu úy", k: "7", tv: "20.000 EXP"},
+  {n: "Thượng sĩ", k: "6", tv: "12.000 EXP"},
+  {n: "Trung sĩ", k: "5", tv: "7.000 EXP"},
+  {n: "Hạ sĩ", k: "4", tv: "4.000 EXP"},
+  {n: "Binh nhất", k: "3", tv: "2.000 EXP"},
+  {n: "Binh nhì", k: "2", tv: "1.000 EXP"},
+  {n: "Tân binh", k: "1", tv: "0 EXP · Cấp bậc khởi đầu"}
 ];
-var OFFICE_LADDER = [ /* cao → thấp, tính bằng điểm cống hiến */
-  {n: "Tông chủ", k: "宗", tv: "5.000 điểm · Đỉnh cao địa vị tông môn"},
-  {n: "Trưởng lão", k: "老", tv: "2.000 điểm · Được giao nhiệm vụ cho đệ tử"},
-  {n: "Chân truyền đệ tử", k: "伝", tv: "800 điểm · Vào được phòng luyện riêng"},
-  {n: "Nội môn đệ tử", k: "内", tv: "300 điểm · Mở nhiệm vụ tông môn cấp cao"},
-  {n: "Ngoại môn đệ tử", k: "門", tv: "0 điểm cống hiến · Chức vụ khởi đầu"}
+var OFFICE_LADDER = [ /* cao → thấp, tính bằng Điểm đóng góp */
+  {n: "Đại sứ SoraKanji", k: "5", tv: "5.000 điểm · Đỉnh cao cộng đồng SoraKanji"},
+  {n: "Cố vấn", k: "4", tv: "2.000 điểm · Được giao nhiệm vụ cho thành viên"},
+  {n: "Cộng tác viên", k: "3", tv: "800 điểm · Vào được nhóm học riêng"},
+  {n: "Thành viên tích cực", k: "2", tv: "300 điểm · Mở nhiệm vụ cộng đồng cấp cao"},
+  {n: "Thành viên mới", k: "1", tv: "0 Điểm đóng góp · Hạng khởi đầu"}
 ];
 var WEEK_TOP = [ /* bảng tuần như bản mobile hiển thị */
-  {name: "Minh Anh", realm: "Hóa Thần", lv: "N3", tv: "7.420"},
-  {name: "Tuấn Kiệt", realm: "Nguyên Anh", lv: "N2", tv: "5.860"},
-  {name: "Hương Ly", realm: "Kim Đan", lv: "N4", tv: "3.210"},
-  {name: "Khánh Linh", realm: "Kim Đan", lv: "N4", tv: "2.980"},
-  {name: "Quốc Bảo", realm: "Kim Đan", lv: "N3", tv: "2.610"},
-  {name: "Thu Hằng", realm: "Kim Đan", lv: "N5", tv: "2.205"},
-  {name: "Văn Đức", realm: "Trúc Cơ", lv: "N4", tv: "1.890"},
-  {name: "Ngọc Mai", realm: "Trúc Cơ", lv: "N3", tv: "1.720"},
-  {name: "Hải Đăng", realm: "Trúc Cơ", lv: "N5", tv: "1.505"},
-  {name: "Thanh Tùng", realm: "Trúc Cơ", lv: "N4", tv: "1.330"}
+  {name: "Minh Anh", realm: "Trung sĩ", lv: "N3", tv: "7.420"},
+  {name: "Tuấn Kiệt", realm: "Hạ sĩ", lv: "N2", tv: "5.860"},
+  {name: "Hương Ly", realm: "Binh nhất", lv: "N4", tv: "3.210"},
+  {name: "Khánh Linh", realm: "Binh nhất", lv: "N4", tv: "2.980"},
+  {name: "Quốc Bảo", realm: "Binh nhất", lv: "N3", tv: "2.610"},
+  {name: "Thu Hằng", realm: "Binh nhất", lv: "N5", tv: "2.205"},
+  {name: "Văn Đức", realm: "Binh nhì", lv: "N4", tv: "1.890"},
+  {name: "Ngọc Mai", realm: "Binh nhì", lv: "N3", tv: "1.720"},
+  {name: "Hải Đăng", realm: "Binh nhì", lv: "N5", tv: "1.505"},
+  {name: "Thanh Tùng", realm: "Binh nhì", lv: "N4", tv: "1.330"}
 ];
 function renderRankPage(){
-  document.title = "Xếp hạng & cảnh giới | SoraKanji";
+  document.title = "Xếp hạng & cấp bậc | SoraKanji";
   document.body.classList.remove("plain");
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Xếp hạng</div>' +
     "<h1>Xếp hạng</h1>" +
-    "<p>Cảnh giới tu luyện — tích Tu vi từ nhiệm vụ, quiz và đề thi để đột phá từ Luyện Khí lên Đại Đế.</p></div>" +
-    '<h2 class="secttl">Đạo hữu dẫn đầu tuần này</h2><div class="card" style="padding:6px 20px">' +
+    "<p>Cấp bậc quân đội — tích EXP từ nhiệm vụ, quiz và đề thi để thăng cấp từ Tân binh lên Tướng.</p></div>" +
+    '<h2 class="secttl">Bạn học dẫn đầu tuần này</h2><div class="card" style="padding:6px 20px">' +
     WEEK_TOP.map(function(r, i){
       return '<div class="leadrow"><span class="l-rank' + (i < 3 ? " top" : "") + '">' + (i + 1) + '</span>' +
         '<span class="l-av">' + esc(r.name.charAt(0)) + '</span><span class="l-main"><b>' + esc(r.name) + "</b><span>" +
-        esc(r.realm) + " · " + esc(r.lv) + '</span></span><span class="l-tv">' + esc(r.tv) + " Tu vi</span></div>";
+        esc(r.realm) + " · " + esc(r.lv) + '</span></span><span class="l-tv">' + esc(r.tv) + " EXP</span></div>";
     }).join("") + "</div>" +
-    '<h2 class="secttl">Thang cảnh giới</h2>' +
+    '<h2 class="secttl">Thang cấp bậc</h2>' +
     REALM_LADDER.map(function(r){
       return '<div class="realmrow"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' + esc(r.n) +
         "</b><span>" + esc(r.tv) + "</span></span></div>";
     }).join("") +
-    '<h2 class="secttl">Chức vụ tông môn</h2>' +
-    '<p style="color:var(--muted);margin:0 0 12px;max-width:720px">Lên chức bằng <b>điểm cống hiến</b> — kiếm từ thắng Đấu Pháp Đài, quyên linh thạch cho tông môn và giúp đạo hữu trong phòng chat. Điểm này không mua được bằng tiền.</p>' +
+    '<h2 class="secttl">Hạng thành viên</h2>' +
+    '<p style="color:var(--muted);margin:0 0 12px;max-width:720px">Lên hạng bằng <b>Điểm đóng góp</b> — kiếm từ thắng Đấu trường, tặng Xu cho cộng đồng và giúp bạn học trong phòng chat. Điểm này không mua được bằng tiền.</p>' +
     OFFICE_LADDER.map(function(r){
       return '<div class="realmrow"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' + esc(r.n) +
         "</b><span>" + esc(r.tv) + "</span></span></div>";
     }).join("") +
-    '<p style="padding-bottom:34px"><a class="btn" href="#/thi">Luyện thi để tích Tu vi</a></p>';
+    '<p style="padding-bottom:34px"><a class="btn" href="#/thi">Luyện thi để tích EXP</a></p>';
   $app.innerHTML = h;
 }
 
 /* ================= CÁ NHÂN HOÁ ================= */
 var REALMS_PATH = [ /* cùng dữ liệu lộ trình với bản mobile */
-  {n: "Luyện Khí", k: "気", courseLbl: "Khóa N5 · nền tảng từ con số 0"},
-  {n: "Trúc Cơ", k: "築", courseLbl: "Khóa N4 · xây nền chắc chắn"},
-  {n: "Kim Đan", k: "丹", courseLbl: "Khóa N3 · trung cấp"},
-  {n: "Nguyên Anh", k: "嬰", courseLbl: "Khóa N2 · thượng cấp"},
-  {n: "Hóa Thần", k: "神", courseLbl: "Khóa N1 · cao cấp"},
-  {n: "Luyện Hư", k: "虚", courseLbl: "Nâng cao sau N1 · đọc hiểu chuyên sâu"},
-  {n: "Hợp Thể", k: "合", courseLbl: "Nâng cao sau N1 · luyện đề tổng hợp"},
-  {n: "Đại Thừa", k: "乗", courseLbl: "Nâng cao sau N1 · tiếng Nhật công việc"},
-  {n: "Độ Kiếp", k: "劫", courseLbl: "Nâng cao sau N1 · chinh phục đề khó"},
-  {n: "Đại Đế", k: "帝", courseLbl: "Đỉnh phong SoraKanji · thông thạo toàn diện"}
+  {n: "Tân binh", k: "1", courseLbl: "Khóa N5 · nền tảng từ con số 0"},
+  {n: "Binh nhì", k: "2", courseLbl: "Khóa N4 · xây nền chắc chắn"},
+  {n: "Binh nhất", k: "3", courseLbl: "Khóa N3 · trung cấp"},
+  {n: "Hạ sĩ", k: "4", courseLbl: "Khóa N2 · thượng cấp"},
+  {n: "Trung sĩ", k: "5", courseLbl: "Khóa N1 · cao cấp"},
+  {n: "Thượng sĩ", k: "6", courseLbl: "Nâng cao sau N1 · đọc hiểu chuyên sâu"},
+  {n: "Thiếu úy", k: "7", courseLbl: "Nâng cao sau N1 · luyện đề tổng hợp"},
+  {n: "Trung úy", k: "8", courseLbl: "Nâng cao sau N1 · tiếng Nhật công việc"},
+  {n: "Thượng úy", k: "9", courseLbl: "Nâng cao sau N1 · chinh phục đề khó"},
+  {n: "Tướng", k: "10", courseLbl: "Đỉnh cao SoraKanji · thông thạo toàn diện"}
 ];
 var LV_NAMES_W = ["Chưa khai", "N5", "N4", "N3", "N2", "N1"];
 var declaredLvW = 0; /* 0 = chưa khai trình độ */
@@ -5281,7 +5317,7 @@ function renderPersonalPage(){
   var courseLv = ["N5", "N4", "N3", "N2", "N1", "N1"][declaredLvW];
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Cá nhân hoá</div>' +
     "<h1>Lộ trình học cá nhân</h1>" +
-    "<p>Khai trình độ JLPT bạn đã đạt — bên dưới là lộ trình 30 ngày của cấp bạn đang học, bắt đầu từ cảnh giới tương ứng. Hoàn thành ngày 30 (đề thi thử tổng kết) là sẵn sàng đột phá lên cảnh giới tiếp theo.</p></div>" +
+    "<p>Khai trình độ JLPT bạn đã đạt — bên dưới là lộ trình 30 ngày của cấp bạn đang học, bắt đầu từ cấp bậc tương ứng. Hoàn thành ngày 30 (đề thi thử tổng kết) là sẵn sàng thăng cấp lên cấp bậc tiếp theo.</p></div>" +
     '<div class="card" id="lvPickerCard" style="margin:16px 0"><h3 style="margin-top:0">Khai trình độ</h3>' +
     '<div class="cd-lv" style="padding:0">' +
     LV_NAMES_W.map(function(n, i){
@@ -5289,7 +5325,7 @@ function renderPersonalPage(){
     }).join("") + "</div>" +
     '<p id="pathSummary" style="margin:12px 0 0;font-weight:700">' +
     (declaredLvW === 0
-      ? "Chưa khai trình độ → lộ trình bắt đầu từ Luyện Khí (" + REALMS_PATH[0].courseLbl + ")."
+      ? "Chưa khai trình độ → lộ trình bắt đầu từ Tân binh (" + REALMS_PATH[0].courseLbl + ")."
       : "Đã khai: " + LV_NAMES_W[declaredLvW] + " → lộ trình bắt đầu từ " + cur.n + " (" + cur.courseLbl + ").") +
     "</p></div>" +
     '<div class="plan30-head"><h2 class="secttl" style="margin:0">Lộ trình · ' + courseLv + '</h2>' +
@@ -5301,11 +5337,11 @@ function renderPersonalPage(){
     '<a class="btn ghost" href="#/tuvung/' + courseLv + '">Từ vựng ' + courseLv + '</a>' +
     '<a class="btn ghost" href="#/nguphap/' + courseLv + '">Ngữ pháp ' + courseLv + '</a>' +
     '<a class="btn ghost" href="#/thi/' + courseLv + '">Thi thử ' + courseLv + "</a></p>" +
-    '<h2 class="secttl">Toàn bộ lộ trình — 10 cảnh giới</h2><div style="padding-bottom:36px">' +
+    '<h2 class="secttl">Toàn bộ lộ trình — 10 cấp bậc</h2><div style="padding-bottom:36px">' +
     REALMS_PATH.map(function(r, i){
       var cls = "", st = "", sub = r.courseLbl;
       if(i < declaredLvW){ cls = "got"; st = "Đã qua"; sub += " · Miễn học lại"; }
-      else if(i === declaredLvW){ cls = "cur"; st = "Chặng của bạn"; sub += " · Đang tu luyện tại đây"; }
+      else if(i === declaredLvW){ cls = "cur"; st = "Chặng của bạn"; sub += " · Bạn đang học tại đây"; }
       else { st = "Chưa mở"; sub += " · Đậu Thi thử chặng trước mới mở"; }
       return '<div class="realmrow ' + cls + '"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' +
         esc(r.n) + "</b><span>" + esc(sub) + '</span></span><span class="r-state">' + st + "</span></div>";
@@ -5629,58 +5665,418 @@ function renderChuyenAmPage(){
   $app.innerHTML = h;
 }
 
-/* ================= TRỌN ĐỜI / NÂNG CẤP ================= */
+/* ================= PREMIUM / THANH TOÁN =================
+   Gói miễn phí = toàn bộ N5 ở mọi mục. Premium mở N4–N1.
+   Thanh toán: chuyển khoản MB Bank + mã đơn SK........ (VietQR động).
+   Đơn hàng lưu ở Firestore sk_orders/{code} (xem skCreateOrder); kích hoạt
+   Premium do hệ thống email-watch phía backend thực hiện, KHÔNG phải nút
+   "Tôi đã chuyển khoản" (nút đó chỉ ghi nhận phía client).
+   Premium đọc từ kanji_progress/{uid}.premium: until == null là Trọn đời,
+   until là thời điểm (Timestamp Firestore / millis / giây) còn trong tương
+   lai thì còn hạn. Cache trong phiên ở SK_PREMIUM. */
+var SK_SALE_END = new Date("2026-12-06T23:59:59+07:00").getTime(); /* hết 06/12/2026 */
+var SK_PACKAGES = {
+  year: {label: "Gói Năm", dur: "12 tháng", sale: 499000, full: 799000, save: 300000},
+  lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 2499000, save: 1500000}
+};
+var SK_MB_ACC = "94199419941994";
+var SK_MB_NAME = "DONG THANH HUNG";
+function skSaleActive(){ return Date.now() <= SK_SALE_END; }
+function skPrice(pkg){ var p = SK_PACKAGES[pkg] || SK_PACKAGES.year; return skSaleActive() ? p.sale : p.full; }
+function skFmtVND(n){ return Number(n).toLocaleString("vi-VN") + "đ"; }
+function skVietQR(amount, code){
+  return "https://img.vietqr.io/image/MB-94199419941994-compact2.png?amount=" + amount +
+    "&addInfo=" + encodeURIComponent(code) + "&accountName=DONG%20THANH%20HUNG";
+}
+function skDb(){
+  try{
+    if(typeof firebase === "undefined" || !firebase.initializeApp || !firebase.firestore) return null;
+    if(!firebase.apps || !firebase.apps.length) firebase.initializeApp(SK_FB_CONFIG);
+    return firebase.firestore();
+  }catch(e){ return null; }
+}
+/* User hiện tại: ưu tiên window.SK_USER, dự phòng firebase.auth().currentUser
+   (cần cho đường "đăng nhập xong mua ngay": onAuthStateChanged có thể chưa
+   kịp chạy khi callback tiếp tục được gọi). */
+function skAuthUser(){
+  var u = webCurrentUser();
+  if(u) return u;
+  try{
+    var auth = skAuth();
+    var fu = auth && auth.currentUser;
+    if(fu) return {uid: fu.uid, email: fu.email || ""};
+  }catch(e){}
+  return null;
+}
+var SK_PREMIUM = {loaded: false, active: false, until: null, pkg: null};
+var skLockedTarget = null; /* hash trang bị khóa — về đó sau khi Premium kích hoạt */
+function skIsPremium(){ return !!SK_PREMIUM.active; }
+function skLevelLocked(lv){ return lv !== "N5" && !skIsPremium(); }
+function skLoadPremium(force){
+  var u = webCurrentUser();
+  if(!u){
+    SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
+    return Promise.resolve(SK_PREMIUM);
+  }
+  if(SK_PREMIUM.loaded && !force) return Promise.resolve(SK_PREMIUM);
+  var db = skDb();
+  if(!db){ SK_PREMIUM.loaded = true; return Promise.resolve(SK_PREMIUM); }
+  return db.collection("kanji_progress").doc(u.uid).get().then(function(snap){
+    var p = (snap.exists && snap.data()) ? snap.data().premium : null;
+    var active = false, until = null, pkg = null;
+    if(p === true){ active = true; }
+    else if(p && typeof p === "object"){
+      pkg = p.package || p.pkg || null;
+      if(p.until === null){ active = true; until = null; }
+      else if(p.until != null){
+        var ms = null;
+        if(typeof p.until === "number") ms = p.until < 1e12 ? p.until * 1000 : p.until;
+        else if(typeof p.until.toMillis === "function") ms = p.until.toMillis();
+        else if(typeof p.until === "string"){ var t = Date.parse(p.until); if(!isNaN(t)) ms = t; }
+        if(ms != null){ until = ms; active = ms > Date.now(); }
+      }
+    }
+    SK_PREMIUM = {loaded: true, active: active, until: until, pkg: pkg};
+    if(active){
+      /* Vừa xác nhận Premium: nếu đang ở trang khóa thì về trang đã định,
+         nếu đang ở trang danh sách cấp thì vẽ lại để gỡ ổ khóa. */
+      if(skLockedTarget){ var t = skLockedTarget; skLockedTarget = null; goHash(t); }
+      else{
+        var h0 = location.hash || "#/";
+        if(/^\#\/(tuvung|nguphap|thi|nghe|doc|kanji|nangcap|trondoi)?(\?.*)?$/.test(h0)) route();
+      }
+    }
+    return SK_PREMIUM;
+  }).catch(function(){
+    SK_PREMIUM.loaded = true;
+    return SK_PREMIUM;
+  });
+}
+/* Trả về {lv, label} nếu hash đang trỏ tới nội dung N4+ đang bị khóa. */
+function skGateForHash(hash){
+  var raw = (hash || "#/").replace(/^#/, "");
+  var parts = raw.split("?");
+  var segs = parts[0].split("/").filter(Boolean).map(function(s){
+    try{ return decodeURIComponent(s); }catch(e){ return s; }
+  });
+  var query = {};
+  (parts[1] || "").split("&").forEach(function(kv){
+    if(!kv) return;
+    var p = kv.split("=");
+    try{ query[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || ""); }catch(e){}
+  });
+  var seg = segs[0] || "", lv = null, label = "";
+  if(seg === "kanji" && segs[1]){
+    var ent = (window.KANJI_DB || {})[segs[1]];
+    if(ent && ent.jlpt){ lv = ent.jlpt; label = "Kanji " + lv; }
+  } else if(seg === "kanji" && query.lv && LEVELS.indexOf(query.lv) >= 0){
+    lv = query.lv; label = "Kanji " + lv;
+  } else if((seg === "tuvung" || seg === "nguphap" || seg === "thi" || seg === "nghe" || seg === "doc") &&
+            segs[1] && LEVELS.indexOf(segs[1]) >= 0){
+    lv = segs[1];
+    label = ({tuvung: "Từ vựng ", nguphap: "Ngữ pháp ", thi: "Đề thi JLPT ", nghe: "Luyện nghe ", doc: "Đọc hiểu "})[seg] + lv;
+  }
+  if(lv && skLevelLocked(lv)) return {lv: lv, label: label};
+  return null;
+}
+function renderLockedPage(lv, label, targetHash){
+  document.title = label + " — Premium | SoraKanji";
+  document.body.classList.remove("plain");
+  skLockedTarget = targetHash || "#/";
+  var u = webCurrentUser();
+  $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / ' + esc(label) + "</div>" +
+    "<h1>🔒 " + esc(label) + " — nội dung Premium</h1>" +
+    "<p>" + esc(label) + " thuộc gói Premium. Gói miễn phí mở toàn bộ nội dung N5 ở mọi mục — nâng cấp để mở N4–N1.</p></div>" +
+    '<div style="max-width:680px;padding-bottom:36px">' +
+    '<div class="card"><h3 style="margin-top:0">Mở khóa ' + esc(label) + "</h3>" +
+    "<p style=\"margin:0 0 12px\">Premium mở toàn bộ N4–N1: kanji, từ vựng, ngữ pháp, đề thi JLPT, luyện nghe và đọc hiểu — trên cả web và app điện thoại.</p>" +
+    '<p style="display:flex;gap:10px;flex-wrap:wrap;margin:0"><a class="btn" href="#/nangcap">Xem gói Premium</a>' +
+    (u ? "" : '<button class="btn ghost" id="lkLogin" type="button">Đăng nhập</button>') +
+    '<a class="btn ghost" href="#/">Về trang chủ</a></p>' +
+    '<p class="lock-note" id="lkCheck" style="margin:12px 0 0">Đang kiểm tra gói của bạn…</p></div></div>';
+  var loginBtn = document.getElementById("lkLogin");
+  if(loginBtn) loginBtn.addEventListener("click", function(){
+    openAuthModalContinue(function(){ skLoadPremium(true); });
+  });
+  /* Kiểm tra lại Premium (trường hợp vừa kích hoạt / vừa đăng nhập):
+     nếu đã Premium thì tự về trang đã định. */
+  skLoadPremium(true).then(function(){
+    var note = document.getElementById("lkCheck");
+    if(note) note.textContent = SK_PREMIUM.active ? "Đã mở khóa — đang chuyển tới nội dung…" : "Bạn đang dùng gói miễn phí (toàn bộ N5).";
+  });
+}
+/* Hộp thoại khóa cho cú bấm trong trang (tab cấp kanji…) — không rời trang. */
+function skLockedPrompt(label){
+  showModal("Nội dung Premium",
+    label + " thuộc gói Premium. Gói miễn phí mở toàn bộ nội dung N5 ở mọi mục — nâng cấp để mở N4–N1 trên cả web và app điện thoại.",
+    "Xem gói Premium", "Để sau", function(){ goHash("#/nangcap"); });
+}
+/* ----- Đăng nhập rồi tiếp tục (mua gói / mở nội dung khóa) ----- */
+var skLoginContinue = null;
+function openAuthModalContinue(fn){
+  skLoginContinue = (typeof fn === "function") ? fn : null;
+  openAuthModal();
+}
+/* ----- Mã đơn: "SK" + 8 ký tự [A-Z0-9], sinh bằng crypto ----- */
+function skGenOrderCode(){
+  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", out = "SK";
+  var buf = new Uint8Array(8);
+  if(window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(buf);
+  else for(var i = 0; i < 8; i++) buf[i] = Math.floor(Math.random() * 256);
+  for(var j = 0; j < 8; j++) out += chars.charAt(buf[j] % 36);
+  return out;
+}
+/* Tạo doc sk_orders/{code} theo hợp đồng backend:
+   {uid, email, package: "year"|"lifetime", amount, status: "pending", createdAt}.
+   Rules cấm client ĐỌC sk_orders nên không get() kiểm tra trùng được: thay vào
+   đó, rules chỉ cho `create` (doc chưa tồn tại) — set() trùng mã sẽ bị chặn
+   dạng update (permission-denied) thì sinh mã mới thử lại, tối đa 3 lần. */
+function skCreateOrder(pkg, amount, attempt){
+  attempt = attempt || 1;
+  var db = skDb();
+  var u = skAuthUser();
+  if(!db || !u) return Promise.reject(new Error("not-ready"));
+  var code = skGenOrderCode();
+  return db.collection("sk_orders").doc(code).set({
+    uid: u.uid, email: u.email || "", package: pkg, amount: amount, status: "pending",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){ return code; }).catch(function(err){
+    if(attempt < 3 && err && err.code === "permission-denied") return skCreateOrder(pkg, amount, attempt + 1);
+    throw err;
+  });
+}
+/* Đơn đang chờ thanh toán — lưu local để tải lại trang vẫn thấy lại mã đơn. */
+function skPendingOrderLoad(){
+  try{
+    var o = JSON.parse(localStorage.getItem("sk_pending_order") || "null");
+    return (o && o.code && o.pkg) ? o : null;
+  }catch(e){ return null; }
+}
+function skPendingOrderSave(o){
+  try{ localStorage.setItem("sk_pending_order", JSON.stringify(o)); }catch(e){}
+}
+function skPendingOrderClear(){
+  try{ localStorage.removeItem("sk_pending_order"); }catch(e){}
+}
+function skCopyText(text, okMsg){
+  var done = function(){
+    var m = document.getElementById("ckMsg");
+    if(m) m.textContent = okMsg || "Đã sao chép.";
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){ skCopyFallback(text); done(); });
+  } else { skCopyFallback(text); done(); }
+}
+function skCopyFallback(text){
+  try{
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }catch(e){}
+}
+/* ----- Trang Nâng cấp (#/nangcap, #/trondoi) ----- */
 function freeStatusHTML(){
-  return '<div class="card" style="margin:16px 0"><h3 style="margin-top:0">Hiện tại: đang mở miễn phí toàn bộ</h3>' +
-    "<p style=\"margin:0\">SoraKanji đang ở giai đoạn mở miễn phí đầu tiên để học viên trải nghiệm và góp ý hoàn thiện. Mọi nội dung trên bản web đều học được ngay, không cần tài khoản:</p>" +
+  return '<div class="card" style="margin:16px 0"><h3 style="margin-top:0">Gói miễn phí — toàn bộ N5</h3>' +
+    "<p style=\"margin:0\">Không cần trả phí, bạn vẫn học được toàn bộ nội dung N5 ở mọi mục:</p>" +
     '<ul style="margin:10px 0 2px;line-height:1.75">' +
-    "<li>2.138 kanji đủ 5 cấp, có thứ tự nét, chiết tự và video câu chuyện</li>" +
-    "<li>10.605 từ vựng N5–N1 kèm hình minh họa + 1.056 từ chuyên ngành Tokutei</li>" +
-    "<li>374 mẫu ngữ pháp, đủ Trợ từ và Cách chia thể</li>" +
-    "<li>Phòng thi Sora JLPT: 5 cấp × Test 1–9, phần viết và phần nghe, chấm /180</li>" +
-    "<li>149 hội thoại luyện nghe và 200 bài đọc hiểu</li></ul></div>" +
-    '<div class="card" style="margin:16px 0"><h3 style="margin-top:0">Gói trả phí — cài sau khi hoàn thiện</h3>' +
-    "<p style=\"margin:0\">Khi bản chính thức hoàn thiện, SoraKanji mới mở gói trả phí <b>360.000₫/năm</b> gồm nội dung <b>N3–N1</b> và các tính năng nâng cao (trong đó có tải video shadowing kèm phụ đề tự động), thanh toán bằng chuyển khoản ngân hàng trên web. Từ nay tới lúc đó, toàn bộ nội dung vẫn mở miễn phí như hiện tại — trang này chưa thu bất kỳ khoản phí nào.</p></div>";
+    "<li>126 kanji N5, có thứ tự nét, chiết tự và video câu chuyện</li>" +
+    "<li>1.205 từ vựng N5 kèm hình minh họa + 75 từ số đếm</li>" +
+    "<li>84 mẫu ngữ pháp N5 theo đúng 25 bài Minna no Nihongo</li>" +
+    "<li>Đề thi JLPT N5 Test 1–9, phần viết và phần nghe, chấm /180</li>" +
+    "<li>24 hội thoại luyện nghe N5 và bài đọc hiểu N5</li></ul></div>" +
+    '<div class="card" style="margin:16px 0"><h3 style="margin-top:0">Premium mở thêm N4–N1</h3>' +
+    "<p style=\"margin:0\">Nâng cấp để mở toàn bộ N4–N1 ở mọi mục — kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu — trên cả web và app điện thoại, đồng bộ theo tài khoản. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24h.</p></div>";
 }
 function renderTrondoiPage(){
-  document.title = "Nâng Premium | SoraKanji";
-  document.body.classList.remove("plain");
-  $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Nâng Premium</div>' +
-    "<h1>Nâng Premium</h1>" +
-    "<p>Nâng Premium là gói mở khóa vĩnh viễn của SoraKanji, dự kiến công bố cùng đợt mở gói trả phí khi bản chính thức hoàn thiện.</p></div>" +
-    '<div style="max-width:780px;padding-bottom:36px">' + freeStatusHTML() +
-    '<p style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#/thi">Vào phòng thi JLPT</a>' +
-    '<a class="btn ghost" href="#/tuvung">Học từ vựng ngay</a></p></div>';
+  renderNangcapPage();
 }
+var skCheckoutErr = "";
 function renderNangcapPage(){
-  document.title = "Nâng cấp | SoraKanji";
+  document.title = "Nâng cấp Premium | SoraKanji";
   document.body.classList.remove("plain");
+  skLoadPremium(false); /* chưa biết trạng thái thì đi lấy; xong sẽ vẽ lại nếu đã Premium */
+  if(SK_PREMIUM.active){ renderPremiumStatusView(""); return; }
+  var pend = skPendingOrderLoad();
+  var u = skAuthUser();
+  if(pend && u && pend.uid === u.uid){ renderCheckoutView(pend); return; }
+  /* Chỉ xóa đơn chờ khi đã biết chắc là tài khoản khác — chưa biết user
+     (auth chưa kịp tải) thì giữ đơn lại, đăng nhập xong sẽ thấy tiếp. */
+  if(pend && u && pend.uid !== u.uid) skPendingOrderClear();
+  renderPackagesView();
+}
+function renderPremiumStatusView(notice){
+  document.title = "Premium | SoraKanji";
+  var untilTxt = SK_PREMIUM.until == null ? "Trọn đời — không hết hạn" :
+    "đến ngày " + new Date(SK_PREMIUM.until).toLocaleDateString("vi-VN");
+  var pkgTxt = SK_PREMIUM.pkg === "lifetime" ? "Gói Trọn đời" : SK_PREMIUM.pkg === "year" ? "Gói Năm" : "Premium";
   $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Nâng cấp</div>' +
-    "<h1>Nâng cấp</h1>" +
-    "<p>Hiện tại chưa có gì phải nâng cấp: toàn bộ nội dung trên bản web đang mở miễn phí trong giai đoạn ra mắt.</p></div>" +
-    '<div style="max-width:780px;padding-bottom:36px">' + freeStatusHTML() +
-    '<p style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#/nguphap">Học ngữ pháp</a>' +
-    '<a class="btn ghost" href="#/nghe">Luyện nghe ngay</a></p></div>';
+    "<h1>💎 Bạn đang dùng Premium</h1>" +
+    "<p>Toàn bộ nội dung N4–N1 đã mở cho tài khoản của bạn.</p></div>" +
+    '<div style="max-width:680px;padding-bottom:36px">' +
+    (notice ? '<div class="note-box" style="border-color:var(--ok);background:var(--ok-bg)">' + esc(notice) + "</div>" : "") +
+    '<div class="card"><h3 style="margin-top:0">Gói của bạn</h3>' +
+    "<p style=\"margin:0\">" + pkgTxt + " · " + untilTxt + "</p></div>" +
+    '<p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn" href="#/tuvung/N4">Học từ vựng N4</a>' +
+    '<a class="btn ghost" href="#/thi">Vào phòng thi JLPT</a></p></div>';
+}
+function pkgCardHTML(pkg, sale){
+  var p = SK_PACKAGES[pkg];
+  var price = sale ? p.sale : p.full;
+  var h = '<div class="pkg-card' + (pkg === "lifetime" ? " hot" : "") + '">' +
+    (pkg === "lifetime" ? '<span class="pkg-badge">Phổ biến nhất</span>' : "") +
+    "<h3>" + p.label + "</h3>" +
+    '<div style="color:var(--muted);font-size:14px">' + p.dur + "</div>" +
+    '<div class="pkg-price">' + skFmtVND(price) + "</div>";
+  if(sale) h += '<div><span class="pkg-old">' + skFmtVND(p.full) + '</span> <span class="pkg-save">Tiết kiệm ' + skFmtVND(p.save) + "</span></div>";
+  else h += '<div style="height:24px"></div>';
+  h += "<ul><li>Mở toàn bộ N4–N1: kanji, từ vựng, ngữ pháp</li>" +
+    "<li>Đề thi JLPT N4–N1 Test 1–9, chấm /180</li>" +
+    "<li>Luyện nghe + đọc hiểu N4–N1</li>" +
+    "<li>Đồng bộ web và app điện thoại</li></ul>" +
+    '<button class="btn" id="' + (pkg === "year" ? "buyYear" : "buyLifetime") + '" type="button">' +
+    (webCurrentUser() ? "Mua " + p.label : "Đăng nhập để mua") + "</button></div>";
+  return h;
+}
+var skSaleTimer = null;
+function skSaleCountdownText(){
+  var ms = SK_SALE_END - Date.now();
+  if(ms <= 0) return "0 ngày 00:00:00";
+  var s = Math.floor(ms / 1000);
+  var d = Math.floor(s / 86400); s %= 86400;
+  var hh = Math.floor(s / 3600), mm = Math.floor((s % 3600) / 60), ss = s % 60;
+  function p2(n){ return (n < 10 ? "0" : "") + n; }
+  return d + " ngày " + p2(hh) + ":" + p2(mm) + ":" + p2(ss);
+}
+function skStartSaleCountdown(){
+  if(skSaleTimer){ clearInterval(skSaleTimer); skSaleTimer = null; }
+  function tick(){
+    var el = document.getElementById("saleCd");
+    if(!el){ clearInterval(skSaleTimer); skSaleTimer = null; return; }
+    if(!skSaleActive()){ clearInterval(skSaleTimer); skSaleTimer = null; route(); return; }
+    el.textContent = skSaleCountdownText();
+  }
+  tick();
+  skSaleTimer = setInterval(tick, 1000);
+}
+function renderPackagesView(){
+  var sale = skSaleActive();
+  var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Nâng cấp</div>' +
+    "<h1>Nâng cấp Premium</h1>" +
+    "<p>Gói miễn phí mở toàn bộ nội dung <b>N5</b> ở mọi mục. Premium mở thêm <b>N4–N1</b> — kanji, từ vựng, ngữ pháp, đề thi JLPT, luyện nghe và đọc hiểu — trên cả web và app điện thoại, đồng bộ theo tài khoản.</p></div>" +
+    '<div style="max-width:860px;padding-bottom:36px">';
+  if(sale){
+    h += '<div class="sale-bar">🎉 Ưu đãi ra mắt — giảm giá đến <b>06/12/2026</b> (ngày thi JLPT). Còn <span class="cd" id="saleCd"></span> nữa là hết ưu đãi.</div>';
+  } else {
+    h += '<div class="sale-bar" style="background:var(--card2);border-color:var(--line-strong);color:var(--muted)">Ưu đãi ra mắt đã kết thúc ngày 06/12/2026 — giá dưới đây là giá chính thức.</div>';
+  }
+  h += '<div class="pkg-grid">';
+  h += pkgCardHTML("year", sale);
+  h += pkgCardHTML("lifetime", sale);
+  h += "</div>";
+  if(skCheckoutErr) h += '<div class="note-box" style="border-color:var(--bad);color:var(--bad)">' + esc(skCheckoutErr) + "</div>";
+  h += freeStatusHTML();
+  h += '<p style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn ghost" href="#/tuvung/N5">Học N5 miễn phí</a>' +
+    '<a class="btn ghost" href="#/thi/N5">Thi thử N5</a></p></div>';
+  $app.innerHTML = h;
+  var by = document.getElementById("buyYear"), bl = document.getElementById("buyLifetime");
+  if(by) by.addEventListener("click", function(){ skStartCheckout("year"); });
+  if(bl) bl.addEventListener("click", function(){ skStartCheckout("lifetime"); });
+  if(sale) skStartSaleCountdown();
+}
+function skStartCheckout(pkg){
+  var u = skAuthUser();
+  if(!u){
+    openAuthModalContinue(function(){ skStartCheckout(pkg); });
+    return;
+  }
+  var btn = document.getElementById(pkg === "year" ? "buyYear" : "buyLifetime");
+  if(btn){ btn.disabled = true; btn.textContent = "Đang tạo đơn…"; }
+  var amount = skPrice(pkg);
+  skCreateOrder(pkg, amount).then(function(code){
+    var order = {code: code, pkg: pkg, amount: amount, uid: u.uid, ack: false};
+    skPendingOrderSave(order);
+    skCheckoutErr = "";
+    renderCheckoutView(order);
+  }).catch(function(err){
+    skCheckoutErr = "Chưa tạo được đơn thanh toán — kiểm tra kết nối rồi thử lại." +
+      (err && err.code ? " (" + err.code + ")" : "");
+    renderNangcapPage();
+  });
+}
+function renderCheckoutView(o){
+  var p = SK_PACKAGES[o.pkg] || SK_PACKAGES.year;
+  document.title = "Thanh toán — " + p.label + " | SoraKanji";
+  var qr = skVietQR(o.amount, o.code);
+  var email = (skAuthUser() || {}).email || "";
+  var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nangcap">Nâng cấp</a> / Thanh toán</div>' +
+    "<h1>Thanh toán — " + p.label + "</h1>" +
+    "<p>Chuyển khoản đúng số tiền và đúng mã đơn bên dưới — hệ thống tự động kích hoạt Premium cho tài khoản của bạn.</p></div>" +
+    '<div style="max-width:680px;padding-bottom:36px">' +
+    '<div class="card"><h3 style="margin-top:0">Đơn hàng của bạn</h3>' +
+    '<table class="bank-rows"><tbody>' +
+    "<tr><td>Gói</td><td>" + p.label + " · " + p.dur + "</td></tr>" +
+    '<tr><td>Số tiền</td><td style="color:var(--red);font-size:19px">' + skFmtVND(o.amount) + "</td></tr>" +
+    "<tr><td>Tài khoản</td><td>" + esc(email) + "</td></tr>" +
+    "</tbody></table>" +
+    "<p style=\"font-weight:800;margin:14px 0 4px\">Mã đơn — ghi ĐÚNG mã này vào nội dung chuyển khoản:</p>" +
+    '<div class="code-box"><span class="code" id="skCode">' + esc(o.code) + '</span>' +
+    '<button class="btn sm ghost" id="copyCode" type="button">Sao chép mã</button></div>' +
+    '<div class="qr-box"><img src="' + qr + '" alt="Mã VietQR thanh toán ' + p.label + '"><p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Quét mã bằng app ngân hàng — số tiền và mã đơn đã điền sẵn.</p></div>' +
+    "<p style=\"font-weight:800;margin:14px 0 4px\">Hoặc chuyển khoản thủ công:</p>" +
+    '<table class="bank-rows"><tbody>' +
+    "<tr><td>Ngân hàng</td><td>MB Bank</td></tr>" +
+    "<tr><td>Chủ tài khoản</td><td>" + SK_MB_NAME + "</td></tr>" +
+    '<tr><td>Số tài khoản</td><td><span id="skAcc">' + SK_MB_ACC + '</span> <button class="btn sm ghost" id="copyAcc" type="button" style="margin-left:6px">Sao chép</button></td></tr>' +
+    "<tr><td>Số tiền</td><td>" + skFmtVND(o.amount) + "</td></tr>" +
+    "<tr><td>Nội dung</td><td>" + esc(o.code) + "</td></tr>" +
+    "</tbody></table>" +
+    '<div class="note-box" style="margin-top:14px">⚠️ <b>Ghi ĐÚNG mã ' + esc(o.code) + ' vào nội dung chuyển khoản.</b> Sai mã hoặc thiếu mã, hệ thống không tự kích hoạt được — bạn sẽ cần liên hệ hỗ trợ để kích hoạt thủ công.</div>' +
+    (o.ack
+      ? '<div class="note-box" style="margin-top:16px;border-color:var(--ok);background:var(--ok-bg)">✅ <b>Đã ghi nhận!</b> Premium sẽ được kích hoạt tự động sau khi hệ thống nhận được chuyển khoản — <b>thường vài phút, tối đa 24h</b>. Bạn cứ học tiếp N5 trong lúc chờ, không cần làm gì thêm.</div>' +
+        '<p style="margin:12px 0 0"><button class="btn ghost" id="recheckBtn" type="button">Kiểm tra lại trạng thái</button></p>'
+      : '<p style="margin:16px 0 0"><button class="btn" id="paidBtn" type="button">Tôi đã chuyển khoản</button></p>') +
+    '<p id="ckMsg" style="font-size:13.5px;color:var(--ok);font-weight:700;min-height:20px;margin:10px 0 0"></p></div>' +
+    '<p style="margin-top:14px"><button class="btn ghost" id="otherPkg" type="button">← Chọn gói khác</button></p></div>';
+  $app.innerHTML = h;
+  document.getElementById("copyCode").addEventListener("click", function(){ skCopyText(o.code, "Đã sao chép mã đơn."); });
+  document.getElementById("copyAcc").addEventListener("click", function(){ skCopyText(SK_MB_ACC, "Đã sao chép số tài khoản."); });
+  var paid = document.getElementById("paidBtn");
+  if(paid) paid.addEventListener("click", function(){
+    o.ack = true;
+    skPendingOrderSave(o);
+    renderCheckoutView(o);
+  });
+  var re = document.getElementById("recheckBtn");
+  if(re) re.addEventListener("click", function(){
+    var m = document.getElementById("ckMsg");
+    if(m) m.textContent = "Đang kiểm tra…";
+    skLoadPremium(true).then(function(){
+      if(SK_PREMIUM.active){
+        skPendingOrderClear();
+        renderPremiumStatusView("🎉 Premium đã được kích hoạt — chúc bạn học tốt!");
+      } else {
+        var m2 = document.getElementById("ckMsg");
+        if(m2) m2.textContent = "Chưa thấy kích hoạt — chuyển khoản thường được xử lý trong vài phút, tối đa 24h. Bạn thử kiểm tra lại sau nhé.";
+      }
+    });
+  });
+  document.getElementById("otherPkg").addEventListener("click", function(){
+    skPendingOrderClear();
+    renderPackagesView();
+  });
 }
 
 /* ================= CỘNG ĐỒNG ================= */
 function renderCongdongPage(){
   document.title = "Cộng đồng học viên | SoraKanji";
   document.body.classList.remove("plain");
-  var msgs = [
-    {av: "M", who: "Minh Anh · Hóa Thần", txt: "「家族」với「家庭」khác nhau chỗ nào vậy mọi người?", jp: true},
-    {av: "T", who: "Tuấn Kiệt · Nguyên Anh", txt: "家族 là người trong nhà, còn 家庭 là không khí / đời sống gia đình á. Ví dụ 家庭的 = ấm cúng kiểu gia đình.", jp: false},
-    {av: "H", who: "Hương Ly · Kim Đan", txt: "Mình vừa đột phá Kim Đan nhờ làm đủ nhiệm vụ 14 ngày liên tục nè, cố lên mọi người!", jp: false},
-    {av: "B", who: "Bạn · Trúc Cơ", txt: "Cảm ơn cả nhà, để mình ghi vào flashcard ôn luôn.", jp: false}
-  ];
   $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Cộng đồng</div>' +
     "<h1>Phòng chat học viên</h1>" +
-    "<p>Nơi các đạo hữu cùng tu luyện hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.</p></div>" +
+    "<p>Nơi các bạn học cùng nhau hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.</p></div>" +
     '<div style="max-width:760px;padding-bottom:36px">' +
-    '<div class="card">' + msgs.map(function(m){
-      return '<div class="chatmsg"><span class="c-av">' + esc(m.av) + '</span><span class="c-bub"><b>' + esc(m.who) +
-        '</b><p' + (m.jp ? ' class="jp"' : "") + ">" + esc(m.txt) + "</p></span></div>";
-    }).join("") + "</div>" +
+    '<div class="card" style="text-align:center;padding:34px 20px"><p style="margin:0;font-size:15.5px;color:var(--muted)">Chưa có tin nhắn nào — hãy là người đầu tiên trò chuyện.</p></div>' +
     '<div class="card" style="margin-top:14px"><h3 style="margin-top:0">Tham gia phòng chat</h3>' +
     "<p style=\"margin:0 0 8px\">Phòng chat chạy trong ứng dụng di động SoraKanji — cài app lên màn hình chính là vào được phòng chat cùng các học viên khác. Quy định của phòng: mỗi tin tối đa 500 ký tự, giãn cách 3 giây giữa hai lần gửi để chống spam.</p>" +
     '<p style="margin:0"><a class="btn" href="#/caidat">Xem hướng dẫn cài app</a></p></div></div>';
@@ -5796,9 +6192,13 @@ function route(){
   if(seg !== "kanji" || !segs[1]) document.body.classList.remove("plain");
   var isPlayer = seg === "thi" && segs[3] === "lam";
   if(!isPlayer && exTimer){ clearInterval(exTimer); exTimer = null; }
+  if(skSaleTimer){ clearInterval(skSaleTimer); skSaleTimer = null; }
   if(kdAnimTimer){ clearTimeout(kdAnimTimer); kdAnimTimer = null; }
   deckTeardown();
   window.scrollTo(0, 0);
+  /* Paywall: nội dung N4+ chỉ mở cho Premium (xem skGateForHash). */
+  var gate = skGateForHash(location.hash || "#/");
+  if(gate){ renderLockedPage(gate.lv, gate.label, location.hash || "#/"); return; }
   if(!seg){ renderHome(); return; }
   if(seg === "kanji"){
     if(segs[1]) renderKanjiDetail(segs[1]);
@@ -5939,29 +6339,29 @@ var SORA_TOPICS = [
     keywords:["flashcard","on tap","the ghi nho","da thuoc","chua thuoc","on the"],
     answer:"Ôn flashcard từ vựng: mở Sora Tango → chọn cấp → chọn bài (tab bài ở cột phải). Trang bài mở thẳng flashcard lớn ở trên: bấm vào thẻ hoặc phím Space để lật xem nghĩa và Hán Việt, mũi tên hai bên (hoặc phím ←/→) để qua thẻ, nút ✓/✕ (phím Z/X) để đánh dấu đã biết / chưa biết, chuyển Từ đơn / Ví dụ để xem câu ví dụ của từ (từ nào chưa có data câu ví dụ sẽ ghi rõ “Chưa có câu ví dụ”), ⇄ JP→VI để đổi chiều thẻ, nút ▶ để thẻ tự phát, trộn thẻ và toàn màn hình ở góc phải thanh điều khiển. Danh sách từ của cả bài nằm ngay dưới thẻ, bấm vào một từ để nhảy tới thẻ của từ đó.\n\nTừ bạn đã lưu — bấm ★ trên thẻ để đánh dấu yêu thích, hoặc phím C để thêm vào deck ôn — được gom hết ở tab “Mục đã lưu” ở cột dọc bên trái: vào đó để xem lại tất cả từ đã lưu ở mọi bài, nghe đọc từng từ, bấm vào từ để mở lại flashcard tại thẻ đó, hoặc bỏ lưu.\n\nShadowing (luyện nói đuổi): vào Luyện nghe → chọn cấp → mở 1 hội thoại → mục Shadowing ở cuối trang: nghe mẫu → ghi âm nhắc lại tối đa 30 giây → nghe lại so sánh.",
     actions:[{label:"Mở Từ vựng", action:"flash"},{label:"Mở Luyện nghe", action:"listen"}] },
-  { id:"path", label:"Lộ trình, nhiệm vụ, Tu vi là gì?",
-    keywords:["lo trinh","khai trinh do","nhiem vu","tu vi","canh gioi","streak","dot pha","chinh tuyen"],
-    answer:"Lộ trình cá nhân nằm ở cột dọc bên trái → “Lộ trình cá nhân”:\n\n• Bấm “Khai trình độ”, chọn trình độ bạn đã đạt (Chưa khai / N5 / N4 / N3 / N2 / N1) — lộ trình bắt đầu từ chặng cảnh giới tương ứng (chưa khai → Luyện Khí, đã khai N5 → Trúc Cơ, N4 → Kim Đan, N3 → Nguyên Anh, N2 → Hóa Thần, N1 → Luyện Hư) với lộ trình 30 ngày của cấp đang học: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết; học xong một ngày thì bấm “Đánh dấu đã xong” trong panel của ngày đó để mở khóa ngày tiếp theo.\n• Ở trang chủ, thẻ “Đếm ngược JLPT” tính theo cấp mục tiêu bạn chọn: lộ trình ôn Học mới 60% / Luyện đề 25% / Tổng ôn 15% và gợi ý “Hôm nay nên học” theo số liệu thật của cấp đó.\n• Tu vi và thang 10 cảnh giới Luyện Khí → Đại Đế xem ở tab “Xếp hạng”. Nhiệm vụ hôm nay và streak là tính năng của ứng dụng di động.\n\nChuông thông báo ở thanh trên cùng cũng nhắc bạn 3 việc: còn bao nhiêu ngày tới kỳ thi JLPT, bạn đang ở ngày nào của lộ trình 30 ngày (hôm nay đã đánh dấu xong chưa) và có bao nhiêu từ đang chờ ôn tập trong Mục đã lưu.",
+  { id:"path", label:"Lộ trình, nhiệm vụ, EXP là gì?",
+    keywords:["lo trinh","khai trinh do","nhiem vu","exp","cap bac","streak","thang cap","chinh tuyen"],
+    answer:"Lộ trình cá nhân nằm ở cột dọc bên trái → “Lộ trình cá nhân”:\n\n• Bấm “Khai trình độ”, chọn trình độ bạn đã đạt (Chưa khai / N5 / N4 / N3 / N2 / N1) — lộ trình bắt đầu từ chặng cấp bậc tương ứng (chưa khai → Tân binh, đã khai N5 → Binh nhì, N4 → Binh nhất, N3 → Hạ sĩ, N2 → Trung sĩ, N1 → Thượng sĩ) với lộ trình 30 ngày của cấp đang học: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết; học xong một ngày thì bấm “Đánh dấu đã xong” trong panel của ngày đó để mở khóa ngày tiếp theo.\n• Ở trang chủ, thẻ “Đếm ngược JLPT” tính theo cấp mục tiêu bạn chọn: lộ trình ôn Học mới 60% / Luyện đề 25% / Tổng ôn 15% và gợi ý “Hôm nay nên học” theo số liệu thật của cấp đó.\n• EXP và thang 10 cấp bậc Tân binh → Tướng xem ở tab “Xếp hạng”. Nhiệm vụ hôm nay và streak là tính năng của ứng dụng di động.\n\nChuông thông báo ở thanh trên cùng cũng nhắc bạn 3 việc: còn bao nhiêu ngày tới kỳ thi JLPT, bạn đang ở ngày nào của lộ trình 30 ngày (hôm nay đã đánh dấu xong chưa) và có bao nhiêu từ đang chờ ôn tập trong Mục đã lưu.",
     actions:[{label:"Khai trình độ", action:"path"},{label:"Xem Xếp hạng", action:"rank"}] },
   { id:"duel", label:"Đấu trường đấu thế nào?",
-    keywords:["dau truong","dau phap","dau lech gio","thi dau","doi thu"],
-    answer:"Đấu Pháp Đài hiện là tính năng của ứng dụng di động SoraKanji: đấu lệch giờ 10 câu (15 giây/câu) với đạo hữu cùng cảnh giới, thắng trận được cộng Tu vi, điểm cống hiến và linh thạch, mỗi ngày 3 lượt đấu.\n\nTrên bản web, bạn tích Tu vi bằng cách luyện thi ở phòng Sora JLPT và xem thang cảnh giới ở tab Xếp hạng.",
+    keywords:["dau truong","dau lech gio","thi dau","doi thu"],
+    answer:"Đấu trường hiện là tính năng của ứng dụng di động SoraKanji: đấu lệch giờ 10 câu (15 giây/câu) với bạn học cùng cấp bậc, thắng trận được cộng EXP, Điểm đóng góp và Xu, mỗi ngày 3 lượt đấu.\n\nTrên bản web, bạn tích EXP bằng cách luyện thi ở phòng Sora JLPT và xem thang cấp bậc ở tab Xếp hạng.",
     actions:[{label:"Mở Luyện thi", action:"exam"},{label:"Xem Xếp hạng", action:"rank"}] },
-  { id:"shop", label:"Linh thạch, cống hiến, Bảo tàng là gì?",
-    keywords:["linh thach","cong hien","bao tang","tang bao","mua do","khung avatar","chuc vu"],
-    answer:"Đây là hệ thống của ứng dụng di động SoraKanji:\n\n• Linh thạch: tiền trong app — kiếm từ nhiệm vụ, streak và thắng Đấu Pháp Đài; tiêu ở Bảo tàng (Tàng Bảo Các) để mua đan dược, thêm lượt đấu, khung avatar…\n• Điểm cống hiến: không mua được bằng tiền, chỉ kiếm bằng đóng góp thật (thắng đấu, giúp đạo hữu trong phòng chat…) — tích đủ điểm thì lên chức vụ tông môn (Ngoại môn → Nội môn → Chân truyền → Trưởng lão → Tông chủ).\n\nThang chức vụ tông môn đầy đủ xem ở tab Xếp hạng trên bản web này.",
+  { id:"shop", label:"Xu, điểm đóng góp, Cửa hàng là gì?",
+    keywords:["xu","diem dong gop","cua hang","mua do","khung avatar","hang thanh vien"],
+    answer:"Đây là hệ thống của ứng dụng di động SoraKanji:\n\n• Xu: tiền trong app — kiếm từ nhiệm vụ, streak và thắng Đấu trường; tiêu ở Cửa hàng để mua thêm lượt đấu, khung avatar…\n• Điểm đóng góp: không mua được bằng tiền, chỉ kiếm bằng đóng góp thật (thắng đấu, giúp bạn học trong phòng chat…) — tích đủ điểm thì lên hạng thành viên (Thành viên mới → Thành viên tích cực → Cộng tác viên → Cố vấn → Đại sứ SoraKanji).\n\nThang hạng thành viên đầy đủ xem ở tab Xếp hạng trên bản web này.",
     actions:[{label:"Xem Xếp hạng", action:"rank"},{label:"Mở Lộ trình cá nhân", action:"path"}] },
   { id:"rank", label:"Xếp hạng xem ở đâu?",
     keywords:["xep hang","bang xep hang","top tuan","hang cua toi"],
-    answer:"Bấm tab “Xếp hạng” ở cột dọc bên trái (icon cúp).\n\nTrang này có: bảng đạo hữu dẫn đầu tuần này, thang 10 cảnh giới từ Luyện Khí lên Đại Đế kèm mốc Tu vi của từng cảnh giới, và thang chức vụ tông môn tính bằng điểm cống hiến — cả hai thang đều xếp từ cao xuống thấp.",
+    answer:"Bấm tab “Xếp hạng” ở cột dọc bên trái (icon cúp).\n\nTrang này có: bảng bạn học dẫn đầu tuần này, thang 10 cấp bậc từ Tân binh lên Tướng kèm mốc EXP của từng cấp bậc, và thang hạng thành viên tính bằng Điểm đóng góp — cả hai thang đều xếp từ cao xuống thấp.",
     actions:[{label:"Mở Xếp hạng", action:"rank"}] },
-  { id:"fun", label:"Đấu trường, xếp hạng, linh thạch ở đâu?",
-    keywords:["dau truong xep hang linh thach"],
-    answer:"• Xếp hạng: tab “Xếp hạng” ở cột dọc bên trái — bảng top tuần, thang cảnh giới Luyện Khí → Đại Đế và thang chức vụ tông môn.\n• Đấu trường và linh thạch & điểm cống hiến là tính năng của ứng dụng di động SoraKanji (Đấu Pháp Đài đấu lệch giờ 10 câu; ví linh thạch nằm ở tab Cá nhân trong app).\n\nHỏi riêng từng mục (vd: “linh thạch là gì”) mình sẽ giải thích kỹ hơn.",
+  { id:"fun", label:"Đấu trường, xếp hạng, Xu ở đâu?",
+    keywords:["dau truong xep hang xu"],
+    answer:"• Xếp hạng: tab “Xếp hạng” ở cột dọc bên trái — bảng top tuần, thang cấp bậc Tân binh → Tướng và thang hạng thành viên.\n• Đấu trường và Xu & Điểm đóng góp là tính năng của ứng dụng di động SoraKanji (Đấu trường đấu lệch giờ 10 câu; ví Xu nằm ở tab Cá nhân trong app).\n\nHỏi riêng từng mục (vd: “Xu là gì”) mình sẽ giải thích kỹ hơn.",
     actions:[{label:"Mở Xếp hạng", action:"rank"}] },
   { id:"chat", label:"Phòng chat dùng thế nào?",
     keywords:["phong chat","chat voi","hoi dap","nhan tin","cong dong"],
-    answer:"Bấm tab “Cộng đồng” ở cột dọc bên trái để xem phòng chat học viên — nơi các đạo hữu hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.\n\nPhòng chat chạy trong ứng dụng di động SoraKanji: cài app lên màn hình chính (xem hướng dẫn ở tab Cài đặt) là vào chat được. Quy định của phòng: mỗi tin tối đa 500 ký tự và giãn cách 3 giây giữa 2 lần gửi để chống spam.",
+    answer:"Bấm tab “Cộng đồng” ở cột dọc bên trái để xem phòng chat học viên — nơi các bạn học hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.\n\nPhòng chat chạy trong ứng dụng di động SoraKanji: cài app lên màn hình chính (xem hướng dẫn ở tab Cài đặt) là vào chat được. Quy định của phòng: mỗi tin tối đa 500 ký tự và giãn cách 3 giây giữa 2 lần gửi để chống spam.",
     actions:[{label:"Mở Cộng đồng", action:"chat"},{label:"Xem hướng dẫn cài app", action:"settings"}] },
   { id:"install", label:"Cài app lên màn hình chính, học offline được không?",
     keywords:["cai app","man hinh chinh","pwa","offline","khong co mang","mat mang","tai goi","cai dat app"],
@@ -5977,17 +6377,17 @@ var SORA_TOPICS = [
     actions:[{label:"Mở Cài đặt", action:"settings"}] },
   { id:"start", label:"Mới học thì bắt đầu từ đâu?",
     keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
-    answer:"Chào đạo hữu! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: tab “Lộ trình cá nhân” → chọn “Chưa khai” (hoặc cấp bạn đã đạt) để app xếp chặng cảnh giới và lộ trình 30 ngày của cấp đang học cho bạn: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết.\n2. Chọn cấp mục tiêu ở thẻ “Đếm ngược JLPT” trên trang chủ — thẻ sẽ gợi ý hôm nay nên học bao nhiêu kanji / từ vựng / ngữ pháp của cấp đó.\n3. Học theo thứ tự: Kanji ở trang chủ → Từ vựng (Sora Tango) → Ngữ pháp (Sora Bunpo) → Luyện nghe & Đọc hiểu → vào phòng thi Sora JLPT khi gần tới kỳ thi.",
+    answer:"Chào bạn! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: tab “Lộ trình cá nhân” → chọn “Chưa khai” (hoặc cấp bạn đã đạt) để app xếp chặng cấp bậc và lộ trình 30 ngày của cấp đang học cho bạn: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết.\n2. Chọn cấp mục tiêu ở thẻ “Đếm ngược JLPT” trên trang chủ — thẻ sẽ gợi ý hôm nay nên học bao nhiêu kanji / từ vựng / ngữ pháp của cấp đó.\n3. Học theo thứ tự: Kanji ở trang chủ → Từ vựng (Sora Tango) → Ngữ pháp (Sora Bunpo) → Luyện nghe & Đọc hiểu → vào phòng thi Sora JLPT khi gần tới kỳ thi.",
     actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Về trang chủ", action:"home"}] }
 ];
 var SORA_FALLBACK = {
-  answer:"Câu này nằm ngoài phần hướng dẫn dùng trang mà mình trả lời được.\n\nNói rõ để bạn khỏi kỳ vọng nhầm: Sora là trợ lý chạy ngay trong máy với kho câu hỏi soạn sẵn về cách dùng SoraKanji — chưa phải AI trực tuyến, nên mình chưa dịch bài, chưa giải bài tập tiếng Nhật và chưa chấm bài được.\n\nBạn thử hỏi theo tính năng, ví dụ: “luyện nghe ở đâu”, “thi JLPT làm thế nào”, “linh thạch là gì”, “cài app ra màn hình chính” — hoặc bấm một chủ đề gợi ý bên dưới nhé.",
+  answer:"Câu này nằm ngoài phần hướng dẫn dùng trang mà mình trả lời được.\n\nNói rõ để bạn khỏi kỳ vọng nhầm: Sora là trợ lý chạy ngay trong máy với kho câu hỏi soạn sẵn về cách dùng SoraKanji — chưa phải AI trực tuyến, nên mình chưa dịch bài, chưa giải bài tập tiếng Nhật và chưa chấm bài được.\n\nBạn thử hỏi theo tính năng, ví dụ: “luyện nghe ở đâu”, “thi JLPT làm thế nào”, “Xu là gì”, “cài app ra màn hình chính” — hoặc bấm một chủ đề gợi ý bên dưới nhé.",
   actions:[{label:"Bắt đầu từ đâu?", action:"path"},{label:"Xem Luyện thi", action:"exam"}]
 };
 var SORA_CHIPS = [
   ["start", "Bắt đầu từ đâu?"], ["learn", "Học từ vựng / ngữ pháp / kanji"], ["exam", "Luyện thi JLPT"],
   ["listenread", "Luyện nghe & đọc hiểu"], ["write", "Luyện viết, vẽ kanji"], ["flash", "Flashcard & Shadowing"],
-  ["fun", "Đấu trường, xếp hạng, linh thạch"], ["install", "Cài app & học offline"], ["search", "Tìm kiếm & tra cứu"]
+  ["fun", "Đấu trường, xếp hạng, Xu"], ["install", "Cài app & học offline"], ["search", "Tìm kiếm & tra cứu"]
 ];
 function soraNorm(s){
   return (s || "").toLowerCase().replace(/đ/g, "d").normalize("NFD")
@@ -6328,8 +6728,17 @@ function initWebAuth(){
       };
     }else{
       window.SK_USER = null;
+      SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
     }
     renderHeaderUser();
+    /* Premium: đăng nhập thì đi lấy trạng thái (xong sẽ tự vẽ lại trang
+       khóa / gỡ ổ khóa); đăng xuất thì khóa lại ngay nếu đang ở nội dung N4+. */
+    if(user){
+      skLoadPremium(true);
+      /* Đang ở trang Nâng cấp thì vẽ lại để nút mua đổi trạng thái. */
+      if(/^\#\/(nangcap|trondoi)/.test(location.hash || "")) route();
+    }
+    else if(skGateForHash(location.hash || "#/")) route();
     /* Đang ở trang chi tiết Kanji: dựng lại thẻ bình luận theo trạng thái mới
        (đăng nhập xong là đăng bình luận được ngay, đăng xuất thì khóa lại). */
     if(location.hash.indexOf("#/kanji/") === 0 &&
@@ -6401,6 +6810,7 @@ function openAuthModal(){
     var provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(function(){
       closeAuthModal();
+      if(skLoginContinue){ var fn = skLoginContinue; skLoginContinue = null; fn(); }
     }).catch(function(err){ showErr(skAuthErrorVI(err)); });
   });
   document.getElementById("authForgot").addEventListener("click", function(){
@@ -6428,6 +6838,7 @@ function openAuthModal(){
       : auth.signInWithEmailAndPassword(email, pass);
     promise.then(function(){
       closeAuthModal();
+      if(skLoginContinue){ var fn = skLoginContinue; skLoginContinue = null; fn(); }
     }).catch(function(err){
       setBusy(false, reg ? "Đăng ký" : "Đăng nhập");
       showErr(skAuthErrorVI(err));
