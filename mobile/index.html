@@ -779,6 +779,27 @@
   .sg.now{outline:2.5px solid var(--ink); outline-offset:1px;}
   /* Thi JLPT đầy đủ */
   .testrow.locked{opacity:.55;}
+  /* ---------- Paywall: ổ khóa Premium + bảng nâng cấp ---------- */
+  #premiumScrim{z-index:69;}
+  #premiumSheet{z-index:70; max-height:84%; overflow-y:auto;}
+  .pw-lock{font-size:12px; margin-left:4px; vertical-align:1px;}
+  .testrow.pw-locked .badge{border-color:var(--red); color:var(--red);}
+  .lv.pw-locked{color:var(--ink-2);}
+  .ls-lvtile.pw-locked{color:var(--ink-2);}
+  .ls-lvtile .pw-lock{display:block; font-size:11px; margin:2px 0 0;}
+  .sv-card-lock{position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
+  .sv-card.pw-locked .sv-card-thumb img{filter:saturate(.55);}
+  .sv-all-entry.pw-locked .sv-all-thumb img{filter:saturate(.55);}
+  .pw-plans{display:flex; flex-direction:column; gap:10px; margin:0 0 12px;}
+  .pw-plan{border:1.5px solid var(--line); border-radius:14px; padding:12px 14px; background:var(--bg);}
+  .pw-plan.hot{border-color:var(--red); background:var(--red-soft);}
+  .pw-plan b{display:block; font-size:15px; margin-bottom:2px;}
+  .pw-plan .pw-price{font-size:17px; font-weight:800; color:var(--red);}
+  .pw-plan .pw-old{font-size:13px; color:var(--ink-2); text-decoration:line-through; margin-left:6px; font-weight:600;}
+  .pw-plan p{margin:4px 0 0; font-size:13px; color:var(--ink-2); line-height:1.5;}
+  .pw-guide{border:1px dashed var(--line); border-radius:14px; padding:12px 14px; background:var(--card); margin:0 0 14px;}
+  .pw-guide b{display:block; font-size:14px; margin-bottom:4px;}
+  .pw-guide p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.6;}
   .resultwrap{overflow-y:auto; justify-content:flex-start; padding-top:34px;}
   .ex-pass{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; font-size:16.5px; line-height:1.95; margin-bottom:14px;}
   .ex-pass table{border-collapse:collapse; margin:8px 0; max-width:100%;}
@@ -2088,6 +2109,14 @@
   .loginfield>span{display:block; font-size:12px; font-weight:800; letter-spacing:.06em; color:var(--ink-2); margin-bottom:6px;}
   .logininput{width:100%; box-sizing:border-box; min-height:50px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); font-family:inherit; font-size:15px;}
   .logininput:focus{outline:2px solid var(--red); outline-offset:1px; border-color:transparent;}
+  .googlebtn{width:100%; min-height:50px; display:flex; align-items:center; justify-content:center; gap:10px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-family:inherit; font-size:15px; font-weight:700; color:var(--ink); cursor:pointer; margin-bottom:12px;}
+  .googlebtn:disabled{opacity:.6; cursor:default;}
+  .googlebtn svg{flex:none;}
+  .auth-or{display:flex; align-items:center; gap:10px; color:var(--ink-2); font-size:12.5px; font-weight:600; margin:2px 0 12px;}
+  .auth-or:before,.auth-or:after{content:""; flex:1; height:1px; background:var(--line);}
+  .auth-links{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px; font-size:13.5px; color:var(--ink-2);}
+  .auth-link{background:none; border:0; padding:0; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--red); cursor:pointer;}
+  .auth-link:hover{text-decoration:underline;}
   .sturow{padding:12px 0; border-bottom:1px solid var(--line);}
   .sturow:last-child{border-bottom:none;}
   .stu-top{display:flex; align-items:center; gap:11px;}
@@ -3414,28 +3443,76 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="sheetgrid" id="sheetGrid"></div>
     </div>
 
-    <!-- đăng nhập / đổi tài khoản (bản xem thử: đổi theo email ngay trong phiên) -->
+    <!-- đăng nhập Firebase Auth thật (Google hoặc email/mật khẩu) -->
     <div class="sheet" id="loginSheet" aria-hidden="true">
       <div class="grab"></div>
-      <h3>Đăng nhập / Đổi tài khoản</h3>
-      <p class="snote">Nhập email để app nhận diện tài khoản trong phiên này. Tài khoản Admin của app là <b>nongaphao@gmail.com</b> — đăng nhập bằng email đó sẽ mở ô <b>Quản trị</b> ở Home và mục <b>Quản lý học viên</b> ở tab Cá nhân; email khác vẫn là tài khoản học viên thường. Ảnh đại diện (ảnh tài khoản Google khi đăng nhập Google, hoặc ảnh tự tải lên) đổi ở tab Cá nhân → Ảnh đại diện.</p>
-      <label class="loginfield">
-        <span>EMAIL ĐĂNG NHẬP</span>
-        <input class="logininput" id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="VD: nongaphao@gmail.com" aria-label="Email đăng nhập" />
-      </label>
-      <p id="loginMsg" style="font-size:13px; color:var(--red); font-weight:700; min-height:19px; margin:6px 0 10px; line-height:1.5;"></p>
-      <div style="display:flex; gap:10px;">
-        <button class="ghostbtn" id="loginCancel" type="button" style="flex:1; justify-content:center; min-height:52px;">Đóng</button>
-        <button class="sheetbtn" id="loginGo" type="button" style="flex:1;">Đăng nhập</button>
+      <h3 id="loginTitle">Đăng nhập</h3>
+      <p class="snote">Một tài khoản cho cả bản web và app SoraKanji — tiến độ học và gói Premium đồng bộ theo tài khoản. Tài khoản Admin của app là <b>nongaphao@gmail.com</b> — đăng nhập bằng tài khoản đó sẽ mở ô <b>Quản trị</b> ở Home và mục <b>Quản lý học viên</b> ở tab Cá nhân.</p>
+      <div id="loginFormWrap">
+        <button class="googlebtn" id="loginGoogle" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg><span>Tiếp tục bằng Google</span></button>
+        <div class="auth-or"><span>hoặc bằng email</span></div>
+        <label class="loginfield">
+          <span>EMAIL</span>
+          <input class="logininput" id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="ban@vidu.com" aria-label="Email đăng nhập" />
+        </label>
+        <label class="loginfield">
+          <span>MẬT KHẨU</span>
+          <input class="logininput" id="loginPass" type="password" autocomplete="current-password" placeholder="Mật khẩu của bạn" aria-label="Mật khẩu" />
+        </label>
+        <p id="loginMsg" style="font-size:13px; color:var(--red); font-weight:700; min-height:19px; margin:6px 0 10px; line-height:1.5;"></p>
+        <p id="loginOk" hidden style="font-size:13px; color:var(--teal); font-weight:700; margin:6px 0 10px; line-height:1.5;"></p>
+        <div style="display:flex; gap:10px;">
+          <button class="ghostbtn" id="loginCancel" type="button" style="flex:1; justify-content:center; min-height:52px;">Đóng</button>
+          <button class="sheetbtn" id="loginGo" type="button" style="flex:1;">Đăng nhập</button>
+        </div>
+        <div class="auth-links">
+          <button class="auth-link" id="loginForgot" type="button">Quên mật khẩu?</button>
+          <span><span id="loginSwitchQ">Chưa có tài khoản?</span> <button class="auth-link" id="loginSwitch" type="button">Đăng ký</button></span>
+        </div>
       </div>
-      <button class="acctbtn" id="loginLogout" type="button" hidden style="width:100%; margin-top:10px;">Đăng xuất khỏi tài khoản hiện tại</button>
+      <div id="loginAcctWrap" hidden>
+        <p class="snote">Bạn đang đăng nhập với <b id="loginAcctEmail"></b><span id="loginAcctAdmin"></span></p>
+        <div style="display:flex; gap:10px;">
+          <button class="ghostbtn" id="loginCancel2" type="button" style="flex:1; justify-content:center; min-height:52px;">Đóng</button>
+          <button class="sheetbtn" id="loginLogout" type="button" style="flex:1;">Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- bảng nâng cấp Premium (paywall): CHỈ chữ hướng dẫn mua trên web,
+         KHÔNG có link — xem ghi chú trong khối Premium ở đầu script chính -->
+    <div class="scrim" id="premiumScrim"></div>
+    <div class="sheet" id="premiumSheet" aria-hidden="true" role="dialog" aria-label="Nâng cấp Premium">
+      <div class="grab"></div>
+      <h3>🔒 Nâng cấp Premium</h3>
+      <p class="snote">Nội dung N4–N1 và video Shadowing từ bài thứ 11 trở đi thuộc gói Premium. Gói miễn phí gồm toàn bộ N5 ở mọi mục và 10 video Shadowing đầu tiên.</p>
+      <div class="pw-plans">
+        <div class="pw-plan">
+          <b>Gói Năm</b>
+          <span class="pw-price">499.000đ</span><span class="pw-old">799.000đ</span>
+          <p>Mở toàn bộ nội dung N4–N1 trong 12 tháng.</p>
+        </div>
+        <div class="pw-plan hot">
+          <b>Gói Trọn đời · Phổ biến nhất</b>
+          <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
+          <p>Mở toàn bộ nội dung N4–N1 vĩnh viễn, không gia hạn.</p>
+        </div>
+      </div>
+      <p class="snote">Giá giảm đến 06/12/2026 — sau thời gian này gói về giá gốc.</p>
+      <div class="pw-guide">
+        <b>Cách mua gói</b>
+        <p>Mở trình duyệt Chrome trên điện thoại của bạn, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Sau khi chuyển khoản thành công, Premium sẽ được mở cho tài khoản của bạn — thường trong vài phút, tối đa 24 giờ.</p>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="sheetbtn" id="premiumClose" type="button" style="flex:1; justify-content:center;">Đóng</button>
+      </div>
     </div>
 
     <!-- đổi ảnh đại diện: ảnh Google tự lấy khi đăng nhập Gmail / tự tải ảnh lên / về mặc định -->
     <div class="sheet" id="avatarSheet" aria-hidden="true">
       <div class="grab"></div>
       <h3>Ảnh đại diện</h3>
-      <p class="snote">Ảnh hiện ở tab Cá nhân, bảng Xếp hạng và Phòng chat — khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như thường. Khi đăng nhập bằng Google, app lấy thẳng ảnh của chính tài khoản đó (qua Firebase) làm avatar; bản xem thử chưa nối đăng nhập Google thật — chờ domain chính thức — nên mục ảnh Google đang chờ, bạn cứ tự tải ảnh lên trước.</p>
+      <p class="snote">Ảnh hiện ở tab Cá nhân, bảng Xếp hạng và Phòng chat — khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như thường. Khi đăng nhập bằng Google, app lấy thẳng ảnh của chính tài khoản đó (qua Firebase) làm avatar — đăng nhập xong là ảnh tự hiện ở đây; bạn cũng có thể tự tải ảnh lên.</p>
       <div class="avprev">
         <div class="avatar jp bigav" id="avPreview">空</div>
         <p>Đang dùng: <b id="avCurSrc">avatar mặc định (chữ 空)</b><br><span id="avAcctLine">Chưa đăng nhập</span></p>
@@ -4188,7 +4265,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <p style="margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.55;">Quyên Xu cho cộng đồng để nhận điểm đóng góp: <b style="color:var(--ink);">100 Xu = 10 điểm đóng góp</b>. Điểm đóng góp dùng để lên chức trong cộng đồng và đổi đồ hiếm ở trên.</p>
           <button class="cta" id="exchangeBtn" style="margin-top:12px;"><svg class="curic" viewBox="0 0 48 48" style="width:19px;height:19px;" aria-hidden="true"><use href="#ic-linh"></use></svg>Quyên 100 Xu</button>
         </div>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Nguyên tắc của SoraKanji: Xu mua tiện ích và đồ khoe — bài học, đề thi và từ vựng luôn miễn phí, không khóa bằng tiền.</p>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Nguyên tắc của SoraKanji: Xu mua tiện ích và đồ khoe. Gói miễn phí gồm toàn bộ N5 và 10 video Shadowing đầu tiên; nội dung N4–N1 thuộc gói Premium.</p>
       </div>
     </div>
 
@@ -4655,14 +4732,14 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <div class="drow"><b>Học</b><span class="v">2.138 kanji N5–N1 kèm chiết tự dễ nhớ, 214 bộ thủ, bảng kana đầy đủ (seion, dakuon, yōon) và flashcard ôn theo hạn quên.</span></div>
           <div class="drow"><b>Luyện thi</b><span class="v">Phòng thi JLPT đúng format đề thật: đủ số câu, thời gian và thang điểm 180 cho cả 5 cấp N5–N1.</span></div>
           <div class="drow"><b>Cấp độ & Đấu trường</b><span class="v">Nhiệm vụ mỗi ngày, 10 cấp độ từ Tân binh đến Tướng, Đấu trường đấu lệch giờ và Cửa hàng tiêu Xu / đổi đồ hiếm bằng điểm đóng góp.</span></div>
-          <div class="drow"><b>Nguyên tắc</b><span class="v">Bài học, đề thi và từ vựng luôn miễn phí — Xu chỉ mua tiện ích và đồ trang trí, không khóa nội dung học bằng tiền.</span></div>
+          <div class="drow"><b>Nguyên tắc</b><span class="v">Gói miễn phí gồm toàn bộ N5 ở mọi mục và 10 video Shadowing đầu tiên; nội dung N4–N1 thuộc gói Premium. Xu chỉ mua tiện ích và đồ trang trí.</span></div>
         </div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Đây là bản xem thử giao diện điện thoại — nội dung đầy đủ nằm ở bản web chính SoraKanji.</p>
       </div>
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu hiện đại, lưới Mục học, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu trường (đấu lệch giờ 10 câu, thắng cộng điểm đóng góp), ví Xu trong tab Cá nhân và Cửa hàng để tiêu Xu / đổi đồ hiếm bằng điểm đóng góp. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cấp độ tương ứng, kèm lộ trình 30 ngày theo cấp đang học (nhịp tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử × 4 tuần + tổng ôn + thi thử tổng kết, mở khóa từng ngày theo thứ tự, tiến độ lưu riêng từng cấp). Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Mục học và hàng tiện ích đã đổi sang phong cách chibi hiện đại (học viên chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Xu (tinh thạch ngọc lục) và Điểm đóng góp (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Cửa hàng với 6 khung kèm giá (60–250 Xu, khung Ngọc Bội 500 điểm đóng góp) — mua xong khung đeo luôn lên avatar; quân hàm cấp độ kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → huy hiệu cấp Tướng). Lưới Mục học nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Cửa hàng · Phòng chat · Đấu trường. Ô Tokutei (icon học viên chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): danh sách dọc 1 cột 14 ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ), Xây dựng ở hàng đầu và mỗi hàng ghi “(đang biên soạn)” sau tên ngành — bấm vào 1 hàng là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Mục học và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nay đã nối theo email đăng nhập: đầu tab Cá nhân có mục Tài khoản cho đăng nhập / đổi tài khoản ngay trong phiên này, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ (bản thật còn kiểm tra thêm cờ isAdmin=true trên tài khoản Firebase). Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 Xu và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu trường, Cửa hàng, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Mục học, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng email @gmail.com thì app tự lấy ảnh hồ sơ gắn với email làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như cũ. Phần tự lấy ảnh Google đã nối sẵn điểm lấy ảnh từ chính phiên đăng nhập (photoURL của Firebase) — đăng nhập Google thật chưa chạy được trên bản xem thử (chờ domain chính thức) nên phần đang dùng ngay được là tự tải ảnh lên.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu hiện đại, lưới Mục học, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu trường (đấu lệch giờ 10 câu, thắng cộng điểm đóng góp), ví Xu trong tab Cá nhân và Cửa hàng để tiêu Xu / đổi đồ hiếm bằng điểm đóng góp. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cấp độ tương ứng, kèm lộ trình 30 ngày theo cấp đang học (nhịp tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử × 4 tuần + tổng ôn + thi thử tổng kết, mở khóa từng ngày theo thứ tự, tiến độ lưu riêng từng cấp). Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Mục học và hàng tiện ích đã đổi sang phong cách chibi hiện đại (học viên chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Xu (tinh thạch ngọc lục) và Điểm đóng góp (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Cửa hàng với 6 khung kèm giá (60–250 Xu, khung Ngọc Bội 500 điểm đóng góp) — mua xong khung đeo luôn lên avatar; quân hàm cấp độ kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → huy hiệu cấp Tướng). Lưới Mục học nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Cửa hàng · Phòng chat · Đấu trường. Ô Tokutei (icon học viên chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): danh sách dọc 1 cột 14 ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ), Xây dựng ở hàng đầu và mỗi hàng ghi “(đang biên soạn)” sau tên ngành — bấm vào 1 hàng là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Mục học và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nối theo tài khoản Firebase Auth thật: đầu tab Cá nhân có mục Tài khoản để đăng nhập bằng Google hoặc email/mật khẩu, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ. Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 Xu và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu trường, Cửa hàng, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Mục học, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng Google thì app tự lấy ảnh hồ sơ của tài khoản đó làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như cũ. Đăng nhập bằng Google là app tự lấy ảnh hồ sơ của chính tài khoản đó (photoURL của Firebase) làm avatar; ai cũng tự tải ảnh từ máy lên được.</p>
 </div>
 
   <!-- handwriting.js (MIT) — lớp gọi Google Input Tools, file nguyên bản ở assets/ -->
@@ -4685,9 +4762,212 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   <!-- Firebase compat SDK — CHỈ để gọi callable makeLessonFromVideo (tính năng dán link YouTube tự tạo bài shadowing); app không dùng Firebase cho việc gì khác trong bản này -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 (function(){
   "use strict";
+
+  /* ================= PAYWALL: Premium (gói trả phí) =================
+     Gói miễn phí: toàn bộ N5 ở mọi mục + 10 video Shadowing đầu tiên
+     (10 video đầu theo thứ tự hiển thị — xem svFreeIds()).
+     Nội dung N4–N1 và video Shadowing từ bài thứ 11 cần Premium.
+     Trạng thái Premium đọc từ Firestore kanji_progress/{uid}.premium =
+     {plan, since, until}: gói "year" có until = ngày kích hoạt + 12 tháng,
+     gói "lifetime" có until = null. Premium còn hiệu lực khi until == null
+     hoặc until nằm trong tương lai. Cache ở localStorage "sk_premium"
+     (kèm uid) để mở app là biết ngay; làm mới lại khi đăng nhập
+     (onAuthStateChanged) và khi mở app có phiên Firebase sẵn.
+     Đăng nhập trên bản mobile là Firebase Auth thật (khối “Đăng nhập
+     Firebase Auth” ở phần Tài khoản, cùng project donghung-3208d với bản
+     web): onAuthStateChanged dưới đây tự đọc Premium khi đăng nhập và xóa
+     cache khi đăng xuất, không cần sửa thêm.
+     KHÔNG có link mua trong app: bảng nâng cấp chỉ hướng dẫn bằng chữ
+     (mở Chrome, đăng nhập tại sorakanji.com, mua bằng VND). */
+  var SK_PREMIUM_KEY = "sk_premium";
+  var SV_FREE_COUNT = 10;
+  function premiumCacheLoad(){
+    try{ var p = JSON.parse(window.localStorage.getItem(SK_PREMIUM_KEY) || "null"); return (p && typeof p === "object") ? p : null; }
+    catch(_){ return null; }
+  }
+  function premiumCacheSave(p){
+    try{
+      if(p) window.localStorage.setItem(SK_PREMIUM_KEY, JSON.stringify(p));
+      else window.localStorage.removeItem(SK_PREMIUM_KEY);
+    }catch(_){}
+  }
+  /* until có thể là: null (trọn đời), số mili-giây, chuỗi ISO, hoặc
+     Timestamp của Firestore ({seconds} hoặc .toMillis()). */
+  function premiumUntilMs(until){
+    if(until == null) return null;
+    if(typeof until === "number") return until;
+    if(typeof until === "string"){ var t = Date.parse(until); return isNaN(t) ? 0 : t; }
+    if(until && typeof until.toMillis === "function"){ try{ return until.toMillis(); }catch(_){ return 0; } }
+    if(until && typeof until.seconds === "number") return until.seconds * 1000;
+    return 0;
+  }
+  function premiumIsActive(p){
+    if(!p) return false;
+    var u = premiumUntilMs(p.until);
+    if(u === null) return true; /* gói trọn đời */
+    return u > Date.now();
+  }
+  function isPremium(){ return premiumIsActive(premiumCacheLoad()); }
+  function premiumLevelOpen(lv){ return lv === "N5" || isPremium(); }
+  /* Mở bảng nâng cấp Premium; trả về false để handler dừng lại. */
+  function showPremiumPrompt(){
+    var sh = document.getElementById("premiumSheet");
+    var sc = document.getElementById("premiumScrim");
+    if(!sh) return false;
+    sh.classList.add("open");
+    sh.setAttribute("aria-hidden", "false");
+    if(sc) sc.classList.add("open");
+    return false;
+  }
+  function closePremiumPrompt(){
+    var sh = document.getElementById("premiumSheet");
+    var sc = document.getElementById("premiumScrim");
+    if(sh){ sh.classList.remove("open"); sh.setAttribute("aria-hidden", "true"); }
+    if(sc) sc.classList.remove("open");
+  }
+  /* Gate chung cho nội dung theo cấp: N5 luôn mở; N4–N1 cần Premium.
+     Trả true = được mở; false = đã hiện bảng nâng cấp, handler dừng lại. */
+  function premiumGateLevel(lv){
+    if(premiumLevelOpen(lv)) return true;
+    return showPremiumPrompt();
+  }
+  /* 10 video Shadowing miễn phí = 10 video đầu theo THỨ TỰ HIỂN THỊ:
+     thể loại theo SV_CATS (Podcast → Anime → Đời thường → JLPT), trong
+     mỗi thể loại theo chuỗi (thứ tự xuất hiện đầu tiên), trong mỗi chuỗi
+     theo thứ tự mảng SV_VIDEOS. Tính lười + cache vì SV_CATS/SV_VIDEOS
+     khai báo ở phần sau của file. */
+  var svFreeIdsCache = null;
+  function svFreeIds(){
+    if(svFreeIdsCache) return svFreeIdsCache;
+    var ids = [];
+    try{
+      var groups = svGroupByCat(SV_VIDEOS);
+      SV_CATS.forEach(function(cat){
+        (groups[cat] || []).forEach(function(row){
+          row.videos.forEach(function(v){ ids.push(v.id); });
+        });
+      });
+    }catch(_){}
+    svFreeIdsCache = ids.slice(0, SV_FREE_COUNT);
+    return svFreeIdsCache;
+  }
+  function svIsCurated(id){
+    if(typeof SV_VIDEOS === "undefined") return false;
+    for(var i = 0; i < SV_VIDEOS.length; i++){ if(SV_VIDEOS[i].id === id) return true; }
+    return false;
+  }
+  /* Thẻ video có khóa: nằm trong danh sách Shadowing có sẵn, chưa có
+     Premium, và không thuộc 10 video miễn phí đầu tiên. */
+  function svCardLocked(id){
+    return svIsCurated(id) && !isPremium() && svFreeIds().indexOf(id) < 0;
+  }
+  function premiumGateVideo(id){
+    /* Video user tự tạo (không nằm trong SV_VIDEOS) không thuộc danh
+       sách Shadowing có sẵn nên không khóa ở đây. */
+    if(!svCardLocked(id)) return true;
+    return showPremiumPrompt();
+  }
+  /* Cập nhật ổ khóa trên các nút chọn cấp + vẽ lại danh sách cấp đang mở. */
+  function premiumApplyLocks(){
+    var prem = isPremium();
+    ["lvRow", "flashLvRow", "writeLvRow"].forEach(function(rowId){
+      document.querySelectorAll("#" + rowId + " .lv").forEach(function(b){
+        var lv = b.getAttribute("data-lv") || b.getAttribute("data-flv") || b.getAttribute("data-wlv");
+        if(!lv) return;
+        var locked = lv !== "N5" && !prem;
+        b.classList.toggle("pw-locked", locked);
+        b.textContent = locked ? lv + " 🔒" : lv;
+      });
+    });
+    /* Đồng bộ nút đang chọn ở trang Thi JLPT với curLevel thật. */
+    try{
+      if(typeof curLevel !== "undefined"){
+        document.querySelectorAll("#lvRow .lv").forEach(function(x){
+          x.classList.toggle("on", x.getAttribute("data-lv") === curLevel);
+        });
+      }
+    }catch(_){}
+    /* Vẽ lại các danh sách cấp đang mở (nếu có) để cập nhật ổ khóa. */
+    try{
+      var vo = document.getElementById("wordsOverlay");
+      if(vo && vo.classList.contains("open") && typeof renderWvLevels === "function") renderWvLevels();
+      var go = document.getElementById("grammarOverlay");
+      if(go && go.classList.contains("open") && typeof renderGrLevels === "function") renderGrLevels();
+      var ko = document.getElementById("kjOverlay");
+      if(ko && ko.classList.contains("open") && typeof renderKjLevels === "function") renderKjLevels();
+      var lo = document.getElementById("listenOverlay");
+      if(lo && lo.classList.contains("open")){
+        if(typeof lsRenderLevels === "function") lsRenderLevels();
+        if(typeof svRenderRows === "function") svRenderRows();
+      }
+      var ro = document.getElementById("readOverlay");
+      if(ro && ro.classList.contains("open") && typeof rdRenderLevels === "function") rdRenderLevels();
+    }catch(_){}
+  }
+  /* ---------- Đọc Premium từ Firestore ---------- */
+  function premiumFbApp(){
+    try{
+      if(typeof firebase === "undefined" || !firebase.initializeApp) return null;
+      if(firebase.apps && firebase.apps.length) return firebase.apps[0];
+      if(typeof SVU_FB_CONFIG !== "undefined" && SVU_FB_CONFIG) return firebase.initializeApp(SVU_FB_CONFIG);
+    }catch(_){}
+    return null;
+  }
+  function premiumTsToMs(v){
+    if(v == null) return null;
+    if(typeof v === "number" || typeof v === "string") return v;
+    if(typeof v.toMillis === "function"){ try{ return v.toMillis(); }catch(_){ return null; } }
+    if(typeof v.seconds === "number") return v.seconds * 1000;
+    return null;
+  }
+  function premiumRefresh(){
+    try{
+      var app = premiumFbApp();
+      if(!app || !firebase.auth || !firebase.firestore) return;
+      var user = firebase.auth().currentUser;
+      if(!user) return; /* chưa đăng nhập Firebase: giữ cache, mặc định gói miễn phí */
+      firebase.firestore().collection("kanji_progress").doc(user.uid).get().then(function(snap){
+        var data = (snap && snap.exists) ? snap.data() : null;
+        var prem = data && data.premium ? data.premium : null;
+        if(prem && prem.plan){
+          premiumCacheSave({plan: prem.plan, since: premiumTsToMs(prem.since), until: premiumTsToMs(prem.until), uid: user.uid, fetchedAt: Date.now()});
+        }else{
+          premiumCacheSave(null);
+        }
+        premiumApplyLocks();
+      }).catch(function(){ /* offline/lỗi đọc: giữ cache cũ */ });
+    }catch(_){}
+  }
+  var premiumSawUser = false;
+  function premiumInitAuth(){
+    try{
+      var app = premiumFbApp();
+      if(!app || !firebase.auth) return;
+      firebase.auth().onAuthStateChanged(function(user){
+        if(user){ premiumSawUser = true; premiumRefresh(); }
+        else if(premiumSawUser){ premiumSawUser = false; premiumCacheSave(null); premiumApplyLocks(); }
+      });
+      if(firebase.auth().currentUser){ premiumSawUser = true; premiumRefresh(); }
+    }catch(_){}
+  }
+  /* Khởi tạo sau khi toàn bộ script đã chạy (SVU_FB_CONFIG, curLevel và
+     các hàm render khai báo ở phần sau của file phải sẵn sàng; đăng ký
+     trước setTimeout(renderTests, 0) để kịp đổi cấp mặc định về N5). */
+  setTimeout(function(){
+    premiumInitAuth();
+    /* Trang Thi JLPT mặc định mở N4 — gói miễn phí thì về N5. */
+    if(!isPremium() && typeof curLevel !== "undefined" && curLevel !== "N5") curLevel = "N5";
+    premiumApplyLocks();
+    var pc = document.getElementById("premiumClose");
+    if(pc) pc.addEventListener("click", closePremiumPrompt);
+    var ps = document.getElementById("premiumScrim");
+    if(ps) ps.addEventListener("click", closePremiumPrompt);
+  }, 0);
 
   /* ---------- Data ---------- */
   var KANJI = [
@@ -6358,6 +6638,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return EXS && EXS.official ? "Đề chuẩn · " + EXS.lv : "Test " + (EXS ? EXS.test : "") + " · " + (EXS ? EXS.lv : "");
   }
   function openOfficialExam(){
+    if(!premiumGateLevel("N3")) return;
     var qs = exBuildOfficialN3();
     if(!qs) return;
     examKind = "test";
@@ -6465,6 +6746,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   document.querySelectorAll("#lvRow .lv").forEach(function(b){
     b.addEventListener("click", function(){
+      if(!premiumGateLevel(b.dataset.lv)) return;
       document.querySelectorAll("#lvRow .lv").forEach(function(x){ x.classList.remove("on"); });
       b.classList.add("on");
       curLevel = b.dataset.lv;
@@ -6513,6 +6795,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
   }
   function openExam(testNo){
+    if(!premiumGateLevel(curLevel)) return;
     var qs = EX_BUILT[curLevel + "-" + testNo];
     if(!qs) return;
     examKind = "test";
@@ -7369,6 +7652,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("flashLvRow").addEventListener("click", function(ev){
     var b = ev.target.closest("[data-flv]");
     if(!b) return;
+    if(!premiumGateLevel(b.getAttribute("data-flv"))) return;
     flashLevel = b.getAttribute("data-flv");
     if(flashLists) renderFlashLessons();
     else buildFlashLessons();
@@ -8096,6 +8380,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("writeLvRow").addEventListener("click", function(ev){
     var b = ev.target.closest("[data-wlv]");
     if(!b) return;
+    if(!premiumGateLevel(b.getAttribute("data-wlv"))) return;
     writeLevel = b.getAttribute("data-wlv");
     if(writeLists) renderWriteGrid();
     else buildWriteGrid();
@@ -8695,12 +8980,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var box = document.getElementById("lsLevels");
     box.innerHTML = "";
     LS_GRID_LEVELS.forEach(function(lv){
+      var lsLocked = !premiumLevelOpen(lv);
       var b = document.createElement("button");
-      b.className = "ls-lvtile" + (lv === lsLevel ? " on" : "");
+      b.className = "ls-lvtile" + (lv === lsLevel ? " on" : "") + (lsLocked ? " pw-locked" : "");
       if(lv === lsLevel) b.setAttribute("aria-current", "true");
-      b.setAttribute("aria-label", "Mở trang luyện nghe " + lv);
-      b.innerHTML = '<b>' + lv + '</b>';
+      b.setAttribute("aria-label", "Mở trang luyện nghe " + lv + (lsLocked ? " — cần Premium" : ""));
+      b.innerHTML = '<b>' + lv + '</b>' + (lsLocked ? '<span class="pw-lock">🔒</span>' : '');
       b.addEventListener("click", function(){
+        if(!premiumGateLevel(lv)) return;
         ensureListenData(lv, function(d){
           if(!d){ return; }
           lsLevel = lv;
@@ -9065,14 +9352,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
     return out;
   }
-  /* 1 thẻ video — hàm thuần (nhận plays làm tham số) để test được bằng node. */
-  function svCardHTML(v, plays){
+  /* 1 thẻ video — hàm thuần (nhận plays/locked làm tham số) để test được bằng node. */
+  function svCardHTML(v, plays, locked){
     var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
-    return '<button class="sv-card" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
+    return '<button class="sv-card' + (locked ? ' pw-locked' : '') + '" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
       '<span class="sv-card-thumb">' +
         '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
         (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
         '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
+        (locked ? '<span class="sv-card-lock">🔒 Premium</span>' : '') +
       '</span>' +
       '<span class="sv-card-title">' + svEsc(v.name) + '</span>' +
       '<span class="sv-card-chan">' + svEsc(v.channel) + '</span>' +
@@ -9093,7 +9381,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function svRowHTML(series, videos, allKey){
     var shown = videos.slice(0, SV_ROW_MAX);
-    var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id)); }).join("");
+    var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardLocked(v.id)); }).join("");
     if(videos.length > SV_ROW_MAX) cards += svMoreHTML(allKey, videos.length);
     return '<div class="sv-row"><div class="sv-rowhead"><h4>' + svEsc(series) + '</h4></div>' +
       '<div class="sv-hscroll">' + cards + '</div></div>';
@@ -9111,6 +9399,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
   }
   function svOpenCard(id){
+    if(!premiumGateVideo(id)) return;
     if(id === SV_ID){ svOpenLesson(); return; }
     if(typeof SVU_DATA !== "undefined" && SVU_DATA[id]){ svuActivate(SVU_DATA[id]); return; }
     /* Bài user tạo ở phiên trước: chưa có trong SVU_DATA, tải lại từ cache server. */
@@ -9154,13 +9443,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svBindCards(box);
   }
   /* Trang "xem tất cả video của 1 chuỗi": danh sách dọc đầy đủ. */
-  function svAllEntryHTML(v, plays){
+  function svAllEntryHTML(v, plays, locked){
     var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
-    return '<button class="sv-all-entry" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
+    return '<button class="sv-all-entry' + (locked ? ' pw-locked' : '') + '" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
       '<span class="sv-all-thumb">' +
         '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
         (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
         '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
+        (locked ? '<span class="sv-card-lock">🔒 Premium</span>' : '') +
       '</span>' +
       '<span class="sv-all-meta">' +
         '<span class="sv-all-title">' + svEsc(v.name) + '</span>' +
@@ -9172,7 +9462,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function svOpenAllList(title, videos){
     document.getElementById("svAllTitle").textContent = title;
     var box = document.getElementById("svAllList");
-    box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id)); }).join("");
+    box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id), svCardLocked(v.id)); }).join("");
     box.querySelectorAll(".sv-all-entry").forEach(function(entry){
       entry.addEventListener("click", function(){ svOpenCard(entry.getAttribute("data-vid")); });
     });
@@ -11108,11 +11398,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     RD_LEVELS.forEach(function(lv){
       var cells = RD_CELLS[lv];
       var names = cells.map(function(tp){ return rdTypeName(tp); }).join(" · ");
+      var rdLocked = !premiumLevelOpen(lv);
       var b = document.createElement("button");
-      b.className = "setrow";
-      b.innerHTML = '<span class="r1"><h3>' + lv + '</h3><span class="cnt">' + (cells.length * 10) + ' BÀI ›</span></span>' +
+      b.className = "setrow" + (rdLocked ? " pw-locked" : "");
+      b.innerHTML = '<span class="r1"><h3>' + lv + (rdLocked ? '<span class="pw-lock">🔒</span>' : '') + '</h3><span class="cnt">' + (cells.length * 10) + ' BÀI ›</span></span>' +
         '<p>' + cells.length + ' dạng bài như đề JLPT thật (' + names + '), mỗi dạng 10 bài đọc tự viết mới — mỗi bài 2 câu hỏi, có giải thích và từ vựng.</p>';
       b.addEventListener("click", function(){
+        if(!premiumGateLevel(lv)) return;
         rdLevel = lv;
         rdRenderTypes();
         hideOv(readOverlay); showOv(rdTypeOverlay);
@@ -11337,9 +11629,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     kjLevelsEl.innerHTML = KJ_LEVELS.map(function(lv){
       var entries = kjLevelEntries(lv);
       var seen = entries.filter(function(e){ return kjSeen[e.ch]; }).length;
-      return '<button class="testrow" data-kj-level="' + lv + '">' +
+      var kjLocked = !premiumLevelOpen(lv);
+      return '<button class="testrow' + (kjLocked ? ' pw-locked' : '') + '" data-kj-level="' + lv + '">' +
         '<span class="tnum">' + lv + '</span>' +
-        '<span><h3>Kanji ' + lv + '</h3><p>' +
+        '<span><h3>Kanji ' + lv + (kjLocked ? '<span class="pw-lock">🔒</span>' : '') + '</h3><p>' +
         (seen ? "Đã xem " + seen + " / " + entries.length + " chữ — bấm để mở lưới chữ"
               : "Toàn bộ chữ Hán cấp " + lv + " — bấm để mở lưới chữ") +
         '</p></span>' +
@@ -11394,6 +11687,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(body) body.scrollTop = 0;
   }
   function kjOpenLevel(lv){
+    if(!premiumGateLevel(lv)) return;
     kjLevel = lv;
     if(!window.KANJI_DB){
       ensureKanjiDB(function(d){ if(d && kjLevel === lv) kjShowGrid(); });
@@ -11702,9 +11996,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           ? (wvLessons(lv).length + " bài · Minna no Nihongo " + WV_MINNA_BOOK[lv])
           : (wvLessons(lv).length + " nhóm ôn luyện — bấm để mở danh sách"))
         : "Đang tải dữ liệu từ…";
-      return '<button class="testrow" data-wv-level="' + lv + '">' +
+      var wvLocked = !premiumLevelOpen(lv);
+      return '<button class="testrow' + (wvLocked ? ' pw-locked' : '') + '" data-wv-level="' + lv + '">' +
         '<span class="tnum">' + lv + '</span>' +
-        '<span><h3>Từ vựng ' + lv + '</h3><p>' + esc(sub) + '</p></span>' +
+        '<span><h3>Từ vựng ' + lv + (wvLocked ? '<span class="pw-lock">🔒</span>' : '') + '</h3><p>' + esc(sub) + '</p></span>' +
         '<span class="badge' + (rows ? "" : " todo") + '">' + cnt + '</span>' +
         '</button>';
     }).join("");
@@ -11759,6 +12054,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(body) body.scrollTop = 0;
   }
   function wvOpenLessons(lv){
+    if(!premiumGateLevel(lv)) return;
     wvLevel = lv;
     wvView = "lessons";
     wvCtx = null;
@@ -13398,9 +13694,10 @@ function furiHTML(text){
       var arr = grData && grData[lv];
       var cnt = arr ? arr.length + " MẪU" : "ĐANG TẢI";
       var sub = arr ? GR_LEVEL_DESC[lv] : "Đang tải dữ liệu ngữ pháp…";
-      return '<button class="testrow" data-gr-level="' + lv + '">' +
+      var grLocked = !premiumLevelOpen(lv);
+      return '<button class="testrow' + (grLocked ? ' pw-locked' : '') + '" data-gr-level="' + lv + '">' +
         '<span class="tnum">' + lv + '</span>' +
-        '<span><h3>Ngữ pháp ' + lv + '</h3><p>' + esc(sub) + '</p></span>' +
+        '<span><h3>Ngữ pháp ' + lv + (grLocked ? '<span class="pw-lock">🔒</span>' : '') + '</h3><p>' + esc(sub) + '</p></span>' +
         '<span class="badge' + (arr ? "" : " todo") + '">' + cnt + '</span>' +
         '</button>';
     }).join("");
@@ -14100,6 +14397,7 @@ function furiHTML(text){
     }).join("");
   }
   function grOpenLessons(lv){
+    if(!premiumGateLevel(lv)) return;
     grLevel = lv;
     renderGrLessons();
     showOv(grLessonsOverlay);
@@ -14593,6 +14891,9 @@ function furiHTML(text){
 
   /* Mở đúng màn học của 1 nhiệm vụ trong lộ trình (đã đóng Lộ trình trước khi gọi). */
   function openPlanTask(task, lv){
+    /* Lộ trình 30 ngày theo cấp mục tiêu: nhiệm vụ N4–N1 cần Premium
+       (trừ Ôn tập — mở mục đã lưu của chính học viên, không khóa). */
+    if(task.kind !== "review" && !premiumGateLevel(lv)) return;
     if(task.kind === "kanji") kjOpenLevel(lv);
     else if(task.kind === "vocab"){ openWords(); wvOpenLessons(lv); }
     else if(task.kind === "grammar"){ openGrammar(); grOpenLessons(lv); }
@@ -15492,14 +15793,14 @@ function furiHTML(text){
     renderAdminInbox();
   }
   /* ---------- Tài khoản + quyền Admin theo email ----------
-     Email được cấp Admin trong app: nongaphao@gmail.com.
-     Bản thật: sau khi đăng nhập Firebase, app đọc thêm cờ isAdmin=true trên
-     /users/{uid} (project donghung-3208d) rồi mới mở quyền — cờ đó cấp ở phía
-     Firebase, không nằm trong file này. Bản xem thử chưa có máy chủ đăng nhập
-     nên quyền Admin ở đây suy ra từ email đang đăng nhập trong phiên: đúng
-     email Admin thì ô “Quản trị” + mục Quản lý học viên hiện, email khác ẩn. */
+     Email được cấp Admin trong app: nongaphao@gmail.com (cùng luật với bản
+     web). Đăng nhập là Firebase Auth thật (project donghung-3208d) — xem
+     khối “Đăng nhập Firebase Auth” ngay dưới đây. signedInEmail CHỈ được
+     ghi bởi onAuthStateChanged của Firebase (setSignedInEmail là điểm ghi
+     duy nhất); không còn đường gõ email demo nào nữa. Đúng email Admin thì
+     ô “Quản trị” + mục Quản lý học viên hiện, email khác ẩn. */
   var ADMIN_EMAILS = ["nongaphao@gmail.com"];
-  var signedInEmail = ""; /* email đang đăng nhập trong phiên; rỗng = chưa đăng nhập */
+  var signedInEmail = ""; /* email tài khoản Firebase đang đăng nhập; rỗng = chưa đăng nhập */
   var isAdminAccount = false;
   function refreshAdminState(){
     isAdminAccount = !!signedInEmail && ADMIN_EMAILS.indexOf(signedInEmail) >= 0;
@@ -15543,17 +15844,111 @@ function furiHTML(text){
   document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
 
-  /* ---------- Đăng nhập / đổi tài khoản (trong phiên) ---------- */
+  /* ---------- Đăng nhập Firebase Auth (thật) ----------
+     Cùng project donghung-3208d với bản web — dùng lại SVU_FB_CONFIG đã có
+     sẵn trong file (giá trị giống hệt SK_FB_CONFIG của web, không khai báo
+     thêm config nào). Google: signInWithRedirect (popup không ổn định trên
+     Safari/PWA) + getRedirectResult khi mở app. Email: đăng nhập / đăng ký
+     chung 1 form. Mọi thay đổi phiên đều đi qua onAuthStateChanged dưới
+     đây — nó là điểm ghi DUY NHẤT của signedInEmail / window.SK_USER /
+     avatar Google. Premium: khối paywall ở đầu file đã tự đọc Firestore
+     khi đăng nhập và xóa cache khi đăng xuất (listener riêng của nó); ở đây
+     chỉ dọn thêm cache khi đăng xuất để chắc chắn không còn Premium cũ sau
+     khi đổi tài khoản. LƯU Ý: đăng nhập Google KHÔNG chạy trên link xem
+     trước githack (Firebase chặn domain lạ — hành vi đúng, không phải lỗi);
+     thử thật trên sorakanji.com/mobile/ sau khi đẩy. Đăng nhập email/mật
+     khẩu thì chạy cả trên bản xem trước. */
+  var SK_ADMIN_EMAIL = "nongaphao@gmail.com";
+  function skAuth(){
+    try{
+      if(typeof firebase === "undefined" || !firebase.initializeApp || !firebase.auth) return null;
+      /* premiumFbApp() (khối paywall) đã khởi tạo app bằng SVU_FB_CONFIG
+         và chống khởi tạo trùng — dùng chung, không khởi tạo lại ở đây. */
+      if(!premiumFbApp()) return null;
+      return firebase.auth();
+    }catch(e){ return null; }
+  }
+  /* Dịch lỗi Firebase sang tiếng Việt — chép từ bản web (skAuthErrorVI),
+     thêm mã của luồng redirect. */
+  function skAuthErrorVI(err){
+    var code = (err && err.code) || "";
+    var map = {
+      "auth/invalid-email": "Email chưa đúng định dạng — bạn kiểm tra lại email nhé.",
+      "auth/missing-email": "Bạn chưa nhập email.",
+      "auth/missing-password": "Bạn chưa nhập mật khẩu.",
+      "auth/user-not-found": "Chưa có tài khoản nào với email này — bạn bấm Đăng ký để tạo tài khoản mới nhé.",
+      "auth/wrong-password": "Mật khẩu chưa đúng — bạn thử lại nhé.",
+      "auth/invalid-credential": "Email hoặc mật khẩu chưa đúng — bạn thử lại nhé.",
+      "auth/invalid-login-credentials": "Email hoặc mật khẩu chưa đúng — bạn thử lại nhé.",
+      "auth/email-already-in-use": "Email này đã được đăng ký rồi — bạn chuyển sang Đăng nhập nhé.",
+      "auth/weak-password": "Mật khẩu quá ngắn — cần ít nhất 6 ký tự.",
+      "auth/too-many-requests": "Bạn đã thử quá nhiều lần — đợi ít phút rồi thử lại nhé.",
+      "auth/network-request-failed": "Không kết nối được mạng — kiểm tra kết nối rồi thử lại.",
+      "auth/popup-closed-by-user": "Bạn đã đóng cửa sổ đăng nhập Google trước khi hoàn tất.",
+      "auth/cancelled-popup-request": "Cửa sổ đăng nhập Google đang mở rồi — bạn hoàn tất ở cửa sổ đó nhé.",
+      "auth/redirect-operation-pending": "Đang chờ kết quả đăng nhập Google — bạn đợi giây lát rồi thử lại nhé.",
+      "auth/unauthorized-domain": "Trang này chưa được cấp phép đăng nhập Google — bạn thử trên sorakanji.com sau khi app được đẩy lên nhé.",
+      "auth/operation-not-allowed": "Cách đăng nhập này chưa được bật — bạn thử cách khác nhé.",
+      "auth/user-disabled": "Tài khoản này đã bị khóa — bạn liên hệ hỗ trợ SoraKanji để được giúp nhé."
+    };
+    return map[code] || ("Chưa đăng nhập được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.");
+  }
+  /* ---------- Bảng đăng nhập (loginSheet) ---------- */
   var loginSheet = document.getElementById("loginSheet");
   var loginScrim = document.getElementById("sheetScrim");
   var loginEmailInput = document.getElementById("loginEmail");
+  var loginPassInput = document.getElementById("loginPass");
   var loginMsgEl = document.getElementById("loginMsg");
+  var loginOkEl = document.getElementById("loginOk");
+  var loginGoBtn = document.getElementById("loginGo");
+  var skAuthMode = "login"; /* "login" | "register" */
+  var skRedirectErr = ""; /* lỗi từ getRedirectResult (nếu có) — hiện khi mở bảng */
   function loginMsg(t){ if(loginMsgEl) loginMsgEl.textContent = t || ""; }
+  function loginOk(t){ if(loginOkEl){ loginOkEl.textContent = t || ""; loginOkEl.hidden = !t; } }
+  function loginShowErr(msg){ loginOk(""); loginMsg(msg); }
+  function loginShowOk(msg){ loginMsg(""); loginOk(msg); }
+  function loginSetBusy(busy){
+    if(loginGoBtn){
+      loginGoBtn.disabled = busy;
+      loginGoBtn.textContent = busy ? "Đang xử lý…" : (skAuthMode === "register" ? "Đăng ký" : "Đăng nhập");
+    }
+    var gBtn = document.getElementById("loginGoogle");
+    if(gBtn) gBtn.disabled = busy;
+  }
+  function applyLoginMode(){
+    var reg = skAuthMode === "register";
+    var title = document.getElementById("loginTitle");
+    if(title) title.textContent = reg ? "Đăng ký tài khoản" : "Đăng nhập";
+    if(loginGoBtn) loginGoBtn.textContent = reg ? "Đăng ký" : "Đăng nhập";
+    if(loginPassInput) loginPassInput.setAttribute("autocomplete", reg ? "new-password" : "current-password");
+    var q = document.getElementById("loginSwitchQ");
+    if(q) q.textContent = reg ? "Đã có tài khoản?" : "Chưa có tài khoản?";
+    var sw = document.getElementById("loginSwitch");
+    if(sw) sw.textContent = reg ? "Đăng nhập" : "Đăng ký";
+    var fg = document.getElementById("loginForgot");
+    if(fg) fg.style.visibility = reg ? "hidden" : "visible";
+    loginMsg(""); loginOk("");
+  }
   function openLogin(){
-    if(loginEmailInput) loginEmailInput.value = signedInEmail || "";
-    loginMsg("");
-    var lo = document.getElementById("loginLogout");
-    if(lo) lo.hidden = !signedInEmail;
+    var formWrap = document.getElementById("loginFormWrap");
+    var acctWrap = document.getElementById("loginAcctWrap");
+    if(signedInEmail){
+      /* Đã đăng nhập: hiện tài khoản + nút Đăng xuất, ẩn form. */
+      if(formWrap) formWrap.hidden = true;
+      if(acctWrap) acctWrap.hidden = false;
+      var ae = document.getElementById("loginAcctEmail");
+      if(ae) ae.textContent = signedInEmail;
+      var aa = document.getElementById("loginAcctAdmin");
+      if(aa) aa.textContent = isAdminAccount ? " · ADMIN" : "";
+      var title = document.getElementById("loginTitle");
+      if(title) title.textContent = "Tài khoản";
+    }else{
+      if(formWrap) formWrap.hidden = false;
+      if(acctWrap) acctWrap.hidden = true;
+      skAuthMode = "login";
+      applyLoginMode();
+      if(skRedirectErr){ loginMsg(skRedirectErr); skRedirectErr = ""; }
+    }
     loginSheet.classList.add("open");
     loginSheet.setAttribute("aria-hidden", "false");
     if(loginScrim) loginScrim.classList.add("open");
@@ -15564,29 +15959,120 @@ function furiHTML(text){
     var ans = document.getElementById("answerSheet");
     if(loginScrim && !(ans && ans.classList.contains("open"))) loginScrim.classList.remove("open");
   }
-  function doLogin(){
-    var v = loginEmailInput ? loginEmailInput.value.trim() : "";
-    if(!v || v.indexOf("@") < 1 || v.indexOf(".", v.indexOf("@")) < 0){
-      loginMsg("Email chưa hợp lệ — kiểm tra lại giúp mình nhé.");
-      return;
-    }
-    setSignedInEmail(v);
-    resolveGooglePhoto(); /* bản thật: lấy photoURL từ phiên đăng nhập Google làm avatar tại đây */
-    closeLogin();
-    if(isAdminAccount) openAdmin(); /* vừa cấp Admin: mở thẳng trang Quản lý học viên để thấy đã mở khóa */
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function doGoogleLogin(){
+    var auth = skAuth();
+    if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
+    var provider = new firebase.auth.GoogleAuthProvider();
+    loginSetBusy(true);
+    auth.signInWithRedirect(provider).catch(function(err){
+      loginSetBusy(false);
+      loginShowErr(skAuthErrorVI(err));
+    });
+    /* Thành công: trình duyệt rời trang sang Google rồi quay lại —
+       kết quả xử lý ở getRedirectResult + onAuthStateChanged. */
+  }
+  function doLoginSubmit(){
+    var email = loginEmailInput ? loginEmailInput.value.trim() : "";
+    var pass = loginPassInput ? loginPassInput.value : "";
+    if(!email){ loginShowErr("Bạn chưa nhập email."); if(loginEmailInput) loginEmailInput.focus(); return; }
+    if(!validEmail(email)){ loginShowErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); if(loginEmailInput) loginEmailInput.focus(); return; }
+    if(!pass){ loginShowErr("Bạn chưa nhập mật khẩu."); if(loginPassInput) loginPassInput.focus(); return; }
+    var auth = skAuth();
+    if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
+    var reg = skAuthMode === "register";
+    loginSetBusy(true);
+    var promise = reg
+      ? auth.createUserWithEmailAndPassword(email, pass)
+      : auth.signInWithEmailAndPassword(email, pass);
+    promise.then(function(cred){
+      loginSetBusy(false);
+      /* Ghi phiên ngay từ credential (listener onAuthStateChanged sẽ bắn
+         lại cùng user và ghi đè y hệt — applyAuthUser là lũy đẳng). */
+      if(cred && cred.user) applyAuthUser(cred.user);
+      closeLogin();
+      if(isAdminAccount) openAdmin(); /* vừa đăng nhập Admin: mở thẳng trang Quản lý học viên */
+    }).catch(function(err){
+      loginSetBusy(false);
+      loginShowErr(skAuthErrorVI(err));
+    });
+  }
+  function doForgot(){
+    var email = loginEmailInput ? loginEmailInput.value.trim() : "";
+    if(!email){ loginShowErr("Bạn nhập email ở ô trên rồi bấm “Quên mật khẩu?” — thư đặt lại mật khẩu sẽ gửi về email đó."); if(loginEmailInput) loginEmailInput.focus(); return; }
+    if(!validEmail(email)){ loginShowErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); if(loginEmailInput) loginEmailInput.focus(); return; }
+    var auth = skAuth();
+    if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
+    auth.sendPasswordResetEmail(email).then(function(){
+      loginShowOk("Đã gửi thư đặt lại mật khẩu tới " + email + ". Bạn kiểm tra hộp thư (cả mục thư rác) rồi làm theo hướng dẫn trong thư nhé.");
+    }).catch(function(err){ loginShowErr(skAuthErrorVI(err)); });
   }
   function doLogout(){
-    setSignedInEmail("");
-    avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
-    renderAvatarPhoto();
+    var auth = skAuth();
     closeLogin();
+    if(auth){ auth.signOut().catch(function(){}); }
+    else{ applyAuthUser(null); } /* SDK chưa nạp được: dọn phiên cục bộ */
   }
+  /* Điểm ghi duy nhất của phiên đăng nhập: onAuthStateChanged gọi hàm này
+     với user Firebase thật (hoặc null khi đăng xuất). Cập nhật email hiển
+     thị, quyền Admin, window.SK_USER (cùng dạng với bản web), ảnh Google,
+     và dọn cache Premium khi đăng xuất. */
+  function applyAuthUser(user){
+    if(user){
+      window.SK_USER = {
+        uid: user.uid,
+        email: user.email || "",
+        name: user.displayName || (user.email ? user.email.split("@")[0] : "Học viên"),
+        displayName: user.displayName || "",
+        photoURL: user.photoURL || "",
+        isAdmin: (user.email || "").toLowerCase() === SK_ADMIN_EMAIL
+      };
+      setSignedInEmail(user.email || "");
+      setGooglePhotoURL(user.photoURL || "");
+    }else{
+      window.SK_USER = null;
+      setSignedInEmail("");
+      avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
+      renderAvatarPhoto();
+      /* Dọn cache Premium + khóa lại ngay (listener của paywall cũng làm
+         việc này, nhưng gọi thêm ở đây để chắc chắn cả khi listener đó
+         chưa từng thấy phiên — ví dụ đổi tài khoản sau khi mở app). */
+      try{ premiumCacheSave(null); premiumApplyLocks(); }catch(_){}
+    }
+  }
+  function initMobileAuth(){
+    var auth = skAuth();
+    if(!auth) return;
+    try{
+      var p = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      if(p && p.catch) p.catch(function(){});
+    }catch(e){}
+    /* Kết quả đăng nhập Google bằng redirect (nếu vừa quay lại từ Google):
+       user về qua onAuthStateChanged; ở đây chỉ bắt lỗi để báo lại. */
+    try{
+      auth.getRedirectResult().then(function(){ /* ok — user xử lý ở listener */ }).catch(function(err){
+        skRedirectErr = skAuthErrorVI(err);
+      });
+    }catch(e){}
+    auth.onAuthStateChanged(function(user){ applyAuthUser(user); });
+    /* Có phiên sẵn (mở lại app): onAuthStateChanged tự bắn ngay, không cần
+       gọi thêm — Premium đọc ở listener của paywall. */
+  }
+  initMobileAuth();
   document.getElementById("acctLoginBtn").addEventListener("click", openLogin);
   document.getElementById("acctLogoutBtn").addEventListener("click", doLogout);
-  document.getElementById("loginGo").addEventListener("click", doLogin);
+  document.getElementById("loginGo").addEventListener("click", doLoginSubmit);
+  document.getElementById("loginGoogle").addEventListener("click", doGoogleLogin);
+  document.getElementById("loginForgot").addEventListener("click", doForgot);
+  document.getElementById("loginSwitch").addEventListener("click", function(){
+    skAuthMode = skAuthMode === "login" ? "register" : "login";
+    applyLoginMode();
+  });
   document.getElementById("loginCancel").addEventListener("click", closeLogin);
+  document.getElementById("loginCancel2").addEventListener("click", closeLogin);
   document.getElementById("loginLogout").addEventListener("click", doLogout);
-  if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLogin(); } });
+  if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
+  if(loginPassInput) loginPassInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
   if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")) closeLogin(); });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
@@ -15595,10 +16081,9 @@ function furiHTML(text){
        "google"  — ảnh hồ sơ của tài khoản đang đăng nhập (chỉ trong phiên);
        "default" — chữ mặc định (空 / 築 / B).
      Chưa chọn gì (auto): có ảnh tự tải thì dùng, không thì ảnh Google, không nữa thì mặc định.
-     Ảnh Google CHỈ lấy từ chính phiên đăng nhập của người dùng: luồng đăng nhập Google
-     (Firebase) gọi setGooglePhotoURL(user.photoURL) — app không tra cứu ảnh qua bất kỳ
-     dịch vụ bên thứ ba nào theo địa chỉ email. Bản xem thử chưa nối đăng nhập Google
-     thật (chờ domain chính thức) nên chưa có photoURL; điểm nối đã sẵn sàng. */
+     Ảnh Google CHỈ lấy từ chính phiên đăng nhập của người dùng: onAuthStateChanged
+     của Firebase gọi setGooglePhotoURL(user.photoURL) — app không tra cứu ảnh qua
+     bất kỳ dịch vụ bên thứ ba nào theo địa chỉ email. */
   var avatarCustom = null;
   var avatarGoogle = null;
   var avatarChoice = "";
@@ -15620,14 +16105,6 @@ function furiHTML(text){
      và app dùng ảnh tự tải / avatar mặc định. */
   function setGooglePhotoURL(url){
     avatarGoogle = (typeof url === "string" && /^https:\/\//.test(url)) ? url : null;
-    renderAvatarPhoto();
-  }
-  function resolveGooglePhoto(){
-    /* Gọi sau mỗi lần đăng nhập / đổi tài khoản. Bản thật: tại đây đọc photoURL
-       từ user của Firebase rồi gọi setGooglePhotoURL(user.photoURL). Bản xem thử
-       đăng nhập demo theo email, chưa có phiên Google thật nên chưa có photoURL
-       để lấy — chỉ dọn ảnh Google của phiên trước nếu đã đăng xuất. */
-    if(!signedInEmail) avatarGoogle = null;
     renderAvatarPhoto();
   }
   function effectiveAvatarUrl(){
@@ -15659,15 +16136,13 @@ function furiHTML(text){
     var srcEl = document.getElementById("avCurSrc");
     if(srcEl) srcEl.textContent = !eff ? "avatar mặc định (chữ 空)" : (eff === avatarCustom && avatarCustom ? "ảnh bạn tự tải lên" : "ảnh tài khoản Google");
     var acct = document.getElementById("avAcctLine");
-    if(acct) acct.textContent = signedInEmail ? ("Tài khoản: " + signedInEmail) : "Chưa đăng nhập — đăng nhập bằng Gmail để app tự lấy ảnh.";
+    if(acct) acct.textContent = signedInEmail ? ("Tài khoản: " + signedInEmail) : "Chưa đăng nhập — đăng nhập bằng Google để app tự lấy ảnh.";
     var gBtn = document.getElementById("avGoogleBtn"), gNote = document.getElementById("avGoogleNote");
     var gThumb = document.getElementById("avGoogleThumb"), gG = document.getElementById("avGoogleG");
-    var isGmail = !!signedInEmail && signedInEmail.slice(-10) === "@gmail.com";
     if(gBtn && gNote){
       if(!signedInEmail){ gBtn.disabled = true; gNote.textContent = "Đăng nhập bằng tài khoản Google trước — app sẽ tự lấy ảnh của tài khoản làm avatar."; }
-      else if(!isGmail){ gBtn.disabled = true; gNote.textContent = "Tài khoản hiện tại (" + signedInEmail + ") không phải Gmail nên không có ảnh Google — hãy tải ảnh từ máy."; }
       else if(avatarGoogle){ gBtn.disabled = false; gNote.textContent = "Ảnh tài khoản Google của " + signedInEmail + " — app đã tự lấy khi bạn đăng nhập."; }
-      else { gBtn.disabled = true; gNote.textContent = "Bản xem thử chưa nối đăng nhập Google thật (chờ domain chính thức) nên chưa lấy được ảnh của " + signedInEmail + " — bản thật sẽ tự lấy ngay khi đăng nhập Google. Giờ bạn tải ảnh từ máy lên nhé."; }
+      else { gBtn.disabled = true; gNote.textContent = "Tài khoản hiện tại (" + signedInEmail + ") chưa có ảnh Google — hãy tải ảnh từ máy."; }
     }
     if(gThumb && gG){
       if(avatarGoogle){ gThumb.src = avatarGoogle; gThumb.hidden = false; gG.hidden = true; }
@@ -15974,6 +16449,10 @@ function furiHTML(text){
     }catch(_){ return {}; }
   }
   function jlptNav(kind, lv){
+    /* Link "kế hoạch hôm nay" trên thẻ đếm ngược JLPT: nội dung N4–N1
+       cần Premium; Luyện nghe/Đọc hiểu chỉ mở trang chọn cấp (khóa ở
+       nút chọn cấp bên trong) nên không khóa ở đây. */
+    if((kind === "kanji" || kind === "vocab" || kind === "grammar" || kind === "exam") && !premiumGateLevel(lv)) return;
     if(kind === "kanji") kjOpenLevel(lv);
     else if(kind === "vocab"){ openWords(); wvOpenLessons(lv); }
     else if(kind === "grammar"){ openGrammar(); grOpenLessons(lv); }
