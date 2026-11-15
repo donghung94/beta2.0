@@ -27,6 +27,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="mobile/assets/sync-module.js"></script>
 <style>
 :root{
   color-scheme: light dark;
@@ -1259,6 +1260,14 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 /* ----- Đọc hiểu AI v2: ảnh minh họa + 2 cột + thẻ từ lưu được ----- */
 .dk-thumb{position:relative; display:block; margin:-15px -17px 10px; aspect-ratio:16/9; overflow:hidden; border-radius:12px 12px 0 0}
 .dk-thumb img{width:100%; height:100%; object-fit:cover; display:block}
+/* Thẻ "Video tôi tạo" ở Luyện nghe (danh sách đồng bộ từ app di động) */
+.svm-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; padding:6px 0 30px}
+.svm-card{display:block; text-decoration:none; color:inherit}
+.svm-card b{display:block; font-size:15px; line-height:1.45}
+.svm-thumb{position:relative; display:block; aspect-ratio:16/9; overflow:hidden; border-radius:12px; background:#1c1c1e; margin-bottom:10px}
+.svm-thumb img{width:100%; height:100%; object-fit:cover; display:block}
+.svm-dur{position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,.8); color:#fff; font-size:12px; font-weight:700; padding:2px 6px; border-radius:4px}
+.svm-meta{display:block; font-size:12.5px; color:var(--muted); margin-top:4px}
 .dk-badge{position:absolute; top:10px; left:10px; font-size:12px; font-weight:800; letter-spacing:.04em; color:#fff; padding:4px 10px; border-radius:999px}
 .dk-headrow{display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap}
 .dk-next{display:block; text-align:right; border:1.5px solid var(--line-strong); background:var(--card); border-radius:12px; padding:10px 14px; font-size:14px; line-height:1.5; max-width:260px; flex:none}
@@ -2752,6 +2761,7 @@ function vocabProgSave(key, status){
     var obj = vocabProgRaw(key);
     obj.status = status;
     localStorage.setItem(key, JSON.stringify(obj));
+    if(typeof skSyncPushVocab === "function") skSyncPushVocab(key);
   }catch(e){}
 }
 /* Deck ôn (phím C) + yêu thích (★) của mỗi bài cũng lưu trong cùng khóa
@@ -2763,6 +2773,9 @@ function vocabProgSaveSaved(key, favs, review){
     obj.favs = favs || {};
     obj.review = review || [];
     localStorage.setItem(key, JSON.stringify(obj));
+    /* favs/review đổi thì cả tiến độ bài lẫn tập từ đã lưu đều đổi. */
+    if(typeof skSyncPushVocab === "function") skSyncPushVocab(key);
+    if(typeof skSyncPushSaved === "function") skSyncPushSaved();
   }catch(e){}
 }
 function vocabLessonDone(lv, L){
@@ -3632,7 +3645,9 @@ function renderGrammarLesson(lv, segKind, key){
     $app.innerHTML = h;
   }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
 }
-var grLearnedW = {}; /* "N5|12" -> 1: mẫu đã bấm Đã học trong phiên */
+var grLearnedW = (function(){ /* "N5|12" -> 1: mẫu đã bấm Đã học — lưu local + đồng bộ */
+  try{ var o = JSON.parse(localStorage.getItem("sk_grammar_learned") || "null"); return (o && typeof o === "object") ? o : {}; }catch(e){ return {}; }
+})();
 var grQuizW = null;   /* {lv, type, qs, idx, score, locked} */
 function grShuffleW(a){
   for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
@@ -3781,6 +3796,7 @@ function renderGrammarDetail(lv, idx){
     $app.innerHTML = h;
     document.getElementById("grDoneW").addEventListener("click", function(){
       if(grLearnedW[key]) delete grLearnedW[key]; else grLearnedW[key] = 1;
+      if(typeof grLearnedSave === "function") grLearnedSave();
       var on = !!grLearnedW[key];
       this.classList.toggle("on", on);
       this.textContent = on ? "✓ Đã học mẫu này" : "Đánh dấu đã học";
@@ -4971,6 +4987,50 @@ function listenKindName(lv, t){
   var comp = (window.EXAM_LISTEN || {})[lv] || [];
   return (comp[t - 1] || ["Dạng " + t])[0];
 }
+/* ----- "Video tôi tạo" ở Luyện nghe: danh sách video shadowing tự tạo
+   đồng bộ từ app di động (sk_sv_mine -> doc videos). Bản web chưa có trình
+   phát shadowing (phụ đề song ngữ + karaoke) nên thẻ chỉ phát video gốc
+   bằng facade YouTube đã có; bài học đầy đủ vẫn ở app di động. */
+function skSvMineSectionHTML(){
+  var u = webCurrentUser();
+  var h = '<h2 class="secttl" style="margin-top:8px">Video tôi tạo</h2>';
+  if(!u){
+    return h + '<div class="empty-note" style="margin:0 0 34px">Đăng nhập để xem các video shadowing bạn đã tạo trên app di động — danh sách sẽ tự đồng bộ về đây.</div>';
+  }
+  var mine = svMineLoad();
+  if(!mine.length){
+    return h + '<div class="empty-note" style="margin:0 0 34px">Chưa có video nào. Tạo bài shadowing bằng cách dán link YouTube trên app di động — video sẽ hiện ở đây sau khi đồng bộ.</div>';
+  }
+  var cards = mine.map(function(v){
+    var thumb = "https://i.ytimg.com/vi/" + encodeURIComponent(v.id) + "/mqdefault.jpg";
+    return '<a class="card svm-card" href="#/nghe/video/' + encodeURIComponent(v.id) + '">' +
+      '<span class="svm-thumb"><img src="' + thumb + '" alt="Ảnh xem trước video: ' + esc(v.title || "") + '" loading="lazy">' +
+      (v.dur ? '<span class="svm-dur">' + esc(v.dur) + '</span>' : '') + '</span>' +
+      '<b>' + esc(v.title || v.id) + '</b>' +
+      '<span class="svm-meta">Video của bạn' + (v.lines ? ' · ' + v.lines + ' câu' : '') + '</span></a>';
+  }).join("");
+  return h + '<div class="svm-grid">' + cards + '</div>';
+}
+function renderSvVideoPage(vid){
+  document.title = "Video tôi tạo | SoraKanji";
+  document.body.classList.remove("plain");
+  var v = svMineLoad().filter(function(x){ return x.id === vid; })[0];
+  var title = v ? (v.title || vid) : vid;
+  var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / Video tôi tạo</div>' +
+    '<h1>' + esc(title) + '</h1>' +
+    '<p>' + (v ? ('Video của bạn' + (v.dur ? ' · ' + esc(v.dur) : '') + (v.lines ? ' · ' + v.lines + ' câu' : '')) : 'Video này không còn trong danh sách của bạn.') + '</p></div>' +
+    '<div style="max-width:860px;padding-bottom:36px">' +
+    '<div class="video-facade" id="svFacade" data-vid="' + esc(vid) + '">' +
+    '<img src="https://i.ytimg.com/vi/' + encodeURIComponent(vid) + '/mqdefault.jpg" alt="Ảnh xem trước video: ' + esc(title) + '" loading="lazy">' +
+    '<div class="play"><span>▶</span></div></div>' +
+    '<p class="hint" style="margin:12px 0 0">Bài học shadowing đầy đủ (phụ đề song ngữ + karaoke từng câu) hiện có trên app di động — bản web đang phát video gốc.</p></div>';
+  $app.innerHTML = h;
+  var vf = document.getElementById("svFacade");
+  if(vf) vf.addEventListener("click", function(){
+    vf.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + vf.getAttribute("data-vid") +
+      '?autoplay=1&rel=0" title="' + esc(title) + '" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  });
+}
 function renderListenHome(){
   document.title = "Luyện nghe tiếng Nhật N5–N1 | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải danh sách hội thoại…");
@@ -4985,7 +5045,7 @@ function renderListenHome(){
       var lk = skLevelLocked(lv);
       h += '<a class="lesson-card" href="#/nghe/' + lv + '"><b>' + (lk ? "🔒 " : "") + "Luyện nghe " + lv + "</b><span>" + n + " hội thoại" + (lk ? " · Premium" : "") + "</span></a>";
     });
-    h += "</div>";
+    h += "</div>" + skSvMineSectionHTML();
     $app.innerHTML = h;
   }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
 }
@@ -5965,6 +6025,7 @@ function planDoneGet(lv){
 }
 function planDoneSet(lv, n){
   try{ localStorage.setItem("sk_plan_done_" + lv, String(n)); }catch(e){}
+  skSyncPushPlan();
 }
 /* Chia tổng số mục thành 4 đợt liên tiếp — trả về các khoảng [đầu, cuối] tính từ 1 */
 function planQuarters(total){
@@ -6070,6 +6131,7 @@ function renderPersonalPage(){
   $app.querySelectorAll("[data-dlv]").forEach(function(b){
     b.addEventListener("click", function(){
       declaredLvW = parseInt(b.getAttribute("data-dlv"), 10);
+      skSyncPushPlan();
       renderPersonalPage();
     });
   });
@@ -7003,8 +7065,8 @@ function renderSettingsPage(){
     '<span class="switch' + (SET_SOUND ? " on" : "") + '" id="swSound"></span></button>' +
     '<button class="setrow" id="setSora"><span class="grow">Hiện nút trợ lý Sora<span class="sub">Nút tròn chibi ở góc phải dưới — bấm để hỏi cách dùng trang</span></span>' +
     '<span class="switch' + (SORA_ON ? " on" : "") + '" id="swSora"></span></button>' +
-    '<div class="setrow" style="cursor:default"><span class="grow">Đồng bộ tiến độ<span class="sub">Đăng nhập đồng bộ với bản di động — mở khi SoraKanji ra mắt trên domain chính thức</span></span>' +
-    '<span class="tag">Sắp có</span></div>' +
+    '<button class="setrow" id="setSync"><span class="grow">Đồng bộ tiến độ<span class="sub">Tiến độ học đồng bộ giữa web và bản di động khi đăng nhập — tắt thì mỗi máy học riêng</span></span>' +
+    '<span class="switch' + (skSyncEnabled() ? " on" : "") + '" id="swSync"></span></button>' +
     '<h2 class="secttl">Khác</h2>' +
     '<button class="setrow" id="setBackup"><span class="grow">Sao lưu dữ liệu học</span><span aria-hidden="true">›</span></button>' +
     '<button class="setrow" id="setAbout"><span class="grow">Giới thiệu SoraKanji</span><span aria-hidden="true">›</span></button>' +
@@ -7034,8 +7096,13 @@ function renderSettingsPage(){
     applySoraVisibility();
     msg.textContent = SORA_ON ? "Đã hiện nút trợ lý Sora." : "Đã ẩn nút trợ lý Sora — bật lại ở đây khi cần.";
   });
+  document.getElementById("setSync").addEventListener("click", function(){
+    var on = skSyncSetEnabled(!skSyncEnabled());
+    document.getElementById("swSync").classList.toggle("on", on);
+    msg.textContent = on ? "Đã bật đồng bộ tiến độ." : "Đã tắt đồng bộ tiến độ — tiến độ trên máy này không gửi lên máy chủ nữa.";
+  });
   document.getElementById("setBackup").addEventListener("click", function(){
-    showModal("Sao lưu dữ liệu học", "Bản web hiện học ngay không cần tài khoản nên chưa có tiến độ nào được lưu lên máy chủ. Khi đăng nhập đồng bộ được mở (cùng đợt ra mắt domain chính thức), tiến độ học trên web và bản di động sẽ tự gộp về một tài khoản.", "Đã hiểu", "Đóng", function(){});
+    showModal("Sao lưu dữ liệu học", "Khi đã đăng nhập, tiến độ học của bạn (từ vựng, từ đã lưu, lộ trình 30 ngày, đánh dấu ngữ pháp, video tự tạo) tự đồng bộ lên máy chủ và gộp với bản di động theo cùng tài khoản. Công tắc “Đồng bộ tiến độ” ở trên tắt thì máy này học riêng, không gửi lên máy chủ.", "Đã hiểu", "Đóng", function(){});
   });
   document.getElementById("setAbout").addEventListener("click", function(){
     showModal("Giới thiệu SoraKanji", "SoraKanji — Bầu trời Kanji cho người Việt. Học kanji, từ vựng, ngữ pháp tiếng Nhật theo giáo trình Minna no Nihongo và luyện thi JLPT đủ 5 cấp N5–N1.", "Đã hiểu", "Đóng", function(){});
@@ -7398,7 +7465,8 @@ function route(){
     return;
   }
   if(seg === "nghe"){
-    if(segs[1] && segs[2] != null) renderListenItem(segs[1], segs[2]);
+    if(segs[1] === "video" && segs[2]) renderSvVideoPage(segs[2]);
+    else if(segs[1] && segs[2] != null) renderListenItem(segs[1], segs[2]);
     else if(segs[1]) renderListenLevel(segs[1]);
     else renderListenHome();
     return;
@@ -7691,7 +7759,7 @@ function renderSavedPage(){
   Promise.all(jobs).then(function(){
     var total = 0, rows = "";
     entries.forEach(function(e){
-      var words = null, label = "", href = "", isDk = false;
+      var words = null, label = "", href = "", isDk = false, isSync = false;
       if(e.rest.indexOf("cn_") === 0){
         var fk = e.rest.slice(3);
         var f = SPEC_FIELDS.filter(function(x){ return x.key === fk; })[0];
@@ -7709,6 +7777,15 @@ function renderSavedPage(){
         label = "Đọc hiểu AI · " + p.level + " · " + (p.titleVi || p.title);
         href = "#/dokkai/" + p.id;
         isDk = true;
+      } else if(e.rest === "sync"){
+        /* Từ đồng bộ từ app di động mà web không tra được bài gốc:
+           khóa sk_vocab_prog_sync, chỉ số là chỉ số trong danh sách
+           sk_sync_words (module đồng bộ quản lý). Entry chuẩn đã có đủ
+           trường hiển thị (word/reading/hanViet/meaning). */
+        words = skSyncWordsLoad();
+        label = "Từ app di động · đã lưu";
+        href = "#/daluu";
+        isSync = true;
       } else {
         var m = e.rest.match(/^(N[1-5])_(.+)$/);
         if(!m) return;
@@ -7731,7 +7808,7 @@ function renderSavedPage(){
         var kinds = [];
         if(e.favs[ix]) kinds.push("★ Yêu thích");
         if(e.review.indexOf(ix) >= 0) kinds.push("Deck ôn");
-        rows += '<div class="saved-item" data-href="' + esc(href) + '" data-idx="' + ix + '"' + (isDk ? ' data-dk="1"' : "") + ">" +
+        rows += '<div class="saved-item" data-href="' + esc(href) + '" data-idx="' + ix + '"' + (isDk ? ' data-dk="1"' : "") + (isSync ? ' data-sync="1"' : "") + ">" +
           '<div class="sw-main"><span class="sw-word jp">' + esc(w.word) + '</span>' +
           (w.reading ? '<span class="sw-read jp">' + esc(w.reading) + "</span>" : "") +
           '<div class="sw-mean">' + (w.hanViet ? "<b>" + esc(String(w.hanViet).toUpperCase()) + "</b> · " : "") + esc(w.meaning || "") + "</div></div>" +
@@ -7749,6 +7826,7 @@ function renderSavedPage(){
     $app.querySelectorAll(".saved-item").forEach(function(row){
       row.addEventListener("click", function(ev){
         if(ev.target.closest && ev.target.closest("button")) return;
+        if(row.getAttribute("data-sync")) return; /* từ đồng bộ: không có trang bài gốc để mở */
         if(row.getAttribute("data-dk")){
           window._skDkJumpIdx = parseInt(row.getAttribute("data-idx"), 10);
         } else {
@@ -7761,6 +7839,7 @@ function renderSavedPage(){
       b.addEventListener("click", function(ev){
         ev.stopPropagation();
         var key = b.getAttribute("data-key"), ix = parseInt(b.getAttribute("data-idx"), 10);
+        if(key === "sk_vocab_prog_sync") skSyncUnsaveSyncWord(ix);
         var raw = vocabProgRaw(key);
         var favs = raw.favs || {};
         delete favs[ix];
@@ -7913,12 +7992,16 @@ function initWebAuth(){
     }else{
       window.SK_USER = null;
       SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
+      /* Xóa dữ liệu đồng bộ của tài khoản cũ khỏi máy để tài khoản khác
+         đăng nhập sau không gộp nhầm (xem SYNC-DESIGN.md §8). */
+      if(window.SKSync) SKSync.clearLocalForLogout();
     }
     renderHeaderUser();
     /* Premium: đăng nhập thì đi lấy trạng thái (xong sẽ tự vẽ lại trang
        khóa / gỡ ổ khóa); đăng xuất thì khóa lại ngay nếu đang ở nội dung N4+. */
     if(user){
       skLoadPremium(true);
+      skSyncStart();
       /* Đang ở trang Nâng cấp thì vẽ lại để nút mua đổi trạng thái. */
       if(/^\#\/(nangcap|trondoi)/.test(location.hash || "")) route();
     }
@@ -8007,7 +8090,7 @@ function renderHeaderUser(){
     closeHeaderPanels();
     var auth = skAuth();
     if(auth){ auth.signOut().catch(function(){}); }
-    else{ window.SK_USER = null; renderHeaderUser(); }
+    else{ window.SK_USER = null; if(window.SKSync) SKSync.clearLocalForLogout(); renderHeaderUser(); }
   });
 }
 
@@ -8108,8 +8191,435 @@ function setupHeader(){
   updateNotifBadge();
 }
 
+/* ===== Đồng bộ tiến độ web <-> mobile (SKSync) — adapter web — BEGIN =====
+   Thiết kế: SYNC-DESIGN.md (~/workspace/progress-sync). Module SKSync nằm ở
+   mobile/assets/sync-module.js (nạp ở <head>). Adapter ánh xạ localStorage bản web
+   sang các doc đồng bộ kanji_progress/{uid}/sync/{docId}:
+     plan30     <- sk_plan_done_<lv> (+ cấp đang học declaredLvW)
+     vocab_<k>  <- sk_vocab_prog_<k> (1 doc / 1 bài, LWW từng chỉ số)
+     savedWords <- gom review/favs của mọi sk_vocab_prog_* -> entry chuẩn
+     videos     <- sk_sv_mine (danh sách video tự tạo, xem ở Luyện nghe)
+     grammar    <- sk_grammar_learned ("N5|12" -> 1)
+   Các doc chỉ mobile có (wallet, missions, kanji, jlpt, examBest, settings,
+   avatar) trả undefined — module bỏ qua. Không đồng bộ: sk_pending_order,
+   sk_notif_read, sk_view (theo thiết kế).
+   Bài giả vocab_sync: từ mobile lưu mà web không tra được bài gốc -> lưu
+   trong sk_sync_words + khóa sk_vocab_prog_sync (chỉ số trong danh sách
+   đó, sắp xếp ổn định theo khóa từ|cách đọc); trang Mục đã lưu có nhánh
+   đọc riêng (xem renderSavedPage). */
+
+var skSyncApplying = false; /* true trong lúc adapter ghi local từ server: hook đẩy bỏ qua */
+
+/* Công tắc đồng bộ của máy này (chỉ local, KHÔNG đồng bộ lên server):
+   mặc định BẬT. Tắt thì getUid() trả null -> module không đọc/ghi server. */
+function skSyncEnabled(){
+  try{ var v = localStorage.getItem("sk_sync_enabled"); return v !== "0"; }catch(e){ return true; }
+}
+function skSyncSetEnabled(on){
+  try{ localStorage.setItem("sk_sync_enabled", on ? "1" : "0"); }catch(e){}
+  if(!window.SKSync) return !!on;
+  if(on){ skSyncStart(); }
+  else { SKSync.stopListener(); }
+  return !!on;
+}
+
+/* ----- hook đẩy (gọi sau mỗi lần ghi local; tự bỏ qua khi đang áp dụng
+   bản gộp từ server hoặc khi module chưa nạp) ----- */
+function skSyncPushVocab(key){
+  if(skSyncApplying || !window.SKSync || !key) return;
+  var rest = key.indexOf("sk_vocab_prog_") === 0 ? key.slice("sk_vocab_prog_".length) : null;
+  if(!rest) return;
+  SKSync.schedulePush("vocab_" + rest);
+}
+function skSyncPushSaved(){
+  if(skSyncApplying || !window.SKSync) return;
+  SKSync.schedulePush("savedWords");
+}
+function skSyncPushPlan(){
+  if(skSyncApplying || !window.SKSync) return;
+  SKSync.schedulePush("plan30");
+}
+
+/* ----- danh sách video tự tạo (sk_sv_mine) — cùng hình dạng mobile ----- */
+function svMineLoad(){
+  try{ var m = JSON.parse(localStorage.getItem("sk_sv_mine") || "[]"); return Array.isArray(m) ? m : []; }catch(e){ return []; }
+}
+function svMineSave(list){
+  try{ localStorage.setItem("sk_sv_mine", JSON.stringify(list || [])); }catch(e){}
+  if(!skSyncApplying && window.SKSync) SKSync.schedulePush("videos");
+}
+
+/* ----- đánh dấu Đã học ngữ pháp (persist + đẩy) ----- */
+function grLearnedLoad(){
+  try{ var o = JSON.parse(localStorage.getItem("sk_grammar_learned") || "null"); return (o && typeof o === "object") ? o : {}; }catch(e){ return {}; }
+}
+function grLearnedSave(){
+  try{ localStorage.setItem("sk_grammar_learned", JSON.stringify(grLearnedW || {})); }catch(e){}
+  if(!skSyncApplying && window.SKSync) SKSync.schedulePush("grammar");
+}
+
+/* ----- danh sách từ của bài giả vocab_sync ----- */
+function skSyncWordsLoad(){
+  try{ var m = JSON.parse(localStorage.getItem("sk_sync_words") || "[]"); return Array.isArray(m) ? m : []; }catch(e){ return []; }
+}
+function skSyncWordsSave(list){
+  try{ localStorage.setItem("sk_sync_words", JSON.stringify(list || [])); }catch(e){}
+}
+/* Bỏ lưu 1 từ đồng bộ: ghi tombstone ngay để máy khác gỡ theo (đường
+   diff trong skSyncGatherSaved cũng bắt được, đây là lớp chắc chắn thêm). */
+function skSyncUnsaveSyncWord(ix){
+  var list = skSyncWordsLoad();
+  var e = list[ix];
+  if(!e || !e.word) return;
+  if(window.SKSync && typeof SKSync.unsaveWord === "function") SKSync.unsaveWord(e.word, e.reading || "");
+}
+
+/* ----- sổ từ đã đẩy lần cuối: {khóa "từ|cách đọc": {u, fav, lesson}} -----
+   Dùng để (a) giữ nguyên u cho entry không đổi, (b) phát hiện từ bị gỡ lưu
+   (có trong sổ mà không còn trong tập hiện tại -> tombstone). */
+function skSyncSavedKeysLoad(){
+  try{ var o = JSON.parse(localStorage.getItem("sk_sync_saved_keys") || "null"); return (o && typeof o === "object") ? o : {}; }catch(e){ return {}; }
+}
+function skSyncSavedKeysSave(map){
+  try{ localStorage.setItem("sk_sync_saved_keys", JSON.stringify(map || {})); }catch(e){}
+}
+
+/* Giải 1 khóa sk_vocab_prog_* ra danh sách từ + thông tin bài.
+   Trả null khi dữ liệu bài đó CHƯA NẠP (caller bỏ qua bài đó, KHÔNG coi là
+   đã gỡ — tránh tombstone oan khi đồng bộ lúc mở app). */
+function skSyncResolveLesson(rest){
+  if(rest === "sync"){
+    return {kind: "sync", lv: null, from: "", words: skSyncWordsLoad()};
+  }
+  if(rest.indexOf("cn_") === 0){
+    var fk = rest.slice(3);
+    if(!window.VOCAB_SPEC) return null;
+    var f = (SPEC_FIELDS || []).filter(function(x){ return x.key === fk; })[0];
+    return {kind: "cn", lv: null, from: "Chuyên ngành · " + (f ? f.name : fk), words: window.VOCAB_SPEC[fk] || []};
+  }
+  if(rest.indexOf("dk-") === 0){
+    if(!window.DOKKAI_PASSAGES) return null;
+    var p = dkById(rest);
+    if(!p) return null;
+    return {kind: "dk", lv: p.level, from: (p.level || "") + " · Đọc hiểu AI",
+      words: (p.vocab || []).map(function(v){ return {word: v.w, reading: v.r, hanViet: v.hv, meaning: v.vi}; })};
+  }
+  var m = rest.match(/^(N[1-5])_(.+)$/);
+  if(!m) return null;
+  var lv = m[1], lk = m[2];
+  if(lk === "num" && lv === "N5"){
+    return {kind: "minna", lv: lv, from: "N5 · Bài mở đầu: Số và đếm ngày tháng", words: introWords()};
+  }
+  if(lv === "N1"){ if(!window.VOCAB_N1) return null; }
+  else if(!window.VOCAB_MINNA) return null;
+  var L = vocabLessons(lv).filter(function(x){ return x.n === parseInt(lk, 10); })[0];
+  if(!L) return null;
+  return {kind: "minna", lv: lv, from: lv + " · " + (lv === "N1" ? "Nhóm " : "Bài ") + L.n, words: L.words};
+}
+
+/* Gom từ đã lưu (review + favs) của mọi bài -> entry chuẩn cho doc savedWords.
+   Đồng thời phát hiện từ bị gỡ (có trong sổ lần trước, bài đã nạp mà không
+   còn trong tập hiện tại) -> ghi tombstone ngay. */
+function skSyncGatherSaved(){
+  var now = Date.now();
+  var stored = skSyncSavedKeysLoad();
+  var out = [], outKeys = {}, resolved = {};
+  var keys = [];
+  try{
+    for(var i = 0; i < localStorage.length; i++){
+      var k = localStorage.key(i);
+      if(k && k.indexOf("sk_vocab_prog_") === 0) keys.push(k);
+    }
+  }catch(e){}
+  keys.forEach(function(key){
+    var rest = key.slice("sk_vocab_prog_".length);
+    var res = skSyncResolveLesson(rest);
+    if(!res) return; /* dữ liệu chưa nạp: bỏ qua, không tombstone */
+    resolved[rest] = 1;
+    var raw = vocabProgRaw(key);
+    var idxs = {};
+    Object.keys(raw.favs || {}).forEach(function(k){ if(raw.favs[k]) idxs[k] = 1; });
+    (raw.review || []).forEach(function(x){ idxs[x] = 1; });
+    Object.keys(idxs).forEach(function(ks){
+      var ix = parseInt(ks, 10);
+      if(isNaN(ix) || ix < 0) return;
+      var w = res.words[ix];
+      if(!w) return; /* chỉ số cũ, từ không còn trong dữ liệu */
+      var fav = !!(raw.favs && raw.favs[ix]);
+      var ck = (w.word || "") + "|" + (w.reading || "");
+      if(outKeys[ck]) return; /* cùng từ lưu ở 2 bài: lấy 1 */
+      outKeys[ck] = 1;
+      var prev = stored[ck];
+      var u = (prev && prev.fav === fav) ? prev.u : now;
+      /* Từ của bài giả vocab_sync đã mang dấu giờ từ server (w.u): khi chưa
+         có sổ thì GIỮ nguyên, đừng đóng dấu now — đóng dấu now có thể hồi
+         sinh từ mà máy khác vừa gỡ (tombstone cũ hơn now nhưng mới hơn w.u). */
+      if(res.kind === "sync" && !prev && w.u) u = w.u;
+      if(res.kind === "sync"){
+        out.push({word: w.word, reading: w.reading || "", hanViet: w.hanViet || "",
+          meaning: w.meaning || "", lv: w.lv || null, from: w.from || "",
+          fav: fav, u: u, src: null});
+      } else {
+        out.push(SKSync.convert.webWordToCanonical(rest, res.kind, ix,
+          {word: w.word, reading: w.reading, hanViet: w.hanViet, meaning: w.meaning,
+           lv: res.lv, from: res.from}, fav, u));
+      }
+    });
+  });
+  /* Từ bị gỡ: có trong sổ, bài của nó đã nạp mà không còn trong tập hiện tại. */
+  Object.keys(stored).forEach(function(ck){
+    if(outKeys[ck]) return;
+    var prev = stored[ck] || {};
+    if(prev.lesson && !resolved[prev.lesson]) return; /* bài chưa nạp: chưa kết luận */
+    var parts = ck.split("|");
+    if(window.SKSync && typeof SKSync.unsaveWord === "function") SKSync.unsaveWord(parts[0], parts[1] || "");
+  });
+  /* Cập nhật sổ = tập hiện tại (u/fav/lesson). */
+  var next = {};
+  out.forEach(function(e){
+    var ck = (e.word || "") + "|" + (e.reading || "");
+    next[ck] = {u: e.u, fav: !!e.fav, lesson: (e.src && e.src.lesson) || "sync"};
+  });
+  skSyncSavedKeysSave(next);
+  return {words: out};
+}
+
+/* Tách entry chuẩn đã gộp về lại các khóa sk_vocab_prog_* (theo src) +
+   bài giả vocab_sync (src không tra được). Ghi đè toàn bộ favs/review của
+   các bài liên quan từ tập đã gộp (từ bị gỡ ở máy khác biến mất khỏi bài) —
+   status giữ nguyên. */
+function skSyncApplySaved(payload){
+  var words = (payload && payload.words) || [];
+  var byLesson = {}, syncList = [];
+  words.forEach(function(e){
+    var src = e.src;
+    if(src && src.lesson && typeof src.lesson === "string" &&
+       (src.lesson === "sync" || /^(N[1-5])_.+/.test(src.lesson) ||
+        src.lesson.indexOf("cn_") === 0 || src.lesson.indexOf("dk-") === 0)){
+      if(src.lesson === "sync"){ syncList.push(e); return; }
+      (byLesson[src.lesson] = byLesson[src.lesson] || []).push(e);
+    } else {
+      syncList.push(e);
+    }
+  });
+  /* Các bài cần viết lại: bài có entry trong tập gộp + bài đang có từ lưu. */
+  var lessonKeys = {};
+  Object.keys(byLesson).forEach(function(r){ lessonKeys[r] = 1; });
+  try{
+    for(var i = 0; i < localStorage.length; i++){
+      var k = localStorage.key(i);
+      if(!k || k.indexOf("sk_vocab_prog_") !== 0) continue;
+      var rest = k.slice("sk_vocab_prog_".length);
+      if(rest === "sync") continue;
+      var raw = vocabProgRaw(k);
+      if((raw.review && raw.review.length) || (raw.favs && Object.keys(raw.favs).length)) lessonKeys[rest] = 1;
+    }
+  }catch(e){}
+  Object.keys(lessonKeys).forEach(function(rest){
+    var key = "sk_vocab_prog_" + rest;
+    var raw = vocabProgRaw(key);
+    var entries = byLesson[rest] || [];
+    var favs = {}, review = [];
+    entries.forEach(function(e){
+      var ix = e.src && e.src.idx;
+      if(typeof ix !== "number" || ix < 0) return;
+      review.push(ix);
+      if(e.fav) favs[ix] = true;
+    });
+    review.sort(function(a, b){ return a - b; });
+    var obj = {status: raw.status || {}, favs: favs, review: review};
+    try{ localStorage.setItem(key, JSON.stringify(obj)); }catch(e2){}
+  });
+  /* Bài giả vocab_sync: danh sách sắp xếp ổn định theo khóa từ|cách đọc
+     để chỉ số giống nhau ở mọi máy. */
+  syncList.sort(function(a, b){
+    var ka = (a.word || "") + "|" + (a.reading || ""), kb = (b.word || "") + "|" + (b.reading || "");
+    return ka < kb ? -1 : (ka > kb ? 1 : 0);
+  });
+  skSyncWordsSave(syncList);
+  var syncFavs = {}, syncReview = [];
+  syncList.forEach(function(e, ix){
+    syncReview.push(ix);
+    if(e.fav) syncFavs[ix] = true;
+  });
+  if(syncList.length){
+    try{ localStorage.setItem("sk_vocab_prog_sync", JSON.stringify({status: {}, favs: syncFavs, review: syncReview})); }catch(e2){}
+  } else {
+    try{ localStorage.removeItem("sk_vocab_prog_sync"); }catch(e2){}
+    try{ localStorage.removeItem("sk_sync_words"); }catch(e2){}
+  }
+  var next = {};
+  words.forEach(function(e){
+    var ck = (e.word || "") + "|" + (e.reading || "");
+    next[ck] = {u: e.u || 0, fav: !!e.fav, lesson: (e.src && e.src.lesson) || "sync"};
+  });
+  skSyncSavedKeysSave(next);
+}
+
+/* ----- adapter SKSync cho bản web ----- */
+var SK_SYNC_ADAPTER = {
+  readLocal: function(docId){
+    if(docId === "wallet" || docId === "missions" || docId === "kanji" ||
+       docId === "jlpt" || docId === "examBest" || docId === "settings" ||
+       docId === "avatar") return undefined; /* web không có các doc này */
+    if(docId === "plan30"){
+      var done = {};
+      ["N5", "N4", "N3", "N2", "N1"].forEach(function(lv){ done[lv] = planDoneGet(lv); });
+      var anyDone = false;
+      Object.keys(done).forEach(function(lv){ if(done[lv] > 0) anyDone = true; });
+      /* Chưa học ngày nào + chưa khai cấp: không có dữ liệu -> null để
+         module khỏi ghi doc rỗng (migration cả 2 trống thì không ghi gì). */
+      if(!anyDone && !(declaredLvW > 0)) return null;
+      var out = {done: done};
+      /* Cấp đang học (chỉ khi user đã khai trong phiên; 0 = chưa khai). */
+      if(declaredLvW > 0) out.appliedLv = ["N5", "N4", "N3", "N2", "N1"][declaredLvW - 1];
+      return out;
+    }
+    if(docId === "videos"){
+      var mine = svMineLoad();
+      return mine.length ? {mine: mine} : null;
+    }
+    if(docId === "grammar"){
+      /* Đọc từ localStorage như bản mobile (không đọc biến RAM): khóa chưa
+         có -> null (chưa từng đánh dấu mẫu nào, không ghi doc rỗng).
+         grLearnedSave() luôn ghi khóa kể cả khi gỡ hết ({}), nên sau lần
+         đánh dấu đầu tiên khóa luôn tồn tại và {} vẫn được trả về để module
+         soi meta và đẩy tombstone {v:0} — không hồi sinh. */
+      try{ if(localStorage.getItem("sk_grammar_learned") === null) return null; }catch(e){ return null; }
+      return grLearnedLoad();
+    }
+    if(docId === "savedWords"){
+      var g = skSyncGatherSaved();
+      if(g.words.length) return g;
+      /* Không còn từ nào: chỉ trả null khi cũng không còn tombstone cần
+         đẩy (meta của module) — trả null khi có tombstone sẽ khiến
+         syncSavedWords đi nhánh kéo về và hồi sinh từ đã gỡ. */
+      var smeta = null;
+      try{ smeta = JSON.parse(localStorage.getItem("sk_sync_meta_savedWords") || "null"); }catch(e){}
+      if(!smeta || !smeta.removed || !Object.keys(smeta.removed).length) return null;
+      return g;
+    }
+    if(docId.indexOf("vocab_") === 0){
+      var key = "sk_vocab_prog_" + docId.slice("vocab_".length);
+      try{ if(localStorage.getItem(key) === null) return null; }catch(e){ return null; }
+      return vocabProgRaw(key);
+    }
+    return undefined;
+  },
+  writeLocal: function(docId, payload){
+    skSyncApplying = true;
+    try{
+      if(docId === "plan30"){
+        var done = (payload && payload.done) || {};
+        ["N5", "N4", "N3", "N2", "N1"].forEach(function(lv){
+          if(typeof done[lv] === "number") planDoneSet(lv, done[lv]);
+        });
+        /* Cấp đang học từ máy khác: chỉ áp dụng khi phiên này chưa khai. */
+        if(declaredLvW === 0 && payload && payload.appliedLv){
+          var i = ["N5", "N4", "N3", "N2", "N1"].indexOf(payload.appliedLv);
+          if(i >= 0) declaredLvW = i + 1;
+        }
+        return;
+      }
+      if(docId === "videos"){ svMineSave((payload && payload.mine) || []); return; }
+      if(docId === "grammar"){
+        grLearnedW = {};
+        var g = payload || {};
+        Object.keys(g).forEach(function(k){ if(g[k]) grLearnedW[k] = 1; });
+        grLearnedSave();
+        return;
+      }
+      if(docId === "savedWords"){ skSyncApplySaved(payload); return; }
+      if(docId.indexOf("vocab_") === 0){
+        var key = "sk_vocab_prog_" + docId.slice("vocab_".length);
+        try{ localStorage.setItem(key, JSON.stringify(payload || {})); }catch(e){}
+        return;
+      }
+    }finally{
+      skSyncApplying = false;
+    }
+  },
+  listVocabKeys: function(){
+    var out = [];
+    try{
+      for(var i = 0; i < localStorage.length; i++){
+        var k = localStorage.key(i);
+        if(k && k.indexOf("sk_vocab_prog_") === 0) out.push(k.slice("sk_vocab_prog_".length));
+      }
+    }catch(e){}
+    return out;
+  },
+  onMerged: function(docId){
+    try{ updateNotifBadge(); }catch(e){}
+    var h = location.hash || "#/";
+    if((docId === "savedWords" || docId === "grammar" || docId.indexOf("vocab_") === 0) && h.indexOf("#/daluu") === 0) route();
+    else if(docId === "plan30" && h.indexOf("#/canhan") === 0) route();
+    else if(docId === "videos" && h === "#/nghe") route();
+  }
+};
+
+/* Nạp trước dữ liệu từ vựng của các bài có từ đã lưu để adapter dịch được
+   (bài, chỉ số) -> entry chuẩn. Luôn resolve (lỗi mạng -> đồng bộ vẫn chạy,
+   bài chưa nạp sẽ bị bỏ qua, không tombstone oan). */
+function skSyncPrepare(){
+  var needLv = {}, needSpec = false, needDk = false;
+  try{
+    for(var i = 0; i < localStorage.length; i++){
+      var k = localStorage.key(i);
+      if(!k || k.indexOf("sk_vocab_prog_") !== 0) continue;
+      var rest = k.slice("sk_vocab_prog_".length);
+      if(rest === "sync" || rest === "N5_num") continue; /* dữ liệu đã có sẵn */
+      if(rest.indexOf("cn_") === 0){ needSpec = true; continue; }
+      if(rest.indexOf("dk-") === 0){ needDk = true; continue; }
+      var m = rest.match(/^(N[1-5])_/);
+      if(m) needLv[m[1]] = 1;
+    }
+  }catch(e){}
+  var jobs = [];
+  Object.keys(needLv).forEach(function(lv){ jobs.push(ensureVocabFor(lv)); });
+  if(needSpec) jobs.push(ensureSpec());
+  if(needDk) jobs.push(ensureDokkai());
+  if(!jobs.length) return Promise.resolve();
+  return Promise.all(jobs.map(function(p){ return p.catch(function(){ return null; }); })).then(function(){});
+}
+
+/* Bắt đầu đồng bộ sau khi đăng nhập (hoặc mở app đã đăng nhập): nạp dữ
+   liệu cần thiết rồi đồng bộ đầy đủ, sau đó bật listener trực tiếp. */
+function skSyncStart(){
+  if(!window.SKSync || !skSyncEnabled()) return;
+  if(!webCurrentUser()) return;
+  skSyncPrepare().then(function(){
+    return SKSync.syncAll();
+  }).then(function(){
+    SKSync.startListener();
+  }).catch(function(){});
+}
+
+function initSkSync(){
+  if(!window.SKSync) return; /* mobile/assets/sync-module.js chưa nạp được: chạy local */
+  var db = null;
+  try{ db = skDb(); }catch(e){ db = null; }
+  if(!db) return;
+  try{
+    SKSync.init({
+      db: db,
+      getUid: function(){
+        /* Công tắc tắt -> coi như chưa đăng nhập: module không đọc/ghi server. */
+        if(!skSyncEnabled()) return null;
+        var u = webCurrentUser();
+        return u ? u.uid : null;
+      },
+      adapter: SK_SYNC_ADAPTER,
+      onStatus: function(m){ try{ console.log("[SKSync] " + m); }catch(e){} }
+    });
+  }catch(e){}
+}
+/* ===== Đồng bộ tiến độ (SKSync) — adapter web — END ===== */
+
+
 (function init(){
   setupHeader();
+  initSkSync();
   initWebAuth();
   initSora();
   route();
