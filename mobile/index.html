@@ -813,11 +813,9 @@
   /* ---------- Paywall: ổ khóa Premium + bảng nâng cấp ---------- */
   #premiumScrim{z-index:69;}
   #premiumSheet{z-index:70; max-height:84%; overflow-y:auto;}
-  #loginSheet{max-height:84%; overflow-y:auto;} /* form đăng nhập dài: cho cuộn trong bảng, nút Đăng nhập không bị che */
+  #loginSheet{max-height:84%; overflow-y:auto;} /* bảng đăng nhập: cho cuộn trong bảng nếu nội dung dài */
   #loginSheet h3{font-size:20px; margin-bottom:6px;}
   .login-mascot{display:block; margin:0 auto 12px; height:84px; width:auto; max-width:100%; object-fit:contain;}
-  #loginSheet #loginGo{background:#1e88e5; color:#fff;} /* nút Đăng nhập xanh như mẫu (cùng mã màu với --blue của bản web) */
-  #loginSheet #loginGo:disabled{opacity:.6; cursor:wait;}
   .pw-lock{font-size:12px; margin-left:4px; vertical-align:1px;}
   .testrow.pw-locked .badge{border-color:var(--red); color:var(--red);}
   .lv.pw-locked{color:var(--ink-2);}
@@ -2141,20 +2139,9 @@
   #acctEmail{font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .acctnote{font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:7px 0 11px;}
   .acctbtn{min-height:44px; padding:0 15px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; color:var(--ink); display:inline-flex; align-items:center; justify-content:center; gap:6px;}
-  .loginfield{display:flex; align-items:center; gap:10px; box-sizing:border-box; min-height:50px; margin:2px 0 10px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg);}
-  .loginfield:focus-within{border-color:var(--sky);}
-  .login-ic{flex:none; display:flex; color:var(--ink-3);}
-  .login-ic svg{display:block;}
-  .logininput{flex:1; min-width:0; box-sizing:border-box; min-height:46px; padding:0; border:0; border-radius:0; background:transparent; color:var(--ink); font-family:inherit; font-size:15px;}
-  .logininput:focus{outline:none; border-color:transparent;}
   .googlebtn{width:100%; min-height:50px; display:flex; align-items:center; justify-content:center; gap:10px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-family:inherit; font-size:15px; font-weight:700; color:var(--ink); cursor:pointer; margin-bottom:12px;}
   .googlebtn:disabled{opacity:.6; cursor:default;}
   .googlebtn svg{flex:none;}
-  .auth-or{display:flex; align-items:center; gap:10px; color:var(--ink-2); font-size:12.5px; font-weight:600; margin:2px 0 12px;}
-  .auth-or:before,.auth-or:after{content:""; flex:1; height:1px; background:var(--line);}
-  .auth-links{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px; font-size:13.5px; color:var(--ink-2);}
-  .auth-link{background:none; border:0; padding:0; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--red); cursor:pointer;}
-  .auth-link:hover{text-decoration:underline;}
   .sturow{padding:12px 0; border-bottom:1px solid var(--line);}
   .sturow:last-child{border-bottom:none;}
   .stu-top{display:flex; align-items:center; gap:11px;}
@@ -3481,32 +3468,15 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="sheetgrid" id="sheetGrid"></div>
     </div>
 
-    <!-- đăng nhập Firebase Auth thật (Google hoặc email/mật khẩu) -->
+    <!-- đăng nhập Firebase Auth thật (chỉ Google) -->
     <div class="sheet" id="loginSheet" aria-hidden="true">
       <div class="grab"></div>
       <img class="login-mascot" src="assets/chibi.png" alt="">
       <h3 id="loginTitle">Đăng nhập</h3>
       <p class="snote">Đăng nhập để đồng bộ tiến trình học của bạn.</p>
       <div id="loginFormWrap">
-        <button class="googlebtn" id="loginGoogle" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg><span>Đăng nhập bằng Google</span></button>
-        <div class="auth-or"><span>HOẶC</span></div>
-        <label class="loginfield">
-          <span class="login-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>
-          <input class="logininput" id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="Email" aria-label="Email đăng nhập" />
-        </label>
-        <label class="loginfield">
-          <span class="login-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-          <input class="logininput" id="loginPass" type="password" autocomplete="current-password" placeholder="Mật khẩu" aria-label="Mật khẩu" />
-        </label>
+        <button class="googlebtn" id="loginGoogle" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg><span>Tiếp tục bằng Google</span></button>
         <p id="loginMsg" style="font-size:13px; color:var(--red); font-weight:700; min-height:19px; margin:6px 0 10px; line-height:1.5;"></p>
-        <p id="loginOk" hidden style="font-size:13px; color:var(--teal); font-weight:700; margin:6px 0 10px; line-height:1.5;"></p>
-        <div style="display:flex; gap:10px;">
-          <button class="sheetbtn" id="loginGo" type="button" style="flex:1;">Đăng nhập</button>
-        </div>
-        <div class="auth-links">
-          <button class="auth-link" id="loginForgot" type="button">Quên mật khẩu?</button>
-          <span><span id="loginSwitchQ">Chưa có tài khoản?</span> <button class="auth-link" id="loginSwitch" type="button">Đăng ký</button></span>
-        </div>
       </div>
       <div id="loginAcctWrap" hidden>
         <p class="snote">Bạn đang đăng nhập với <b id="loginAcctEmail"></b><span id="loginAcctAdmin"></span></p>
@@ -4799,7 +4769,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu hiện đại, lưới Mục học, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu trường (đấu lệch giờ 10 câu, thắng cộng điểm đóng góp), ví Xu trong tab Cá nhân và Cửa hàng để tiêu Xu / đổi đồ hiếm bằng điểm đóng góp. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cấp độ tương ứng, kèm lộ trình 30 ngày theo cấp đang học (nhịp tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử × 4 tuần + tổng ôn + thi thử tổng kết, mở khóa từng ngày theo thứ tự, tiến độ lưu riêng từng cấp). Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Mục học và hàng tiện ích đã đổi sang phong cách chibi hiện đại (học viên chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Xu (tinh thạch ngọc lục) và Điểm đóng góp (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Cửa hàng với 6 khung kèm giá (60–250 Xu, khung Ngọc Bội 500 điểm đóng góp) — mua xong khung đeo luôn lên avatar; quân hàm cấp độ kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → huy hiệu cấp Tướng). Lưới Mục học nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Cửa hàng · Phòng chat · Đấu trường. Ô Tokutei (icon học viên chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): danh sách dọc 1 cột 14 ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ), Xây dựng ở hàng đầu và mỗi hàng ghi “(đang biên soạn)” sau tên ngành — bấm vào 1 hàng là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Mục học và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nối theo tài khoản Firebase Auth thật: đầu tab Cá nhân có mục Tài khoản để đăng nhập bằng Google hoặc email/mật khẩu, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ. Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 Xu và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu trường, Cửa hàng, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Mục học, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng Google thì app tự lấy ảnh hồ sơ của tài khoản đó làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như cũ. Đăng nhập bằng Google là app tự lấy ảnh hồ sơ của chính tài khoản đó (photoURL của Firebase) làm avatar; ai cũng tự tải ảnh từ máy lên được.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu hiện đại, lưới Mục học, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu trường (đấu lệch giờ 10 câu, thắng cộng điểm đóng góp), ví Xu trong tab Cá nhân và Cửa hàng để tiêu Xu / đổi đồ hiếm bằng điểm đóng góp. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cấp độ tương ứng, kèm lộ trình 30 ngày theo cấp đang học (nhịp tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử × 4 tuần + tổng ôn + thi thử tổng kết, mở khóa từng ngày theo thứ tự, tiến độ lưu riêng từng cấp). Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Mục học và hàng tiện ích đã đổi sang phong cách chibi hiện đại (học viên chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Xu (tinh thạch ngọc lục) và Điểm đóng góp (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Cửa hàng với 6 khung kèm giá (60–250 Xu, khung Ngọc Bội 500 điểm đóng góp) — mua xong khung đeo luôn lên avatar; quân hàm cấp độ kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → huy hiệu cấp Tướng). Lưới Mục học nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Cửa hàng · Phòng chat · Đấu trường. Ô Tokutei (icon học viên chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): danh sách dọc 1 cột 14 ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ), Xây dựng ở hàng đầu và mỗi hàng ghi “(đang biên soạn)” sau tên ngành — bấm vào 1 hàng là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Mục học và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nối theo tài khoản Firebase Auth thật: đầu tab Cá nhân có mục Tài khoản để đăng nhập bằng Google, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ. Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 Xu và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu trường, Cửa hàng, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Mục học, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng Google thì app tự lấy ảnh hồ sơ của tài khoản đó làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như cũ. Đăng nhập bằng Google là app tự lấy ảnh hồ sơ của chính tài khoản đó (photoURL của Firebase) làm avatar; ai cũng tự tải ảnh từ máy lên được.</p>
 </div>
 
   <!-- handwriting.js (MIT) — lớp gọi Google Input Tools, file nguyên bản ở assets/ -->
@@ -16287,38 +16257,13 @@ function furiHTML(text){
   /* ---------- Bảng đăng nhập (loginSheet) ---------- */
   var loginSheet = document.getElementById("loginSheet");
   var loginScrim = document.getElementById("sheetScrim");
-  var loginEmailInput = document.getElementById("loginEmail");
-  var loginPassInput = document.getElementById("loginPass");
   var loginMsgEl = document.getElementById("loginMsg");
-  var loginOkEl = document.getElementById("loginOk");
-  var loginGoBtn = document.getElementById("loginGo");
-  var skAuthMode = "login"; /* "login" | "register" */
   var skRedirectErr = ""; /* lỗi từ getRedirectResult (nếu có) — hiện khi mở bảng */
   function loginMsg(t){ if(loginMsgEl) loginMsgEl.textContent = t || ""; }
-  function loginOk(t){ if(loginOkEl){ loginOkEl.textContent = t || ""; loginOkEl.hidden = !t; } }
-  function loginShowErr(msg){ loginOk(""); loginMsg(msg); }
-  function loginShowOk(msg){ loginMsg(""); loginOk(msg); }
+  function loginShowErr(msg){ loginMsg(msg); }
   function loginSetBusy(busy){
-    if(loginGoBtn){
-      loginGoBtn.disabled = busy;
-      loginGoBtn.textContent = busy ? "Đang xử lý…" : (skAuthMode === "register" ? "Đăng ký" : "Đăng nhập");
-    }
     var gBtn = document.getElementById("loginGoogle");
     if(gBtn) gBtn.disabled = busy;
-  }
-  function applyLoginMode(){
-    var reg = skAuthMode === "register";
-    var title = document.getElementById("loginTitle");
-    if(title) title.textContent = reg ? "Đăng ký tài khoản" : "Đăng nhập";
-    if(loginGoBtn) loginGoBtn.textContent = reg ? "Đăng ký" : "Đăng nhập";
-    if(loginPassInput) loginPassInput.setAttribute("autocomplete", reg ? "new-password" : "current-password");
-    var q = document.getElementById("loginSwitchQ");
-    if(q) q.textContent = reg ? "Đã có tài khoản?" : "Chưa có tài khoản?";
-    var sw = document.getElementById("loginSwitch");
-    if(sw) sw.textContent = reg ? "Đăng nhập" : "Đăng ký";
-    var fg = document.getElementById("loginForgot");
-    if(fg) fg.style.visibility = reg ? "hidden" : "visible";
-    loginMsg(""); loginOk("");
   }
   function openLogin(){
     var formWrap = document.getElementById("loginFormWrap");
@@ -16336,8 +16281,7 @@ function furiHTML(text){
     }else{
       if(formWrap) formWrap.hidden = false;
       if(acctWrap) acctWrap.hidden = true;
-      skAuthMode = "login";
-      applyLoginMode();
+      loginMsg("");
       if(skRedirectErr){ loginMsg(skRedirectErr); skRedirectErr = ""; }
     }
     loginSheet.classList.add("open");
@@ -16350,7 +16294,6 @@ function furiHTML(text){
     var ans = document.getElementById("answerSheet");
     if(loginScrim && !(ans && ans.classList.contains("open"))) loginScrim.classList.remove("open");
   }
-  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
   function doGoogleLogin(){
     var auth = skAuth();
     if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
@@ -16365,7 +16308,7 @@ function furiHTML(text){
        Popup giữ nguyên trang nên không cần getRedirectResult. */
     auth.signInWithPopup(provider).then(function(cred){
       loginSetBusy(false);
-      /* Ghi phiên ngay từ credential — giống doLoginSubmit (listener bắn
+      /* Ghi phiên ngay từ credential (listener onAuthStateChanged bắn
          lại sau cũng chỉ ghi đè y hệt, applyAuthUser là lũy đẳng). Lỗi
          2026-11-15 "popup xong vẫn Chưa đăng nhập" KHÔNG phải do listener
          — listener bắn tốt; lỗi là tài khoản Google của Admin không có
@@ -16376,41 +16319,6 @@ function furiHTML(text){
       loginSetBusy(false);
       loginShowErr(skAuthErrorVI(err));
     });
-  }
-  function doLoginSubmit(){
-    var email = loginEmailInput ? loginEmailInput.value.trim() : "";
-    var pass = loginPassInput ? loginPassInput.value : "";
-    if(!email){ loginShowErr("Bạn chưa nhập email."); if(loginEmailInput) loginEmailInput.focus(); return; }
-    if(!validEmail(email)){ loginShowErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); if(loginEmailInput) loginEmailInput.focus(); return; }
-    if(!pass){ loginShowErr("Bạn chưa nhập mật khẩu."); if(loginPassInput) loginPassInput.focus(); return; }
-    var auth = skAuth();
-    if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
-    var reg = skAuthMode === "register";
-    loginSetBusy(true);
-    var promise = reg
-      ? auth.createUserWithEmailAndPassword(email, pass)
-      : auth.signInWithEmailAndPassword(email, pass);
-    promise.then(function(cred){
-      loginSetBusy(false);
-      /* Ghi phiên ngay từ credential (listener onAuthStateChanged sẽ bắn
-         lại cùng user và ghi đè y hệt — applyAuthUser là lũy đẳng). */
-      if(cred && cred.user) applyAuthUser(cred.user);
-      closeLogin();
-      if(isAdminAccount) openAdmin(); /* vừa đăng nhập Admin: mở thẳng trang Quản lý học viên */
-    }).catch(function(err){
-      loginSetBusy(false);
-      loginShowErr(skAuthErrorVI(err));
-    });
-  }
-  function doForgot(){
-    var email = loginEmailInput ? loginEmailInput.value.trim() : "";
-    if(!email){ loginShowErr("Bạn nhập email ở ô trên rồi bấm “Quên mật khẩu?” — thư đặt lại mật khẩu sẽ gửi về email đó."); if(loginEmailInput) loginEmailInput.focus(); return; }
-    if(!validEmail(email)){ loginShowErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); if(loginEmailInput) loginEmailInput.focus(); return; }
-    var auth = skAuth();
-    if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
-    auth.sendPasswordResetEmail(email).then(function(){
-      loginShowOk("Đã gửi thư đặt lại mật khẩu tới " + email + ". Bạn kiểm tra hộp thư (cả mục thư rác) rồi làm theo hướng dẫn trong thư nhé.");
-    }).catch(function(err){ loginShowErr(skAuthErrorVI(err)); });
   }
   function doLogout(){
     var auth = skAuth();
@@ -16480,7 +16388,7 @@ function furiHTML(text){
     try{
       auth.getRedirectResult().then(function(result){
         /* Ghi phiên ngay từ credential nếu còn kết quả redirect cũ
-           (giống doLoginSubmit — không trông chờ listener). */
+           (không trông chờ listener). */
         if(result && result.user) applyAuthUser(result.user);
         startAuthListener();
       }).catch(function(err){
@@ -16510,17 +16418,9 @@ function furiHTML(text){
   initMobileAuth();
   document.getElementById("acctLoginBtn").addEventListener("click", openLogin);
   document.getElementById("acctLogoutBtn").addEventListener("click", doLogout);
-  document.getElementById("loginGo").addEventListener("click", doLoginSubmit);
   document.getElementById("loginGoogle").addEventListener("click", doGoogleLogin);
-  document.getElementById("loginForgot").addEventListener("click", doForgot);
-  document.getElementById("loginSwitch").addEventListener("click", function(){
-    skAuthMode = skAuthMode === "login" ? "register" : "login";
-    applyLoginMode();
-  });
   document.getElementById("loginCancel2").addEventListener("click", closeLogin);
   document.getElementById("loginLogout").addEventListener("click", doLogout);
-  if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
-  if(loginPassInput) loginPassInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
   if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open") && signedInUid) closeLogin(); });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
