@@ -2183,7 +2183,7 @@
   .vsc-row b{flex:0 0 46px; text-align:right; font-size:14px;}
   #drOppBar{background:var(--ink-3);}
 
-  /* ---------- Trang Admin: Quản lý học viên ---------- */
+  /* ---------- Trang Admin: Bảng điều khiển ---------- */
   .adm-tag{font-size:10px; font-weight:800; letter-spacing:.08em; background:var(--red); color:#fff; padding:4px 8px; border-radius:999px; white-space:nowrap;}
 
   /* ---------- Tài khoản: đăng nhập / đổi tài khoản + huy hiệu Admin ---------- */
@@ -2210,6 +2210,15 @@
   .admbtn:disabled{opacity:.45; cursor:default;}
   .admbtn.done{background:var(--good-soft); color:var(--good); border-color:transparent; opacity:1;}
   .sturow.isblocked .stu-main b, .sturow.isblocked .stu-main span{color:var(--ink-3);}
+  .ordrow{padding:11px 0; border-bottom:1px solid var(--line);}
+  .ordrow:last-child{border-bottom:none;}
+  .ord-top{display:flex; align-items:center; gap:8px;}
+  .ord-code{font-size:14px; font-weight:800; letter-spacing:.02em; word-break:break-all;}
+  .ord-meta{font-size:12.5px; color:var(--ink-2); line-height:1.5; margin-top:2px; word-break:break-word;}
+  .badge.paid{background:var(--good-soft); color:var(--good);}
+  .badge.pending{background:var(--amber-soft); color:var(--amber);}
+  .adm-input{width:100%; min-height:46px; padding:0 13px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-family:inherit; font-size:14px; color:var(--ink); box-sizing:border-box;}
+  .adm-input:focus{outline:none; border-color:var(--red);}
 
   /* ---------- PWA: cài app + trạng thái offline ---------- */
   .pwabanner{
@@ -3133,7 +3142,7 @@
               <span id="acctEmail">Chưa đăng nhập</span>
               <span class="adm-tag" id="acctAdminBadge" hidden>ADMIN</span>
             </div>
-            <p class="acctnote" id="acctNote">Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng email Admin để mở.</p>
+            <p class="acctnote" id="acctNote">Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng tài khoản Google Admin để mở.</p>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="acctbtn" id="acctLoginBtn" type="button">Đăng nhập / Đổi tài khoản</button>
               <button class="acctbtn" id="acctLogoutBtn" type="button" hidden>Đăng xuất</button>
@@ -3213,7 +3222,7 @@
           </button>
           <button class="mrow" id="meAdminRow" hidden>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.4-7 10-4-1.6-7-5.5-7-10V6Z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>
-            Quản lý học viên
+            Bảng điều khiển
             <span class="adm-tag">ADMIN</span>
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
@@ -4462,33 +4471,52 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
-    <!-- ============ ADMIN OVERLAY: QUẢN LÝ HỌC VIÊN (chỉ tài khoản Admin mới thấy) ============ -->
+    <!-- ============ ADMIN OVERLAY: BẢNG ĐIỀU KHIỂN (chỉ tài khoản Admin mới thấy) ============ -->
     <div class="overlay front" id="adminOverlay" aria-hidden="true">
       <div class="detailhead">
         <button class="iconbtn" id="closeAdmin" aria-label="Quay lại — đóng quản lý học viên">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2>Quản lý học viên</h2><span>Trang riêng của Admin — học viên thường không thấy trang này</span></div>
+        <div><h2>Bảng điều khiển</h2><span>Trang riêng của Admin — học viên thường không thấy trang này</span></div>
       </div>
       <div class="detailbody">
         <div id="admLock" style="text-align:center; padding:30px 12px;">
           <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-3);"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
           <h3 style="margin:12px 0 6px; font-size:17px; font-weight:800;">Chỉ tài khoản Admin mới xem được</h3>
-          <p style="margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.6;">Tài khoản bạn đang dùng là tài khoản học viên thường nên trang Quản lý học viên bị khóa. Khi đăng nhập bằng tài khoản Admin, trang này sẽ hiện tổng số người dùng app, số tài khoản bị khóa và danh sách học viên để tặng Xu, khóa / mở khóa.</p>
+          <p style="margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.6;">Tài khoản bạn đang dùng là tài khoản học viên thường nên Bảng điều khiển bị khóa. Khi đăng nhập bằng tài khoản Admin, trang này sẽ hiện thống kê học viên/Premium/doanh thu, danh sách đơn hàng, danh sách học viên và mục cấp Premium tay.</p>
         </div>
         <div id="admMain" hidden>
         <div class="balstrip" style="grid-template-columns:1fr 1fr;">
-          <div class="stat"><b id="admUsers">1.284</b><span>TỔNG NGƯỜI DÙNG</span></div>
-          <div class="stat"><b id="admBlocked">3</b><span>ĐANG BỊ KHÓA</span></div>
+          <div class="stat"><b id="admUsers">…</b><span>TỔNG HỌC VIÊN</span></div>
+          <div class="stat"><b id="admPremYear">…</b><span>PREMIUM NĂM</span></div>
+          <div class="stat"><b id="admPremLife">…</b><span>PREMIUM TRỌN ĐỜI</span></div>
+          <div class="stat"><b id="admRevenue">…</b><span>DOANH THU (Đ)</span></div>
+          <div class="stat"><b id="admPending">…</b><span>ĐƠN CHỜ XỬ LÝ</span></div>
+          <div class="stat"><b id="admOrdersTotal">…</b><span>TỔNG ĐƠN HÀNG</span></div>
         </div>
         <p id="admMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:10px 2px 0; line-height:1.5;"></p>
+        <h2 class="secttl">Đơn hàng mới nhất</h2>
+        <div class="card shopcard" id="admOrders" style="margin-top:0;"></div>
+        <h2 class="secttl">Cấp Premium tay</h2>
+        <div class="card shopcard" id="admGrant" style="margin-top:0;">
+          <p style="font-size:13px;color:var(--ink-2);line-height:1.55;margin:8px 0 10px;">Nhập UID của học viên (bấm “Cấp Premium” ở dòng học viên để điền sẵn), chọn gói rồi bấm cấp. Premium cũ của tài khoản đó (nếu có) sẽ bị thay thế.</p>
+          <input class="adm-input" id="admGrantUid" type="text" placeholder="UID học viên (28 ký tự)" autocomplete="off" aria-label="UID học viên" />
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <select class="adm-input" id="admGrantPlan" aria-label="Chọn gói Premium" style="flex:1;">
+              <option value="year">Gói Năm (12 tháng)</option>
+              <option value="lifetime">Gói Trọn đời</option>
+            </select>
+            <button class="admbtn pri" id="admGrantBtn" type="button">Cấp Premium</button>
+          </div>
+          <p id="admGrantMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:10px 0 4px; line-height:1.5;"></p>
+        </div>
         <div class="searchbar" style="margin-top:10px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
           <input id="admSearch" type="text" placeholder="Tìm học viên theo tên…" autocomplete="off" aria-label="Tìm học viên" />
         </div>
         <h2 class="secttl">Danh sách học viên</h2>
         <div class="card shopcard" id="admList" style="margin-top:0;"></div>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Bản xem thử: số liệu và danh sách học viên là dữ liệu minh họa. Thao tác tặng Xu và khóa / mở khóa chỉ có hiệu lực trong phiên này — bản thật sẽ kiểm tra quyền Admin ở máy chủ trước khi cho mở trang.</p>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). V1 hiện tối đa 200 học viên và 100 đơn mới nhất.</p>
         <h2 class="secttl">Thư góp ý</h2>
         <div class="card shopcard" id="admInbox" style="margin-top:0;"></div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Góp ý do học viên gửi từ khung góp ý trong màn flashcard (theo từng từ) và mục “Bình luận góp ý sửa lỗi” ở cuối trang danh sách từ — lưu trên máy này kèm từ/bài liên quan và thời gian gửi, mới nhất xếp trên cùng.</p>
@@ -16630,69 +16658,235 @@ function furiHTML(text){
   renderBotRank();
   renderBotChat();
 
-  /* ---------- Trang Admin: Quản lý học viên (chỉ tài khoản Admin mới thấy) ---------- */
-  var STUDENTS = [
-    { name:"Minh Anh", rk:4, realm:"Trung sĩ", lv:"N3", blocked:false, linh:860, act:"Hoạt động 5 phút trước" },
-    { name:"Tuấn Kiệt", rk:3, realm:"Hạ sĩ", lv:"N2", blocked:false, linh:640, act:"Hoạt động 22 phút trước" },
-    { name:"Hương Ly", rk:2, realm:"Binh nhất", lv:"N4", blocked:false, linh:410, act:"Hoạt động 1 giờ trước" },
-    { name:"Khánh Linh", rk:1, realm:"Binh nhì", lv:"N4", blocked:false, linh:275, act:"Hoạt động 3 giờ trước" },
-    { name:"Văn Đức", rk:2, realm:"Binh nhất", lv:"N3", blocked:false, linh:520, act:"Hoạt động hôm qua" },
-    { name:"Thu Hằng", rk:1, realm:"Binh nhì", lv:"N5", blocked:false, linh:180, act:"Hoạt động hôm qua" },
-    { name:"Hoàng Nam", rk:0, realm:"Tân binh", lv:"N5", blocked:false, linh:95, act:"Hoạt động 2 ngày trước" },
-    { name:"Phương Thảo", rk:1, realm:"Binh nhì", lv:"N4", blocked:true, linh:60, act:"Hoạt động lần cuối 4 ngày trước" },
-    { name:"Đình Bảo", rk:0, realm:"Tân binh", lv:"N5", blocked:true, linh:40, act:"Hoạt động lần cuối 6 ngày trước" },
-    { name:"Ngọc Trâm", rk:1, realm:"Binh nhì", lv:"N4", blocked:true, linh:120, act:"Hoạt động lần cuối 1 tuần trước" }
-  ];
-  var admBlockedTotal = 3;
+  /* ---------- Bảng điều khiển Admin: thống kê + đơn hàng + học viên (dữ liệu Firestore thật) ----------
+     Đọc từ Firestore bằng SDK compat đã nạp cho paywall (dùng lại
+     premiumFbApp()): kanji_progress (danh sách học viên + Premium) và
+     sk_orders (đơn hàng). Chỉ tài khoản Admin (ADMIN_UIDS/ADMIN_EMAILS)
+     mở được trang này; rules Firestore cũng chỉ cho Admin đọc 2 collection
+     trên. V1 đếm ở client, giới hạn 200 học viên + 100 đơn mới nhất.
+     "Tổng học viên" chỉ đếm tài khoản ĐÃ CÓ doc kanji_progress (tài khoản
+     mới đăng ký chưa có dữ liệu học/Premium thì chưa có doc — không đếm
+     được từ client vì không đọc được danh sách Firebase Auth).
+     Cấp Premium tay ghi kanji_progress/{uid}.premium bằng set merge —
+     rules chỉ cho Admin ghi ĐÚNG field premium.
+     LƯU Ý 2026-11-15: Quản lý học viên trước đây là DỮ LIỆU MẪU hard-code
+     (mảng mẫu 10 tên + tổng 1.284) — đã thay bằng dữ liệu thật. Nút
+     "Tặng 50 Xu" / "Khóa tài khoản" cũ chỉ sửa mảng trong bộ nhớ (không có
+     tác dụng thật — Xu lưu localStorage từng máy, app không đọc field khóa
+     nào) nên đã BỎ khỏi v1, không ship thao tác admin giả. */
+  var admStudents = []; /* [{uid, name, premium, bestExam, examDone}] từ kanji_progress */
+  var admOrders = []; /* [{code, uid, email, displayName, package, amount, status, createdAtMs}] từ sk_orders */
+  var admLoaded = false;
+  var admLoading = false;
+  var admLoadErr = "";
   var adminOverlay = document.getElementById("adminOverlay");
   function admMsg(t){ setTxt("admMsg", t); }
+  function admPlanLabel(pkg){ return pkg === "lifetime" ? "Trọn đời" : (pkg === "year" ? "Gói Năm" : "—"); }
+  function admFmtDate(ms){
+    if(!ms) return "—";
+    try{ return new Date(ms).toLocaleDateString("vi-VN"); }catch(_){ return "—"; }
+  }
+  function admShortUid(uid){
+    uid = String(uid || "");
+    return uid.length > 12 ? uid.slice(0, 8) + "…" + uid.slice(-4) : uid;
+  }
+  function admStudentName(d){
+    var p = d && d.profile ? d.profile : null;
+    var n = (p && (p.name || p.displayName)) || (d && (d.displayName || d.name)) || "";
+    return String(n || "").trim();
+  }
+  function admDb(){
+    try{
+      var app = premiumFbApp();
+      return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
+    }catch(_){ return null; }
+  }
+  function admLoadDashboard(){
+    if(!isAdminAccount) return;
+    if(admLoading) return;
+    admLoading = true;
+    admLoadErr = "";
+    admMsg("Đang tải dữ liệu…");
+    renderAdmin();
+    var db = admDb();
+    if(!db){
+      admLoading = false;
+      admLoadErr = "Chưa kết nối được máy chủ — kiểm tra mạng rồi mở lại trang nhé.";
+      admMsg(admLoadErr);
+      renderAdmin();
+      return;
+    }
+    Promise.all([
+      db.collection("kanji_progress").limit(200).get(),
+      db.collection("sk_orders").limit(100).get()
+    ]).then(function(res){
+      var kp = res[0], so = res[1];
+      admStudents = [];
+      kp.forEach(function(doc){
+        var d = doc.data() || {};
+        admStudents.push({uid: doc.id, name: admStudentName(d), premium: (d.premium && d.premium.plan) ? d.premium : null, bestExam: d.bestExam, examDone: d.examDone});
+      });
+      admStudents.sort(function(a, b){
+        if(a.name && b.name) return a.name.localeCompare(b.name, "vi");
+        if(a.name) return -1;
+        if(b.name) return 1;
+        return a.uid < b.uid ? -1 : (a.uid > b.uid ? 1 : 0);
+      });
+      admOrders = [];
+      so.forEach(function(doc){
+        var d = doc.data() || {};
+        admOrders.push({code: doc.id, uid: d.uid || "", email: d.email || "", displayName: d.displayName || "", package: d.package || "", amount: (typeof d.amount === "number" ? d.amount : 0), status: d.status || "", createdAtMs: premiumTsToMs(d.createdAt)});
+      });
+      admOrders.sort(function(a, b){ return (b.createdAtMs || 0) - (a.createdAtMs || 0); });
+      admLoaded = true;
+      admLoading = false;
+      admLoadErr = "";
+      admMsg("");
+      renderAdmin();
+    }).catch(function(err){
+      admLoading = false;
+      admLoadErr = (err && err.code === "permission-denied")
+        ? "Tài khoản này chưa được cấp quyền đọc dữ liệu Admin (kiểm tra rules Firestore)."
+        : "Không tải được dữ liệu — kiểm tra mạng rồi mở lại trang nhé.";
+      admMsg(admLoadErr);
+      renderAdmin();
+    });
+  }
   function renderAdminStats(){
-    setTxt("admBlocked", fmtN(admBlockedTotal));
+    var ids = ["admUsers", "admPremYear", "admPremLife", "admRevenue", "admPending", "admOrdersTotal"];
+    if(!admLoaded){ ids.forEach(function(id){ setTxt(id, "…"); }); return; }
+    var y = 0, l = 0;
+    admStudents.forEach(function(s){
+      if(s.premium && premiumIsActive(s.premium)){
+        if(s.premium.plan === "lifetime") l++;
+        else if(s.premium.plan === "year") y++;
+      }
+    });
+    var rev = 0, pend = 0;
+    admOrders.forEach(function(o){
+      if(o.status === "paid") rev += o.amount;
+      else if(o.status === "pending") pend++;
+    });
+    setTxt("admUsers", fmtN(admStudents.length));
+    setTxt("admPremYear", fmtN(y));
+    setTxt("admPremLife", fmtN(l));
+    setTxt("admRevenue", fmtN(rev));
+    setTxt("admPending", fmtN(pend));
+    setTxt("admOrdersTotal", fmtN(admOrders.length));
+  }
+  function renderAdminOrders(){
+    var box = document.getElementById("admOrders");
+    if(!box) return;
+    box.innerHTML = "";
+    if(admLoading){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải đơn hàng…</p>';
+      return;
+    }
+    if(admLoadErr){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admLoadErr) + '</p>';
+      return;
+    }
+    if(!admOrders.length){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Chưa có đơn hàng nào.</p>';
+      return;
+    }
+    admOrders.forEach(function(o){
+      var paid = o.status === "paid";
+      var d = document.createElement("div");
+      d.className = "ordrow";
+      d.innerHTML = '<div class="ord-top"><b class="ord-code">' + esc(o.code) + '</b>' +
+        '<span class="badge ' + (paid ? "paid" : "pending") + '">' + (paid ? "Đã thanh toán" : "Chờ xử lý") + '</span></div>' +
+        '<div class="ord-meta">' + esc(admPlanLabel(o.package)) + ' · ' + esc(o.displayName || o.email || admShortUid(o.uid)) + '</div>' +
+        '<div class="ord-meta">' + fmtN(o.amount) + 'đ · ' + esc(admFmtDate(o.createdAtMs)) + '</div>';
+      box.appendChild(d);
+    });
   }
   function renderAdmin(){
+    renderAdminStats();
+    renderAdminOrders();
     var q = norm(document.getElementById("admSearch").value || "").trim();
     var list = document.getElementById("admList");
     list.innerHTML = "";
+    if(admLoading){
+      list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải danh sách học viên…</p>';
+      renderAdminInbox();
+      return;
+    }
+    if(admLoadErr){
+      list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admLoadErr) + '</p>';
+      renderAdminInbox();
+      return;
+    }
     var shown = 0;
-    STUDENTS.forEach(function(s, idx){
-      if(q && norm(s.name).indexOf(q) < 0) return;
+    admStudents.forEach(function(s){
+      if(q && norm(s.name + " " + s.uid).indexOf(q) < 0) return;
       shown++;
+      var badge;
+      if(s.premium && premiumIsActive(s.premium)){
+        badge = '<span class="badge">' + esc(s.premium.plan === "lifetime" ? "Trọn đời" : "Gói Năm") + (s.premium.plan === "year" && s.premium.until ? " · hết hạn " + esc(admFmtDate(premiumTsToMs(s.premium.until))) : "") + '</span>';
+      } else if(s.premium && s.premium.plan){
+        badge = '<span class="badge blocked">Hết hạn</span>';
+      } else {
+        badge = '<span class="badge todo">Miễn phí</span>';
+      }
+      var bits = ["UID " + admShortUid(s.uid)];
+      if(s.examDone !== undefined && s.examDone !== null) bits.push("Đã thi " + s.examDone + " đề");
+      if(s.bestExam !== undefined && s.bestExam !== null) bits.push("Điểm cao nhất " + s.bestExam);
+      var av = ((s.name || s.uid || "?").charAt(0) || "?").toUpperCase();
       var row = document.createElement("div");
-      row.className = "sturow" + (s.blocked ? " isblocked" : "");
-      var status = s.blocked ? '<span class="badge blocked">Đã khóa</span>'
-        : '<span class="badge">Đang hoạt động</span>';
-      row.innerHTML =
-        '<div class="stu-top"><span class="stu-av">' + s.name.charAt(0) + '</span>' +
-        '<span class="stu-main"><b>' + s.name + '</b>' +
-        '<span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + s.rk + '"></use></svg>' + s.realm + ' · Đang học ' + s.lv + '</span>' +
-        '<span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-linh"></use></svg>' + fmtN(s.linh) + ' Xu · ' + s.act + '</span></span>' + status + '</div>' +
-        '<div class="stu-actions">' +
-          '<button class="admbtn" data-adm="gift" data-i="' + idx + '"' + (s.blocked ? " disabled" : "") + '>Tặng 50 Xu</button>' +
-          (s.blocked
-            ? '<button class="admbtn" data-adm="block" data-i="' + idx + '">Mở khóa</button>'
-            : '<button class="admbtn" data-adm="block" data-i="' + idx + '">Khóa tài khoản</button>') +
-        '</div>';
+      row.className = "sturow";
+      row.innerHTML = '<div class="stu-top"><span class="stu-av">' + esc(av) + '</span>' +
+        '<span class="stu-main"><b>' + esc(s.name || admShortUid(s.uid)) + '</b>' +
+        '<span>' + esc(bits.join(" · ")) + '</span></span>' + badge + '</div>' +
+        '<div class="stu-actions"><button class="admbtn" data-admgrant="' + esc(s.uid) + '">Cấp Premium</button></div>';
       list.appendChild(row);
     });
     if(!shown){
-      list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Không thấy học viên nào khớp với từ khóa.</p>';
+      list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + (admStudents.length ? "Không thấy học viên nào khớp với từ khóa." : "Chưa có tài khoản học viên nào có dữ liệu.") + '</p>';
     }
-    list.querySelectorAll("[data-adm]").forEach(function(b){
+    list.querySelectorAll("[data-admgrant]").forEach(function(b){
       b.addEventListener("click", function(){
-        var s = STUDENTS[parseInt(b.dataset.i, 10)];
-        if(b.dataset.adm === "gift"){
-          s.linh += 50;
-          admMsg("Đã tặng 50 Xu cho " + s.name + " — số dư mới: " + fmtN(s.linh) + " Xu.");
-        } else if(b.dataset.adm === "block"){
-          s.blocked = !s.blocked;
-          admBlockedTotal += s.blocked ? 1 : -1;
-          admMsg(s.blocked ? ("Đã khóa tài khoản của " + s.name + ".") : ("Đã mở khóa cho " + s.name + "."));
-        }
-        renderAdmin();
+        var uid = b.getAttribute("data-admgrant");
+        var inp = document.getElementById("admGrantUid");
+        if(inp){ inp.value = uid; inp.focus(); }
+        admMsg("Đã điền UID — chọn gói rồi bấm Cấp Premium.");
+        var g = document.getElementById("admGrant");
+        if(g && g.scrollIntoView) g.scrollIntoView({behavior: "smooth", block: "center"});
       });
     });
-    renderAdminStats();
     renderAdminInbox();
+  }
+  function admGrantPremium(){
+    var inp = document.getElementById("admGrantUid");
+    var sel = document.getElementById("admGrantPlan");
+    var msg = document.getElementById("admGrantMsg");
+    var btn = document.getElementById("admGrantBtn");
+    function gmsg(t){ if(msg) msg.textContent = t || ""; }
+    var uid = inp ? inp.value.trim() : "";
+    var plan = sel ? sel.value : "year";
+    if(!uid){ gmsg("Bạn chưa nhập UID học viên."); if(inp) inp.focus(); return; }
+    if(plan !== "year" && plan !== "lifetime"){ gmsg("Gói chưa hợp lệ."); return; }
+    if(!confirm("Cấp " + (plan === "lifetime" ? "Gói Trọn đời" : "Gói Năm (12 tháng)") + " cho UID " + uid + "?\nPremium cũ của tài khoản này (nếu có) sẽ bị thay thế.")) return;
+    var db = admDb();
+    if(!db){ gmsg("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại."); return; }
+    gmsg("Đang cấp Premium…");
+    if(btn) btn.disabled = true;
+    var now = firebase.firestore.Timestamp.now();
+    var until = null;
+    if(plan === "year"){
+      var d = now.toDate();
+      d.setMonth(d.getMonth() + 12);
+      until = firebase.firestore.Timestamp.fromDate(d);
+    }
+    db.collection("kanji_progress").doc(uid).set({premium: {plan: plan, since: now, until: until}}, {merge: true}).then(function(){
+      if(btn) btn.disabled = false;
+      gmsg("Đã cấp " + (plan === "lifetime" ? "Gói Trọn đời" : "Gói Năm") + " cho " + uid + ".");
+      admMsg("Đã cấp Premium — đang tải lại dữ liệu…");
+      admLoadDashboard();
+    }).catch(function(err){
+      if(btn) btn.disabled = false;
+      gmsg((err && err.code === "permission-denied") ? "Không có quyền cấp Premium (kiểm tra rules Firestore)." : "Cấp Premium lỗi — thử lại nhé.");
+    });
   }
   /* ---------- Tài khoản + quyền Admin theo email ----------
      Email được cấp Admin trong app: nongaphao@gmail.com (cùng luật với bản
@@ -16702,7 +16896,7 @@ function furiHTML(text){
      duy nhất); không còn đường gõ email demo nào nữa. Tín hiệu "đã đăng
      nhập" là signedInUid (bản sửa 5, 2026-11-15: tài khoản Google của
      Admin không có email nên email rỗng KHÔNG có nghĩa là chưa đăng nhập).
-     Đúng email/UID Admin thì ô “Quản trị” + mục Quản lý học viên hiện. */
+     Đúng email/UID Admin thì ô “Quản trị” + mục Bảng điều khiển hiện. */
   var ADMIN_EMAILS = ["nongaphao@gmail.com"];
   var ADMIN_UIDS = ["kymtRAzDs9RefxtoREh5sa6fE142"]; /* UID tài khoản Google của Admin — tài khoản này KHÔNG có email trong Firebase (đăng nhập Google lần đầu không trả email, chẩn đoán 2026-11-15), nên nhận diện Admin bằng UID thay vì email */
   var signedInEmail = ""; /* email tài khoản Firebase đang đăng nhập; CÓ THỂ RỖNG với tài khoản Google không có email — KHÔNG dùng làm tín hiệu "đã đăng nhập" */
@@ -16720,10 +16914,10 @@ function furiHTML(text){
     var note = document.getElementById("acctNote");
     if(note){
       note.textContent = isAdminAccount
-        ? "Tài khoản Admin — ô Quản trị ở Home và mục Quản lý học viên bên dưới đã mở."
+        ? "Tài khoản Admin — ô Quản trị ở Home và mục Bảng điều khiển bên dưới đã mở."
         : (signedInUid
           ? "Tài khoản học viên thường — mục Quản trị chỉ hiện với tài khoản Admin."
-          : "Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng email Admin để mở.");
+          : "Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng tài khoản Google Admin để mở.");
     }
     var outBtn = document.getElementById("acctLogoutBtn");
     if(outBtn) outBtn.hidden = !signedInUid;
@@ -16744,12 +16938,13 @@ function furiHTML(text){
   function openAdmin(){
     document.getElementById("admLock").hidden = isAdminAccount;
     document.getElementById("admMain").hidden = !isAdminAccount;
-    if(isAdminAccount) renderAdmin();
+    if(isAdminAccount) admLoadDashboard();
     showOv(adminOverlay);
   }
   document.getElementById("admSearch").addEventListener("input", renderAdmin);
   document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
+  document.getElementById("admGrantBtn").addEventListener("click", admGrantPremium);
 
   /* ---------- Đăng nhập Firebase Auth (thật) ----------
      Cùng project donghung-3208d với bản web — dùng lại SVU_FB_CONFIG đã có
