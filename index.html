@@ -5667,9 +5667,11 @@ function renderChuyenAmPage(){
 
 /* ================= PREMIUM / THANH TOÁN =================
    Gói miễn phí = toàn bộ N5 ở mọi mục. Premium mở N4–N1.
-   Thanh toán: chuyển khoản MB Bank + mã đơn SK........ (VietQR động).
+   Thanh toán: chuyển khoản VietinBank + nội dung "SEVQR SK........"
+   (VietQR động). SePay chỉ thấy giao dịch VietinBank khi nội dung bắt đầu
+   bằng SEVQR — xem skTransferMemo.
    Đơn hàng lưu ở Firestore sk_orders/{code} (xem skCreateOrder); kích hoạt
-   Premium do hệ thống email-watch phía backend thực hiện, KHÔNG phải nút
+   Premium do webhook SePay phía backend thực hiện, KHÔNG phải nút
    "Tôi đã chuyển khoản" (nút đó chỉ ghi nhận phía client).
    Premium đọc từ kanji_progress/{uid}.premium: until == null là Trọn đời,
    until là thời điểm (Timestamp Firestore / millis / giây) còn trong tương
@@ -5679,14 +5681,18 @@ var SK_PACKAGES = {
   year: {label: "Gói Năm", dur: "12 tháng", sale: 499000, full: 799000, save: 300000},
   lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 2499000, save: 1500000}
 };
-var SK_MB_ACC = "94199419941994";
-var SK_MB_NAME = "DONG THANH HUNG";
+var SK_VTB_ACC = "108888811513";
+var SK_VTB_NAME = "DONG THANH HUNG";
 function skSaleActive(){ return Date.now() <= SK_SALE_END; }
 function skPrice(pkg){ var p = SK_PACKAGES[pkg] || SK_PACKAGES.year; return skSaleActive() ? p.sale : p.full; }
 function skFmtVND(n){ return Number(n).toLocaleString("vi-VN") + "đ"; }
-function skVietQR(amount, code){
-  return "https://img.vietqr.io/image/MB-94199419941994-compact2.png?amount=" + amount +
-    "&addInfo=" + encodeURIComponent(code) + "&accountName=DONG%20THANH%20HUNG";
+/* Nội dung chuyển khoản đầy đủ: SePay chỉ nhận giao dịch VietinBank khi
+   nội dung bắt đầu bằng SEVQR. Mã đơn lưu Firestore vẫn là SK+8 (xem
+   skCreateOrder) — tiền tố SEVQR chỉ thêm ở phần hiển thị + VietQR. */
+function skTransferMemo(code){ return "SEVQR " + code; }
+function skVietQR(amount, memo){
+  return "https://img.vietqr.io/image/ICB-108888811513-compact2.png?amount=" + amount +
+    "&addInfo=" + encodeURIComponent(memo) + "&accountName=DONG%20THANH%20HUNG";
 }
 function skDb(){
   try{
@@ -6021,11 +6027,11 @@ function skStartCheckout(pkg){
 function renderCheckoutView(o){
   var p = SK_PACKAGES[o.pkg] || SK_PACKAGES.year;
   document.title = "Thanh toán — " + p.label + " | SoraKanji";
-  var qr = skVietQR(o.amount, o.code);
+  var qr = skVietQR(o.amount, skTransferMemo(o.code));
   var email = (skAuthUser() || {}).email || "";
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nangcap">Nâng cấp</a> / Thanh toán</div>' +
     "<h1>Thanh toán — " + p.label + "</h1>" +
-    "<p>Chuyển khoản đúng số tiền và đúng mã đơn bên dưới — hệ thống tự động kích hoạt Premium cho tài khoản của bạn.</p></div>" +
+    "<p>Chuyển khoản đúng số tiền và đúng nội dung chuyển khoản bên dưới — hệ thống tự động kích hoạt Premium cho tài khoản của bạn.</p></div>" +
     '<div style="max-width:680px;padding-bottom:36px">' +
     '<div class="card"><h3 style="margin-top:0">Đơn hàng của bạn</h3>' +
     '<table class="bank-rows"><tbody>' +
@@ -6033,19 +6039,19 @@ function renderCheckoutView(o){
     '<tr><td>Số tiền</td><td style="color:var(--red);font-size:19px">' + skFmtVND(o.amount) + "</td></tr>" +
     "<tr><td>Tài khoản</td><td>" + esc(email) + "</td></tr>" +
     "</tbody></table>" +
-    "<p style=\"font-weight:800;margin:14px 0 4px\">Mã đơn — ghi ĐÚNG mã này vào nội dung chuyển khoản:</p>" +
-    '<div class="code-box"><span class="code" id="skCode">' + esc(o.code) + '</span>' +
-    '<button class="btn sm ghost" id="copyCode" type="button">Sao chép mã</button></div>' +
-    '<div class="qr-box"><img src="' + qr + '" alt="Mã VietQR thanh toán ' + p.label + '"><p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Quét mã bằng app ngân hàng — số tiền và mã đơn đã điền sẵn.</p></div>' +
+    "<p style=\"font-weight:800;margin:14px 0 4px\">Nội dung chuyển khoản — ghi ĐÚNG cả dòng này (kể cả SEVQR):</p>" +
+    '<div class="code-box"><span class="code" id="skCode">' + esc(skTransferMemo(o.code)) + '</span>' +
+    '<button class="btn sm ghost" id="copyCode" type="button">Sao chép nội dung</button></div>' +
+    '<div class="qr-box"><img src="' + qr + '" alt="Mã VietQR thanh toán ' + p.label + '"><p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Quét mã bằng app ngân hàng — số tiền và nội dung chuyển khoản đã điền sẵn.</p></div>' +
     "<p style=\"font-weight:800;margin:14px 0 4px\">Hoặc chuyển khoản thủ công:</p>" +
     '<table class="bank-rows"><tbody>' +
-    "<tr><td>Ngân hàng</td><td>MB Bank</td></tr>" +
-    "<tr><td>Chủ tài khoản</td><td>" + SK_MB_NAME + "</td></tr>" +
-    '<tr><td>Số tài khoản</td><td><span id="skAcc">' + SK_MB_ACC + '</span> <button class="btn sm ghost" id="copyAcc" type="button" style="margin-left:6px">Sao chép</button></td></tr>' +
+    "<tr><td>Ngân hàng</td><td>VietinBank</td></tr>" +
+    "<tr><td>Chủ tài khoản</td><td>" + SK_VTB_NAME + "</td></tr>" +
+    '<tr><td>Số tài khoản</td><td><span id="skAcc">' + SK_VTB_ACC + '</span> <button class="btn sm ghost" id="copyAcc" type="button" style="margin-left:6px">Sao chép</button></td></tr>' +
     "<tr><td>Số tiền</td><td>" + skFmtVND(o.amount) + "</td></tr>" +
-    "<tr><td>Nội dung</td><td>" + esc(o.code) + "</td></tr>" +
+    "<tr><td>Nội dung</td><td>" + esc(skTransferMemo(o.code)) + "</td></tr>" +
     "</tbody></table>" +
-    '<div class="note-box" style="margin-top:14px">⚠️ <b>Ghi ĐÚNG mã ' + esc(o.code) + ' vào nội dung chuyển khoản.</b> Sai mã hoặc thiếu mã, hệ thống không tự kích hoạt được — bạn sẽ cần liên hệ hỗ trợ để kích hoạt thủ công.</div>' +
+    '<div class="note-box" style="margin-top:14px">⚠️ <b>Ghi ĐÚNG nội dung ' + esc(skTransferMemo(o.code)) + ' (kể cả SEVQR).</b> Sai hoặc thiếu nội dung, hệ thống không tự kích hoạt được — bạn sẽ cần liên hệ hỗ trợ để kích hoạt thủ công.</div>' +
     (o.ack
       ? '<div class="note-box" style="margin-top:16px;border-color:var(--ok);background:var(--ok-bg)">✅ <b>Đã ghi nhận!</b> Premium sẽ được kích hoạt tự động sau khi hệ thống nhận được chuyển khoản — <b>thường vài phút, tối đa 24h</b>. Bạn cứ học tiếp N5 trong lúc chờ, không cần làm gì thêm.</div>' +
         '<p style="margin:12px 0 0"><button class="btn ghost" id="recheckBtn" type="button">Kiểm tra lại trạng thái</button></p>'
@@ -6053,8 +6059,8 @@ function renderCheckoutView(o){
     '<p id="ckMsg" style="font-size:13.5px;color:var(--ok);font-weight:700;min-height:20px;margin:10px 0 0"></p></div>' +
     '<p style="margin-top:14px"><button class="btn ghost" id="otherPkg" type="button">← Chọn gói khác</button></p></div>';
   $app.innerHTML = h;
-  document.getElementById("copyCode").addEventListener("click", function(){ skCopyText(o.code, "Đã sao chép mã đơn."); });
-  document.getElementById("copyAcc").addEventListener("click", function(){ skCopyText(SK_MB_ACC, "Đã sao chép số tài khoản."); });
+  document.getElementById("copyCode").addEventListener("click", function(){ skCopyText(skTransferMemo(o.code), "Đã sao chép nội dung chuyển khoản."); });
+  document.getElementById("copyAcc").addEventListener("click", function(){ skCopyText(SK_VTB_ACC, "Đã sao chép số tài khoản."); });
   var paid = document.getElementById("paidBtn");
   if(paid) paid.addEventListener("click", function(){
     o.ack = true;
