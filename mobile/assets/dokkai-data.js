@@ -1,10 +1,13 @@
 // SoraKanji Đọc hiểu AI v1 — 10 bài đọc (N5–N1), tạo bằng Gemini free key,
 // kiểm chứng cấp độ độc lập (xem CONTENT-REPORT.md). Nạp lười: mobile/assets/dokkai-data.js
 // v2 (2026-11-15): thêm field img — ảnh minh họa tại mobile/assets/dokkai/<id>.jpg
+// v3 (2026-11-15): thêm field audio + timings — MP3 thật tại mobile/assets/dokkai/audio/<id>.mp3 (Cloud TTS ja-JP-Neural2-B)
 window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n5-01",
   "img": "dk-n5-01.jpg",
+  "audio": "dk-n5-01.mp3",
+  "timings": [0.015, 2.731, 5.184, 8.542, 11.319, 14.29, 16.646, 19.484],
   "level": "N5",
   "title": "わたしの せんせい",
   "titleVi": "Thầy giáo của tôi",
@@ -480,6 +483,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n5-02",
   "img": "dk-n5-02.jpg",
+  "audio": "dk-n5-02.mp3",
+  "timings": [0.015, 3.053, 5.464, 7.58, 9.674, 13.2, 16.578, 18.046],
   "level": "N5",
   "title": "はじめての すし",
   "titleVi": "Lần đầu ăn sushi",
@@ -963,6 +968,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n4-01",
   "img": "dk-n4-01.jpg",
+  "audio": "dk-n4-01.mp3",
+  "timings": [0.015, 4.544, 8.857, 14.579, 18.432, 24.232, 28, 30.955, 35.585],
   "level": "N4",
   "title": "駅前の 本屋",
   "titleVi": "Hiệu sách trước ga",
@@ -1778,6 +1785,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n4-02",
   "img": "dk-n4-02.jpg",
+  "audio": "dk-n4-02.mp3",
+  "timings": [0.015, 4.235, 7.507, 11.821, 14.516, 19.859, 23.774, 26.942, 31.203, 34.191],
   "level": "N4",
   "title": "花見に 行きました",
   "titleVi": "Tôi đã đi ngắm hoa anh đào",
@@ -2543,6 +2552,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n3-01",
   "img": "dk-n3-01.jpg",
+  "audio": "dk-n3-01.mp3",
+  "timings": [0.015, 5.195, 10.052, 15.083, 21.639, 25.261, 30.557, 35.621, 41.403, 45.74],
   "level": "N3",
   "title": "コンビニの おにぎり",
   "titleVi": "Cơm nắm ở cửa hàng tiện lợi",
@@ -3482,6 +3493,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n3-02",
   "img": "dk-n3-02.jpg",
+  "audio": "dk-n3-02.mp3",
+  "timings": [0.015, 4.225, 9.329, 13.46, 17.903, 21.755, 24.685, 29.132, 32.74, 37.937, 42.241],
   "level": "N3",
   "title": "自転車で 通勤",
   "titleVi": "Đạp xe đi làm",
@@ -4119,6 +4132,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n2-01",
   "img": "dk-n2-01.jpg",
+  "audio": "dk-n2-01.mp3",
+  "timings": [0.015, 4.828, 11.728, 18.243, 23.338, 30.381, 36.808, 43.74, 48.974, 53.414],
   "level": "N2",
   "title": "せんとうの 文化",
   "titleVi": "Văn hóa nhà tắm công cộng (Sento)",
@@ -5526,6 +5541,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n2-02",
   "img": "dk-n2-02.jpg",
+  "audio": "dk-n2-02.mp3",
+  "timings": [0.015, 4.24, 9.765, 16.651, 22.67, 29.289, 34.485, 41.24, 48.003, 55.165],
   "level": "N2",
   "title": "方言の おもしろさ",
   "titleVi": "Cái hay của phương ngữ",
@@ -7029,6 +7046,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n1-01",
   "img": "dk-n1-01.jpg",
+  "audio": "dk-n1-01.mp3",
+  "timings": [0.015, 7.523, 14.913, 22.162, 30.365, 38.708, 44.94, 50.895, 58.75, 65.427],
   "level": "N1",
   "title": "手書きの手紙",
   "titleVi": "Thư viết tay",
@@ -8176,6 +8195,8 @@ window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n1-02",
   "img": "dk-n1-02.jpg",
+  "audio": "dk-n1-02.mp3",
+  "timings": [0.015, 7.314, 14.48, 22.873, 30.697, 38.555, 46.432, 53.05, 59.395, 65.374, 71.953, 78.07, 84.632, 90.568],
   "level": "N1",
   "title": "俳句と季節",
   "titleVi": "Thơ haiku và bốn mùa",
