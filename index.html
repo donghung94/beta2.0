@@ -1221,8 +1221,21 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .dk-lv-N2{background:#7e57c2}
 .dk-lv-N1{background:#c0392b}
 .dk-card .dk-meta{font-size:12.5px}
-.dk-bar{position:sticky; top:64px; z-index:40; display:flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--card); border:1.5px solid var(--line-strong); border-radius:12px; padding:10px 12px; margin:14px 0; box-shadow:0 2px 10px rgba(20,16,12,.08)}
+.dk-bar{position:sticky; top:64px; z-index:40; background:var(--card); border:1.5px solid var(--line-strong); border-radius:12px; padding:12px 14px; margin:14px 0; box-shadow:0 2px 10px rgba(20,16,12,.08)}
 .dk-bar .dk-tgl.on{background:var(--blue); border-color:var(--blue); color:#fff}
+.dk-prow{display:flex; gap:10px; align-items:center}
+.dk-time{font-size:13.5px; font-weight:700; color:var(--muted); white-space:nowrap; min-width:32px; text-align:center; font-variant-numeric:tabular-nums}
+.dk-seek{-webkit-appearance:none; appearance:none; flex:1; min-width:0; height:6px; border-radius:999px; background:#4a4a4a; outline:none; cursor:pointer}
+.dk-seek::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%; background:var(--blue); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer}
+.dk-seek::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:var(--blue); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer}
+.dk-seek::-moz-range-track{height:6px; border-radius:999px; background:#4a4a4a}
+.dk-crow{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px}
+.dk-grp{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.dk-grp.dk-right{margin-left:auto}
+.dk-sq{width:40px; height:40px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:18px; line-height:1; border-radius:10px; background:var(--card2); border:1.5px solid var(--line); color:var(--ink); cursor:pointer; flex:none}
+.dk-sq:hover{border-color:var(--blue)}
+.dk-sq.dk-play{width:44px; height:44px; font-size:20px; background:var(--blue); border-color:var(--blue); color:#fff}
+.dk-sq.dk-play:hover{background:var(--blue-dark); border-color:var(--blue-dark)}
 .dk-note{font-size:13px; color:var(--muted)}
 .dk-pass{font-size:18px; line-height:2}
 .dk-sent{padding:8px 10px; border-radius:9px; cursor:pointer}
@@ -4637,7 +4650,7 @@ function renderExamHome(){
       return '<a class="exam-lv" href="#/nghe/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + '</b><span data-ln="' + lv + '"></span></a>';
     }).join("") + "</div>" +
     '<h2 class="secttl">Đọc hiểu AI</h2>' +
-    "<p style=\"color:var(--muted);font-size:14.5px;line-height:1.6;max-width:760px;margin:0\">Bài đọc ngắn theo từng cấp, có audio giọng máy đọc từng câu kèm chữ sáng theo câu, bản dịch tiếng Việt, từ vựng trọng điểm và câu hỏi kiểm tra.</p>" +
+    "<p style=\"color:var(--muted);font-size:14.5px;line-height:1.6;max-width:760px;margin:0\">Bài đọc ngắn theo từng cấp, có audio đọc từng câu kèm chữ sáng theo câu, bản dịch tiếng Việt, từ vựng trọng điểm và câu hỏi kiểm tra.</p>" +
     '<div class="lesson-grid" style="padding:14px 0 36px">' +
     '<a class="lesson-card" href="#/dokkai"><b>📖 Thư viện Đọc hiểu AI</b><span>Bài N5 mở miễn phí · Bài N4–N1 cần Premium</span></a>' +
     "</div>";
@@ -5161,7 +5174,7 @@ function renderDokkaiHome(lvFilter){
     var list = lv ? all.filter(function(p){ return p.level === lv; }) : all;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / Đọc hiểu AI</div>' +
       "<h1>Đọc hiểu AI</h1>" +
-      "<p>Bài đọc ngắn theo từng cấp, có audio giọng máy đọc từng câu kèm chữ sáng theo câu, bản dịch tiếng Việt, từ vựng trọng điểm và câu hỏi kiểm tra. Bài N5 mở miễn phí, bài N4–N1 cần Premium.</p></div>" +
+      "<p>Bài đọc ngắn theo từng cấp, có audio đọc từng câu kèm chữ sáng theo câu, bản dịch tiếng Việt, từ vựng trọng điểm và câu hỏi kiểm tra. Bài N5 mở miễn phí, bài N4–N1 cần Premium.</p></div>" +
       '<div class="dk-filter">' +
       '<a class="dk-pill' + (lv === "" ? " on" : "") + '" href="#/dokkai">Tất cả</a>' +
       LEVELS.map(function(l){ return '<a class="dk-pill' + (lv === l ? " on" : "") + '" href="#/dokkai?lv=' + l + '">' + l + (skLevelLocked(l) ? " 🔒" : "") + "</a>"; }).join("") +
@@ -5183,8 +5196,11 @@ function renderDokkaiHome(lvFilter){
     $app.innerHTML = h;
   }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu đọc hiểu.</div>'; });
 }
-/* ----- Trình phát karaoke bằng giọng đọc của máy (device TTS) ----- */
+/* ----- Trình phát Đọc hiểu AI: file MP3 thật (karaoke theo timings) ----- */
+/* MP3 là chính; khi bài không có audio hoặc tải lỗi thì rơi về giọng đọc
+   của máy (device TTS) như v1 — xem dkUseMp3()/dkSpeakTTS(). */
 var dkCur = null, dkIdx = -1, dkPlaying = false, dkRepeat = false, dkRate = 1, dkFuri = false, dkVi = false, dkUtter = null;
+var dkAudio = null, dkTtsFallback = false, dkPlayTo = null, dkMp3Want = -1, dkSeeking = false;
 var dkAnswered = {};
 var DK_RATES = [0.75, 1, 1.25, 1.5];
 function dkPickVoice(){
@@ -5197,6 +5213,41 @@ function dkPickVoice(){
 function dkNote(msg){
   var n = document.getElementById("dkNote");
   if(n) n.textContent = msg || "";
+}
+function dkFmtTime(s){
+  if(!isFinite(s) || s < 0) s = 0;
+  var m = Math.floor(s / 60), ss = Math.floor(s % 60);
+  return m + ":" + (ss < 10 ? "0" : "") + ss;
+}
+function dkAudioUrl(p){
+  /* Cùng mẫu đường dẫn mobile/assets/ như ảnh hero (mobile/assets/dokkai/<img>);
+     bản live rewrite mobile/assets/ -> mobile/assets/. */
+  if(!p || !p.audio) return "";
+  return "mobile/assets/dokkai/audio/" + p.audio;
+}
+function dkUseMp3(){
+  return !!(dkCur && dkCur.audio && !dkTtsFallback && typeof Audio !== "undefined");
+}
+function dkSentAt(t){
+  /* Câu đang đọc tại thời điểm t (giây) theo timings cấp câu.
+     Sau này có timings cấp từ thì hàm này là chỗ duy nhất cần mở rộng
+     để tô theo từ (xem REPORT-WEB-AUDIO.md). */
+  var tm = (dkCur && dkCur.timings) || null;
+  if(!tm || !tm.length) return -1;
+  var idx = 0;
+  for(var i = 0; i < tm.length; i++){ if(t >= tm[i]) idx = i; else break; }
+  return idx;
+}
+function dkStartOf(i){
+  var tm = (dkCur && dkCur.timings) || null;
+  if(tm && tm[i] !== undefined) return tm[i];
+  return 0;
+}
+function dkEndOf(i){
+  var tm = (dkCur && dkCur.timings) || null;
+  if(tm && i + 1 < tm.length) return tm[i + 1];
+  var d = dkAudio ? dkAudio.duration : NaN;
+  return isFinite(d) ? d : Infinity;
 }
 function dkUpdatePos(){
   /* Chỉ báo vị trí câu trên thanh phát (Câu x/N) — TTS không có duration
@@ -5235,12 +5286,15 @@ function dkMarkToken(i, charIndex){
 function dkStop(){
   dkPlaying = false;
   dkUtter = null;
+  dkMp3Want = -1;
+  dkPlayTo = null;
+  try{ if(dkAudio) dkAudio.pause(); }catch(e){}
   try{ if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
   dkMarkPlaying(-1);
   var pb = document.getElementById("dkPlayBtn");
-  if(pb) pb.textContent = "▶ Phát toàn bài";
+  if(pb) pb.textContent = "▶";
 }
-function dkSpeak(i){
+function dkSpeakTTS(i){
   if(!dkCur) return;
   var sents = dkCur.sentences || [];
   var s = sents[i];
@@ -5259,20 +5313,146 @@ function dkSpeak(i){
     if(dkUtter !== u) return; /* đã bị hủy / thay bằng utterance khác */
     dkUtter = null;
     dkClearTokens(i);
-    if(dkRepeat){ dkSpeak(i); return; }
+    if(dkRepeat){ dkSpeakTTS(i); return; }
     if(!dkPlaying){ dkMarkPlaying(-1); return; } /* phát lẻ 1 câu: dừng + bỏ tô sáng */
-    if(i + 1 < sents.length) dkSpeak(i + 1);
+    if(i + 1 < sents.length) dkSpeakTTS(i + 1);
     else { dkIdx = -1; dkStop(); } /* hết bài: về đầu để lần sau phát lại từ câu 1 */
   };
   u.onerror = function(){ if(dkUtter === u){ dkUtter = null; dkPlaying = false; dkMarkPlaying(-1); } };
   dkUtter = u;
   try{ speechSynthesis.speak(u); }catch(e){ dkUtter = null; }
 }
+/* ----- Trình phát MP3 thật ----- */
+function dkSpeak(i){
+  /* Router: có MP3 thì phát file thật, không thì giọng máy (TTS). */
+  if(!dkCur) return;
+  if(!SET_SOUND){ dkNote("Âm thanh đang tắt — bật lại ở Cài đặt → Âm thanh & giọng đọc."); return; }
+  if(dkUseMp3()){ dkSpeakMp3(i); return; }
+  dkSpeakTTS(i);
+}
+function dkAudioInit(){
+  if(dkAudio) return dkAudio;
+  if(!dkUseMp3()) return null;
+  var a;
+  try{ a = new Audio(); }catch(e){ return null; }
+  a.preload = "auto";
+  a.playbackRate = dkRate;
+  a.addEventListener("loadedmetadata", function(){ dkUpdateTime(); });
+  a.addEventListener("playing", function(){ dkMp3Want = -1; });
+  a.addEventListener("timeupdate", dkOnTimeUpdate);
+  a.addEventListener("ended", function(){
+    dkIdx = -1;
+    try{ a.currentTime = 0; }catch(e){}
+    dkStop();
+    dkUpdateTime();
+  });
+  a.addEventListener("error", function(){
+    if(dkTtsFallback) return;
+    dkTtsFallback = true;
+    var row = document.getElementById("dkPRow");
+    if(row) row.style.display = "none";
+    dkNote("Không tải được file audio — dùng giọng đọc của máy.");
+    /* Đang phát dở thì đọc tiếp bằng TTS từ câu hiện tại; lỗi lúc mới
+       mở bài (chưa bấm phát) thì chỉ đổi chế độ, không tự phát. */
+    if(dkPlaying) dkSpeakTTS(dkIdx >= 0 ? dkIdx : 0);
+    else if(dkMp3Want >= 0){ var w = dkMp3Want; dkMp3Want = -1; dkSpeakTTS(w); }
+  });
+  try{ a.src = dkAudioUrl(dkCur); }catch(e){}
+  dkAudio = a;
+  return a;
+}
+function dkSpeakMp3(i){
+  if(!dkCur) return;
+  var sents = dkCur.sentences || [];
+  if(i < 0) i = 0;
+  if(i >= sents.length){ dkStop(); return; }
+  dkAudioInit();
+  if(!dkAudio){ dkSpeakTTS(i); return; }
+  dkIdx = i;
+  dkMarkPlaying(i);
+  dkNote("");
+  var start = dkStartOf(i);
+  /* Phát cả bài: chạy tới hết; phát lẻ 1 câu: dừng ở mốc câu sau. */
+  dkPlayTo = dkPlaying ? null : dkEndOf(i);
+  dkMp3Want = i;
+  try{
+    dkAudio.playbackRate = dkRate;
+    if(Math.abs(dkAudio.currentTime - start) > 0.05) dkAudio.currentTime = start;
+    var pr = dkAudio.play();
+    if(pr && pr.catch) pr.catch(function(){});
+  }catch(e){ dkNote("Không phát được audio."); }
+}
+function dkToggleMp3(){
+  dkAudioInit();
+  if(!dkAudio) return;
+  if(!dkAudio.paused){
+    dkAudio.pause();
+    dkPlaying = false;
+    dkMp3Want = -1;
+    var pb = document.getElementById("dkPlayBtn");
+    if(pb) pb.textContent = "▶";
+    return;
+  }
+  if(!SET_SOUND){ dkNote("Âm thanh đang tắt — bật lại ở Cài đặt → Âm thanh & giọng đọc."); return; }
+  dkPlaying = true;
+  dkPlayTo = null;
+  var pb2 = document.getElementById("dkPlayBtn");
+  if(pb2) pb2.textContent = "⏸";
+  var d = dkAudio.duration;
+  if(isFinite(d) && d > 0 && dkAudio.currentTime >= d - 0.15){ dkAudio.currentTime = 0; dkIdx = 0; dkMarkPlaying(0); }
+  else if(dkIdx < 0){ dkIdx = 0; dkMarkPlaying(0); }
+  dkMp3Want = dkIdx;
+  dkAudio.playbackRate = dkRate;
+  var pr = dkAudio.play();
+  if(pr && pr.catch) pr.catch(function(){});
+}
+function dkOnTimeUpdate(){
+  if(!dkAudio || !dkCur) return;
+  var t = dkAudio.currentTime;
+  dkUpdateTime();
+  var i = dkSentAt(t);
+  if(i >= 0 && i !== dkIdx){ dkIdx = i; dkMarkPlaying(i); }
+  var cur = dkIdx < 0 ? 0 : dkIdx;
+  /* Lặp câu: về đầu câu hiện tại khi chạm mốc câu sau. */
+  if(dkRepeat){
+    var end = dkEndOf(cur);
+    if(isFinite(end) && t >= end - 0.02){
+      try{ dkAudio.currentTime = dkStartOf(cur); }catch(e){}
+      return;
+    }
+  }
+  /* Phát lẻ 1 câu: dừng ở mốc câu sau. */
+  if(!dkPlaying && dkPlayTo !== null && t >= dkPlayTo){
+    dkPlayTo = null;
+    try{ dkAudio.pause(); }catch(e){}
+    dkMarkPlaying(-1);
+  }
+}
+function dkUpdateTime(){
+  var cur = document.getElementById("dkTimeCur"), tot = document.getElementById("dkTimeTot"), sk = document.getElementById("dkSeek");
+  var t = dkAudio ? dkAudio.currentTime : 0, d = dkAudio ? dkAudio.duration : NaN;
+  if(cur) cur.textContent = dkFmtTime(t);
+  if(tot) tot.textContent = dkFmtTime(d);
+  if(sk && !dkSeeking && isFinite(d) && d > 0) sk.value = String(Math.round(t / d * 1000));
+}
+function dkSetupBar(){
+  /* Mở bài: có MP3 thì hiện hàng tiến trình + nạp audio; không thì ẩn
+     hàng tiến trình, chỉ dùng Câu x/N như v1. */
+  var row = document.getElementById("dkPRow");
+  if(dkUseMp3()){
+    if(row) row.style.display = "";
+    dkAudioInit();
+    dkUpdateTime();
+  } else {
+    if(row) row.style.display = "none";
+  }
+}
 function dkTogglePlay(){
+  if(dkUseMp3()){ dkToggleMp3(); return; }
   if(dkUtter){ dkStop(); return; }
   dkPlaying = true;
   var pb = document.getElementById("dkPlayBtn");
-  if(pb) pb.textContent = "■ Dừng";
+  if(pb) pb.textContent = "⏸";
   dkSpeak(dkIdx >= 0 ? dkIdx : 0);
 }
 function dkJump(d){
@@ -5473,7 +5653,9 @@ function renderDokkaiItem(id){
     var p = dkById(id);
     if(!p){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy bài đọc này.</div>'; return; }
     document.title = p.title + " — Đọc hiểu AI " + p.level + " | SoraKanji";
+    if(dkAudio){ try{ dkAudio.pause(); }catch(e){} }
     dkCur = p; dkIdx = -1; dkPlaying = false; dkRepeat = false; dkRate = 1; dkFuri = false; dkVi = false; dkUtter = null; dkAnswered = {};
+    dkAudio = null; dkTtsFallback = false; dkPlayTo = null; dkMp3Want = -1; dkSeeking = false;
     var same = dkByLevel(p.level), pos = 0;
     for(var k = 0; k < same.length; k++){ if(same[k].id === p.id) pos = k; }
     var prev = pos > 0 ? same[pos - 1] : null, next = pos < same.length - 1 ? same[pos + 1] : null;
@@ -5492,14 +5674,20 @@ function renderDokkaiItem(id){
       '<div class="dk-wrap">' +
       '<p style="margin:0 0 4px"><a class="btn ghost sm" href="#/dokkai">← Về danh sách</a></p>' +
       '<div class="dk-bar" id="dkBar">' +
-      '<button class="btn sm" id="dkPlayBtn" type="button">▶ Phát toàn bài</button>' +
-      '<button class="btn ghost sm" id="dkPrevBtn" type="button">← Câu trước</button>' +
-      '<button class="btn ghost sm" id="dkNextBtn" type="button">Câu sau →</button>' +
-      '<button class="btn ghost sm dk-tgl" id="dkRepBtn" type="button">Lặp câu</button>' +
+      '<div class="dk-prow" id="dkPRow"><span class="dk-time" id="dkTimeCur">0:00</span>' +
+      '<input type="range" class="dk-seek" id="dkSeek" min="0" max="1000" value="0" step="1" aria-label="Tua audio">' +
+      '<span class="dk-time" id="dkTimeTot">0:00</span></div>' +
+      '<div class="dk-crow"><div class="dk-grp">' +
+      '<button class="dk-sq" id="dkPrevBtn" type="button" title="Câu trước">⏮</button>' +
+      '<button class="dk-sq dk-play" id="dkPlayBtn" type="button" title="Phát / Tạm dừng">▶</button>' +
+      '<button class="dk-sq" id="dkNextBtn" type="button" title="Câu sau">⏭</button>' +
+      '<button class="btn ghost sm dk-tgl" id="dkRepBtn" type="button">🔁 Lặp câu</button>' +
       '<button class="btn ghost sm" id="dkRateBtn" type="button">1x</button>' +
-      '<button class="btn ghost sm dk-tgl" id="dkFuriBtn" type="button">Furigana</button>' +
-      '<button class="btn ghost sm dk-tgl" id="dkViBtn" type="button">Bản dịch</button>' +
+      '</div><div class="dk-grp dk-right">' +
+      '<button class="btn ghost sm dk-tgl" id="dkFuriBtn" type="button">ふ Furigana</button>' +
+      '<button class="btn ghost sm dk-tgl" id="dkViBtn" type="button">🌐 Bản dịch</button>' +
       '<span class="dk-pos" id="dkPos"></span>' +
+      '</div></div>' +
       '<span class="dk-note" id="dkNote"></span></div>' +
       '<div class="dk-layout"><div class="dk-main">' + hero +
       '<div class="card" style="padding:18px 22px"><div class="dk-pass" id="dkPass"></div></div>' +
@@ -5515,6 +5703,7 @@ function renderDokkaiItem(id){
     $app.innerHTML = h;
     dkRenderPassage();
     dkUpdatePos();
+    dkSetupBar();
     dkJumpToSavedWord();
     var dkVb = document.getElementById("dkVocabBox");
     if(dkVb) dkVb.addEventListener("click", function(e){
@@ -5523,6 +5712,17 @@ function renderDokkaiItem(id){
       if(e.target.closest && e.target.closest("#dkAddAllBtn")) dkSaveAll();
     });
     document.getElementById("dkPlayBtn").addEventListener("click", dkTogglePlay);
+    var dkSk = document.getElementById("dkSeek");
+    if(dkSk){
+      dkSk.addEventListener("input", function(){
+        dkSeeking = true;
+        if(!dkAudio) return;
+        var d = dkAudio.duration;
+        if(!isFinite(d) || d <= 0) return;
+        try{ dkAudio.currentTime = (parseFloat(this.value) || 0) / 1000 * d; }catch(e){}
+      });
+      dkSk.addEventListener("change", function(){ dkSeeking = false; });
+    }
     document.getElementById("dkPrevBtn").addEventListener("click", function(){ dkJump(-1); });
     document.getElementById("dkNextBtn").addEventListener("click", function(){ dkJump(1); });
     document.getElementById("dkRepBtn").addEventListener("click", function(){ dkRepeat = !dkRepeat; this.classList.toggle("on", dkRepeat); });
@@ -5530,6 +5730,7 @@ function renderDokkaiItem(id){
       var i = DK_RATES.indexOf(dkRate);
       dkRate = DK_RATES[(i + 1) % DK_RATES.length];
       this.textContent = (dkRate === 1 ? "1x" : dkRate + "x");
+      if(dkAudio){ try{ dkAudio.playbackRate = dkRate; }catch(e){} }
     });
     document.getElementById("dkFuriBtn").addEventListener("click", function(){ dkFuri = !dkFuri; this.classList.toggle("on", dkFuri); dkRenderPassage(); });
     document.getElementById("dkViBtn").addEventListener("click", function(){
