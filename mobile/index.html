@@ -1550,9 +1550,11 @@
   .rdvrow .r{font-size:13.5px; color:var(--ink-3); white-space:nowrap;}
   .rdvrow .m{font-size:14px; color:var(--ink-2); margin-left:auto; text-align:right;}
 
-  /* Đọc hiểu AI (v1, trong Luyện nghe): thư viện bài đọc + trang bài karaoke TTS
-     + quiz. Tái dùng .setrow/.sv-cattab/.shbtn/.sv-chip/.lsopt/.lsexp/.rdvrow/.lstype.
-     V1 chưa có ảnh minh họa: thẻ bài dùng dải màu theo cấp. */
+  /* Đọc hiểu AI (v2, trong Luyện nghe): thư viện bài đọc + trang bài karaoke TTS
+     + quiz. Tái dùng .setrow/.sv-cattab/.shbtn/.sv-chip/.lsopt/.lsexp/.lstype.
+     V2 theo mẫu Nhai Kanji: ảnh minh họa (đầu bài + thumbnail thẻ), thứ tự
+     ngữ pháp trước từ vựng, thẻ từ riêng + sao lưu vào ôn tập (sk_saved_words),
+     chỉ báo Câu x/N, link bài tiếp góc phải trên. */
   .dk-card{
     width:100%; text-align:left; font-family:inherit; color:var(--ink); cursor:pointer;
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
@@ -1603,6 +1605,24 @@
   .dk-gr-vi{font-size:13.5px; color:var(--ink-2); line-height:1.55; margin:0 0 7px;}
   .dk-gr-ex{font-size:15px; font-weight:600; line-height:1.6; margin:0;}
   .dk-gr-exvi{font-size:13px; font-style:italic; color:var(--ink-2); line-height:1.55; margin:3px 0 0;}
+  /* v2: ảnh minh họa + link bài tiếp + chỉ báo câu + thẻ từ lưu được */
+  .dk-card-img{width:100%; height:170px; object-fit:cover; display:block; background:var(--bg);}
+  .dk-nextlink{text-align:right; margin:0 0 10px;}
+  .dk-nextlink button{background:none; border:none; padding:2px; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--sky); cursor:pointer; line-height:1.5;}
+  .dk-nextlink button:active{color:var(--red);}
+  .dk-hero-img{width:100%; height:210px; object-fit:cover; display:block; border-radius:14px; margin-bottom:14px; background:var(--bg);}
+  .dk-pos{margin-left:auto; align-self:center; font-size:13px; font-weight:700; color:var(--ink-2); white-space:nowrap;}
+  .dk-vcard{display:flex; gap:10px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:12px 13px; margin-bottom:10px;}
+  .dk-vmain{flex:1 1 auto; min-width:0;}
+  .dk-vw{font-size:17px; font-weight:800; line-height:1.7; margin:0;}
+  .dk-vw ruby{ruby-align:center;}
+  .dk-vw rt{font-size:.52em; font-weight:600; color:var(--ink-2);}
+  .dk-vr{font-size:13.5px; color:var(--ink-2); line-height:1.5; margin:3px 0 0;}
+  .dk-vhv{color:var(--sky); font-weight:700;}
+  .dk-vm{font-size:14px; line-height:1.55; margin:4px 0 0;}
+  .dk-star{flex:0 0 auto; background:none; border:none; padding:2px 2px 0; font-size:24px; line-height:1; color:var(--ink-3); cursor:pointer;}
+  .dk-star.on{color:var(--amber);}
+  .dk-star:active{transform:scale(1.15);}
 
   /* greeting + logo SoraKanji bên phải banner */
   .greetxt{display:flex; flex-direction:column; align-items:flex-start; flex:1 1 auto; min-width:0;}
@@ -3846,6 +3866,8 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <div><h2 id="dkPassTitle">Bài đọc</h2><span id="dkPassSub"></span></div>
       </div>
       <div class="detailbody">
+        <div id="dkNextLink" class="dk-nextlink"></div>
+        <div id="dkHero"></div>
         <div class="dk-audiobar">
           <div class="dk-audiorow">
             <button class="shbtn" id="dkPrev" type="button">← Câu trước</button>
@@ -3857,16 +3879,17 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <button class="sv-chip" id="dkRate" type="button">1x</button>
             <button class="sv-chip" id="dkFuri" type="button" aria-pressed="false">Furigana</button>
             <button class="sv-chip" id="dkTrans" type="button" aria-pressed="false">Bản dịch</button>
+            <span class="dk-pos" id="dkPos" aria-live="polite"></span>
           </div>
           <p class="dk-status" id="dkStatus" role="status" aria-live="polite"></p>
         </div>
         <div id="dkSentences"></div>
         <h3 class="wvsec">Kiểm tra đọc hiểu</h3>
         <div id="dkQuiz"></div>
-        <button class="dk-collapse" id="dkVocabToggle" type="button" aria-expanded="true"><span>Từ vựng trọng điểm</span><span class="dk-col-arrow">▾</span></button>
-        <div id="dkVocab"></div>
         <button class="dk-collapse" id="dkGrammarToggle" type="button" aria-expanded="true"><span>Mẫu ngữ pháp trong bài</span><span class="dk-col-arrow">▾</span></button>
         <div id="dkGrammar"></div>
+        <button class="dk-collapse" id="dkVocabToggle" type="button" aria-expanded="true"><span>Từ vựng trọng điểm</span><span class="dk-col-arrow">▾</span></button>
+        <div id="dkVocab"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -11752,7 +11775,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   rdRenderLevels();
 
-  /* ================= ĐỌC HIỂU AI (v1): thư viện + trang bài karaoke + quiz =================
+  /* ================= ĐỌC HIỂU AI (v2): thư viện + trang bài karaoke + quiz =================
      Nằm trong Luyện nghe (điểm vào: nút "Thư viện bài đọc" cuối trang Luyện nghe,
      ngoài 2 tab video nên hiện ở cả 2 tab). Data: assets/dokkai-data.js
      (window.DOKKAI_PASSAGES, 10 bài tạo sẵn — 2 bài/cấp N5–N1), nạp lười lần đầu
@@ -11762,8 +11785,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      từng từ chỉ khi trình duyệt bắn boundary events (Chrome
      có, Safari/iOS thường không — progressive enhancement, không hứa hẹn).
      Paywall: N5 mở free; N4–N1 khóa Premium (premiumGateLevel).
-     V1 chưa có: ảnh minh họa bài đọc, nút lưu từ vào ôn tập, đánh dấu "ĐÃ ĐỌC". */
+     V2 theo mẫu Nhai Kanji: ảnh minh họa assets/dokkai/<id>.jpg (đầu bài +
+     thumbnail thẻ, lỗi tải thì ẩn ảnh), thứ tự ngữ pháp trước từ vựng, thẻ từ
+     riêng + sao lưu vào sk_saved_words (hệ thống Ôn tập sẵn có), chỉ báo
+     Câu x/N (TTS không có duration thật nên không làm thanh tua), link bài
+     tiếp góc phải trên. Chưa có: đánh dấu "ĐÃ ĐỌC", nút "Tạo bài đọc khác"
+     (cần Gemini billing — không thêm nút chết). */
   var DK_DATA_FILE = "assets/dokkai-data.js";
+  var DK_IMG_DIR = "assets/dokkai/";
   var DK_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
   var DK_RATES = [0.75, 1, 1.25, 1.5];
   var dkDataState = "idle";   /* idle | loading | ready | error */
@@ -11815,6 +11844,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     for(var i = 0; i < all.length; i++) if(all[i].id === id) return all[i];
     return null;
   }
+  /* URL ảnh minh họa của bài (field img trong data chỉ là tên file);
+     bài chưa có img thì trả "" để giao diện giữ dải màu theo cấp (v1). */
+  function dkImgUrl(p){
+    return (p && p.img) ? (DK_IMG_DIR + p.img) : "";
+  }
+  /* Bài tiếp theo trong thư viện (theo thứ tự mảng DOKKAI_PASSAGES);
+     bài cuối thì trả null để ẩn link bài tiếp. */
+  function dkNextPassage(){
+    if(!dkPass) return null;
+    var all = dkPassages();
+    var at = all.indexOf(dkPass);
+    return (at >= 0 && at + 1 < all.length) ? all[at + 1] : null;
+  }
   function dkOpenLibrary(){
     hideOv(listenOverlay);
     showOv(dkLibOverlay);
@@ -11843,7 +11885,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var html = "";
     list.forEach(function(p){
       var locked = !premiumLevelOpen(p.level);
+      var img = dkImgUrl(p);
       html += '<button class="dk-card' + (locked ? ' pw-locked' : '') + '" type="button" data-dk-id="' + esc(p.id) + '">' +
+        (img ? '<img class="dk-card-img" src="' + esc(img) + '" alt="" loading="lazy" onerror="this.remove()">' : '') +
         '<span class="dk-card-top dk-lv-' + esc(p.level) + '"><b>' + esc(p.level) + '</b><span>' + (p.sentences ? p.sentences.length : 0) + ' câu' + (locked ? ' · 🔒' : '') + '</span></span>' +
         '<span class="dk-card-title jp">' + esc(p.title) + '</span>' +
         '<span class="dk-card-sub">' + esc(p.titleVi || "") + '</span></button>';
@@ -11869,10 +11913,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     dkFinished = false;
     document.getElementById("dkPassTitle").textContent = p.title;
     document.getElementById("dkPassSub").textContent = p.level + " · " + p.sentences.length + " câu" + (p.titleVi ? " · " + p.titleVi : "");
+    dkRenderHero();
+    dkRenderNextLink();
     dkRenderSentences();
     dkRenderQuiz();
-    dkRenderVocab();
     dkRenderGrammar();
+    dkRenderVocab();
     dkUpdatePlayBtn();
     dkUpdateToggles();
     dkSetStatus("");
@@ -11916,6 +11962,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var html = "";
     dkPass.sentences.forEach(function(s, i){ html += dkSentHTML(s, i); });
     box.innerHTML = html;
+    dkUpdatePos();
   }
   function dkQuizHTML(){
     if(!dkPass || !dkPass.quiz || !dkPass.quiz.length) return '<p class="sv-empty">Bài này chưa có câu hỏi.</p>';
@@ -11966,17 +12013,98 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     dkRenderQuiz();
     dkRenderSentences();
   }
+  /* Thẻ từ vựng trọng điểm (v2, theo mẫu): mỗi từ 1 thẻ riêng — chữ Hán +
+     furigana (furiHTML), cách đọc + Hán-Việt xanh, nghĩa Việt, nút sao lưu.
+     Lưu vào đúng kho sk_saved_words của hệ thống Ôn tập sẵn có (không xây
+     kho riêng): từ dokkai map thẳng sang entry đã lưu (word/reading/hanViet/
+     meaning/lv/from) nên hiện ngay trong mục Ôn tập + deck flashcard đã lưu. */
+  function dkVocabEntry(it){
+    return { word: it.w, reading: it.r || "", hanViet: it.hv || "", meaning: it.vi || "", ex: null, img: null, lv: (dkPass ? dkPass.level : null), from: (dkPass ? dkPass.level + " · Đọc hiểu AI" : "Đọc hiểu AI") };
+  }
   function dkRenderVocab(){
     var box = document.getElementById("dkVocab");
     if(!box || !dkPass) return;
     var v = dkPass.vocab || [];
     if(!v.length){ box.innerHTML = '<p class="sv-empty">Bài này chưa có từ vựng trọng điểm.</p>'; return; }
-    var html = '<div class="rdvocab">';
-    v.forEach(function(it){
-      html += '<div class="rdvrow"><span class="w jp">' + esc(it.w) + '</span><span class="r">' + esc(it.r || "") + (it.hv ? ' · ' + esc(it.hv) : '') + '</span><span class="m">' + esc(it.vi || "") + '</span></div>';
+    var html = '<button class="wv-addall" id="dkAddAll" type="button">' + '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.6l2.9 5.87 6.48.94-4.69 4.57 1.11 6.45L12 17.47l-5.8 2.96 1.11-6.45L2.62 9.41l6.48-.94z"/></svg>' + '<span id="dkAddAllTx">Thêm tất cả vào ôn tập</span></button>' +
+      '<p class="wv-addallmsg" id="dkAddAllMsg"></p>';
+    v.forEach(function(it, i){
+      var saved = isWordSaved(it.w, it.r || "");
+      html += '<div class="dk-vcard"><div class="dk-vmain">' +
+        '<p class="dk-vw jp">' + furiHTML(it.w) + '</p>' +
+        '<p class="dk-vr jp">' + esc(it.r || "") + (it.hv ? ' · <span class="dk-vhv">' + esc(it.hv) + '</span>' : '') + '</p>' +
+        '<p class="dk-vm">' + esc(it.vi || "") + '</p></div>' +
+        '<button class="dk-star' + (saved ? ' on' : '') + '" type="button" data-dk-star="' + i + '" aria-label="Lưu từ để ôn tập" aria-pressed="' + (saved ? 'true' : 'false') + '">★</button></div>';
     });
-    html += '</div>';
     box.innerHTML = html;
+    dkSyncAddAllBtn();
+  }
+  /* Nút sao: lưu/bỏ lưu 1 từ; đồng bộ lại nút thêm tất cả + mục Ôn tập
+     + các dấu lưu khác trong app (từ dokkai có thể trùng từ trong bài
+     từ vựng — cùng khóa word|reading). */
+  function dkToggleVocabSave(i){
+    if(!dkPass || !dkPass.vocab || !dkPass.vocab[i]) return;
+    toggleWordSave(dkVocabEntry(dkPass.vocab[i]));
+    dkRenderVocab();
+    renderSavedWords();
+    syncSaveMarks();
+    syncAddAllBtn();
+  }
+  /* Nút vàng "Thêm tất cả vào ôn tập": chưa đủ thì lưu nốt các từ chưa lưu;
+     đã đủ thì bấm lại để bỏ tất cả — theo đúng mẫu nút "Thêm cả bài" của
+     trang danh sách từ. */
+  function dkAddAllVocab(){
+    if(!dkPass || !dkPass.vocab || !dkPass.vocab.length) return;
+    var all = dkPass.vocab.every(function(it){ return isWordSaved(it.w, it.r || ""); });
+    dkPass.vocab.forEach(function(it){
+      var saved = isWordSaved(it.w, it.r || "");
+      if(all && saved) toggleWordSave(dkVocabEntry(it));
+      else if(!all && !saved) toggleWordSave(dkVocabEntry(it));
+    });
+    dkRenderVocab();
+    renderSavedWords();
+    syncSaveMarks();
+    syncAddAllBtn();
+    var msg = document.getElementById("dkAddAllMsg");
+    if(msg) msg.textContent = all
+      ? "Đã bỏ tất cả từ của bài khỏi mục Ôn tập."
+      : "Đã lưu tất cả (" + dkPass.vocab.length + " từ) vào mục Ôn tập trong Cá nhân.";
+  }
+  function dkSyncAddAllBtn(){
+    var btn = document.getElementById("dkAddAll");
+    if(!btn || !dkPass) return;
+    var v = dkPass.vocab || [];
+    var all = v.length > 0 && v.every(function(it){ return isWordSaved(it.w, it.r || ""); });
+    btn.classList.toggle("done", all);
+    var tx = document.getElementById("dkAddAllTx");
+    if(tx) tx.textContent = all ? "Đã thêm tất cả vào ôn tập" : "Thêm tất cả vào ôn tập";
+  }
+  /* Ảnh minh họa lớn đầu bài; bài chưa có ảnh (hoặc ảnh lỗi tải) thì
+     không hiện gì — trang vẫn đủ nội dung như v1. */
+  function dkRenderHero(){
+    var box = document.getElementById("dkHero");
+    if(!box) return;
+    var img = dkPass ? dkImgUrl(dkPass) : "";
+    box.innerHTML = img ? '<img class="dk-hero-img" src="' + esc(img) + '" alt="" onerror="this.remove()">' : "";
+  }
+  /* Link bài tiếp ở góc phải trên (theo mẫu): tên bài + →, kèm 🔒 nếu bài
+     tiếp khóa Premium; bài cuối thì ẩn. Bấm vào mở bài tiếp qua
+     dkOpenPassage nên vẫn qua paywall như mở từ thư viện. */
+  function dkRenderNextLink(){
+    var box = document.getElementById("dkNextLink");
+    if(!box) return;
+    var nx = dkNextPassage();
+    if(!nx){ box.innerHTML = ""; return; }
+    var locked = !premiumLevelOpen(nx.level);
+    box.innerHTML = '<button type="button" data-dk-next="' + esc(nx.id) + '">' + (locked ? '🔒 ' : '') + esc(nx.title) + ' →</button>';
+  }
+  /* Chỉ báo vị trí câu trên thanh phát: "Câu x/N". TTS không có duration
+     thật nên không làm thanh tua — chỉ báo câu là đủ, không giả vờ. */
+  function dkUpdatePos(){
+    var el = document.getElementById("dkPos");
+    if(!el) return;
+    el.textContent = (dkPass && dkPass.sentences && dkPass.sentences.length)
+      ? ("Câu " + (dkSentIdx + 1) + "/" + dkPass.sentences.length) : "";
   }
   function dkRenderGrammar(){
     var box = document.getElementById("dkGrammar");
@@ -12016,6 +12144,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       el.classList.toggle("on", parseInt(el.getAttribute("data-dk-sent"), 10) === dkSentIdx);
     });
     box.querySelectorAll(".dk-seg.dk-word-on").forEach(function(el){ el.classList.remove("dk-word-on"); });
+    dkUpdatePos();
   }
   /* Karaoke theo từ: boundary charIndex -> cụm chứa mốc đó trong câu hiện tại.
      Chỉ chạy khi trình duyệt bắn onboundary (Chrome có, Safari/iOS thường không). */
@@ -12178,6 +12307,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   document.getElementById("dkVocabToggle").addEventListener("click", function(){ dkToggleCollapse("dkVocabToggle", "dkVocab"); });
   document.getElementById("dkGrammarToggle").addEventListener("click", function(){ dkToggleCollapse("dkGrammarToggle", "dkGrammar"); });
+  document.getElementById("dkVocab").addEventListener("click", function(e){
+    var star = e.target.closest ? e.target.closest("[data-dk-star]") : null;
+    if(star){ dkToggleVocabSave(parseInt(star.getAttribute("data-dk-star"), 10)); return; }
+    var all = e.target.closest ? e.target.closest("#dkAddAll") : null;
+    if(all) dkAddAllVocab();
+  });
+  document.getElementById("dkNextLink").addEventListener("click", function(e){
+    var t = e.target.closest ? e.target.closest("[data-dk-next]") : null;
+    if(t) dkOpenPassage(t.getAttribute("data-dk-next"));
+  });
 
   /* ---------- App grid (kiểu iPhone) + nhiệm vụ hôm nay ---------- */
   function openKanjiLesson(){
