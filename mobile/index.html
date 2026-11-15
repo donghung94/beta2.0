@@ -16175,29 +16175,34 @@ function furiHTML(text){
      web). Đăng nhập là Firebase Auth thật (project donghung-3208d) — xem
      khối “Đăng nhập Firebase Auth” ngay dưới đây. signedInEmail CHỈ được
      ghi bởi onAuthStateChanged của Firebase (setSignedInEmail là điểm ghi
-     duy nhất); không còn đường gõ email demo nào nữa. Đúng email Admin thì
-     ô “Quản trị” + mục Quản lý học viên hiện, email khác ẩn. */
+     duy nhất); không còn đường gõ email demo nào nữa. Tín hiệu "đã đăng
+     nhập" là signedInUid (bản sửa 5, 2026-11-15: tài khoản Google của
+     Admin không có email nên email rỗng KHÔNG có nghĩa là chưa đăng nhập).
+     Đúng email/UID Admin thì ô “Quản trị” + mục Quản lý học viên hiện. */
   var ADMIN_EMAILS = ["nongaphao@gmail.com"];
-  var signedInEmail = ""; /* email tài khoản Firebase đang đăng nhập; rỗng = chưa đăng nhập */
+  var ADMIN_UIDS = ["kymtRAzDs9RefxtoREh5sa6fE142"]; /* UID tài khoản Google của Admin — tài khoản này KHÔNG có email trong Firebase (đăng nhập Google lần đầu không trả email, chẩn đoán 2026-11-15), nên nhận diện Admin bằng UID thay vì email */
+  var signedInEmail = ""; /* email tài khoản Firebase đang đăng nhập; CÓ THỂ RỖNG với tài khoản Google không có email — KHÔNG dùng làm tín hiệu "đã đăng nhập" */
+  var signedInUid = ""; /* UID tài khoản Firebase đang đăng nhập; rỗng = chưa đăng nhập (tín hiệu CHÍNH) */
+  var signedInName = ""; /* tên hiển thị: displayName || email || "Tài khoản Google" */
   var isAdminAccount = false;
   function refreshAdminState(){
-    isAdminAccount = !!signedInEmail && ADMIN_EMAILS.indexOf(signedInEmail) >= 0;
+    isAdminAccount = (ADMIN_UIDS.indexOf(signedInUid) >= 0) || (!!signedInEmail && ADMIN_EMAILS.indexOf(signedInEmail) >= 0);
   }
   function renderAccount(){
     var em = document.getElementById("acctEmail");
-    if(em) em.textContent = signedInEmail ? signedInEmail : "Chưa đăng nhập";
+    if(em) em.textContent = signedInUid ? (signedInEmail || signedInName || "Đã đăng nhập") : "Chưa đăng nhập";
     var badge = document.getElementById("acctAdminBadge");
     if(badge) badge.hidden = !isAdminAccount;
     var note = document.getElementById("acctNote");
     if(note){
       note.textContent = isAdminAccount
         ? "Tài khoản Admin — ô Quản trị ở Home và mục Quản lý học viên bên dưới đã mở."
-        : (signedInEmail
+        : (signedInUid
           ? "Tài khoản học viên thường — mục Quản trị chỉ hiện với tài khoản Admin."
           : "Đang xem như học viên thường nên mục Quản trị đang ẩn. Đăng nhập bằng email Admin để mở.");
     }
     var outBtn = document.getElementById("acctLogoutBtn");
-    if(outBtn) outBtn.hidden = !signedInEmail;
+    if(outBtn) outBtn.hidden = !signedInUid;
   }
   function applyAdminVisibility(){
     var cell = document.getElementById("gridAdminCell");
@@ -16311,12 +16316,12 @@ function furiHTML(text){
   function openLogin(){
     var formWrap = document.getElementById("loginFormWrap");
     var acctWrap = document.getElementById("loginAcctWrap");
-    if(signedInEmail){
+    if(signedInUid){
       /* Đã đăng nhập: hiện tài khoản + nút Đăng xuất, ẩn form. */
       if(formWrap) formWrap.hidden = true;
       if(acctWrap) acctWrap.hidden = false;
       var ae = document.getElementById("loginAcctEmail");
-      if(ae) ae.textContent = signedInEmail;
+      if(ae) ae.textContent = signedInEmail || signedInName;
       var aa = document.getElementById("loginAcctAdmin");
       if(aa) aa.textContent = isAdminAccount ? " · ADMIN" : "";
       var title = document.getElementById("loginTitle");
@@ -16343,6 +16348,8 @@ function furiHTML(text){
     var auth = skAuth();
     if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
     var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope("email");
+    provider.addScope("profile");
     loginSetBusy(true);
     /* Đăng nhập Google bằng POPUP — giống bản web (đã test chạy tốt
        2026-11-15, cùng dự án Firebase). KHÔNG dùng signInWithRedirect:
@@ -16351,11 +16358,11 @@ function furiHTML(text){
        Popup giữ nguyên trang nên không cần getRedirectResult. */
     auth.signInWithPopup(provider).then(function(cred){
       loginSetBusy(false);
-      /* Ghi phiên ngay từ credential — giống doLoginSubmit: listener
-         onAuthStateChanged trên mobile bắn chậm/không bắn (đã gây lỗi
-         2026-11-15: popup xong bảng đóng nhưng app vẫn "Chưa đăng nhập"),
-         nên không được trông chờ vào listener. Listener bắn lại sau cũng
-         chỉ ghi đè y hệt (applyAuthUser là lũy đẳng). */
+      /* Ghi phiên ngay từ credential — giống doLoginSubmit (listener bắn
+         lại sau cũng chỉ ghi đè y hệt, applyAuthUser là lũy đẳng). Lỗi
+         2026-11-15 "popup xong vẫn Chưa đăng nhập" KHÔNG phải do listener
+         — listener bắn tốt; lỗi là tài khoản Google của Admin không có
+         email nên signedInEmail rỗng (bản sửa 5 chuyển tín hiệu sang UID). */
       if(cred && cred.user) applyAuthUser(cred.user);
       closeLogin();
     }).catch(function(err){
@@ -16416,8 +16423,10 @@ function furiHTML(text){
         name: user.displayName || (user.email ? user.email.split("@")[0] : "Học viên"),
         displayName: user.displayName || "",
         photoURL: user.photoURL || "",
-        isAdmin: (user.email || "").toLowerCase() === SK_ADMIN_EMAIL
+        isAdmin: (ADMIN_UIDS.indexOf(user.uid) >= 0) || ((user.email || "").toLowerCase() === SK_ADMIN_EMAIL)
       };
+      signedInUid = user.uid || "";
+      signedInName = user.displayName || user.email || "Tài khoản Google";
       setSignedInEmail(user.email || "");
       setGooglePhotoURL(user.photoURL || "");
       /* Phiên đã về (kể cả vừa quay lại từ Google): đóng bảng đăng nhập —
@@ -16425,6 +16434,8 @@ function furiHTML(text){
       closeLogin();
     }else{
       window.SK_USER = null;
+      signedInUid = "";
+      signedInName = "";
       setSignedInEmail("");
       /* Bắt buộc đăng nhập (user yêu cầu 2026-11-15): chưa có phiên thì mở
          bảng đăng nhập ngay — lúc mở app (lần đầu listener bắn) lẫn lúc
@@ -16482,8 +16493,8 @@ function furiHTML(text){
     setTimeout(function(){
       try{
         var u = auth.currentUser;
-        if(u && !signedInEmail) applyAuthUser(u);
-        else if(!u && !signedInEmail && loginSheet && !loginSheet.classList.contains("open")) openLogin();
+        if(u && !signedInUid) applyAuthUser(u);
+        else if(!u && !signedInUid && loginSheet && !loginSheet.classList.contains("open")) openLogin();
       }catch(_){}
     }, 4000);
     /* Có phiên sẵn (mở lại app): onAuthStateChanged tự bắn ngay, không cần
@@ -16503,7 +16514,7 @@ function furiHTML(text){
   document.getElementById("loginLogout").addEventListener("click", doLogout);
   if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
   if(loginPassInput) loginPassInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
-  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open") && signedInEmail) closeLogin(); });
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open") && signedInUid) closeLogin(); });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
      Nguồn ảnh, theo thứ tự người dùng chọn (lưu localStorage "sk_avatar_choice"):
@@ -16566,13 +16577,13 @@ function furiHTML(text){
     var srcEl = document.getElementById("avCurSrc");
     if(srcEl) srcEl.textContent = !eff ? "avatar mặc định (chữ 空)" : (eff === avatarCustom && avatarCustom ? "ảnh bạn tự tải lên" : "ảnh tài khoản Google");
     var acct = document.getElementById("avAcctLine");
-    if(acct) acct.textContent = signedInEmail ? ("Tài khoản: " + signedInEmail) : "Chưa đăng nhập — đăng nhập bằng Google để app tự lấy ảnh.";
+    if(acct) acct.textContent = signedInUid ? ("Tài khoản: " + (signedInEmail || signedInName)) : "Chưa đăng nhập — đăng nhập bằng Google để app tự lấy ảnh.";
     var gBtn = document.getElementById("avGoogleBtn"), gNote = document.getElementById("avGoogleNote");
     var gThumb = document.getElementById("avGoogleThumb"), gG = document.getElementById("avGoogleG");
     if(gBtn && gNote){
-      if(!signedInEmail){ gBtn.disabled = true; gNote.textContent = "Đăng nhập bằng tài khoản Google trước — app sẽ tự lấy ảnh của tài khoản làm avatar."; }
-      else if(avatarGoogle){ gBtn.disabled = false; gNote.textContent = "Ảnh tài khoản Google của " + signedInEmail + " — app đã tự lấy khi bạn đăng nhập."; }
-      else { gBtn.disabled = true; gNote.textContent = "Tài khoản hiện tại (" + signedInEmail + ") chưa có ảnh Google — hãy tải ảnh từ máy."; }
+      if(!signedInUid){ gBtn.disabled = true; gNote.textContent = "Đăng nhập bằng tài khoản Google trước — app sẽ tự lấy ảnh của tài khoản làm avatar."; }
+      else if(avatarGoogle){ gBtn.disabled = false; gNote.textContent = "Ảnh tài khoản Google của " + (signedInEmail || signedInName) + " — app đã tự lấy khi bạn đăng nhập."; }
+      else { gBtn.disabled = true; gNote.textContent = "Tài khoản hiện tại (" + (signedInEmail || signedInName) + ") chưa có ảnh Google — hãy tải ảnh từ máy."; }
     }
     if(gThumb && gG){
       if(avatarGoogle){ gThumb.src = avatarGoogle; gThumb.hidden = false; gG.hidden = true; }
