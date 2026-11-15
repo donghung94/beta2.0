@@ -318,6 +318,37 @@
   .tk-pmain b{font-size:15.5px; font-weight:800; line-height:1.3;}
   .tk-pmain span{font-size:12.5px; color:var(--ink-2);}
   .tk-panel p{font-size:13.5px; color:var(--ink-2); line-height:1.6; margin:0 0 8px;}
+  .tk-tab.pw-locked{color:var(--ink-2);}
+  .tk-tab.pw-locked .tk-todo{color:var(--red); opacity:1;}
+  .tk-setgroup{margin:0 0 14px;}
+  .tk-setgroup h4{font-size:14px; font-weight:800; margin:16px 0 8px;}
+  .tk-setgroup h4:first-child{margin-top:2px;}
+  .tk-setrow{width:100%; min-height:46px; padding:9px 12px; text-align:left; border-radius:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer; margin-bottom:6px;}
+  .tk-setrow:active{background:var(--red-soft);}
+  .tk-setcount{flex:none; font-size:12px; font-weight:700; color:var(--ink-2);}
+  .tk-setrow.random{border-style:dashed; color:var(--red);}
+  .tk-setrow.random .tk-setcount{color:var(--red);}
+  .tk-lockcard{text-align:center; padding:6px 4px 2px;}
+  .tk-lockcard .tk-glyph{margin:0 auto 10px;}
+  .tk-lockcard p{margin:0 0 12px;}
+  .tk-qhead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;}
+  .tk-qidx{font-size:13px; font-weight:800; color:var(--ink-2);}
+  .tk-qtext{font-size:15.5px; line-height:1.7; margin:0 0 10px;}
+  .tk-qtext ruby rt{font-size:10px;}
+  .tk-hira{font-size:13px; color:var(--ink-2); margin:0 0 10px; line-height:1.6;}
+  .tk-qimg{margin:0 0 12px;}
+  .tk-qimg img{max-width:100%; border:1px solid var(--line); border-radius:10px; display:block;}
+  .tk-opt{width:100%; text-align:left; padding:11px 12px; border-radius:10px; border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-family:inherit; font-size:14px; line-height:1.6; cursor:pointer; margin-bottom:8px;}
+  .tk-opt.correct{border-color:var(--good); background:var(--good-soft);}
+  .tk-opt.incorrect{border-color:var(--red); background:var(--red-soft);}
+  .tk-opt:disabled{cursor:default;}
+  .tk-opt .tk-mark{float:right; font-weight:800;}
+  .tk-explain{margin-top:12px; padding:12px; border-radius:10px; background:var(--red-soft); font-size:13.5px; line-height:1.65;}
+  .tk-explain .tk-tip{margin-top:8px;}
+  .tk-vidbtn{display:inline-block; margin:0 0 12px; padding:9px 14px; border-radius:10px; background:var(--red); color:#fff; font-weight:800; font-size:13.5px; text-decoration:none;}
+  .tk-result-item{border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:10px;}
+  .tk-result-item .tk-qtext{font-size:14.5px;}
+  .tk-result-item .tk-ans{font-size:13.5px; line-height:1.6; margin:4px 0;}
   .tk-panel p.tk-note{margin-bottom:0;}
   .tk-panel p b{color:var(--ink);}
   /* Trang con của mục Từ vựng xếp chồng lên trang chọn mục, chi tiết từ nằm trên cùng */
@@ -3485,17 +3516,17 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     <div class="sheet" id="premiumSheet" aria-hidden="true" role="dialog" aria-label="Nâng cấp Premium">
       <div class="grab"></div>
       <h3>🔒 Nâng cấp Premium</h3>
-      <p class="snote">Nội dung N4–N1 và video Shadowing từ bài thứ 11 trở đi thuộc gói Premium. Gói miễn phí gồm toàn bộ N5 ở mọi mục và 10 video Shadowing đầu tiên.</p>
+      <p class="snote">Nội dung N4–N1, ôn thi Tokutei xây dựng và video Shadowing từ bài thứ 11 trở đi thuộc gói Premium. Gói miễn phí gồm toàn bộ N5 ở mọi mục và 10 video Shadowing đầu tiên.</p>
       <div class="pw-plans">
         <div class="pw-plan">
           <b>Gói Năm</b>
           <span class="pw-price">499.000đ</span><span class="pw-old">799.000đ</span>
-          <p>Mở toàn bộ nội dung N4–N1 trong 12 tháng.</p>
+          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng trong 12 tháng.</p>
         </div>
         <div class="pw-plan hot">
           <b>Gói Trọn đời · Phổ biến nhất</b>
           <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
-          <p>Mở toàn bộ nội dung N4–N1 vĩnh viễn, không gia hạn.</p>
+          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng vĩnh viễn, không gia hạn.</p>
         </div>
       </div>
       <p class="snote">Giá giảm đến 06/12/2026 — sau thời gian này gói về giá gốc.</p>
@@ -4026,10 +4057,32 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
       <div class="detailbody">
         <h3 class="wvsec">Chọn ngành Tokutei</h3>
-        <p class="wvinfo">Mục ôn thi Tokutei (kỹ năng đặc định) chia theo 14 ngành nghề. Chọn ngành của bạn để xem trạng thái — nội dung từng ngành đang được biên soạn từ tài liệu chính thức của ngành.</p>
+        <p class="wvinfo">Mục ôn thi Tokutei (kỹ năng đặc định) chia theo 14 ngành nghề. Ngành Xây dựng đã có đủ 730 câu hỏi ôn thi Tokutei Gino 2 (Premium); các ngành còn lại đang được biên soạn từ tài liệu chính thức của ngành.</p>
         <div class="tk-tabs" id="tkTabs" role="tablist" aria-label="Chọn ngành Tokutei"></div>
         <div class="tk-panel" id="tkPanel"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- ============ TOKUTEI XÂY DỰNG: MÀN LÀM BÀI ============ -->
+    <div class="overlay front" id="tkQuizOverlay" aria-hidden="true">
+      <div class="examhead">
+        <button class="iconbtn" id="tkQuizBack" aria-label="Quay lại danh sách bộ Tokutei">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div class="et"><span id="tkQuizTitle">Tokutei Xây dựng</span><span id="tkQuizSub">Lý thuyết chung</span></div>
+        <div class="timer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9.5 2.5h5"/></svg>
+          <span id="tkQuizTimer">60:00</span>
+        </div>
+        <button class="submitbtn" id="tkQuizSubmit">Nộp bài</button>
+      </div>
+      <div class="examprog"><i id="tkQuizProgBar"></i></div>
+      <div class="exambody" id="tkQuizBody"></div>
+      <div class="examfoot" id="tkQuizFoot">
+        <button class="navbtn" id="tkQuizPrev">← Trước</button>
+        <button class="sheetbtn" id="tkQuizExplain">📘 Giải thích</button>
+        <button class="navbtn" id="tkQuizNext">Sau →</button>
       </div>
     </div>
 
@@ -4872,6 +4925,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!svCardLocked(id)) return true;
     return showPremiumPrompt();
   }
+  /* Gate cho ôn thi Tokutei xây dựng: toàn bộ nội dung cần Premium. */
+  function premiumGateTokutei(){
+    if(isPremium()) return true;
+    return showPremiumPrompt();
+  }
   /* Cập nhật ổ khóa trên các nút chọn cấp + vẽ lại danh sách cấp đang mở. */
   function premiumApplyLocks(){
     var prem = isPremium();
@@ -4907,6 +4965,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       }
       var ro = document.getElementById("readOverlay");
       if(ro && ro.classList.contains("open") && typeof rdRenderLevels === "function") rdRenderLevels();
+      var to = document.getElementById("tokuteiOverlay");
+      if(to && to.classList.contains("open") && typeof tkRender === "function") tkRender();
     }catch(_){}
   }
   /* ---------- Đọc Premium từ Firestore ---------- */
@@ -14684,30 +14744,62 @@ function furiHTML(text){
   document.getElementById("closeGrLessons").addEventListener("click", function(){ hideOv(grLessonsOverlay); });
   document.getElementById("closeGrPatterns").addEventListener("click", function(){ hideOv(grPatternsOverlay); });
   document.getElementById("closeGrDetail").addEventListener("click", function(){ hideOv(grDetailOverlay); });
-  /* ---------- Tokutei (kỹ năng đặc định): tab chọn ngành — nội dung đang biên soạn ----------
+  /* ---------- Tokutei (kỹ năng đặc định): tab chọn ngành ----------
      Danh sách ngành lấy chung SPEC_FIELDS với mục Từ vựng → Chuyên ngành (14 ngành).
-     Trang này mới là trang chờ: mỗi tab hiện thẻ “Đang biên soạn”, không bịa nội dung học. */
+     Ngành Xây dựng (hàng đầu) đã có đủ 730 câu ôn thi Tokutei Gino 2 — KHÓA PREMIUM
+     (user miễn phí thấy hàng 🔒 + thẻ khóa; user Premium thấy danh sách bộ).
+     13 ngành còn lại vẫn là trang chờ “Đang biên soạn”, không bịa nội dung học. */
   var tokuteiOverlay = document.getElementById("tokuteiOverlay");
   var tkTabsEl = document.getElementById("tkTabs");
   var tkPanelEl = document.getElementById("tkPanel");
   var tkCur = 0;
   function tkRender(){
+    var prem = isPremium();
     tkTabsEl.innerHTML = "";
     SPEC_FIELDS.forEach(function(f, i){
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "tk-tab" + (i === tkCur ? " on" : "");
+      b.className = "tk-tab" + (i === tkCur ? " on" : "") + (i === 0 && !prem ? " pw-locked" : "");
       b.setAttribute("role", "tab");
       b.setAttribute("aria-selected", i === tkCur ? "true" : "false");
       b.appendChild(document.createTextNode(f.name));
       var todo = document.createElement("span");
       todo.className = "tk-todo";
-      todo.textContent = "(đang biên soạn)";
+      /* Xây dựng (hàng đầu) đã có nội dung: miễn phí thấy 🔒, Premium thấy số câu.
+         13 ngành còn lại vẫn "(đang biên soạn)". */
+      todo.textContent = (i === 0) ? (prem ? "(730 câu)" : "🔒 Premium") : "(đang biên soạn)";
       b.appendChild(todo);
-      b.addEventListener("click", function(){ tkCur = i; tkRender(); });
+      b.addEventListener("click", function(){
+        if(i === 0 && !isPremium()){ showPremiumPrompt(); return; }
+        tkCur = i; tkRender();
+      });
       tkTabsEl.appendChild(b);
     });
     var f = SPEC_FIELDS[tkCur];
+    if(tkCur === 0){
+      /* Ngành Xây dựng: Premium → danh sách bộ; miễn phí → thẻ khóa. */
+      if(prem){
+        tkPanelEl.innerHTML =
+          '<div class="tk-phead"><span class="tk-glyph jp">' + f.glyph + '</span>' +
+          '<span class="tk-pmain"><b>' + f.name + '</b><span class="jp">' + f.jp + '</span></span>' +
+          '<span class="badge">730 câu</span></div>' +
+          '<p>Ôn thi Tokutei Gino 2 ngành xây dựng: lý thuyết chung (9 bộ) + thực hành 3 nhóm (15 bộ), kèm giải thích tiếng Việt và mẹo nhớ từng câu. Chọn 1 bộ để làm bài.</p>' +
+          tkSetListHtml();
+        tkPanelEl.querySelectorAll("[data-tkset]").forEach(function(el){
+          el.addEventListener("click", function(){ tkStartQuiz(el.getAttribute("data-tkset")); });
+        });
+      }else{
+        tkPanelEl.innerHTML =
+          '<div class="tk-lockcard"><span class="tk-glyph jp">' + f.glyph + '</span>' +
+          '<h3 style="margin:0 0 6px; font-size:16px;">' + f.name + ' · <span class="jp">' + f.jp + '</span></h3>' +
+          '<p>730 câu hỏi ôn thi Tokutei Gino 2 ngành xây dựng: lý thuyết chung (9 bộ) + thực hành 3 nhóm (15 bộ), kèm giải thích tiếng Việt và mẹo nhớ từng câu.</p>' +
+          '<p><b>🔒 Nội dung Premium</b> — nâng cấp để mở toàn bộ đề luyện.</p>' +
+          '<button class="cta" id="tkGoPremium" type="button" style="max-width:280px;">Nâng cấp Premium</button></div>';
+        var gp = document.getElementById("tkGoPremium");
+        if(gp) gp.addEventListener("click", function(){ showPremiumPrompt(); });
+      }
+      return;
+    }
     tkPanelEl.innerHTML =
       '<div class="tk-phead"><span class="tk-glyph jp">' + f.glyph + '</span>' +
       '<span class="tk-pmain"><b>' + f.name + '</b><span class="jp">' + f.jp + '</span></span>' +
@@ -14722,6 +14814,292 @@ function furiHTML(text){
     showOv(tokuteiOverlay);
   }
   document.getElementById("closeTokutei").addEventListener("click", function(){ hideOv(tokuteiOverlay); });
+
+  /* ================= TOKUTEI XÂY DỰNG: danh sách bộ + trình phát đề =================
+     Data: 4 file assets/tokutei-{theory,g1,g2,g3}.js (window.TOKUTEI_SETS, 24 bộ,
+     730 câu — nguồn repo donghung94/1, copy verbatim), nạp lười khi user Premium
+     bắt đầu làm bài lần đầu; user miễn phí không tải được data (gate ở
+     tkStartQuiz). Player port từ exam.js của app Tokutei gốc: chấm ngay từng
+     câu, giải thích ngay, nộp bài → điểm + làm lại câu sai. Toàn bộ nội dung
+     Tokutei xây dựng KHÓA PREMIUM (premiumGateTokutei). */
+  var TK_DATA_FILES = ["assets/tokutei-theory.js", "assets/tokutei-g1.js", "assets/tokutei-g2.js", "assets/tokutei-g3.js"];
+  var TK_SET_META = [
+    {key:"t1", group:"theory", title:"Lý thuyết chung – (問1〜問30)", count:30},
+    {key:"t2", group:"theory", title:"Lý thuyết chung – (問31〜問60)", count:30},
+    {key:"t3", group:"theory", title:"Lý thuyết chung – (問61〜問90)", count:29},
+    {key:"t4", group:"theory", title:"Lý thuyết chung – (問91〜問120)", count:30},
+    {key:"t5", group:"theory", title:"Lý thuyết chung – (問121〜問150)", count:29},
+    {key:"t6", group:"theory", title:"Lý thuyết chung – (問151〜問180)", count:30},
+    {key:"t7", group:"theory", title:"Những câu lý thuyết hay thi phần 1", count:37},
+    {key:"t8", group:"theory", title:"Những câu lý thuyết hay thi phần 2", count:55},
+    {key:"t9", group:"theory", title:"Câu hỏi cập nhật", count:4},
+    {key:"g1_1", group:"g1", title:"Thực hành nhóm 1 – (問1〜問30)", count:30},
+    {key:"g1_2", group:"g1", title:"Thực hành nhóm 1 – (問31〜問60)", count:30},
+    {key:"g1_3", group:"g1", title:"Thực hành nhóm 1 – (問61〜問90)", count:29},
+    {key:"g1_4", group:"g1", title:"Thực hành nhóm 1 – (問91〜問132)", count:42},
+    {key:"g2_1", group:"g2", title:"Thực hành nhóm 2 – (問1〜問30)", count:30},
+    {key:"g2_2", group:"g2", title:"Thực hành nhóm 2 – (問31〜問60)", count:28},
+    {key:"g2_3", group:"g2", title:"Thực hành nhóm 2 – (問61〜問90)", count:29},
+    {key:"g2_4", group:"g2", title:"Thực hành nhóm 2 – (問91〜問130)", count:37},
+    {key:"g3_1", group:"g3", title:"Thực hành nhóm 3 – Bộ 1", count:25},
+    {key:"g3_2", group:"g3", title:"Thực hành nhóm 3 – Bộ 2", count:25},
+    {key:"g3_3", group:"g3", title:"Thực hành nhóm 3 – Bộ 3", count:25},
+    {key:"g3_4", group:"g3", title:"Thực hành nhóm 3 – Bộ 4", count:25},
+    {key:"g3_5", group:"g3", title:"Thực hành nhóm 3 – Bộ 5", count:25},
+    {key:"g3_6", group:"g3", title:"Thực hành nhóm 3 – (đề tinh gọn mới nhất 1)", count:36},
+    {key:"g3_7", group:"g3", title:"Thực hành nhóm 3 – (đề tinh gọn mới nhất 2)", count:40}
+  ];
+  var TK_GROUPS = [
+    {id:"theory", name:"Lý thuyết chung", random:{key:"random-theory", title:"🎲 Đề tổng hợp lý thuyết chung đảo ngẫu nhiên", count:40}},
+    {id:"g1", name:"🧰 Đề thực hành nhóm 1", random:{key:"random-g1", title:"🎲 Đề thi thử đảo ngẫu nhiên 40 câu thực hành nhóm 1", count:40}},
+    {id:"g2", name:"🧰 Đề thực hành nhóm 2", random:{key:"random-g2", title:"🎲 Đề thi thử đảo ngẫu nhiên 40 câu thực hành nhóm 2", count:40}},
+    {id:"g3", name:"🧰 Đề thực hành nhóm 3", random:null}
+  ];
+  function tkSetListHtml(){
+    var html = "";
+    TK_GROUPS.forEach(function(g){
+      html += '<div class="tk-setgroup"><h4>' + esc(g.name) + '</h4>';
+      TK_SET_META.forEach(function(m){
+        if(m.group !== g.id) return;
+        html += '<button class="tk-setrow" type="button" data-tkset="' + m.key + '"><span>' + esc(m.title) + '</span><span class="tk-setcount">' + m.count + ' câu</span></button>';
+      });
+      if(g.random) html += '<button class="tk-setrow random" type="button" data-tkset="' + g.random.key + '"><span>' + esc(g.random.title) + '</span><span class="tk-setcount">' + g.random.count + ' câu</span></button>';
+      html += '</div>';
+    });
+    return html;
+  }
+  /* Nạp lười 4 file data theo thứ tự; cb(true) khi đủ, cb(false) khi lỗi. */
+  var tkDataState = "idle";
+  var tkDataWaiters = [];
+  function tkLoadData(cb){
+    if(tkDataState === "ready"){ cb(true); return; }
+    tkDataWaiters.push(cb);
+    if(tkDataState === "loading") return;
+    tkDataState = "loading";
+    var i = 0;
+    function done(ok){
+      tkDataState = ok ? "ready" : "error";
+      var ws = tkDataWaiters; tkDataWaiters = [];
+      ws.forEach(function(w){ w(ok); });
+    }
+    function next(){
+      if(i >= TK_DATA_FILES.length){
+        done(typeof window.TOKUTEI_SETS !== "undefined" && !!window.TOKUTEI_SETS["t1"]);
+        return;
+      }
+      var s = document.createElement("script");
+      s.src = TK_DATA_FILES[i++];
+      s.onload = next;
+      s.onerror = function(){ done(false); };
+      document.head.appendChild(s);
+    }
+    next();
+  }
+  /* Furigana: 漢字（かな） → <ruby> (regex chép từ exam.js của app gốc). */
+  function tkFuri(s){
+    if(!s) return "";
+    return esc(s).replace(/([一-龯々〆ヶ]+)\s*[（(]([^）)]+)[）)]/g, function(m, kanji, kana){
+      return "<ruby>" + kanji + "<rt>" + kana + "</rt></ruby>";
+    });
+  }
+  function tkShuffle(arr){
+    for(var i = arr.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+  function tkFmtT(sec){
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+  }
+  var TKQ = null;
+  function tkStartQuiz(key){
+    if(!premiumGateTokutei()) return;
+    var ov = document.getElementById("tkQuizOverlay");
+    var body = document.getElementById("tkQuizBody");
+    document.getElementById("tkQuizTitle").textContent = "Tokutei Xây dựng";
+    document.getElementById("tkQuizSub").textContent = "Đang tải đề…";
+    document.getElementById("tkQuizTimer").textContent = "60:00";
+    document.getElementById("tkQuizProgBar").style.width = "0%";
+    document.getElementById("tkQuizFoot").style.display = "none";
+    document.getElementById("tkQuizSubmit").style.display = "none";
+    body.innerHTML = '<p class="wvinfo" style="margin-top:16px;">Đang tải đề…</p>';
+    showOv(ov);
+    tkLoadData(function(ok){
+      if(!ov.classList.contains("open")) return; /* user đã đóng overlay lúc đang tải */
+      if(!ok || typeof window.TOKUTEI_SETS === "undefined"){
+        body.innerHTML = '<p class="wvinfo" style="margin-top:16px;">Không tải được đề — kiểm tra mạng rồi thử lại.</p>';
+        return;
+      }
+      var meta = null, qs = [], title = "", sub = "", videoUrl = null;
+      if(key === "random-theory" || key === "random-g1" || key === "random-g2"){
+        var g = key === "random-theory" ? "theory" : key.slice(7);
+        TK_SET_META.forEach(function(m){
+          if(m.group !== g) return;
+          var st = window.TOKUTEI_SETS[m.key];
+          if(st && st.questions) qs = qs.concat(st.questions);
+        });
+        qs = tkShuffle(qs.slice()).slice(0, 40);
+        var rg = null;
+        TK_GROUPS.forEach(function(x){ if(x.random && x.random.key === key) rg = x.random; });
+        title = rg ? rg.title : "Đề ngẫu nhiên";
+        sub = "40 câu · đảo ngẫu nhiên";
+      }else{
+        TK_SET_META.forEach(function(m){ if(m.key === key) meta = m; });
+        var set = window.TOKUTEI_SETS[key];
+        if(!meta || !set || !set.questions){
+          body.innerHTML = '<p class="wvinfo" style="margin-top:16px;">Không tìm thấy bộ đề này.</p>';
+          return;
+        }
+        qs = set.questions.slice();
+        title = meta.title;
+        sub = qs.length + " câu";
+        videoUrl = set.videoUrl || null;
+      }
+      if(!qs.length){
+        body.innerHTML = '<p class="wvinfo" style="margin-top:16px;">Bộ đề này chưa có câu hỏi.</p>';
+        return;
+      }
+      TKQ = {key:key, title:title, qs:qs, cur:0, user:new Array(qs.length).fill(null),
+             videoUrl:videoUrl, timeLeft:3600, timerId:null, explainOpen:false};
+      document.getElementById("tkQuizTitle").textContent = title;
+      document.getElementById("tkQuizSub").textContent = sub;
+      document.getElementById("tkQuizFoot").style.display = "";
+      document.getElementById("tkQuizSubmit").style.display = "";
+      tkRenderQ();
+      TKQ.timerId = setInterval(function(){
+        if(!TKQ) return;
+        TKQ.timeLeft--;
+        if(TKQ.timeLeft <= 0){ TKQ.timeLeft = 0; tkSubmit(true); return; }
+        document.getElementById("tkQuizTimer").textContent = tkFmtT(TKQ.timeLeft);
+      }, 1000);
+    });
+  }
+  function tkExplainHtml(q){
+    var h = "";
+    if(q.vi) h += '<div><b>Dịch:</b> ' + tkFuri(q.vi) + '</div>';
+    if(q.explain) h += '<div><b>📘 Giải thích:</b> ' + tkFuri(q.explain).replace(/\n/g, "<br>") + '</div>';
+    if(q.tip) h += '<div class="tk-tip">' + tkFuri(q.tip) + '</div>';
+    return h;
+  }
+  function tkRenderQ(){
+    if(!TKQ) return;
+    var q = TKQ.qs[TKQ.cur], cur = TKQ.cur, n = TKQ.qs.length;
+    var answered = TKQ.user[cur] !== null;
+    document.getElementById("tkQuizTimer").textContent = tkFmtT(TKQ.timeLeft);
+    document.getElementById("tkQuizProgBar").style.width = ((cur + 1) / n * 100) + "%";
+    var html = '<div class="tk-qhead"><span class="tk-qidx">Câu ' + (cur + 1) + '/' + n + '</span></div>';
+    if(cur === 0 && TKQ.videoUrl) html += '<a class="tk-vidbtn" href="' + esc(TKQ.videoUrl) + '" target="_blank" rel="noopener">▶ Xem video bài giảng</a>';
+    html += '<p class="tk-qtext jp">' + tkFuri(q.q) + '</p>';
+    if(q.hira) html += '<p class="tk-hira jp">' + tkFuri(q.hira) + '</p>';
+    if(q.img) html += '<div class="tk-qimg"><img src="' + esc(q.img) + '" alt="" onerror="this.parentNode.style.display=\'none\'"></div>';
+    /* Render đúng số lựa chọn có sẵn (2 câu gốc chỉ có 3 lựa chọn — không giả định 4). */
+    (q.options || []).forEach(function(op, i){
+      var cls = "tk-opt jp", mark = "";
+      if(answered){
+        if(i === q.answer){ cls += " correct"; mark = "✅"; }
+        else if(TKQ.user[cur] === i){ cls += " incorrect"; mark = "❌"; }
+      }
+      html += '<button class="' + cls + '" type="button" data-tkopt="' + i + '"' + (answered ? " disabled" : "") + '>' + tkFuri(op) + (mark ? ' <span class="tk-mark">' + mark + '</span>' : "") + '</button>';
+    });
+    var showExp = answered || TKQ.explainOpen;
+    html += '<div class="tk-explain" id="tkExplainBox" style="display:' + (showExp ? "block" : "none") + ';">' + tkExplainHtml(q) + '</div>';
+    var body = document.getElementById("tkQuizBody");
+    body.innerHTML = html;
+    body.scrollTop = 0;
+    body.querySelectorAll("[data-tkopt]").forEach(function(el){
+      el.addEventListener("click", function(){
+        if(!TKQ || TKQ.user[TKQ.cur] !== null) return;
+        TKQ.user[TKQ.cur] = parseInt(el.getAttribute("data-tkopt"), 10);
+        tkRenderQ();
+      });
+    });
+    document.getElementById("tkQuizPrev").disabled = (cur === 0);
+    /* Nút Sau chỉ đi tiếp khi đã trả lời câu hiện tại (như app Tokutei gốc). */
+    document.getElementById("tkQuizNext").disabled = (cur === n - 1) || !answered;
+  }
+  function tkCloseQuiz(){
+    if(TKQ && TKQ.timerId) clearInterval(TKQ.timerId);
+    TKQ = null;
+    document.getElementById("tkQuizFoot").style.display = "";
+    document.getElementById("tkQuizSubmit").style.display = "";
+    hideOv(document.getElementById("tkQuizOverlay"));
+  }
+  function tkSubmit(auto){
+    if(!TKQ) return;
+    if(TKQ.timerId) clearInterval(TKQ.timerId);
+    var correct = 0, wrongs = [];
+    TKQ.qs.forEach(function(q, i){
+      if(TKQ.user[i] !== null && TKQ.user[i] === q.answer) correct++;
+      else wrongs.push({q:q, picked:TKQ.user[i]});
+    });
+    var n = TKQ.qs.length;
+    TKQ.wrongs = wrongs;
+    TKQ.timerId = null;
+    document.getElementById("tkQuizFoot").style.display = "none";
+    document.getElementById("tkQuizSubmit").style.display = "none";
+    document.getElementById("tkQuizTimer").textContent = auto ? "Hết giờ" : tkFmtT(TKQ.timeLeft);
+    var html = '<h3 style="font-size:17px; margin:8px 0 4px;">✅ Bạn làm đúng ' + correct + '/' + n + '</h3>';
+    if(!wrongs.length){
+      html += '<p class="wvinfo">🎉 Bạn đúng hết!</p>';
+    }else{
+      html += '<p class="wvinfo">Bạn sai các câu sau:</p>';
+      wrongs.forEach(function(w){
+        var q = w.q;
+        html += '<div class="tk-result-item"><p class="tk-qtext jp">' + tkFuri(q.q) + '</p>';
+        if(q.hira) html += '<p class="tk-hira jp">' + tkFuri(q.hira) + '</p>';
+        if(q.img) html += '<div class="tk-qimg"><img src="' + esc(q.img) + '" alt="" onerror="this.parentNode.style.display=\'none\'"></div>';
+        html += '<p class="tk-ans">❌ <b>Bạn chọn:</b> ' + (w.picked !== null ? tkFuri(q.options[w.picked]) : "(chưa chọn)") + '</p>';
+        html += '<p class="tk-ans">✅ <b>Đáp án đúng:</b> ' + tkFuri(q.options[q.answer]) + '</p>';
+        html += '<div class="tk-explain" style="margin-top:8px;">' + tkExplainHtml(q) + '</div></div>';
+      });
+    }
+    if(wrongs.length) html += '<button class="cta" id="tkRedoWrong" type="button" style="max-width:280px;">Làm lại câu sai (' + wrongs.length + ' câu)</button>';
+    html += '<button class="ghostbtn" id="tkBackToList" type="button" style="width:100%; max-width:280px; margin-top:10px; min-height:50px; justify-content:center;">Về danh sách bộ</button>';
+    var body = document.getElementById("tkQuizBody");
+    body.innerHTML = html;
+    body.scrollTop = 0;
+    var rw = document.getElementById("tkRedoWrong");
+    if(rw) rw.addEventListener("click", function(){ tkRedoWrong(); });
+    document.getElementById("tkBackToList").addEventListener("click", function(){ tkCloseQuiz(); });
+  }
+  function tkRedoWrong(){
+    if(!TKQ || !TKQ.wrongs || !TKQ.wrongs.length) return;
+    var qs = tkShuffle(TKQ.wrongs.map(function(w){ return w.q; }));
+    TKQ.qs = qs;
+    TKQ.cur = 0;
+    TKQ.user = new Array(qs.length).fill(null);
+    TKQ.wrongs = null;
+    TKQ.timeLeft = 3600;
+    TKQ.explainOpen = false;
+    document.getElementById("tkQuizSub").textContent = qs.length + " câu sai · làm lại";
+    document.getElementById("tkQuizFoot").style.display = "";
+    document.getElementById("tkQuizSubmit").style.display = "";
+    tkRenderQ();
+    TKQ.timerId = setInterval(function(){
+      if(!TKQ) return;
+      TKQ.timeLeft--;
+      if(TKQ.timeLeft <= 0){ TKQ.timeLeft = 0; tkSubmit(true); return; }
+      document.getElementById("tkQuizTimer").textContent = tkFmtT(TKQ.timeLeft);
+    }, 1000);
+  }
+  document.getElementById("tkQuizBack").addEventListener("click", function(){ tkCloseQuiz(); });
+  document.getElementById("tkQuizSubmit").addEventListener("click", function(){ tkSubmit(false); });
+  document.getElementById("tkQuizPrev").addEventListener("click", function(){
+    if(!TKQ || TKQ.cur === 0) return;
+    TKQ.cur--; TKQ.explainOpen = false; tkRenderQ();
+  });
+  document.getElementById("tkQuizNext").addEventListener("click", function(){
+    if(!TKQ || TKQ.cur >= TKQ.qs.length - 1 || TKQ.user[TKQ.cur] === null) return;
+    TKQ.cur++; TKQ.explainOpen = false; tkRenderQ();
+  });
+  document.getElementById("tkQuizExplain").addEventListener("click", function(){
+    if(!TKQ) return;
+    TKQ.explainOpen = !TKQ.explainOpen;
+    var box = document.getElementById("tkExplainBox");
+    if(box) box.style.display = (TKQ.explainOpen || TKQ.user[TKQ.cur] !== null) ? "block" : "none";
+  });
 
   document.querySelectorAll("[data-app]").forEach(function(b){
     b.addEventListener("click", function(){
