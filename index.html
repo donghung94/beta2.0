@@ -237,6 +237,24 @@ section.blk{padding:34px 0 6px}
 .stat b i{font-style:normal; color:var(--red)}
 .stat span{font-size:13.5px; color:var(--muted); font-weight:600}
 
+/* admin dashboard */
+.adm-table{width:100%;border-collapse:collapse;font-size:14px}
+.adm-table th,.adm-table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.adm-table thead th{font-size:13px;color:var(--muted);white-space:nowrap}
+.adm-scroll{overflow-x:auto}
+.adm-badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.adm-paid{background:#e6f4ea;color:#137333}
+.adm-pend{background:#fef7e0;color:#b06000}
+.adm-free{background:#f1f3f4;color:#5f6368}
+.adm-year{background:#e8f0fe;color:#1967d2}
+.adm-life{background:#fce8e6;color:#a50e0e}
+.adm-row{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:11px 2px;border-bottom:1px solid var(--line)}
+.adm-row:last-child{border-bottom:0}
+.adm-uid{font-size:12px;color:var(--muted);word-break:break-all}
+.adm-note{font-size:13px;color:var(--muted);line-height:1.6}
+.auth-field select{display:block;width:100%;margin-top:6px;font:inherit;font-size:14.5px;font-weight:400;padding:11px 12px;border:1.5px solid var(--line-strong);border-radius:10px;background:#fff;color:var(--ink)}
+@media (max-width:640px){ .adm-row{flex-direction:column} .adm-row .btn{align-self:flex-start} }
+
 /* feature cards */
 .feat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
 @media (max-width:900px){ .feat-grid{grid-template-columns:repeat(2,1fr)} }
@@ -6674,7 +6692,10 @@ function renderSettingsPage(){
       '<label class="auth-field">URL Fanpage Facebook<input id="skFbUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.facebook.com/ten-trang"></label>' +
       '<label class="auth-field">URL TikTok<input id="skTtUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.tiktok.com/@ten-tai-khoan"></label>' +
       '<p id="skSocialMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
-      '<button class="btn" id="skSocialSave" type="button" style="margin-top:10px">Lưu liên kết</button></div>'
+      '<button class="btn" id="skSocialSave" type="button" style="margin-top:10px">Lưu liên kết</button></div>' +
+      '<div class="card" style="margin-top:14px"><b style="font-size:16px">Bảng điều khiển</b>' +
+      '<p style="margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6">Thống kê học viên và doanh thu, danh sách đơn hàng, quản lý học viên và cấp Premium tay.</p>' +
+      '<p style="margin:10px 0 0"><a class="btn" href="#/admin">Mở bảng điều khiển</a></p></div>'
     : "") +
     '<p id="setMsg" style="font-size:13.5px;color:var(--blue-dark);font-weight:700;min-height:20px;margin:10px 2px 0"></p></div>';
   $app.innerHTML = h;
@@ -6737,6 +6758,236 @@ function renderSettingsPage(){
       });
     }
   }
+}
+
+/* ================= BẢNG ĐIỀU KHIỂN ADMIN (#/admin) =================
+   Chỉ tài khoản admin (webIsAdmin) thấy. Dữ liệu Firestore thật:
+   - kanji_progress: đếm học viên + trạng thái Premium từng người.
+   - sk_orders: doanh thu, đơn chờ, danh sách đơn (mới nhất trước).
+   Rules (deploy riêng): admin được đọc 2 collection trên và ghi CHỈ field
+   premium của kanji_progress. Đếm ở client (v1 — lượng user còn nhỏ).
+   Không có Tặng Xu / Khóa tài khoản: bản mobile chỉ là dữ liệu mẫu local,
+   app chưa có cơ chế thật cho 2 việc đó. */
+var SK_ADM = {students: [], orders: [], stats: null};
+function skAdminTsMs(v){
+  if(v == null) return null;
+  if(typeof v === "number") return v < 1e12 ? v * 1000 : v;
+  if(typeof v === "string"){ var t = Date.parse(v); return isNaN(t) ? null : t; }
+  if(typeof v.toMillis === "function"){ try{ return v.toMillis(); }catch(e){ return null; } }
+  if(typeof v.seconds === "number") return v.seconds * 1000;
+  return null;
+}
+/* Chuẩn hóa premium từ doc kanji_progress: {active, plan, untilMs}.
+   plan đọc cả 3 tên field từng dùng: plan (backend) / package / pkg (web). */
+function skAdminPremiumInfo(p){
+  if(p === true) return {active: true, plan: "lifetime", untilMs: null};
+  if(!p || typeof p !== "object") return {active: false, plan: null, untilMs: null};
+  var plan = p.plan || p.package || p.pkg || null;
+  if(p.until === null) return {active: true, plan: plan || "lifetime", untilMs: null};
+  var ms = skAdminTsMs(p.until);
+  return {active: ms != null && ms > Date.now(), plan: plan, untilMs: ms};
+}
+/* Thống kê từ dữ liệu thô (hàm thuần — test được bằng harness):
+   progDocs: [{uid, premium}], orderDocs: [{id, package, amount, status}]. */
+function skAdminStats(progDocs, orderDocs){
+  var year = 0, lifetime = 0, revenue = 0, pending = 0;
+  (progDocs || []).forEach(function(d){
+    var info = skAdminPremiumInfo(d.premium);
+    if(!info.active) return;
+    if(info.plan === "year") year++;
+    else lifetime++;
+  });
+  (orderDocs || []).forEach(function(o){
+    if(o.status === "paid" && typeof o.amount === "number") revenue += o.amount;
+    if(o.status === "pending") pending++;
+  });
+  return {total: (progDocs || []).length, year: year, lifetime: lifetime, revenue: revenue, pending: pending};
+}
+function skAdminFmtDate(v){
+  var ms = skAdminTsMs(v);
+  if(ms == null) return "—";
+  try{ return new Date(ms).toLocaleString("vi-VN"); }catch(e){ return "—"; }
+}
+function skAdminPkgLabel(pkg){
+  if(pkg === "year") return "Gói Năm";
+  if(pkg === "lifetime") return "Gói Trọn đời";
+  return pkg || "—";
+}
+/* Cấp Premium tay — ghi đúng dạng backend (activateOrder): premium =
+   {plan, since, until}; year: until = now + 12 tháng; lifetime: until null.
+   Dùng set merge nên cấp cho UID chưa có doc cũng được (rules cho admin
+   tạo doc chỉ có field premium). */
+function skAdminGrant(uid, pkg){
+  var db = skDb();
+  if(!db) return Promise.reject(new Error("not-ready"));
+  var now = firebase.firestore.Timestamp.now();
+  var until = null;
+  if(pkg === "year"){
+    var d = now.toDate();
+    d.setMonth(d.getMonth() + 12);
+    until = firebase.firestore.Timestamp.fromDate(d);
+  }
+  return db.collection("kanji_progress").doc(uid).set(
+    {premium: {plan: pkg, since: now, until: until}}, {merge: true});
+}
+function skAdminOrderRowHtml(o){
+  var paid = o.status === "paid";
+  return "<tr><td><b>" + esc(o.id) + "</b><br><span class=\"adm-uid\">" + esc(o.displayName || "") +
+    (o.email ? " · " + esc(o.email) : "") + "</span></td><td>" + esc(skAdminPkgLabel(o.package)) +
+    "</td><td style=\"white-space:nowrap\">" + skFmtVND(o.amount || 0) + "</td><td><span class=\"adm-badge " +
+    (paid ? "adm-paid" : "adm-pend") + "\">" + (paid ? "Đã thanh toán" : "Chờ xử lý") + "</span></td>" +
+    "<td style=\"white-space:nowrap\">" + esc(skAdminFmtDate(o.createdAt)) + "</td></tr>";
+}
+function skAdminStudentRowHtml(s){
+  var info = skAdminPremiumInfo(s.premium);
+  var badge = !info.active ? "<span class=\"adm-badge adm-free\">Miễn phí</span>"
+    : info.plan === "year" ? "<span class=\"adm-badge adm-year\">Năm" + (info.untilMs ? " đến " + esc(skAdminFmtDate(info.untilMs)) : "") + "</span>"
+    : "<span class=\"adm-badge adm-life\">Trọn đời</span>";
+  return "<div class=\"adm-row\"><div><b>" + esc(s.name || "—") + "</b> " + badge +
+    "<div class=\"adm-uid\">" + (s.email ? esc(s.email) + "<br>" : "") + esc(s.uid) + "</div></div>" +
+    "<button class=\"btn sm ghost\" type=\"button\" data-adm-grant=\"" + esc(s.uid) + "\">Cấp Premium</button></div>";
+}
+function skAdminRenderStudents(){
+  var list = document.getElementById("admStudentList");
+  if(!list) return;
+  var q = (document.getElementById("admSearch").value || "").toLowerCase().trim();
+  var rows = SK_ADM.students.filter(function(s){
+    if(!q) return true;
+    return (s.uid || "").toLowerCase().indexOf(q) >= 0 ||
+      (s.name || "").toLowerCase().indexOf(q) >= 0 ||
+      (s.email || "").toLowerCase().indexOf(q) >= 0;
+  });
+  list.innerHTML = rows.length ? rows.map(skAdminStudentRowHtml).join("")
+    : "<p class=\"adm-note\">Không có học viên nào khớp.</p>";
+  list.querySelectorAll("[data-adm-grant]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var uidEl = document.getElementById("admGrantUid");
+      if(uidEl){ uidEl.value = b.getAttribute("data-adm-grant"); uidEl.focus(); }
+      var card = document.getElementById("admGrantCard");
+      if(card) card.scrollIntoView({behavior: "smooth", block: "start"});
+    });
+  });
+}
+function skAdminFill(){
+  var st = SK_ADM.stats || {total: 0, year: 0, lifetime: 0, revenue: 0, pending: 0};
+  var statsEl = document.getElementById("admStats");
+  if(statsEl){
+    statsEl.innerHTML =
+      '<div class="stat"><b>' + st.total.toLocaleString("vi-VN") + '</b><span>Tổng học viên</span></div>' +
+      '<div class="stat"><b>' + st.year.toLocaleString("vi-VN") + '</b><span>Premium Năm</span></div>' +
+      '<div class="stat"><b>' + st.lifetime.toLocaleString("vi-VN") + '</b><span>Premium Trọn đời</span></div>' +
+      '<div class="stat"><b>' + skFmtVND(st.revenue) + '</b><span>Doanh thu (đơn đã thanh toán)</span></div>' +
+      '<div class="stat"><b>' + st.pending.toLocaleString("vi-VN") + '</b><span>Đơn chờ xử lý</span></div>';
+  }
+  var ob = document.getElementById("admOrderBody");
+  if(ob){
+    ob.innerHTML = SK_ADM.orders.length ? SK_ADM.orders.map(skAdminOrderRowHtml).join("")
+      : '<tr><td colspan="5" class="adm-note">Chưa có đơn hàng nào.</td></tr>';
+  }
+  skAdminRenderStudents();
+}
+function skAdminRenderShell(){
+  var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/caidat">Cài đặt</a> / Bảng điều khiển</div>' +
+    "<h1>Bảng điều khiển</h1><p>Thống kê học viên và doanh thu, đơn hàng và cấp Premium tay — chỉ tài khoản quản trị thấy trang này.</p></div>" +
+    '<div style="max-width:960px;padding-bottom:36px">' +
+    '<div id="admStats" class="stat-grid"></div>' +
+    '<h2 class="secttl">Cấp Premium tay</h2>' +
+    '<div class="card" id="admGrantCard"><p class="adm-note" style="margin:0">Nhập UID học viên (lấy từ danh sách bên dưới — bấm "Cấp Premium" ở từng dòng để điền sẵn), chọn gói rồi bấm Cấp. Gói Năm có hạn 12 tháng, Trọn đời không hết hạn. Cấp cho UID chưa từng mở app cũng được.</p>' +
+    '<label class="auth-field">UID học viên<input id="admGrantUid" type="text" autocomplete="off" placeholder="VD: xSqrzV8AKHdi8yNs0mlcw885N492"></label>' +
+    '<label class="auth-field">Gói<select id="admGrantPkg"><option value="year">Gói Năm — 12 tháng</option><option value="lifetime">Gói Trọn đời</option></select></label>' +
+    '<p id="admGrantMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
+    '<button class="btn" id="admGrantBtn" type="button" style="margin-top:10px">Cấp Premium</button></div>' +
+    '<h2 class="secttl">Đơn hàng (mới nhất trước)</h2>' +
+    '<div class="card"><div class="adm-scroll"><table class="adm-table"><thead><tr><th>Mã đơn</th><th>Gói</th><th>Số tiền</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead>' +
+    '<tbody id="admOrderBody"></tbody></table></div>' +
+    '<p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 100 đơn mới nhất.</p></div>' +
+    '<h2 class="secttl">Học viên</h2>' +
+    '<div class="card"><label class="auth-field" style="margin-top:0">Tìm kiếm<input id="admSearch" type="text" autocomplete="off" placeholder="Tìm theo tên, email hoặc UID"></label>' +
+    '<div id="admStudentList" style="margin-top:6px"></div></div>' +
+    '</div>';
+  $app.innerHTML = h;
+  document.getElementById("admSearch").addEventListener("input", skAdminRenderStudents);
+  var grantBtn = document.getElementById("admGrantBtn");
+  var grantMsg = document.getElementById("admGrantMsg");
+  grantBtn.addEventListener("click", function(){
+    var uid = (document.getElementById("admGrantUid").value || "").trim();
+    var pkg = document.getElementById("admGrantPkg").value;
+    if(!uid){ grantMsg.textContent = "Bạn chưa nhập UID học viên."; grantMsg.style.color = "var(--bad)"; return; }
+    showModal("Cấp Premium", "Cấp " + skAdminPkgLabel(pkg) + " cho UID " + uid + "?", "Cấp Premium", "Hủy", function(){
+      grantBtn.disabled = true;
+      grantMsg.textContent = "Đang cấp…";
+      grantMsg.style.color = "var(--ink)";
+      skAdminGrant(uid, pkg).then(function(){
+        grantMsg.textContent = "Đã cấp " + skAdminPkgLabel(pkg) + " cho " + uid + ".";
+        grantMsg.style.color = "var(--ok)";
+        skAdminLoad().catch(function(){
+          grantMsg.textContent += " (Đã cấp xong nhưng chưa tải lại được dữ liệu — mở lại trang để xem.)";
+        });
+      }).catch(function(err){
+        var code = (err && err.code) || "";
+        grantMsg.textContent = code === "permission-denied"
+          ? "Không có quyền cấp — tài khoản này chưa được cấp quyền admin trong rules Firestore."
+          : "Chưa cấp được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.";
+        grantMsg.style.color = "var(--bad)";
+      }).then(function(){ grantBtn.disabled = false; });
+    });
+  });
+}
+function skAdminLoad(){
+  var db = skDb();
+  if(!db) return Promise.reject(new Error("not-ready"));
+  return Promise.all([
+    db.collection("kanji_progress").get(),
+    db.collection("sk_orders").orderBy("createdAt", "desc").limit(100).get()
+  ]).then(function(res){
+    var progDocs = [];
+    res[0].forEach(function(snap){ progDocs.push({uid: snap.id, premium: (snap.data() || {}).premium}); });
+    var orderDocs = [];
+    res[1].forEach(function(snap){
+      var d = snap.data() || {};
+      orderDocs.push({id: snap.id, uid: d.uid || "", package: d.package, amount: d.amount, status: d.status,
+        email: d.email || "", displayName: d.displayName || "", createdAt: d.createdAt});
+    });
+    /* Tên/email học viên lấy từ đơn hàng của họ (doc kanji_progress không lưu
+       email) — đơn mới nhất trước nên gặp UID nào trước thì giữ tên đó. */
+    var byUid = {};
+    orderDocs.forEach(function(o){
+      if(o.uid && !byUid[o.uid]) byUid[o.uid] = {email: o.email || "", name: o.displayName || ""};
+    });
+    var students = progDocs.map(function(d){
+      var known = byUid[d.uid] || {};
+      return {uid: d.uid, premium: d.premium, email: known.email || "", name: known.name || ""};
+    });
+    students.sort(function(a, b){
+      var ai = skAdminPremiumInfo(a.premium).active ? 0 : 1;
+      var bi = skAdminPremiumInfo(b.premium).active ? 0 : 1;
+      if(ai !== bi) return ai - bi;
+      return a.uid < b.uid ? -1 : (a.uid > b.uid ? 1 : 0);
+    });
+    SK_ADM.students = students;
+    SK_ADM.orders = orderDocs;
+    SK_ADM.stats = skAdminStats(progDocs, orderDocs);
+    if(!document.getElementById("admStats")) skAdminRenderShell();
+    skAdminFill();
+  });
+}
+function renderAdminDashboard(){
+  document.title = "Bảng điều khiển | SoraKanji";
+  document.body.classList.remove("plain");
+  if(!webIsAdmin()){ location.replace("#/"); return; }
+  $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/caidat">Cài đặt</a> / Bảng điều khiển</div>' +
+    "<h1>Bảng điều khiển</h1><p>Thống kê học viên và doanh thu, đơn hàng và cấp Premium tay — chỉ tài khoản quản trị thấy trang này.</p></div>" +
+    '<div id="admBody" style="max-width:960px;padding-bottom:36px"><p class="adm-note">Đang tải dữ liệu…</p></div>';
+  skAdminLoad().catch(function(err){
+    var body = document.getElementById("admBody");
+    if(!body) return;
+    var code = (err && err.code) || "";
+    body.innerHTML = '<p class="adm-note">' + (code === "permission-denied"
+      ? "Tài khoản này chưa có quyền đọc dữ liệu admin — kiểm tra rules Firestore đã cho phép UID admin đọc sk_orders và kanji_progress chưa."
+      : err && err.message === "not-ready"
+      ? "Chưa kết nối được Firebase — tải lại trang rồi thử lại."
+      : "Chưa tải được dữ liệu" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.") + "</p>";
+  });
 }
 
 /* ================= ROUTER ================= */
@@ -6850,6 +7101,7 @@ function route(){
   if(seg === "nangcap"){ renderNangcapPage(); return; }
   if(seg === "caidat"){ renderSettingsPage(); return; }
   if(seg === "chuyenam"){ renderChuyenAmPage(); return; }
+  if(seg === "admin"){ renderAdminDashboard(); return; }
   renderHome();
 }
 window.addEventListener("hashchange", function(){
@@ -7267,6 +7519,7 @@ var SK_FB_CONFIG = {
   appId: "1:753379492663:web:baff34f2c0bac00e02d0b2"
 };
 var SK_ADMIN_EMAIL = "nongaphao@gmail.com";
+var SK_ADMIN_UIDS = ["xSqrzV8AKHdi8yNs0mlcw885N492", "kymtRAzDs9RefxtoREh5sa6fE142"]; /* 2 tài khoản admin (email + Google) — cùng 1 người */
 function skAuth(){
   try{
     if(typeof firebase === "undefined" || !firebase.initializeApp || !firebase.auth) return null;
@@ -7316,7 +7569,7 @@ function initWebAuth(){
         name: user.displayName || (user.email ? user.email.split("@")[0] : "Học viên"),
         displayName: user.displayName || "",
         photoURL: user.photoURL || "",
-        isAdmin: (user.email || "").toLowerCase() === SK_ADMIN_EMAIL
+        isAdmin: (user.email || "").toLowerCase() === SK_ADMIN_EMAIL || SK_ADMIN_UIDS.indexOf(user.uid) >= 0
       };
     }else{
       window.SK_USER = null;
