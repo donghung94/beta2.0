@@ -1588,8 +1588,8 @@
   .dk-seek::-moz-range-thumb{width:17px; height:17px; border:2px solid #fff; border-radius:50%; background:var(--sky); box-shadow:0 1px 3px rgba(0,0,0,.3);}
   .dk-time{font-size:12.5px; font-weight:700; color:var(--ink-2); white-space:nowrap; font-variant-numeric:tabular-nums;}
   .dk-ctlrow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between;}
-  .dk-ctl-left{display:flex; gap:6px; align-items:center;}
-  .dk-ctl-right{display:flex; gap:6px; align-items:center; margin-left:auto;}
+  .dk-ctl-left{display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+  .dk-ctl-right{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-left:auto;}
   .dk-ctlbtn{width:38px; height:38px; padding:0; border:none; border-radius:10px; background:var(--bg); color:var(--ink); font-size:17px; line-height:1; cursor:pointer; flex:0 0 auto;}
   .dk-ctlbtn:active{background:var(--line);}
   .dk-playbtn{width:42px; height:42px; padding:0; border:none; border-radius:10px; background:var(--sky); color:#fff; font-size:19px; line-height:1; cursor:pointer; flex:0 0 auto;}
@@ -1632,6 +1632,11 @@
   .dk-nextlink button{background:none; border:none; padding:2px; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--sky); cursor:pointer; line-height:1.5;}
   .dk-nextlink button:active{color:var(--red);}
   .dk-hero-img{width:100%; height:210px; object-fit:cover; display:block; border-radius:14px; margin-bottom:14px; background:var(--bg);}
+  /* Layout 22:18 (theo mẫu mobile): tiêu đề bài là heading trong body, trên
+     ảnh hero; header chỉ ghi "Đọc hiểu". */
+  .dk-title{font-size:20px; font-weight:800; line-height:1.45; margin:2px 2px 3px; color:var(--ink);}
+  .dk-titlesub{font-size:13px; font-weight:600; color:var(--ink-2); line-height:1.5; margin:0 2px 10px;}
+  .dk-titlesub:empty{display:none;}
   .dk-vcard{display:flex; gap:10px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:12px 13px; margin-bottom:10px;}
   .dk-vmain{flex:1 1 auto; min-width:0;}
   .dk-vw{font-size:17px; font-weight:800; line-height:1.7; margin:0;}
@@ -3883,11 +3888,9 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="iconbtn" id="closeDkPass" aria-label="Quay lại — về thư viện bài đọc">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2 id="dkPassTitle">Bài đọc</h2><span id="dkPassSub"></span></div>
+        <div><h2>Đọc hiểu</h2></div>
       </div>
       <div class="detailbody">
-        <div id="dkNextLink" class="dk-nextlink"></div>
-        <div id="dkHero"></div>
         <div class="dk-audiobar">
           <div class="dk-seekrow" id="dkSeekRow" hidden>
             <span class="dk-time" id="dkTimeCur">0:00</span>
@@ -3909,6 +3912,10 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           </div>
           <p class="dk-status" id="dkStatus" role="status" aria-live="polite"></p>
         </div>
+        <div id="dkNextLink" class="dk-nextlink"></div>
+        <h2 class="dk-title" id="dkPassTitle">Bài đọc</h2>
+        <p class="dk-titlesub" id="dkPassSub"></p>
+        <div id="dkHero"></div>
         <div id="dkSentences"></div>
         <h3 class="wvsec">Kiểm tra đọc hiểu</h3>
         <div id="dkQuiz"></div>
