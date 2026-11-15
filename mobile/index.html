@@ -16225,8 +16225,9 @@ function furiHTML(text){
   /* ---------- Đăng nhập Firebase Auth (thật) ----------
      Cùng project donghung-3208d với bản web — dùng lại SVU_FB_CONFIG đã có
      sẵn trong file (giá trị giống hệt SK_FB_CONFIG của web, không khai báo
-     thêm config nào). Google: signInWithRedirect (popup không ổn định trên
-     Safari/PWA) + getRedirectResult khi mở app. Email: đăng nhập / đăng ký
+     thêm config nào). Google: signInWithPopup — giống bản web (redirect
+     bị mất phiên trên mobile, đã đổi 2026-11-15 sau 2 bản sửa thất bại;
+     getRedirectResult chỉ còn là an toàn cho redirect cũ). Email: đăng nhập / đăng ký
      chung 1 form. Mọi thay đổi phiên đều đi qua onAuthStateChanged dưới
      đây — nó là điểm ghi DUY NHẤT của signedInEmail / window.SK_USER /
      avatar Google. Premium: khối paywall ở đầu file đã tự đọc Firestore
@@ -16343,16 +16344,18 @@ function furiHTML(text){
     if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
     var provider = new firebase.auth.GoogleAuthProvider();
     loginSetBusy(true);
-    /* Đánh dấu sắp rời trang sang Google — khi quay lại, initMobileAuth
-       dùng cờ này để biết đây là lần quay về sau redirect (phục vụ chẩn
-       đoán khi kết quả redirect trống). */
-    try{ sessionStorage.setItem("sk_google_redirect", "1"); }catch(_){}
-    auth.signInWithRedirect(provider).catch(function(err){
+    /* Đăng nhập Google bằng POPUP — giống bản web (đã test chạy tốt
+       2026-11-15, cùng dự án Firebase). KHÔNG dùng signInWithRedirect:
+       redirect trên mobile bị mất phiên sau khi Google trả về (2 bản
+       sửa vẫn không được, test trực tiếp 14:17 và 14:30 JST).
+       Popup giữ nguyên trang nên không cần getRedirectResult. */
+    auth.signInWithPopup(provider).then(function(){
+      loginSetBusy(false);
+      closeLogin(); /* onAuthStateChanged cũng bắn user → applyAuthUser cập nhật giao diện */
+    }).catch(function(err){
       loginSetBusy(false);
       loginShowErr(skAuthErrorVI(err));
     });
-    /* Thành công: trình duyệt rời trang sang Google rồi quay lại —
-       kết quả xử lý ở getRedirectResult + onAuthStateChanged. */
   }
   function doLoginSubmit(){
     var email = loginEmailInput ? loginEmailInput.value.trim() : "";
@@ -16437,34 +16440,21 @@ function furiHTML(text){
        Firebase Auth, và gọi nó (bất đồng bộ) ngay trước getRedirectResult
        có thể làm mất kết quả redirect Google — user báo 2026-11-15:
        đăng nhập Google xong app vẫn chưa nhận phiên, không báo lỗi. */
-    /* Kết quả đăng nhập Google bằng redirect (nếu vừa quay lại từ Google).
-       Đăng ký onAuthStateChanged SAU khi getRedirectResult xong: lúc quay
-       lại từ Google, listener bắn null trước (chưa có phiên) rồi mới bắn
-       user — đăng ký sớm sẽ làm bảng đăng nhập bật lên rồi mới tắt (lỗi
-       user báo 2026-11-15: đăng nhập xong vẫn thấy khung đăng nhập).
-       Đăng ký muộn thì lần bắn đầu đã là user, bảng không bật lên nữa.
-       Timeout 3s dự phòng: getRedirectResult không xong thì vẫn đăng ký
-       listener như cũ (khi đó bảng có thể nháy lên rồi tắt nhờ closeLogin
-       ở nhánh user của applyAuthUser). */
+    /* Đăng nhập Google giờ dùng POPUP (xem doGoogleLogin) nên trang không
+       rời đi; getRedirectResult dưới đây chỉ là an toàn cho lần quay lại
+       từ redirect cũ (trước khi đổi sang popup). Đăng ký onAuthStateChanged
+       SAU khi getRedirectResult xong để lần bắn đầu đã là user (đăng ký
+       sớm thì listener bắn null trước rồi mới bắn user, bảng đăng nhập
+       bật lên rồi mới tắt — lỗi user báo 2026-11-15). Timeout 3s dự
+       phòng: getRedirectResult không xong thì vẫn đăng ký listener như cũ. */
     var skAuthListenerOn = false;
     function startAuthListener(){
       if(skAuthListenerOn) return;
       skAuthListenerOn = true;
       auth.onAuthStateChanged(function(user){ applyAuthUser(user); });
     }
-    /* Quay về sau redirect Google? (cờ đặt ở doGoogleLogin trước khi rời trang) */
-    var skReturningFromGoogle = false;
-    try{ skReturningFromGoogle = sessionStorage.getItem("sk_google_redirect") === "1"; sessionStorage.removeItem("sk_google_redirect"); }catch(_){}
     try{
-      auth.getRedirectResult().then(function(result){
-        /* Quay về sau redirect mà không có user = kết quả redirect trống
-           (Firebase không nhận được phiên dù Google đã trả về): hiện rõ
-           cho user biết thay vì im lặng ở lại form đăng nhập. */
-        if(skReturningFromGoogle && !(result && result.user)){
-          skRedirectErr = "Google đã trả về nhưng app chưa nhận được phiên đăng nhập — bạn bấm “Tiếp tục bằng Google” lại lần nữa, hoặc đăng nhập bằng email nhé.";
-        }
-        startAuthListener();
-      }).catch(function(err){
+      auth.getRedirectResult().then(function(){ startAuthListener(); }).catch(function(err){
         skRedirectErr = skAuthErrorVI(err);
         /* Bảng có thể đã mở trước (timeout 3s đăng ký listener sớm): hiện
            lỗi ngay, không chờ lần mở bảng sau. */
