@@ -30,7 +30,12 @@ var stateEl = document.getElementById("state");
 var listenerFires = 0;
 function ts(){ var d = new Date(); return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)+":"+("0"+d.getSeconds()).slice(-2); }
 function log(msg){ logEl.textContent += "[" + ts() + "] " + msg + "\n"; }
-function userStr(u){ return u ? (u.email || "(không có email)") + " uid=" + u.uid : "null"; }
+function userStr(u){
+  if(!u) return "null";
+  var provs = [];
+  try{ (u.providerData||[]).forEach(function(p){ provs.push(p.providerId + "|email=" + (p.email||"-") + "|name=" + (p.displayName||"-")); }); }catch(e){ provs.push("(lỗi đọc providerData)"); }
+  return "email=" + (u.email||"(không có)") + " uid=" + u.uid + " isAnonymous=" + u.isAnonymous + " emailVerified=" + u.emailVerified + " displayName=" + (u.displayName||"(không có)") + " photo=" + (u.photoURL?"có":"không") + " providers=[" + (provs.length?provs.join("; "):"(không có)") + "]";
+}
 function updateState(){
   try{
     var auth = firebase.auth();
@@ -100,7 +105,14 @@ document.getElementById("btnSignOut").addEventListener("click", function(){
     .catch(function(err){ log("Lỗi đăng xuất: " + err.message); });
 });
 document.getElementById("btnCheck").addEventListener("click", function(){
-  log("Kiểm tra tay: currentUser = " + userStr(firebase.auth().currentUser));
+  var u = firebase.auth().currentUser;
+  log("Kiểm tra tay: currentUser = " + userStr(u));
+  if(u){
+    u.getIdTokenResult().then(function(r){
+      log("TOKEN claims: " + JSON.stringify(r.claims));
+      log("TOKEN sign_in_provider: " + (r.claims.firebase && r.claims.firebase.sign_in_provider));
+    }).catch(function(err){ log("TOKEN LỖI: " + err.message); });
+  }
   updateState();
 });
 </script>
