@@ -361,6 +361,32 @@ table.kv tr:last-child td{border-bottom:none}
 .bank-rows td{padding:8px 4px; border-bottom:1px solid var(--line); font-size:15px}
 .bank-rows td:first-child{color:var(--muted); width:130px}
 .bank-rows td:last-child{font-weight:700}
+/* ----- Bảng so sánh gói (trang Nâng cấp) ----- */
+.pkg-sub{color:var(--muted); font-size:14px; margin-top:2px}
+.pkg-price small{font-size:15px; font-weight:700; color:var(--muted)}
+.pkg-card ul{list-style:none; padding-left:2px}
+.pkg-card ul li{position:relative; padding-left:24px}
+.pkg-card ul li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--ok); font-weight:900}
+.cmp-wrap{overflow-x:auto; margin:22px 0 8px; border:1px solid var(--line); border-radius:16px; background:var(--card)}
+.cmp-table{width:100%; min-width:560px; border-collapse:collapse; font-size:14.5px}
+.cmp-table th,.cmp-table td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:middle}
+.cmp-table thead th{text-align:center; font-size:15px}
+.cmp-table thead th:first-child{text-align:left; font-size:16px}
+.cmp-table thead th.cmp-year{background:var(--card2)}
+.cmp-table thead th.cmp-life{background:var(--red-soft); color:var(--red-dark)}
+.cmp-table thead th .cmp-price{display:block; font-size:13px; font-weight:600; color:var(--muted); margin-top:2px}
+.cmp-table td{text-align:center}
+.cmp-table td:first-child{text-align:left; font-weight:600; color:var(--ink)}
+.cmp-table tbody tr:nth-child(even){background:var(--card2)}
+.cmp-table tbody tr:last-child td{border-bottom:none}
+.cmp-tick{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:var(--ok-bg); color:var(--ok); font-weight:900; font-size:15px}
+.cmp-soon{display:inline-block; background:#fef3c7; color:#92400e; border:1px solid #f5c86b; font-weight:800; font-size:12.5px; padding:3px 11px; border-radius:99px; white-space:nowrap}
+.cmp-val{font-weight:800; color:var(--ink)}
+.cmp-table .btn{width:100%}
+.cmp-note{font-size:13.5px; color:var(--muted); margin:10px 0 0; line-height:1.6}
+/* Nút nhắn Messenger (trang thanh toán) */
+.btn-msg{background:#0084ff; border-color:#0084ff; color:#fff}
+.btn-msg:hover{background:#006fd6; border-color:#006fd6; color:#fff}
 /* Thẻ tiến độ học ở trang cấp Từ vựng */
 .prog-card{margin-top:18px; padding:18px 20px}
 .prog-top{display:flex; justify-content:space-between; align-items:baseline; gap:12px}
@@ -530,6 +556,8 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
 
 /* Modal đăng nhập / đăng ký (Firebase Auth) */
 .auth-modal{position:relative; max-width:400px}
+.auth-modal h3{font-size:22px; margin:0 0 6px}
+.auth-mascot{display:block; margin:2px auto 14px; height:96px; width:auto; max-width:100%; object-fit:contain}
 .auth-x{position:absolute; top:10px; right:12px; background:none; border:0; font-size:26px; line-height:1; color:var(--faint); cursor:pointer; padding:4px 8px}
 .auth-x:hover{color:var(--ink)}
 .modal p.auth-sub{color:var(--muted); font-size:14px; margin:0 0 16px; line-height:1.55}
@@ -547,9 +575,16 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
   padding:11px 12px; border:1.5px solid var(--line-strong); border-radius:10px; background:#fff; color:var(--ink);
 }
 .auth-field input:focus{outline:none; border-color:var(--blue)}
+.auth-modal .auth-field{display:flex; align-items:center; gap:10px; margin-top:12px; padding:0 12px; border:1.5px solid var(--line-strong); border-radius:10px; background:#fff}
+.auth-modal .auth-field input{display:block; flex:1; min-width:0; margin-top:0; padding:12px 0; border:0; border-radius:0; background:transparent; font:inherit; font-size:14.5px; font-weight:400; color:var(--ink)}
+.auth-modal .auth-field input:focus{outline:none; border-color:transparent}
+.auth-modal .auth-field:focus-within{border-color:var(--blue)}
+.auth-modal .auth-ic{flex:none; display:flex; color:var(--faint)}
+.auth-modal .auth-ic svg{display:block}
 .auth-err{margin:12px 0 0 !important; background:var(--bad-bg); color:var(--bad) !important; border-radius:10px; padding:10px 12px; font-size:13.5px !important; font-weight:600; line-height:1.5}
 .auth-ok{margin:12px 0 0 !important; background:var(--ok-bg); color:var(--ok) !important; border-radius:10px; padding:10px 12px; font-size:13.5px !important; font-weight:600; line-height:1.5}
-.auth-submit{width:100%; margin-top:16px; padding:12px; font-size:15px}
+.auth-submit{width:100%; margin-top:16px; padding:12px; font-size:15px; background:var(--blue); border-color:var(--blue); color:#fff}
+.auth-submit:hover{background:var(--blue-dark); border-color:var(--blue-dark)}
 .auth-submit[disabled]{opacity:.6; cursor:wait}
 .auth-links{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px; font-size:13.5px; color:var(--muted)}
 .auth-link{background:none; border:0; padding:0; font:inherit; font-weight:700; color:var(--blue-dark); cursor:pointer}
@@ -5944,18 +5979,31 @@ function renderPremiumStatusView(notice){
 function pkgCardHTML(pkg, sale){
   var p = SK_PACKAGES[pkg];
   var price = sale ? p.sale : p.full;
+  /* Gói Năm: giá mỗi ngày (làm tròn tới 10đ) — 499k -> ~1.370đ/ngày. */
+  var perDay = (Math.round(price / 365 / 10) * 10).toLocaleString("vi-VN");
   var h = '<div class="pkg-card' + (pkg === "lifetime" ? " hot" : "") + '">' +
     (pkg === "lifetime" ? '<span class="pkg-badge">Phổ biến nhất</span>' : "") +
     "<h3>" + p.label + "</h3>" +
-    '<div style="color:var(--muted);font-size:14px">' + p.dur + "</div>" +
-    '<div class="pkg-price">' + skFmtVND(price) + "</div>";
-  if(sale) h += '<div><span class="pkg-old">' + skFmtVND(p.full) + '</span> <span class="pkg-save">Tiết kiệm ' + skFmtVND(p.save) + "</span></div>";
-  else h += '<div style="height:24px"></div>';
-  h += "<ul><li>Mở toàn bộ N4–N1: kanji, từ vựng, ngữ pháp</li>" +
-    "<li>Đề thi JLPT N4–N1 Test 1–9, chấm /180</li>" +
-    "<li>Luyện nghe + đọc hiểu N4–N1</li>" +
-    "<li>Đồng bộ web và app điện thoại</li></ul>" +
-    '<button class="btn" id="' + (pkg === "year" ? "buyYear" : "buyLifetime") + '" type="button">' +
+    '<div class="pkg-sub">' + (pkg === "year" ? "Chỉ ~" + perDay + "đ/ngày" : "Mua 1 lần, học mãi mãi") + "</div>";
+  if(sale) h += '<div style="margin-top:8px"><span class="pkg-old">' + skFmtVND(p.full) + "</span></div>";
+  else h += '<div style="height:22px"></div>';
+  h += '<div class="pkg-price">' + skFmtVND(price) + "<small>" + (pkg === "year" ? "/năm" : " (mua 1 lần)") + "</small></div>";
+  if(sale) h += '<div><span class="pkg-save">Tiết kiệm ' + skFmtVND(p.save) + "</span></div>";
+  else h += '<div style="height:30px"></div>';
+  if(pkg === "year"){
+    h += "<ul><li>Mở toàn bộ N4–N1: kanji, từ vựng, ngữ pháp</li>" +
+      "<li>Đề thi JLPT N4–N1 Test 1–9, chấm /180</li>" +
+      "<li>Luyện nghe + video Shadowing</li>" +
+      "<li>Đọc hiểu N4–N1</li>" +
+      "<li>Tokutei xây dựng 730 câu</li>" +
+      "<li>Đồng bộ web và app điện thoại</li></ul>";
+  } else {
+    h += "<ul><li>Tất cả tính năng của Gói Năm</li>" +
+      "<li>Không cần gia hạn, không lo hết hạn</li>" +
+      "<li>Thanh toán 1 lần duy nhất</li>" +
+      "<li>Dùng trọn đời trên web và app điện thoại</li></ul>";
+  }
+  h += '<button class="btn" id="' + (pkg === "year" ? "buyYear" : "buyLifetime") + '" type="button">' +
     (webCurrentUser() ? "Mua " + p.label : "Đăng nhập để mua") + "</button></div>";
   return h;
 }
@@ -5980,6 +6028,43 @@ function skStartSaleCountdown(){
   tick();
   skSaleTimer = setInterval(tick, 1000);
 }
+/* Bảng so sánh chi tiết 2 gói (trang Nâng cấp): tính năng đã có thì tick xanh
+   ở cả 2 cột (2 gói giống nhau mọi tính năng, chỉ khác thời hạn); tính năng
+   roadmap chưa có thì ghi "Sắp có" ở cả 2 cột — KHÔNG tick xanh. */
+function upgradeCompareHTML(){
+  var tick = '<span class="cmp-tick">✓</span>';
+  var soon = '<span class="cmp-soon">Sắp có</span>';
+  function row(name, a, b){ return "<tr><td>" + name + "</td><td>" + a + "</td><td>" + b + "</td></tr>"; }
+  var h = '<h2 class="secttl">So sánh chi tiết các gói</h2>' +
+    '<div class="cmp-wrap"><table class="cmp-table"><thead><tr><th>Tính năng</th>' +
+    '<th class="cmp-year">Gói Năm<span class="cmp-price">' + skFmtVND(skPrice("year")) + "/năm</span></th>" +
+    '<th class="cmp-life">Gói Trọn đời<span class="cmp-price">' + skFmtVND(skPrice("lifetime")) + " (mua 1 lần)</span></th>" +
+    "</tr></thead><tbody>" +
+    row("Thời hạn sử dụng", '<span class="cmp-val">12 tháng</span>', '<span class="cmp-val">Mãi mãi</span>') +
+    row("Kanji N4–N1 đầy đủ", tick, tick) +
+    row("Từ vựng N4–N1 đầy đủ", tick, tick) +
+    row("Ngữ pháp N4–N1 đầy đủ", tick, tick) +
+    row("Luyện đề JLPT Test 1–9 × 5 cấp", tick, tick) +
+    row("Luyện nghe + video Shadowing", tick, tick) +
+    row("Đọc hiểu N4–N1", tick, tick) +
+    row("Tokutei xây dựng 730 câu", tick, tick) +
+    row("Trợ từ, Cách chia thể, Trọng âm, Chuyển âm", tick, tick) +
+    row("Flashcard (5 câu ví dụ mỗi từ)", tick, tick) +
+    row("Lộ trình học 30 ngày", tick, tick) +
+    row("Đồng bộ web và app điện thoại", tick, tick) +
+    row("Đọc hiểu AI", soon, soon) +
+    row("Credit AI (tra từ, hỏi đáp, chấm bài)", soon, soon) +
+    row("Phân tích câu AI", soon, soon) +
+    row("Kaiwa nhập vai với AI", soon, soon) +
+    row("Affiliate 15% hoa hồng", soon, soon) +
+    "<tr><td></td>" +
+    '<td><button class="btn" id="buyYearT" type="button">Chọn Gói Năm</button></td>' +
+    '<td><button class="btn" id="buyLifetimeT" type="button">Chọn Trọn đời</button></td></tr>' +
+    "</tbody></table></div>" +
+    '<p class="cmp-note">Hai gói có đầy đủ tính năng như nhau, chỉ khác thời hạn sử dụng. ' +
+    "Các tính năng ghi “Sắp có” đang được phát triển và sẽ có cho cả 2 gói khi ra mắt.</p>";
+  return h;
+}
 function renderPackagesView(){
   var sale = skSaleActive();
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Nâng cấp</div>' +
@@ -5996,6 +6081,7 @@ function renderPackagesView(){
   h += pkgCardHTML("lifetime", sale);
   h += "</div>";
   if(skCheckoutErr) h += '<div class="note-box" style="border-color:var(--bad);color:var(--bad)">' + esc(skCheckoutErr) + "</div>";
+  h += upgradeCompareHTML();
   h += freeStatusHTML();
   h += '<p style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn ghost" href="#/tuvung/N5">Học N5 miễn phí</a>' +
     '<a class="btn ghost" href="#/thi/N5">Thi thử N5</a></p></div>';
@@ -6003,6 +6089,12 @@ function renderPackagesView(){
   var by = document.getElementById("buyYear"), bl = document.getElementById("buyLifetime");
   if(by) by.addEventListener("click", function(){ skStartCheckout("year"); });
   if(bl) bl.addEventListener("click", function(){ skStartCheckout("lifetime"); });
+  var byT = document.getElementById("buyYearT"), blT = document.getElementById("buyLifetimeT");
+  /* Nút chọn gói ở bảng so sánh bấm hộ nút mua trên thẻ gói — dùng đúng 1 luồng
+     skStartCheckout; nút thẻ bị khóa ("Đang tạo đơn…") thì .click() không có
+     tác dụng nên không tạo trùng đơn. */
+  if(byT) byT.addEventListener("click", function(){ var b = document.getElementById("buyYear"); if(b) b.click(); });
+  if(blT) blT.addEventListener("click", function(){ var b = document.getElementById("buyLifetime"); if(b) b.click(); });
   if(sale) skStartSaleCountdown();
 }
 function skStartCheckout(pkg){
@@ -6024,6 +6116,41 @@ function skStartCheckout(pkg){
       (err && err.code ? " (" + err.code + ")" : "");
     renderNangcapPage();
   });
+}
+/* Dẫn link Messenger (m.me) từ URL fanpage Facebook: facebook.com/<tên trang>
+   hoặc fb.com/<tên trang> -> https://m.me/<tên trang>; profile.php?id=... và
+   pages/<tên>/<id> -> m.me/<id>. Không dẫn được (nhóm, watch, link lạ...) thì
+   trả lại đúng URL gốc để mở thẳng fanpage — không bao giờ trả link chết. */
+function skMessengerUrl(fbUrl){
+  try{
+    var u = new URL(fbUrl);
+    var host = (u.hostname || "").toLowerCase().replace(/^www\./, "");
+    if(host !== "facebook.com" && host !== "fb.com") return fbUrl;
+    var seg = (u.pathname || "").replace(/^\/+|\/+$/g, "").split("/").filter(Boolean);
+    if(!seg.length) return fbUrl;
+    if(seg[0] === "profile.php"){
+      var id = u.searchParams.get("id");
+      return id ? "https://m.me/" + id : fbUrl;
+    }
+    if(seg[0] === "pages" && seg.length >= 3 && /^\d+$/.test(seg[seg.length - 1])) return "https://m.me/" + seg[seg.length - 1];
+    if(["groups", "events", "watch", "marketplace", "people", "pg", "hashtag", "reel", "stories", "gaming", "photo.php", "permalink.php"].indexOf(seg[0]) >= 0) return fbUrl;
+    if(/^[A-Za-z0-9._-]+$/.test(seg[0])) return "https://m.me/" + seg[0];
+    return fbUrl;
+  }catch(e){ return fbUrl; }
+}
+/* Khung chat nhắn fanpage sau khi bấm "Tôi đã chuyển khoản": chỉ hiện khi đã có
+   link fanpage (Firestore sk_config/social, admin nhập ở Cài đặt) — chưa cấu
+   hình hoặc đọc lỗi thì ẩn hẳn, không bao giờ mở link chết. */
+function skRenderChatBox(orderCode){
+  var box = document.getElementById("skChatBox");
+  if(!box) return;
+  skLoadSocial().then(function(){
+    var fb = skSocialUrl("facebook");
+    if(!fb) return;
+    box.innerHTML = '<div class="note-box" style="margin-top:16px">' +
+      "<b>💬 Cần kích hoạt nhanh?</b> Nhắn tin cho fanpage SoraKanji để được hỗ trợ ngay — nhớ gửi kèm mã đơn <b>" + esc(orderCode) + "</b> để admin kích hoạt giúp bạn." +
+      '<p style="margin:10px 0 0"><a class="btn btn-msg" href="' + esc(skMessengerUrl(fb)) + '" target="_blank" rel="noopener">Nhắn tin qua Messenger</a></p></div>';
+  }).catch(function(){});
 }
 function renderCheckoutView(o){
   var p = SK_PACKAGES[o.pkg] || SK_PACKAGES.year;
@@ -6055,7 +6182,8 @@ function renderCheckoutView(o){
     '<div class="note-box" style="margin-top:14px">⚠️ <b>Ghi ĐÚNG nội dung ' + esc(skTransferMemo(o.code)) + ' (kể cả SEVQR).</b> Sai hoặc thiếu nội dung, hệ thống không tự kích hoạt được — bạn sẽ cần liên hệ hỗ trợ để kích hoạt thủ công.</div>' +
     (o.ack
       ? '<div class="note-box" style="margin-top:16px;border-color:var(--ok);background:var(--ok-bg)">✅ <b>Đã ghi nhận!</b> Premium sẽ được kích hoạt tự động sau khi hệ thống nhận được chuyển khoản — <b>thường vài phút, tối đa 24h</b>. Bạn cứ học tiếp N5 trong lúc chờ, không cần làm gì thêm.</div>' +
-        '<p style="margin:12px 0 0"><button class="btn ghost" id="recheckBtn" type="button">Kiểm tra lại trạng thái</button></p>'
+        '<p style="margin:12px 0 0"><button class="btn ghost" id="recheckBtn" type="button">Kiểm tra lại trạng thái</button></p>' +
+        '<div id="skChatBox"></div>'
       : '<p style="margin:16px 0 0"><button class="btn" id="paidBtn" type="button">Tôi đã chuyển khoản</button></p>') +
     '<p id="ckMsg" style="font-size:13.5px;color:var(--ok);font-weight:700;min-height:20px;margin:10px 0 0"></p></div>' +
     '<p style="margin-top:14px"><button class="btn ghost" id="otherPkg" type="button">← Chọn gói khác</button></p></div>';
@@ -6086,6 +6214,7 @@ function renderCheckoutView(o){
     skPendingOrderClear();
     renderPackagesView();
   });
+  skRenderChatBox(o.code);
 }
 
 /* ================= CỘNG ĐỒNG ================= */
@@ -6820,6 +6949,8 @@ function initWebAuth(){
 
 /* ----- Modal đăng nhập / đăng ký ----- */
 var SK_GOOGLE_SVG = '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
+var SK_MAIL_SVG = '<span class="auth-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>';
+var SK_LOCK_SVG = '<span class="auth-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
 var skAuthMode = "login"; /* "login" | "register" */
 function closeAuthModal(){
   var root = document.getElementById("modalRoot");
@@ -6832,13 +6963,14 @@ function openAuthModal(){
   root.innerHTML =
     '<div class="modal-bg" id="authBg"><div class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">' +
     '<button class="auth-x" id="authClose" type="button" aria-label="Đóng">×</button>' +
+    '<img class="auth-mascot" src="mobile/assets/chibi.png" alt="">' +
     '<h3 id="authTitle">Đăng nhập</h3>' +
-    '<p class="auth-sub">Một tài khoản cho cả bản web và ứng dụng SoraKanji trên điện thoại — tiến độ học và gói Premium đồng bộ theo tài khoản.</p>' +
-    '<button class="auth-google" id="authGoogle" type="button">' + SK_GOOGLE_SVG + '<span>Tiếp tục bằng Google</span></button>' +
-    '<div class="auth-or"><span>hoặc bằng email</span></div>' +
+    '<p class="auth-sub">Đăng nhập để đồng bộ tiến trình học của bạn.</p>' +
+    '<button class="auth-google" id="authGoogle" type="button">' + SK_GOOGLE_SVG + '<span>Đăng nhập bằng Google</span></button>' +
+    '<div class="auth-or"><span>HOẶC</span></div>' +
     '<form id="authForm" novalidate>' +
-    '<label class="auth-field">Email<input id="authEmail" type="email" autocomplete="email" placeholder="ban@vidu.com"></label>' +
-    '<label class="auth-field">Mật khẩu<input id="authPass" type="password" autocomplete="current-password" placeholder="Mật khẩu của bạn"></label>' +
+    '<label class="auth-field">' + SK_MAIL_SVG + '<input id="authEmail" type="email" autocomplete="email" placeholder="Email" aria-label="Email"></label>' +
+    '<label class="auth-field">' + SK_LOCK_SVG + '<input id="authPass" type="password" autocomplete="current-password" placeholder="Mật khẩu" aria-label="Mật khẩu"></label>' +
     '<p class="auth-err" id="authErr" hidden></p>' +
     '<p class="auth-ok" id="authOk" hidden></p>' +
     '<button class="btn auth-submit" id="authSubmit" type="submit">Đăng nhập</button>' +
