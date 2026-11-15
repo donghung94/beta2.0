@@ -3493,7 +3493,6 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <p id="loginMsg" style="font-size:13px; color:var(--red); font-weight:700; min-height:19px; margin:6px 0 10px; line-height:1.5;"></p>
         <p id="loginOk" hidden style="font-size:13px; color:var(--teal); font-weight:700; margin:6px 0 10px; line-height:1.5;"></p>
         <div style="display:flex; gap:10px;">
-          <button class="ghostbtn" id="loginCancel" type="button" style="flex:1; justify-content:center; min-height:52px;">Đóng</button>
           <button class="sheetbtn" id="loginGo" type="button" style="flex:1;">Đăng nhập</button>
         </div>
         <div class="auth-links">
@@ -16410,6 +16409,11 @@ function furiHTML(text){
     }else{
       window.SK_USER = null;
       setSignedInEmail("");
+      /* Bắt buộc đăng nhập (user yêu cầu 2026-11-15): chưa có phiên thì mở
+         bảng đăng nhập ngay — lúc mở app (lần đầu listener bắn) lẫn lúc
+         vừa đăng xuất. Bảng này không đóng được khi chưa đăng nhập (đã
+         bỏ nút Đóng + chặn bấm nền mờ). */
+      openLogin();
       avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
       renderAvatarPhoto();
       /* Dọn cache Premium + khóa lại ngay (listener của paywall cũng làm
@@ -16446,12 +16450,11 @@ function furiHTML(text){
     skAuthMode = skAuthMode === "login" ? "register" : "login";
     applyLoginMode();
   });
-  document.getElementById("loginCancel").addEventListener("click", closeLogin);
   document.getElementById("loginCancel2").addEventListener("click", closeLogin);
   document.getElementById("loginLogout").addEventListener("click", doLogout);
   if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
   if(loginPassInput) loginPassInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doLoginSubmit(); } });
-  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")) closeLogin(); });
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open") && signedInEmail) closeLogin(); });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
      Nguồn ảnh, theo thứ tự người dùng chọn (lưu localStorage "sk_avatar_choice"):
