@@ -1400,11 +1400,12 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
 <script src="mobile/assets/kanji-data.js"></script>
 <script src="mobile/assets/kanji-mnemonic-images.js"></script>
 <script>
-/* Link kênh chính thức của SoraKanji — hiện để "#" (TUYỆT ĐỐI không tự bịa URL).
-   Sau này trang Quản trị sẽ quản lý/ghi đè 2 link này (làm khi có domain chính thức);
-   khi giá trị vẫn là "#" thì nút tương ứng ở header bị ẨN, không hiện nút chết. */
-var SOCIAL_TIKTOK_URL = "#"; /* user cung cấp link sau — trang Quản trị ghi đè khi có domain */
-var SOCIAL_FACEBOOK_URL = "#"; /* user cung cấp link sau — trang Quản trị ghi đè khi có domain */
+/* Link kênh chính thức của SoraKanji — nguồn chính là Firestore sk_config/social
+   (admin nhập trong trang Cài đặt, mục "Liên kết mạng xã hội"). 2 hằng số dưới
+   chỉ là fallback khi Firestore chưa có doc; giá trị "#" = chưa có link (TUYỆT
+   ĐỐI không tự bịa URL). Chưa có link thật thì nút tương ứng ở header bị ẨN. */
+var SOCIAL_TIKTOK_URL = "#"; /* fallback khi Firestore chưa có link TikTok */
+var SOCIAL_FACEBOOK_URL = "#"; /* fallback khi Firestore chưa có link Facebook */
 var KANJI_VIDEO = {
     "休": "IFjbEFyZNzg",
     "分": "YBFaenfm95w",
@@ -6150,6 +6151,15 @@ function renderSettingsPage(){
     '<h2 class="secttl">Khác</h2>' +
     '<button class="setrow" id="setBackup"><span class="grow">Sao lưu dữ liệu học</span><span aria-hidden="true">›</span></button>' +
     '<button class="setrow" id="setAbout"><span class="grow">Giới thiệu SoraKanji</span><span aria-hidden="true">›</span></button>' +
+    (webIsAdmin() ?
+      '<h2 class="secttl">Quản trị</h2>' +
+      '<div class="card"><b style="font-size:16px">Liên kết mạng xã hội</b>' +
+      '<p style="margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6">Link Fanpage Facebook và TikTok hiện ở header trang web, và (sau này) dùng cho khung chat nhắn fanpage ở trang thanh toán. Để trống một ô rồi Lưu là xóa link đó.</p>' +
+      '<label class="auth-field">URL Fanpage Facebook<input id="skFbUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.facebook.com/ten-trang"></label>' +
+      '<label class="auth-field">URL TikTok<input id="skTtUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.tiktok.com/@ten-tai-khoan"></label>' +
+      '<p id="skSocialMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
+      '<button class="btn" id="skSocialSave" type="button" style="margin-top:10px">Lưu liên kết</button></div>'
+    : "") +
     '<p id="setMsg" style="font-size:13.5px;color:var(--blue-dark);font-weight:700;min-height:20px;margin:10px 2px 0"></p></div>';
   $app.innerHTML = h;
   var msg = document.getElementById("setMsg");
@@ -6170,6 +6180,47 @@ function renderSettingsPage(){
   document.getElementById("setAbout").addEventListener("click", function(){
     showModal("Giới thiệu SoraKanji", "SoraKanji — Bầu trời Kanji cho người Việt. Học kanji, từ vựng, ngữ pháp tiếng Nhật theo giáo trình Minna no Nihongo và luyện thi JLPT đủ 5 cấp N5–N1.", "Đã hiểu", "Đóng", function(){});
   });
+  /* --- Quản trị: liên kết mạng xã hội (chỉ admin mới thấy mục này) --- */
+  if(webIsAdmin()){
+    var fbEl = document.getElementById("skFbUrl"),
+        ttEl = document.getElementById("skTtUrl"),
+        saveBtn = document.getElementById("skSocialSave"),
+        socMsg = document.getElementById("skSocialMsg");
+    var socNote = function(text, ok){
+      if(!socMsg) return;
+      socMsg.textContent = text;
+      socMsg.style.color = ok ? "var(--ok)" : "var(--bad)";
+    };
+    if(fbEl && ttEl){
+      skLoadSocial().then(function(s){
+        fbEl.value = s.facebook || "";
+        ttEl.value = s.tiktok || "";
+      }).catch(function(){
+        socNote("Không tải được liên kết đã lưu — kiểm tra mạng rồi mở lại trang.", false);
+      });
+    }
+    if(saveBtn){
+      saveBtn.addEventListener("click", function(){
+        var fb = skSocialValidate(fbEl ? fbEl.value : "");
+        var tt = skSocialValidate(ttEl ? ttEl.value : "");
+        if(fb === null || tt === null){
+          socNote("Link chưa đúng định dạng — link phải bắt đầu bằng http:// hoặc https://, hoặc để trống để xóa link.", false);
+          return;
+        }
+        saveBtn.disabled = true;
+        socNote("Đang lưu…", true);
+        skSaveSocial(fb, tt).then(function(){
+          socNote("Đã lưu liên kết mạng xã hội.", true);
+        }).catch(function(err){
+          var code = (err && err.code) || "";
+          if(err && err.message === "not-ready") socNote("Chưa kết nối được Firebase — tải lại trang rồi thử lại.", false);
+          else if(code === "permission-denied") socNote("Bạn không có quyền lưu — cần đăng nhập bằng tài khoản quản trị.", false);
+          else if(code === "unavailable" || code === "deadline-exceeded") socNote("Không kết nối được mạng — kiểm tra kết nối rồi thử lại.", false);
+          else socNote("Chưa lưu được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.", false);
+        }).then(function(){ saveBtn.disabled = false; });
+      });
+    }
+  }
 }
 
 /* ================= ROUTER ================= */
@@ -6913,21 +6964,81 @@ function openInstallGuide(){
     "Xem hướng dẫn cài", "Đóng", function(){ goHash("#/caidat"); });
 }
 
-function setupHeader(){
-  /* Link mạng xã hội lấy từ hằng số đầu script (sau này trang Quản trị sẽ ghi đè
-     khi có domain chính thức). Chưa có link thật ("#") thì ẨN nút — không hiện
-     nút chết dẫn tới "#"; có URL thật mới hiện và mở tab mới. */
-  [["socialTiktok", SOCIAL_TIKTOK_URL], ["socialFacebook", SOCIAL_FACEBOOK_URL]].forEach(function(pair){
+/* ----- Link mạng xã hội (Firestore sk_config/social, admin nhập ở Cài đặt) -----
+   Doc sk_config/social: {facebook, tiktok, updatedAt, updatedBy}. Ai cũng đọc
+   được (link công khai); chỉ UID admin mới ghi được (xem firestore.rules).
+   Header + (sau này) khung chat ở trang thanh toán đọc từ SK_SOCIAL này. */
+var SK_SOCIAL = {loaded: false, facebook: "", tiktok: ""};
+function skSocialNorm(v){
+  v = (typeof v === "string") ? v.trim() : "";
+  return (v && v !== "#") ? v : "";
+}
+function skSocialUrl(kind){
+  var v = skSocialNorm(kind === "facebook" ? SK_SOCIAL.facebook : SK_SOCIAL.tiktok);
+  if(v) return v;
+  return skSocialNorm(kind === "facebook" ? SOCIAL_FACEBOOK_URL : SOCIAL_TIKTOK_URL);
+}
+function skLoadSocial(){
+  if(SK_SOCIAL.loaded) return Promise.resolve(SK_SOCIAL);
+  var db = skDb();
+  if(!db) return Promise.reject(new Error("not-ready"));
+  return db.collection("sk_config").doc("social").get().then(function(snap){
+    if(snap.exists){
+      var d = snap.data() || {};
+      SK_SOCIAL.facebook = skSocialNorm(d.facebook);
+      SK_SOCIAL.tiktok = skSocialNorm(d.tiktok);
+    }
+    SK_SOCIAL.loaded = true;
+    applySocialLinks();
+    return SK_SOCIAL;
+  });
+}
+/* Vẽ lại nút TikTok/Facebook ở header theo link hiện có: có link thật thì hiện
+   (mở tab mới), chưa có thì ẨN — không hiện nút chết dẫn tới "#". */
+function applySocialLinks(){
+  [["socialTiktok", skSocialUrl("tiktok")], ["socialFacebook", skSocialUrl("facebook")]].forEach(function(pair){
     var a = document.getElementById(pair[0]);
     if(!a) return;
-    var url = (pair[1] || "").trim();
-    if(!url || url === "#"){ a.hidden = true; a.style.display = "none"; return; }
+    var url = pair[1];
+    if(!url){ a.hidden = true; a.style.display = "none"; return; }
     a.hidden = false;
     a.style.display = "";
     a.setAttribute("href", url);
     a.setAttribute("target", "_blank");
     a.setAttribute("rel", "noopener");
   });
+}
+/* Validate URL link mạng xã hội: để trống = xóa link; có nhập thì phải bắt đầu
+   bằng http:// hoặc https://. Trả về chuỗi đã trim, hoặc null khi không hợp lệ. */
+function skSocialValidate(v){
+  v = (typeof v === "string") ? v.trim() : "";
+  if(!v) return "";
+  if(/^https?:\/\//i.test(v)) return v;
+  return null;
+}
+/* Lưu 2 link vào sk_config/social (chỉ admin — rules chặn tài khoản khác).
+   Trả về Promise; lưu xong cập nhật cache + header ngay. */
+function skSaveSocial(facebook, tiktok){
+  var db = skDb();
+  var u = skAuthUser();
+  if(!db || !u) return Promise.reject(new Error("not-ready"));
+  return db.collection("sk_config").doc("social").set({
+    facebook: facebook, tiktok: tiktok,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedBy: u.uid
+  }, {merge: true}).then(function(){
+    SK_SOCIAL.facebook = facebook;
+    SK_SOCIAL.tiktok = tiktok;
+    SK_SOCIAL.loaded = true;
+    applySocialLinks();
+  });
+}
+
+function setupHeader(){
+  /* Nút mạng xã hội: vẽ theo hằng số fallback trước, rồi đọc link thật từ
+     Firestore (sk_config/social) để vẽ lại khi có. Lỗi đọc thì giữ fallback. */
+  applySocialLinks();
+  skLoadSocial().catch(function(){});
   var ab = document.getElementById("appAndroidBtn"), ib = document.getElementById("appIosBtn");
   if(ab) ab.addEventListener("click", openInstallGuide);
   if(ib) ib.addEventListener("click", openInstallGuide);
