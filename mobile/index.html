@@ -16343,6 +16343,10 @@ function furiHTML(text){
     if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
     var provider = new firebase.auth.GoogleAuthProvider();
     loginSetBusy(true);
+    /* Đánh dấu sắp rời trang sang Google — khi quay lại, initMobileAuth
+       dùng cờ này để biết đây là lần quay về sau redirect (phục vụ chẩn
+       đoán khi kết quả redirect trống). */
+    try{ sessionStorage.setItem("sk_google_redirect", "1"); }catch(_){}
     auth.signInWithRedirect(provider).catch(function(err){
       loginSetBusy(false);
       loginShowErr(skAuthErrorVI(err));
@@ -16429,10 +16433,10 @@ function furiHTML(text){
   function initMobileAuth(){
     var auth = skAuth();
     if(!auth) return;
-    try{
-      var p = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-      if(p && p.catch) p.catch(function(){});
-    }catch(e){}
+    /* KHÔNG gọi setPersistence(LOCAL) ở đây: LOCAL đã là mặc định của
+       Firebase Auth, và gọi nó (bất đồng bộ) ngay trước getRedirectResult
+       có thể làm mất kết quả redirect Google — user báo 2026-11-15:
+       đăng nhập Google xong app vẫn chưa nhận phiên, không báo lỗi. */
     /* Kết quả đăng nhập Google bằng redirect (nếu vừa quay lại từ Google).
        Đăng ký onAuthStateChanged SAU khi getRedirectResult xong: lúc quay
        lại từ Google, listener bắn null trước (chưa có phiên) rồi mới bắn
@@ -16448,9 +16452,23 @@ function furiHTML(text){
       skAuthListenerOn = true;
       auth.onAuthStateChanged(function(user){ applyAuthUser(user); });
     }
+    /* Quay về sau redirect Google? (cờ đặt ở doGoogleLogin trước khi rời trang) */
+    var skReturningFromGoogle = false;
+    try{ skReturningFromGoogle = sessionStorage.getItem("sk_google_redirect") === "1"; sessionStorage.removeItem("sk_google_redirect"); }catch(_){}
     try{
-      auth.getRedirectResult().then(function(){ startAuthListener(); }).catch(function(err){
+      auth.getRedirectResult().then(function(result){
+        /* Quay về sau redirect mà không có user = kết quả redirect trống
+           (Firebase không nhận được phiên dù Google đã trả về): hiện rõ
+           cho user biết thay vì im lặng ở lại form đăng nhập. */
+        if(skReturningFromGoogle && !(result && result.user)){
+          skRedirectErr = "Google đã trả về nhưng app chưa nhận được phiên đăng nhập — bạn bấm “Tiếp tục bằng Google” lại lần nữa, hoặc đăng nhập bằng email nhé.";
+        }
+        startAuthListener();
+      }).catch(function(err){
         skRedirectErr = skAuthErrorVI(err);
+        /* Bảng có thể đã mở trước (timeout 3s đăng ký listener sớm): hiện
+           lỗi ngay, không chờ lần mở bảng sau. */
+        if(loginSheet && loginSheet.classList.contains("open")) loginMsg(skRedirectErr);
         startAuthListener();
       });
       setTimeout(startAuthListener, 3000);
