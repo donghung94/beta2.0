@@ -1243,6 +1243,31 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .dk-quiz .opt:disabled:hover{border-color:var(--line-strong)}
 @media (max-width:760px){ .dk-pass{font-size:17px} }
 
+/* ----- Đọc hiểu AI v2: ảnh minh họa + 2 cột + thẻ từ lưu được ----- */
+.dk-thumb{position:relative; display:block; margin:-15px -17px 10px; aspect-ratio:16/9; overflow:hidden; border-radius:12px 12px 0 0}
+.dk-thumb img{width:100%; height:100%; object-fit:cover; display:block}
+.dk-badge{position:absolute; top:10px; left:10px; font-size:12px; font-weight:800; letter-spacing:.04em; color:#fff; padding:4px 10px; border-radius:999px}
+.dk-headrow{display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap}
+.dk-next{display:block; text-align:right; border:1.5px solid var(--line-strong); background:var(--card); border-radius:12px; padding:10px 14px; font-size:14px; line-height:1.5; max-width:260px; flex:none}
+.dk-next:hover{border-color:var(--red); text-decoration:none}
+.dk-next b{font-size:15px}
+.dk-wrap{max-width:1080px; padding-bottom:36px}
+.dk-layout{display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:24px; align-items:start}
+.dk-hero{border-radius:12px; overflow:hidden; margin-bottom:16px; height:320px}
+.dk-hero img{width:100%; height:100%; object-fit:cover; display:block}
+.dk-pos{font-size:13.5px; font-weight:700; color:var(--muted); margin-left:auto; white-space:nowrap}
+.dk-vcard{position:relative; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; box-shadow:var(--shadow)}
+.dk-star{position:absolute; top:8px; right:10px; background:none; border:0; font-size:22px; line-height:1; cursor:pointer; color:var(--muted); padding:2px 4px}
+.dk-star.on{color:#e6a700}
+.dk-vword{font-size:19px; font-weight:800; padding-right:30px}
+.dk-vword ruby rt{font-size:11px; color:var(--muted)}
+.dk-vread{font-size:14.5px; color:var(--muted)}
+.dk-vmean{font-size:14.5px; margin-top:2px}
+.dk-addall{background:#f7c948; border-color:#e6a700; color:#4a3200; font-weight:800}
+.dk-addall:hover{background:#ffd75e}
+@media (max-width:900px){ .dk-layout{grid-template-columns:1fr} }
+@media (max-width:760px){ .dk-hero{height:200px} }
+
 /* ===== Trợ lý Sora: khung chat ===== */
 #soraPanel{width:350px; padding:0; overflow:hidden; display:flex; flex-direction:column; max-height:min(560px,calc(100vh - 120px))}
 #soraPanel.hidden{display:none}
@@ -5145,8 +5170,11 @@ function renderDokkaiHome(lvFilter){
     if(!list.length) h += '<div class="empty-note">Chưa có bài đọc nào ở cấp này.</div>';
     list.forEach(function(p){
       var lk = skLevelLocked(p.level);
-      h += '<a class="lesson-card dk-card" href="#/dokkai/' + esc(p.id) + '">' +
-        '<span class="dk-top dk-lv-' + esc(p.level) + '">' + esc(p.level) + (lk ? " · 🔒 Premium" : "") + "</span>" +
+      var thumb = p.img ? '<span class="dk-thumb dk-lv-' + esc(p.level) + '">' +
+        '<img src="mobile/assets/dokkai/' + esc(p.img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '<span class="dk-badge dk-lv-' + esc(p.level) + '">' + esc(p.level) + (lk ? " · 🔒 Premium" : "") + "</span></span>"
+        : '<span class="dk-top dk-lv-' + esc(p.level) + '">' + esc(p.level) + (lk ? " · 🔒 Premium" : "") + "</span>";
+      h += '<a class="lesson-card dk-card" href="#/dokkai/' + esc(p.id) + '">' + thumb +
         '<b class="jp">' + esc(p.title) + "</b>" +
         "<span>" + esc(p.titleVi || "") + "</span>" +
         '<span class="dk-meta">' + (p.sentences || []).length + " câu · " + (p.quiz || []).length + " câu hỏi</span></a>";
@@ -5170,8 +5198,17 @@ function dkNote(msg){
   var n = document.getElementById("dkNote");
   if(n) n.textContent = msg || "";
 }
+function dkUpdatePos(){
+  /* Chỉ báo vị trí câu trên thanh phát (Câu x/N) — TTS không có duration
+     thật nên không làm thanh tua/tiến trình. */
+  var el = document.getElementById("dkPos");
+  if(!el || !dkCur) return;
+  var n = (dkCur.sentences || []).length;
+  el.textContent = dkIdx >= 0 ? "Câu " + (dkIdx + 1) + "/" + n : n + " câu";
+}
 function dkMarkPlaying(i){
   document.querySelectorAll(".dk-sent.playing").forEach(function(el){ el.classList.remove("playing"); });
+  dkUpdatePos();
   if(i < 0) return;
   var el = document.querySelector('.dk-sent[data-dsi="' + i + '"]');
   if(el){
@@ -5342,27 +5379,92 @@ function dkGrammarIndex(p, lv){
   for(var i = 0; i < arr.length; i++){ if(arr[i] && arr[i].p === p) return i; }
   return -1;
 }
-function dkSideHTML(){
-  var h = "";
-  if(dkCur.vocab && dkCur.vocab.length){
-    h += '<h3 style="margin:28px 0 6px">Từ vựng trọng điểm</h3><div class="card" style="padding:6px 20px">' +
-      dkCur.vocab.map(function(v){
-        return '<div class="vrow"><span class="vw jp">' + esc(v.w) + '</span><span class="vr jp">' + esc(v.r || "") + "</span>" +
-          (v.hv ? '<span class="dk-hv">' + esc(v.hv) + "</span>" : "") +
-          '<span class="vm">' + esc(v.vi || "") + "</span></div>";
-      }).join("") + "</div>";
-  }
-  if(dkCur.grammar && dkCur.grammar.length){
-    h += '<h3 style="margin:28px 0 6px">Mẫu ngữ pháp trong bài</h3>';
-    dkCur.grammar.forEach(function(g){
-      var lv = g.lv || dkCur.level;
-      h += '<div class="card" style="padding:14px 20px;margin-bottom:10px"><div class="jp" style="font-weight:800;font-size:16.5px">' + esc(g.p) +
-        ' <span class="tag">' + esc(lv) + "</span></div>" +
-        '<p style="margin:6px 0 0">' + esc(g.vi || "") + "</p>" +
-        (g.ex ? '<p class="jp" style="margin:8px 0 0">' + esc(g.ex) + '</p><p style="margin:2px 0 0;color:var(--muted);font-size:14px">' + esc(g.exVi || "") + "</p>" : "") +
-        '<p style="margin:8px 0 0"><a href="#/nguphap/' + esc(lv) + '" data-dkgr="' + esc(g.p) + '" data-dklv="' + esc(lv) + '">Xem mẫu này trong sổ tay ngữ pháp →</a></p></div>';
-    });
-  }
+/* ----- Lưu từ Đọc hiểu AI vào hệ thống ôn tập đã có -----
+   Từ dokkai lưu vào cùng khóa localStorage sk_vocab_prog_* như từ vựng
+   Minna (khóa sk_vocab_prog_dk-<id bài>), dùng danh sách review (Deck ôn)
+   — sao ★ và nút "Thêm tất cả" đều thêm/bỏ khỏi Deck ôn; Mục đã lưu
+   (#/daluu) gom cả từ dokkai nhờ nhánh riêng trong renderSavedPage. */
+function dkProgKey(id){ return "sk_vocab_prog_" + id; }
+function dkSavedReview(){
+  if(!dkCur) return [];
+  return (vocabProgRaw(dkProgKey(dkCur.id)).review || []).slice();
+}
+function dkToggleSave(vi){
+  if(!dkCur) return;
+  var key = dkProgKey(dkCur.id);
+  var raw = vocabProgRaw(key);
+  var review = raw.review || [];
+  var at = review.indexOf(vi);
+  if(at >= 0) review.splice(at, 1); else review.push(vi);
+  vocabProgSaveSaved(key, raw.favs || {}, review);
+  if(typeof updateNotifBadge === "function") updateNotifBadge();
+  dkRenderVocab();
+}
+function dkSaveAll(){
+  if(!dkCur) return;
+  var key = dkProgKey(dkCur.id);
+  var raw = vocabProgRaw(key);
+  var review = raw.review || [];
+  (dkCur.vocab || []).forEach(function(v, i){ if(review.indexOf(i) < 0) review.push(i); });
+  vocabProgSaveSaved(key, raw.favs || {}, review);
+  if(typeof updateNotifBadge === "function") updateNotifBadge();
+  dkRenderVocab();
+}
+function dkWordRuby(w, r){
+  /* Furigana ruby từ cách đọc đã kiểm chứng (v.r) — chỉ tô khi tách được
+     chắc chắn: đầu kanji + đuôi kana khớp đuôi cách đọc. Không tách được
+     thì trả chữ trần (dòng cách đọc riêng vẫn hiện dưới từ). */
+  if(!w) return {html: "", hasRuby: false};
+  if(!r || r === w) return {html: esc(w), hasRuby: false};
+  var isKana = function(ch){ return /[\u3040-\u30ff]/.test(ch); };
+  var k = 0;
+  while(k < w.length && k < r.length && isKana(w.charAt(w.length - 1 - k)) && w.charAt(w.length - 1 - k) === r.charAt(r.length - 1 - k)) k++;
+  var headW = w.slice(0, w.length - k), headR = r.slice(0, r.length - k);
+  if(!headW || !headR) return {html: esc(w), hasRuby: false};
+  for(var i = 0; i < headW.length; i++){ if(isKana(headW.charAt(i))) return {html: esc(w), hasRuby: false}; }
+  return {html: "<ruby>" + esc(headW) + "<rt>" + esc(headR) + "</rt></ruby>" + esc(w.slice(w.length - k)), hasRuby: true};
+}
+function dkVocabCardHTML(v, i, isSaved){
+  var rb = dkWordRuby(v.w, v.r);
+  return '<div class="dk-vcard" id="dkVocabCard' + i + '">' +
+    '<button class="dk-star' + (isSaved ? " on" : "") + '" type="button" data-dkstar="' + i + '" aria-label="Lưu từ vào ôn tập">' + (isSaved ? "★" : "☆") + "</button>" +
+    '<div class="dk-vword jp">' + rb.html + "</div>" +
+    ((!rb.hasRuby && v.r && v.r !== v.w) ? '<div class="dk-vread jp">' + esc(v.r) + "</div>" : "") +
+    (v.hv ? '<div class="dk-hv">' + esc(v.hv) + "</div>" : "") +
+    '<div class="dk-vmean">' + esc(v.vi || "") + "</div></div>";
+}
+function dkVocabHTML(){
+  var vs = dkCur.vocab || [];
+  if(!vs.length) return "";
+  var saved = dkSavedReview();
+  var all = vs.every(function(v, i){ return saved.indexOf(i) >= 0; });
+  return '<h3 style="margin:28px 0 6px">Từ vựng trọng điểm</h3>' +
+    '<p style="margin:0 0 10px"><button class="btn sm dk-addall" id="dkAddAllBtn" type="button">' + (all ? "✓ Đã thêm tất cả vào ôn tập" : "＋ Thêm tất cả vào ôn tập") + "</button></p>" +
+    '<div id="dkVocabList">' + vs.map(function(v, i){ return dkVocabCardHTML(v, i, saved.indexOf(i) >= 0); }).join("") + "</div>";
+}
+function dkRenderVocab(){
+  var box = document.getElementById("dkVocabBox");
+  if(box) box.innerHTML = dkVocabHTML();
+}
+function dkJumpToSavedWord(){
+  /* Mở từ Mục đã lưu: cuộn tới thẻ từ vừa bấm. */
+  if(window._skDkJumpIdx == null) return;
+  var vi = window._skDkJumpIdx;
+  window._skDkJumpIdx = null;
+  var vc = document.getElementById("dkVocabCard" + vi);
+  if(vc) setTimeout(function(){ vc.scrollIntoView({behavior: "smooth", block: "center"}); }, 60);
+}
+function dkGrammarHTML(){
+  if(!dkCur.grammar || !dkCur.grammar.length) return "";
+  var h = '<h3 style="margin:2px 0 6px">Mẫu ngữ pháp trong bài</h3>';
+  dkCur.grammar.forEach(function(g){
+    var lv = g.lv || dkCur.level;
+    h += '<div class="card" style="padding:14px 20px;margin-bottom:10px"><div class="jp" style="font-weight:800;font-size:16.5px">' + esc(g.p) +
+      ' <span class="tag">' + esc(lv) + "</span></div>" +
+      '<p style="margin:6px 0 0">' + esc(g.vi || "") + "</p>" +
+      (g.ex ? '<p class="jp" style="margin:8px 0 0">' + esc(g.ex) + '</p><p style="margin:2px 0 0;color:var(--muted);font-size:14px">' + esc(g.exVi || "") + "</p>" : "") +
+      '<p style="margin:8px 0 0"><a href="#/nguphap/' + esc(lv) + '" data-dkgr="' + esc(g.p) + '" data-dklv="' + esc(lv) + '">Xem mẫu này trong sổ tay ngữ pháp →</a></p></div>';
+  });
   return h;
 }
 function renderDokkaiItem(id){
@@ -5375,11 +5477,19 @@ function renderDokkaiItem(id){
     var same = dkByLevel(p.level), pos = 0;
     for(var k = 0; k < same.length; k++){ if(same[k].id === p.id) pos = k; }
     var prev = pos > 0 ? same[pos - 1] : null, next = pos < same.length - 1 ? same[pos + 1] : null;
+    var all = window.DOKKAI_PASSAGES || [], ai = 0;
+    for(var j = 0; j < all.length; j++){ if(all[j].id === p.id) ai = j; }
+    var nextAll = ai < all.length - 1 ? all[ai + 1] : null;
+    var nextLk = nextAll ? skLevelLocked(nextAll.level) : false;
+    var hero = p.img ? '<div class="dk-hero dk-lv-' + esc(p.level) + '"><img src="mobile/assets/dokkai/' + esc(p.img) + '" alt="Minh họa bài ' + esc(p.title) + '" onerror="this.parentNode.style.display=\'none\'"></div>' : "";
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / ' +
       '<a href="#/dokkai">Đọc hiểu AI</a> / ' + esc(p.level) + "</div>" +
+      '<div class="dk-headrow"><div>' +
       '<h1 class="jp" style="font-size:26px">' + esc(p.title) + "</h1>" +
       "<p>" + esc(p.titleVi || "") + " · " + esc(p.level) + " · " + (p.sentences || []).length + " câu · " + (p.quiz || []).length + " câu hỏi</p></div>" +
-      '<div style="max-width:800px;padding-bottom:36px">' +
+      (nextAll ? '<a class="dk-next" href="#/dokkai/' + esc(nextAll.id) + '">' + (nextLk ? "🔒 " : "") + 'Bài tiếp<br><b class="jp">' + esc(nextAll.title) + "</b> →</a>" : "") +
+      "</div></div>" +
+      '<div class="dk-wrap">' +
       '<p style="margin:0 0 4px"><a class="btn ghost sm" href="#/dokkai">← Về danh sách</a></p>' +
       '<div class="dk-bar" id="dkBar">' +
       '<button class="btn sm" id="dkPlayBtn" type="button">▶ Phát toàn bài</button>' +
@@ -5389,17 +5499,29 @@ function renderDokkaiItem(id){
       '<button class="btn ghost sm" id="dkRateBtn" type="button">1x</button>' +
       '<button class="btn ghost sm dk-tgl" id="dkFuriBtn" type="button">Furigana</button>' +
       '<button class="btn ghost sm dk-tgl" id="dkViBtn" type="button">Bản dịch</button>' +
+      '<span class="dk-pos" id="dkPos"></span>' +
       '<span class="dk-note" id="dkNote"></span></div>' +
+      '<div class="dk-layout"><div class="dk-main">' + hero +
       '<div class="card" style="padding:18px 22px"><div class="dk-pass" id="dkPass"></div></div>' +
       '<h2 class="secttl" style="margin-top:28px">Kiểm tra đọc hiểu</h2>' +
       dkQuizHTML() +
-      dkSideHTML() +
       '<div class="kd-nav" style="margin-top:24px">' +
       (prev ? '<a class="btn ghost sm" href="#/dokkai/' + esc(prev.id) + '">← Bài trước</a>' : "<span></span>") +
       (next ? '<a class="btn ghost sm" href="#/dokkai/' + esc(next.id) + '">Bài tiếp →</a>' : "<span></span>") +
-      "</div></div>";
+      '</div></div><aside class="dk-side">' +
+      dkGrammarHTML() +
+      '<div id="dkVocabBox">' + dkVocabHTML() + "</div>" +
+      "</aside></div></div>";
     $app.innerHTML = h;
     dkRenderPassage();
+    dkUpdatePos();
+    dkJumpToSavedWord();
+    var dkVb = document.getElementById("dkVocabBox");
+    if(dkVb) dkVb.addEventListener("click", function(e){
+      var st = e.target.closest ? e.target.closest("[data-dkstar]") : null;
+      if(st){ dkToggleSave(parseInt(st.getAttribute("data-dkstar"), 10)); return; }
+      if(e.target.closest && e.target.closest("#dkAddAllBtn")) dkSaveAll();
+    });
     document.getElementById("dkPlayBtn").addEventListener("click", dkTogglePlay);
     document.getElementById("dkPrevBtn").addEventListener("click", function(){ dkJump(-1); });
     document.getElementById("dkNextBtn").addEventListener("click", function(){ dkJump(1); });
@@ -7349,24 +7471,26 @@ function renderSavedPage(){
   document.body.classList.remove("plain");
   var head = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Mục đã lưu</div>' +
     "<h1>Mục đã lưu</h1>" +
-    "<p>Toàn bộ từ vựng bạn đã lưu khi học flashcard: từ đánh dấu ★ yêu thích và từ thêm vào deck ôn (phím C), gom từ mọi cấp và mọi bài. Bấm vào một từ để mở flashcard của bài đó ngay tại từ đó.</p></div>";
+    "<p>Toàn bộ từ vựng bạn đã lưu: từ đánh dấu ★ yêu thích và từ thêm vào deck ôn khi học flashcard (phím C), cùng từ lưu từ bài Đọc hiểu AI. Bấm vào một từ để mở đúng chỗ của từ đó.</p></div>";
   var entries = collectSavedEntries();
   if(!entries.length){
     $app.innerHTML = head + '<div class="empty-note" style="margin:22px 0 42px">Chưa lưu từ nào — bấm ★/bookmark trong flashcard để lưu từ cần ôn.</div>';
     return;
   }
   $app.innerHTML = loadingHTML("Đang tải từ đã lưu…");
-  var jobs = [], seenLv = {}, needSpec = false;
+  var jobs = [], seenLv = {}, needSpec = false, needDk = false;
   entries.forEach(function(e){
     if(e.rest.indexOf("cn_") === 0){ needSpec = true; return; }
+    if(e.rest.indexOf("dk-") === 0){ needDk = true; return; }
     var m = e.rest.match(/^(N[1-5])_/);
     if(m && !seenLv[m[1]]){ seenLv[m[1]] = 1; jobs.push(ensureVocabFor(m[1])); }
   });
   if(needSpec) jobs.push(ensureSpec());
+  if(needDk) jobs.push(ensureDokkai());
   Promise.all(jobs).then(function(){
     var total = 0, rows = "";
     entries.forEach(function(e){
-      var words = null, label = "", href = "";
+      var words = null, label = "", href = "", isDk = false;
       if(e.rest.indexOf("cn_") === 0){
         var fk = e.rest.slice(3);
         var f = SPEC_FIELDS.filter(function(x){ return x.key === fk; })[0];
@@ -7374,6 +7498,16 @@ function renderSavedPage(){
         words = window.VOCAB_SPEC[fk] || [];
         label = "Chuyên ngành · " + f.name;
         href = "#/tuvung/cn/" + fk;
+      } else if(e.rest.indexOf("dk-") === 0){
+        /* Từ Đọc hiểu AI: khóa sk_vocab_prog_dk-<id bài>, từ lấy từ
+           p.vocab (đổi sang dạng {word, reading, hanViet, meaning} để
+           dùng chung mẫu hàng đã lưu). */
+        var p = dkById(e.rest);
+        if(!p) return;
+        words = (p.vocab || []).map(function(v){ return {word: v.w, reading: v.r, hanViet: v.hv, meaning: v.vi}; });
+        label = "Đọc hiểu AI · " + p.level + " · " + (p.titleVi || p.title);
+        href = "#/dokkai/" + p.id;
+        isDk = true;
       } else {
         var m = e.rest.match(/^(N[1-5])_(.+)$/);
         if(!m) return;
@@ -7396,7 +7530,7 @@ function renderSavedPage(){
         var kinds = [];
         if(e.favs[ix]) kinds.push("★ Yêu thích");
         if(e.review.indexOf(ix) >= 0) kinds.push("Deck ôn");
-        rows += '<div class="saved-item" data-href="' + esc(href) + '" data-idx="' + ix + '">' +
+        rows += '<div class="saved-item" data-href="' + esc(href) + '" data-idx="' + ix + '"' + (isDk ? ' data-dk="1"' : "") + ">" +
           '<div class="sw-main"><span class="sw-word jp">' + esc(w.word) + '</span>' +
           (w.reading ? '<span class="sw-read jp">' + esc(w.reading) + "</span>" : "") +
           '<div class="sw-mean">' + (w.hanViet ? "<b>" + esc(String(w.hanViet).toUpperCase()) + "</b> · " : "") + esc(w.meaning || "") + "</div></div>" +
@@ -7414,7 +7548,11 @@ function renderSavedPage(){
     $app.querySelectorAll(".saved-item").forEach(function(row){
       row.addEventListener("click", function(ev){
         if(ev.target.closest && ev.target.closest("button")) return;
-        window._skJumpIdx = parseInt(row.getAttribute("data-idx"), 10);
+        if(row.getAttribute("data-dk")){
+          window._skDkJumpIdx = parseInt(row.getAttribute("data-idx"), 10);
+        } else {
+          window._skJumpIdx = parseInt(row.getAttribute("data-idx"), 10);
+        }
         goHash(row.getAttribute("data-href"));
       });
     });
