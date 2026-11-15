@@ -813,6 +813,7 @@
   /* ---------- Paywall: ổ khóa Premium + bảng nâng cấp ---------- */
   #premiumScrim{z-index:69;}
   #premiumSheet{z-index:70; max-height:84%; overflow-y:auto;}
+  #loginSheet{max-height:84%; overflow-y:auto;} /* form đăng nhập dài: cho cuộn trong bảng, nút Đăng nhập không bị che */
   .pw-lock{font-size:12px; margin-left:4px; vertical-align:1px;}
   .testrow.pw-locked .badge{border-color:var(--red); color:var(--red);}
   .lv.pw-locked{color:var(--ink-2);}
@@ -16406,6 +16407,9 @@ function furiHTML(text){
       };
       setSignedInEmail(user.email || "");
       setGooglePhotoURL(user.photoURL || "");
+      /* Phiên đã về (kể cả vừa quay lại từ Google): đóng bảng đăng nhập —
+         nếu bảng từng bật lên ở lần bắn null trước đó thì tắt ngay. */
+      closeLogin();
     }else{
       window.SK_USER = null;
       setSignedInEmail("");
@@ -16429,14 +16433,28 @@ function furiHTML(text){
       var p = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       if(p && p.catch) p.catch(function(){});
     }catch(e){}
-    /* Kết quả đăng nhập Google bằng redirect (nếu vừa quay lại từ Google):
-       user về qua onAuthStateChanged; ở đây chỉ bắt lỗi để báo lại. */
+    /* Kết quả đăng nhập Google bằng redirect (nếu vừa quay lại từ Google).
+       Đăng ký onAuthStateChanged SAU khi getRedirectResult xong: lúc quay
+       lại từ Google, listener bắn null trước (chưa có phiên) rồi mới bắn
+       user — đăng ký sớm sẽ làm bảng đăng nhập bật lên rồi mới tắt (lỗi
+       user báo 2026-11-15: đăng nhập xong vẫn thấy khung đăng nhập).
+       Đăng ký muộn thì lần bắn đầu đã là user, bảng không bật lên nữa.
+       Timeout 3s dự phòng: getRedirectResult không xong thì vẫn đăng ký
+       listener như cũ (khi đó bảng có thể nháy lên rồi tắt nhờ closeLogin
+       ở nhánh user của applyAuthUser). */
+    var skAuthListenerOn = false;
+    function startAuthListener(){
+      if(skAuthListenerOn) return;
+      skAuthListenerOn = true;
+      auth.onAuthStateChanged(function(user){ applyAuthUser(user); });
+    }
     try{
-      auth.getRedirectResult().then(function(){ /* ok — user xử lý ở listener */ }).catch(function(err){
+      auth.getRedirectResult().then(function(){ startAuthListener(); }).catch(function(err){
         skRedirectErr = skAuthErrorVI(err);
+        startAuthListener();
       });
-    }catch(e){}
-    auth.onAuthStateChanged(function(user){ applyAuthUser(user); });
+      setTimeout(startAuthListener, 3000);
+    }catch(e){ startAuthListener(); }
     /* Có phiên sẵn (mở lại app): onAuthStateChanged tự bắn ngay, không cần
        gọi thêm — Premium đọc ở listener của paywall. */
   }
