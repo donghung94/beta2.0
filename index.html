@@ -554,7 +554,7 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
 .modal p{color:var(--muted); margin:0 0 18px; font-size:14.5px}
 .modal .row{display:flex; gap:10px; justify-content:flex-end}
 
-/* Modal đăng nhập / đăng ký (Firebase Auth) */
+/* Modal đăng nhập (Firebase Auth — chỉ Google) */
 .auth-modal{position:relative; max-width:400px}
 .auth-modal h3{font-size:22px; margin:0 0 6px}
 .auth-mascot{display:block; margin:2px auto 14px; height:96px; width:auto; max-width:100%; object-fit:contain}
@@ -567,28 +567,13 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
   padding:11px 14px; font-weight:700; font-size:14.5px; cursor:pointer;
 }
 .auth-google:hover{border-color:var(--blue)}
-.auth-or{display:flex; align-items:center; gap:12px; margin:16px 0 2px; color:var(--faint); font-size:12.5px; font-weight:600}
-.auth-or::before,.auth-or::after{content:""; flex:1; height:1px; background:var(--line)}
 .auth-field{display:block; font-size:13.5px; font-weight:700; margin-top:12px; text-align:left}
 .auth-field input{
   display:block; width:100%; margin-top:6px; font:inherit; font-size:14.5px; font-weight:400;
   padding:11px 12px; border:1.5px solid var(--line-strong); border-radius:10px; background:#fff; color:var(--ink);
 }
 .auth-field input:focus{outline:none; border-color:var(--blue)}
-.auth-modal .auth-field{display:flex; align-items:center; gap:10px; margin-top:12px; padding:0 12px; border:1.5px solid var(--line-strong); border-radius:10px; background:#fff}
-.auth-modal .auth-field input{display:block; flex:1; min-width:0; margin-top:0; padding:12px 0; border:0; border-radius:0; background:transparent; font:inherit; font-size:14.5px; font-weight:400; color:var(--ink)}
-.auth-modal .auth-field input:focus{outline:none; border-color:transparent}
-.auth-modal .auth-field:focus-within{border-color:var(--blue)}
-.auth-modal .auth-ic{flex:none; display:flex; color:var(--faint)}
-.auth-modal .auth-ic svg{display:block}
 .auth-err{margin:12px 0 0 !important; background:var(--bad-bg); color:var(--bad) !important; border-radius:10px; padding:10px 12px; font-size:13.5px !important; font-weight:600; line-height:1.5}
-.auth-ok{margin:12px 0 0 !important; background:var(--ok-bg); color:var(--ok) !important; border-radius:10px; padding:10px 12px; font-size:13.5px !important; font-weight:600; line-height:1.5}
-.auth-submit{width:100%; margin-top:16px; padding:12px; font-size:15px; background:var(--blue); border-color:var(--blue); color:#fff}
-.auth-submit:hover{background:var(--blue-dark); border-color:var(--blue-dark)}
-.auth-submit[disabled]{opacity:.6; cursor:wait}
-.auth-links{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px; font-size:13.5px; color:var(--muted)}
-.auth-link{background:none; border:0; padding:0; font:inherit; font-weight:700; color:var(--blue-dark); cursor:pointer}
-.auth-link:hover{text-decoration:underline}
 .user-menu-head{padding:8px 10px 7px; border-bottom:1px solid var(--line); margin-bottom:4px}
 .user-menu-head b{display:block; font-size:14px}
 .user-menu-head span{display:block; font-size:12.5px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -5746,7 +5731,7 @@ function skAuthUser(){
   try{
     var auth = skAuth();
     var fu = auth && auth.currentUser;
-    if(fu) return {uid: fu.uid, email: fu.email || ""};
+    if(fu) return {uid: fu.uid, email: fu.email || "", displayName: fu.displayName || "", name: fu.displayName || "Học viên"};
   }catch(e){}
   return null;
 }
@@ -5882,7 +5867,10 @@ function skGenOrderCode(){
   return out;
 }
 /* Tạo doc sk_orders/{code} theo hợp đồng backend:
-   {uid, email, package: "year"|"lifetime", amount, status: "pending", createdAt}.
+   {uid, email, displayName, package: "year"|"lifetime", amount, status: "pending", createdAt}.
+   displayName để admin đối soát khi tài khoản chưa có email. Tài khoản chưa có
+   email thì không tạo đơn được (lỗi "no-email") — phải đăng nhập lại Google để
+   bổ sung email trước khi mua.
    Rules cấm client ĐỌC sk_orders nên không get() kiểm tra trùng được: thay vào
    đó, rules chỉ cho `create` (doc chưa tồn tại) — set() trùng mã sẽ bị chặn
    dạng update (permission-denied) thì sinh mã mới thử lại, tối đa 3 lần. */
@@ -5891,9 +5879,10 @@ function skCreateOrder(pkg, amount, attempt){
   var db = skDb();
   var u = skAuthUser();
   if(!db || !u) return Promise.reject(new Error("not-ready"));
+  if(!u.email) return Promise.reject(new Error("no-email"));
   var code = skGenOrderCode();
   return db.collection("sk_orders").doc(code).set({
-    uid: u.uid, email: u.email || "", package: pkg, amount: amount, status: "pending",
+    uid: u.uid, email: u.email || "", displayName: u.displayName || "", package: pkg, amount: amount, status: "pending",
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){ return code; }).catch(function(err){
     if(attempt < 3 && err && err.code === "permission-denied") return skCreateOrder(pkg, amount, attempt + 1);
@@ -5948,6 +5937,10 @@ function renderTrondoiPage(){
   renderNangcapPage();
 }
 var skCheckoutErr = "";
+/* Cảnh báo khi tài khoản chưa có email (tài khoản Google tạo trước khi app xin
+   scope email): chặn mua vì đơn không gắn được với email để đối soát. Dùng
+   chung cho trang gói (skStartCheckout) và trang Thanh toán (renderCheckoutView). */
+var SK_NO_EMAIL_MSG = "Tài khoản của bạn chưa có email nên chưa mua được gói. Bạn đăng xuất rồi đăng nhập lại bằng Google, bấm \"Tiếp tục\" ở màn đồng ý để bổ sung email, rồi quay lại mua nhé.";
 function renderNangcapPage(){
   document.title = "Nâng cấp Premium | SoraKanji";
   document.body.classList.remove("plain");
@@ -6103,6 +6096,11 @@ function skStartCheckout(pkg){
     openAuthModalContinue(function(){ skStartCheckout(pkg); });
     return;
   }
+  if(!u.email){
+    skCheckoutErr = SK_NO_EMAIL_MSG;
+    renderNangcapPage();
+    return;
+  }
   var btn = document.getElementById(pkg === "year" ? "buyYear" : "buyLifetime");
   if(btn){ btn.disabled = true; btn.textContent = "Đang tạo đơn…"; }
   var amount = skPrice(pkg);
@@ -6112,7 +6110,8 @@ function skStartCheckout(pkg){
     skCheckoutErr = "";
     renderCheckoutView(order);
   }).catch(function(err){
-    skCheckoutErr = "Chưa tạo được đơn thanh toán — kiểm tra kết nối rồi thử lại." +
+    skCheckoutErr = (err && err.message === "no-email") ? SK_NO_EMAIL_MSG :
+      "Chưa tạo được đơn thanh toán — kiểm tra kết nối rồi thử lại." +
       (err && err.code ? " (" + err.code + ")" : "");
     renderNangcapPage();
   });
@@ -6155,8 +6154,33 @@ function skRenderChatBox(orderCode){
 function renderCheckoutView(o){
   var p = SK_PACKAGES[o.pkg] || SK_PACKAGES.year;
   document.title = "Thanh toán — " + p.label + " | SoraKanji";
+  var ckUser = skAuthUser() || {};
+  var email = ckUser.email || "";
+  /* Hàng Tài khoản không bao giờ để trống: chưa có email thì hiện tên + ghi chú. */
+  var accountTxt = email || ((ckUser.displayName || ckUser.name || "Học viên") + " (chưa có email)");
+  /* Tài khoản chưa có email thì chưa thanh toán được — đơn không gắn được với
+     email để đối soát. Đơn chờ vẫn giữ trong localStorage: bổ sung email rồi
+     quay lại trang này là thanh toán tiếp được. */
+  if(!email){
+    $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nangcap">Nâng cấp</a> / Thanh toán</div>' +
+      "<h1>Thanh toán — " + p.label + "</h1></div>" +
+      '<div style="max-width:680px;padding-bottom:36px">' +
+      '<div class="card"><h3 style="margin-top:0">Đơn hàng của bạn</h3>' +
+      '<table class="bank-rows"><tbody>' +
+      "<tr><td>Gói</td><td>" + p.label + " · " + p.dur + "</td></tr>" +
+      '<tr><td>Số tiền</td><td style="color:var(--red);font-size:19px">' + skFmtVND(o.amount) + "</td></tr>" +
+      "<tr><td>Tài khoản</td><td>" + esc(accountTxt) + "</td></tr>" +
+      "</tbody></table>" +
+      '<div class="note-box" style="margin-top:14px;border-color:var(--bad);color:var(--bad)">' + esc(SK_NO_EMAIL_MSG) + "</div>" +
+      "<p>Đơn hàng của bạn vẫn được giữ lại — sau khi bổ sung email, quay lại trang này để tiếp tục thanh toán.</p></div>" +
+      '<p style="margin-top:14px"><button class="btn ghost" id="otherPkg" type="button">← Chọn gói khác</button></p></div>';
+    document.getElementById("otherPkg").addEventListener("click", function(){
+      skPendingOrderClear();
+      renderPackagesView();
+    });
+    return;
+  }
   var qr = skVietQR(o.amount, skTransferMemo(o.code));
-  var email = (skAuthUser() || {}).email || "";
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nangcap">Nâng cấp</a> / Thanh toán</div>' +
     "<h1>Thanh toán — " + p.label + "</h1>" +
     "<p>Chuyển khoản đúng số tiền và đúng nội dung chuyển khoản bên dưới — hệ thống tự động kích hoạt Premium cho tài khoản của bạn.</p></div>" +
@@ -6165,7 +6189,7 @@ function renderCheckoutView(o){
     '<table class="bank-rows"><tbody>' +
     "<tr><td>Gói</td><td>" + p.label + " · " + p.dur + "</td></tr>" +
     '<tr><td>Số tiền</td><td style="color:var(--red);font-size:19px">' + skFmtVND(o.amount) + "</td></tr>" +
-    "<tr><td>Tài khoản</td><td>" + esc(email) + "</td></tr>" +
+    "<tr><td>Tài khoản</td><td>" + esc(accountTxt) + "</td></tr>" +
     "</tbody></table>" +
     "<p style=\"font-weight:800;margin:14px 0 4px\">Nội dung chuyển khoản — ghi ĐÚNG cả dòng này (kể cả SEVQR):</p>" +
     '<div class="code-box"><span class="code" id="skCode">' + esc(skTransferMemo(o.code)) + '</span>' +
@@ -6947,11 +6971,8 @@ function initWebAuth(){
   });
 }
 
-/* ----- Modal đăng nhập / đăng ký ----- */
+/* ----- Modal đăng nhập (chỉ Google) ----- */
 var SK_GOOGLE_SVG = '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
-var SK_MAIL_SVG = '<span class="auth-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>';
-var SK_LOCK_SVG = '<span class="auth-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
-var skAuthMode = "login"; /* "login" | "register" */
 function closeAuthModal(){
   var root = document.getElementById("modalRoot");
   if(root) root.innerHTML = "";
@@ -6959,94 +6980,34 @@ function closeAuthModal(){
 function openAuthModal(){
   var root = document.getElementById("modalRoot");
   if(!root) return;
-  skAuthMode = "login";
   root.innerHTML =
     '<div class="modal-bg" id="authBg"><div class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">' +
     '<button class="auth-x" id="authClose" type="button" aria-label="Đóng">×</button>' +
     '<img class="auth-mascot" src="mobile/assets/chibi.png" alt="">' +
     '<h3 id="authTitle">Đăng nhập</h3>' +
     '<p class="auth-sub">Đăng nhập để đồng bộ tiến trình học của bạn.</p>' +
-    '<button class="auth-google" id="authGoogle" type="button">' + SK_GOOGLE_SVG + '<span>Đăng nhập bằng Google</span></button>' +
-    '<div class="auth-or"><span>HOẶC</span></div>' +
-    '<form id="authForm" novalidate>' +
-    '<label class="auth-field">' + SK_MAIL_SVG + '<input id="authEmail" type="email" autocomplete="email" placeholder="Email" aria-label="Email"></label>' +
-    '<label class="auth-field">' + SK_LOCK_SVG + '<input id="authPass" type="password" autocomplete="current-password" placeholder="Mật khẩu" aria-label="Mật khẩu"></label>' +
+    '<button class="auth-google" id="authGoogle" type="button">' + SK_GOOGLE_SVG + '<span>Tiếp tục bằng Google</span></button>' +
     '<p class="auth-err" id="authErr" hidden></p>' +
-    '<p class="auth-ok" id="authOk" hidden></p>' +
-    '<button class="btn auth-submit" id="authSubmit" type="submit">Đăng nhập</button>' +
-    "</form>" +
-    '<div class="auth-links">' +
-    '<button class="auth-link" id="authForgot" type="button">Quên mật khẩu?</button>' +
-    '<span><span id="authSwitchQ">Chưa có tài khoản?</span> <button class="auth-link" id="authSwitch" type="button">Đăng ký</button></span>' +
-    "</div></div></div>";
-  var emailEl = document.getElementById("authEmail"),
-      passEl = document.getElementById("authPass"),
-      errEl = document.getElementById("authErr"),
-      okEl = document.getElementById("authOk"),
-      submitBtn = document.getElementById("authSubmit");
-  function showErr(msg){ okEl.hidden = true; errEl.textContent = msg; errEl.hidden = false; }
-  function showOk(msg){ errEl.hidden = true; okEl.textContent = msg; okEl.hidden = false; }
-  function setBusy(busy, label){
-    submitBtn.disabled = busy;
-    submitBtn.textContent = busy ? "Đang xử lý…" : label;
-  }
-  function applyMode(){
-    var reg = skAuthMode === "register";
-    document.getElementById("authTitle").textContent = reg ? "Đăng ký tài khoản" : "Đăng nhập";
-    submitBtn.textContent = reg ? "Đăng ký" : "Đăng nhập";
-    passEl.setAttribute("autocomplete", reg ? "new-password" : "current-password");
-    document.getElementById("authSwitchQ").textContent = reg ? "Đã có tài khoản?" : "Chưa có tài khoản?";
-    document.getElementById("authSwitch").textContent = reg ? "Đăng nhập" : "Đăng ký";
-    document.getElementById("authForgot").style.visibility = reg ? "hidden" : "visible";
-    errEl.hidden = true; okEl.hidden = true;
-  }
+    "</div></div>";
+  var errEl = document.getElementById("authErr");
+  function showErr(msg){ errEl.textContent = msg; errEl.hidden = false; }
   document.getElementById("authClose").addEventListener("click", closeAuthModal);
   document.getElementById("authBg").addEventListener("click", function(e){ if(e.target === this) closeAuthModal(); });
-  document.getElementById("authSwitch").addEventListener("click", function(){
-    skAuthMode = skAuthMode === "login" ? "register" : "login";
-    applyMode();
-  });
   document.getElementById("authGoogle").addEventListener("click", function(){
     var auth = skAuth();
     if(!auth){ showErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
     var provider = new firebase.auth.GoogleAuthProvider();
+    /* Xin rõ scope email/profile (như mobile bản sửa 5): không có scope email,
+       tài khoản Google có thể không có email trong Firebase — khi đó cảnh báo
+       "đăng nhập lại để bổ sung email" ở checkout sẽ thành ngõ cụt. Lần đăng
+       nhập sau sẽ hiện màn đồng ý OAuth 1 lần, bấm "Tiếp tục" là xong. */
+    provider.addScope("email");
+    provider.addScope("profile");
     auth.signInWithPopup(provider).then(function(){
       closeAuthModal();
       if(skLoginContinue){ var fn = skLoginContinue; skLoginContinue = null; fn(); }
     }).catch(function(err){ showErr(skAuthErrorVI(err)); });
   });
-  document.getElementById("authForgot").addEventListener("click", function(){
-    var email = emailEl.value.trim();
-    if(!email){ showErr("Bạn nhập email ở ô trên rồi bấm “Quên mật khẩu?” — thư đặt lại mật khẩu sẽ gửi về email đó."); emailEl.focus(); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); emailEl.focus(); return; }
-    var auth = skAuth();
-    if(!auth){ showErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
-    auth.sendPasswordResetEmail(email).then(function(){
-      showOk("Đã gửi thư đặt lại mật khẩu tới " + email + ". Bạn kiểm tra hộp thư (cả mục thư rác) rồi làm theo hướng dẫn trong thư nhé.");
-    }).catch(function(err){ showErr(skAuthErrorVI(err)); });
-  });
-  document.getElementById("authForm").addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var email = emailEl.value.trim(), pass = passEl.value;
-    if(!email){ showErr("Bạn chưa nhập email."); emailEl.focus(); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); emailEl.focus(); return; }
-    if(!pass){ showErr("Bạn chưa nhập mật khẩu."); passEl.focus(); return; }
-    var auth = skAuth();
-    if(!auth){ showErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
-    var reg = skAuthMode === "register";
-    setBusy(true, reg ? "Đăng ký" : "Đăng nhập");
-    var promise = reg
-      ? auth.createUserWithEmailAndPassword(email, pass)
-      : auth.signInWithEmailAndPassword(email, pass);
-    promise.then(function(){
-      closeAuthModal();
-      if(skLoginContinue){ var fn = skLoginContinue; skLoginContinue = null; fn(); }
-    }).catch(function(err){
-      setBusy(false, reg ? "Đăng ký" : "Đăng nhập");
-      showErr(skAuthErrorVI(err));
-    });
-  });
-  if(emailEl) emailEl.focus();
 }
 
 /* ----- Khu vực user trên header -----
