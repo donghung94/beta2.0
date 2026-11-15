@@ -1550,11 +1550,14 @@
   .rdvrow .r{font-size:13.5px; color:var(--ink-3); white-space:nowrap;}
   .rdvrow .m{font-size:14px; color:var(--ink-2); margin-left:auto; text-align:right;}
 
-  /* Đọc hiểu AI (v2, trong Luyện nghe): thư viện bài đọc + trang bài karaoke TTS
-     + quiz. Tái dùng .setrow/.sv-cattab/.shbtn/.sv-chip/.lsopt/.lsexp/.lstype.
+  /* Đọc hiểu AI (v3, trong Luyện nghe): thư viện bài đọc + trang bài karaoke
+     + quiz. Tái dùng .setrow/.sv-cattab/.sv-chip/.lsopt/.lsexp/.lstype.
      V2 theo mẫu Nhai Kanji: ảnh minh họa (đầu bài + thumbnail thẻ), thứ tự
      ngữ pháp trước từ vựng, thẻ từ riêng + sao lưu vào ôn tập (sk_saved_words),
-     chỉ báo Câu x/N, link bài tiếp góc phải trên. */
+     link bài tiếp góc phải trên. V3: thanh phát giống mẫu — thẻ trắng 2 hàng
+     (hàng 1: giờ + thanh tua; hàng 2: Câu trước / Phát vuông xanh / Câu sau /
+     Lặp câu / 1x | Furigana / Bản dịch), audio MP3 thật assets/dokkai/audio/
+     + timings từng câu; MP3 lỗi thì về giọng máy TTS, ẩn thanh tua. */
   .dk-card{
     width:100%; text-align:left; font-family:inherit; color:var(--ink); cursor:pointer;
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
@@ -1572,11 +1575,29 @@
   .dk-card-title{display:block; font-size:16.5px; font-weight:800; line-height:1.45; margin:10px 13px 2px;}
   .dk-card-sub{display:block; font-size:13px; color:var(--ink-2); line-height:1.5; margin:0 13px;}
   .dk-audiobar{
-    position:sticky; top:0; z-index:5; margin:-8px -18px 14px; padding:10px 18px 9px;
-    background:var(--bg); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:5; margin:0 0 14px; padding:12px 13px 11px;
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.07);
   }
-  .dk-audiorow{display:flex; gap:9px;}
-  .dk-audiorow2{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;}
+  .dk-seekrow{display:flex; gap:10px; align-items:center; margin-bottom:10px;}
+  .dk-seekrow[hidden]{display:none;}
+  .dk-seek{flex:1 1 auto; min-width:0; height:28px; -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; margin:0;}
+  .dk-seek::-webkit-slider-runnable-track{height:5px; border-radius:3px; background:#6B7280;}
+  .dk-seek::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:19px; height:19px; margin-top:-7px; border-radius:50%; background:var(--sky); border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.3);}
+  .dk-seek::-moz-range-track{height:5px; border-radius:3px; background:#6B7280;}
+  .dk-seek::-moz-range-thumb{width:17px; height:17px; border:2px solid #fff; border-radius:50%; background:var(--sky); box-shadow:0 1px 3px rgba(0,0,0,.3);}
+  .dk-time{font-size:12.5px; font-weight:700; color:var(--ink-2); white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .dk-ctlrow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between;}
+  .dk-ctl-left{display:flex; gap:6px; align-items:center;}
+  .dk-ctl-right{display:flex; gap:6px; align-items:center; margin-left:auto;}
+  .dk-ctlbtn{width:38px; height:38px; padding:0; border:none; border-radius:10px; background:var(--bg); color:var(--ink); font-size:17px; line-height:1; cursor:pointer; flex:0 0 auto;}
+  .dk-ctlbtn:active{background:var(--line);}
+  .dk-playbtn{width:42px; height:42px; padding:0; border:none; border-radius:10px; background:var(--sky); color:#fff; font-size:19px; line-height:1; cursor:pointer; flex:0 0 auto;}
+  .dk-playbtn:active{filter:brightness(.92);}
+  .dk-chipbtn{display:inline-flex; gap:5px; align-items:center; height:38px; padding:0 10px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:inherit; font-size:13px; font-weight:700; white-space:nowrap; cursor:pointer; flex:0 0 auto;}
+  .dk-chipbtn:active{border-color:var(--sky);}
+  .dk-chipbtn.on{background:var(--sky-soft); border-color:var(--sky); color:var(--sky);}
+  .dk-ic{font-size:14px; line-height:1;}
   .dk-status{font-size:12.5px; color:var(--ink-2); line-height:1.5; margin:7px 2px 0;}
   .dk-status:empty{display:none;}
   .dk-sent{
@@ -1611,7 +1632,6 @@
   .dk-nextlink button{background:none; border:none; padding:2px; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--sky); cursor:pointer; line-height:1.5;}
   .dk-nextlink button:active{color:var(--red);}
   .dk-hero-img{width:100%; height:210px; object-fit:cover; display:block; border-radius:14px; margin-bottom:14px; background:var(--bg);}
-  .dk-pos{margin-left:auto; align-self:center; font-size:13px; font-weight:700; color:var(--ink-2); white-space:nowrap;}
   .dk-vcard{display:flex; gap:10px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:12px 13px; margin-bottom:10px;}
   .dk-vmain{flex:1 1 auto; min-width:0;}
   .dk-vw{font-size:17px; font-weight:800; line-height:1.7; margin:0;}
@@ -3814,7 +3834,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <h3 class="wvsec">Đọc hiểu AI</h3>
         <button class="setrow" id="dkGoLibrary">
           <span class="r1"><h3>📖 Thư viện bài đọc</h3><span class="cnt">MỞ ›</span></span>
-          <p>Bài đọc ngắn theo cấp N5–N1: nghe giọng máy đọc từng câu, bật furigana + bản dịch, làm quiz kiểm tra.</p>
+          <p>Bài đọc ngắn theo cấp N5–N1: nghe audio đọc từng câu, bật furigana + bản dịch, làm quiz kiểm tra.</p>
         </button>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
@@ -3869,17 +3889,23 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <div id="dkNextLink" class="dk-nextlink"></div>
         <div id="dkHero"></div>
         <div class="dk-audiobar">
-          <div class="dk-audiorow">
-            <button class="shbtn" id="dkPrev" type="button">← Câu trước</button>
-            <button class="shbtn primary" id="dkPlay" type="button">▶ Phát</button>
-            <button class="shbtn" id="dkNext" type="button">Câu sau →</button>
+          <div class="dk-seekrow" id="dkSeekRow" hidden>
+            <span class="dk-time" id="dkTimeCur">0:00</span>
+            <input type="range" id="dkSeek" min="0" max="100" value="0" step="0.1" aria-label="Tua audio">
+            <span class="dk-time" id="dkTimeDur">0:00</span>
           </div>
-          <div class="dk-audiorow2">
-            <button class="sv-chip" id="dkRepeat" type="button" aria-pressed="false">↻ Lặp câu</button>
-            <button class="sv-chip" id="dkRate" type="button">1x</button>
-            <button class="sv-chip" id="dkFuri" type="button" aria-pressed="false">Furigana</button>
-            <button class="sv-chip" id="dkTrans" type="button" aria-pressed="false">Bản dịch</button>
-            <span class="dk-pos" id="dkPos" aria-live="polite"></span>
+          <div class="dk-ctlrow">
+            <div class="dk-ctl-left">
+              <button class="dk-ctlbtn" id="dkPrev" type="button" aria-label="Câu trước">⏮</button>
+              <button class="dk-playbtn" id="dkPlay" type="button" aria-label="Phát">▶</button>
+              <button class="dk-ctlbtn" id="dkNext" type="button" aria-label="Câu sau">⏭</button>
+              <button class="dk-chipbtn" id="dkRepeat" type="button" aria-pressed="false">↻ Lặp câu</button>
+              <button class="dk-chipbtn" id="dkRate" type="button">1x</button>
+            </div>
+            <div class="dk-ctl-right">
+              <button class="dk-chipbtn" id="dkFuri" type="button" aria-pressed="false"><span class="dk-ic">ふ</span> Furigana</button>
+              <button class="dk-chipbtn" id="dkTrans" type="button" aria-pressed="false"><span class="dk-ic">🌐</span> Bản dịch</button>
+            </div>
           </div>
           <p class="dk-status" id="dkStatus" role="status" aria-live="polite"></p>
         </div>
@@ -11775,24 +11801,30 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   rdRenderLevels();
 
-  /* ================= ĐỌC HIỂU AI (v2): thư viện + trang bài karaoke + quiz =================
+  /* ================= ĐỌC HIỂU AI (v3): thư viện + trang bài karaoke + quiz =================
      Nằm trong Luyện nghe (điểm vào: nút "Thư viện bài đọc" cuối trang Luyện nghe,
      ngoài 2 tab video nên hiện ở cả 2 tab). Data: assets/dokkai-data.js
      (window.DOKKAI_PASSAGES, 10 bài tạo sẵn — 2 bài/cấp N5–N1), nạp lười lần đầu
      mở thư viện, theo đúng mẫu tkLoadData/ensureReadData (state machine + hàng đợi).
-     Audio: giọng máy của thiết bị (speechSynthesis ja-JP) đọc từng câu; karaoke tô
-     câu đang đọc; hết bài thì dkFinished=true, bấm Phát lại quay về câu 0; tô theo
-     từng từ chỉ khi trình duyệt bắn boundary events (Chrome
-     có, Safari/iOS thường không — progressive enhancement, không hứa hẹn).
+     Audio: file MP3 thật assets/dokkai/audio/<id>.mp3 (Cloud TTS ja-JP-Neural2-B)
+     + timings từng câu (field audio/timings trong data); thẻ <audio> thật cho
+     thanh tua + giờ 0:00/0:00; karaoke tô câu đang đọc theo timings; hết bài
+     thì dkFinished=true, bấm Phát lại quay về câu 0. MP3 tải lỗi (hoặc bài
+     chưa có audio) thì về giọng máy TTS (dkSpeak/dkPlayFrom giữ nguyên) và
+     ẩn thanh tua. Karaoke theo từ chỉ chạy ở chế độ TTS khi trình duyệt bắn
+     boundary events (Chrome có, Safari/iOS thường không); chế độ MP3 chỉ có
+     timings cấp câu nên chỉ tô theo câu (xem dkWordAt — điểm mở rộng).
      Paywall: N5 mở free; N4–N1 khóa Premium (premiumGateLevel).
      V2 theo mẫu Nhai Kanji: ảnh minh họa assets/dokkai/<id>.jpg (đầu bài +
      thumbnail thẻ, lỗi tải thì ẩn ảnh), thứ tự ngữ pháp trước từ vựng, thẻ từ
-     riêng + sao lưu vào sk_saved_words (hệ thống Ôn tập sẵn có), chỉ báo
-     Câu x/N (TTS không có duration thật nên không làm thanh tua), link bài
-     tiếp góc phải trên. Chưa có: đánh dấu "ĐÃ ĐỌC", nút "Tạo bài đọc khác"
-     (cần Gemini billing — không thêm nút chết). */
+     riêng + sao lưu vào sk_saved_words (hệ thống Ôn tập sẵn có), link bài
+     tiếp góc phải trên. V3: thanh phát giống hệt mẫu — thẻ trắng 2 hàng
+     (giờ + thanh tua / nút điều khiển), chỉ báo Câu x/N bỏ (mẫu không có;
+     thanh tua + giờ đã cho biết vị trí). Chưa có: đánh dấu "ĐÃ ĐỌC", nút
+     "Tạo bài đọc khác" (cần Gemini billing — không thêm nút chết). */
   var DK_DATA_FILE = "assets/dokkai-data.js";
   var DK_IMG_DIR = "assets/dokkai/";
+  var DK_AUDIO_DIR = "assets/dokkai/audio/";
   var DK_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
   var DK_RATES = [0.75, 1, 1.25, 1.5];
   var dkDataState = "idle";   /* idle | loading | ready | error */
@@ -11808,7 +11840,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var dkTransOn = false;
   var dkQuizAns = {};         /* qIdx -> đáp án đã chọn */
   var dkEvidence = {};        /* qIdx -> {sent, start, end}: vùng tô vàng trong bài */
-  var dkSpeakSeq = 0;         /* số thứ tự lượt đọc dokkai (chống tiếng sống lại) */
+  var dkSpeakSeq = 0;
+  var dkAudio = null;         /* thẻ <audio> thật (new Audio, tạo lười) */
+  var dkAudioMode = "tts";    /* "mp3" | "tts" — mp3 khi bài có audio+timings và file tải được */
+  var dkSingleShot = false;   /* đang phát lẻ 1 câu bằng MP3 (bấm vào câu) */
+  var dkSingleIdx = 0;        /* câu đang phát lẻ */
+  var dkScrub = false;        /* user đang kéo thanh tua */
   var dkLibOverlay = document.getElementById("dkLibOverlay");
   var dkPassOverlay = document.getElementById("dkPassOverlay");
 
@@ -11848,6 +11885,43 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      bài chưa có img thì trả "" để giao diện giữ dải màu theo cấp (v1). */
   function dkImgUrl(p){
     return (p && p.img) ? (DK_IMG_DIR + p.img) : "";
+  }
+  /* URL file MP3 của bài (field audio trong data chỉ là tên file);
+     bài chưa có audio thì trả "" để dùng giọng máy TTS (fallback). */
+  function dkAudioUrl(p){
+    return (p && p.audio) ? (DK_AUDIO_DIR + p.audio) : "";
+  }
+  /* Mốc kết thúc của câu i: mốc bắt đầu câu sau, hoặc thời lượng audio
+     (câu cuối). Chưa có duration thì Infinity để không cắt nhầm. */
+  function dkSentEnd(i){
+    if(!dkPass || !dkPass.timings) return Infinity;
+    if(i + 1 < dkPass.timings.length) return dkPass.timings[i + 1];
+    var d = (dkAudio && isFinite(dkAudio.duration)) ? dkAudio.duration : Infinity;
+    return d;
+  }
+  /* Câu chứa thời điểm t (giây): câu có mốc bắt đầu lớn nhất mà <= t.
+     timings là mốc bắt đầu từng câu, tăng dần, số mốc = số câu. */
+  function dkSentenceAt(t){
+    if(!dkPass || !dkPass.timings || !dkPass.timings.length) return 0;
+    var idx = 0;
+    for(var i = 0; i < dkPass.timings.length; i++){
+      if(dkPass.timings[i] <= t) idx = i; else break;
+    }
+    return idx;
+  }
+  /* Vị trí từ trong câu i tại thời điểm t — ĐIỂM MỞ RỘNG cho timings cấp
+     từ sau này. Hiện tại data chỉ có timings cấp câu nên luôn trả -1
+     (dkWordHit(-1) = xóa tô từ). Sau này khi câu có field wt là mảng
+     [mốc ký tự, giây] (vd [[0,0.015],[4,0.62],...] theo đúng thứ tự ký tự
+     trong câu), hàm này trả mốc ký tự của từ chứa thời điểm t và karaoke
+     theo từ chạy ngay, không cần sửa trình phát. */
+  function dkWordAt(i, t){
+    return -1;
+  }
+  function dkFmtTime(s){
+    if(!isFinite(s) || s < 0) s = 0;
+    var m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return m + ":" + (sec < 10 ? "0" : "") + sec;
   }
   /* Bài tiếp theo trong thư viện (theo thứ tự mảng DOKKAI_PASSAGES);
      bài cuối thì trả null để ẩn link bài tiếp. */
@@ -11911,6 +11985,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     dkQuizAns = {};
     dkEvidence = {};
     dkFinished = false;
+    dkLoadAudio();
     document.getElementById("dkPassTitle").textContent = p.title;
     document.getElementById("dkPassSub").textContent = p.level + " · " + p.sentences.length + " câu" + (p.titleVi ? " · " + p.titleVi : "");
     dkRenderHero();
@@ -12098,8 +12173,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var locked = !premiumLevelOpen(nx.level);
     box.innerHTML = '<button type="button" data-dk-next="' + esc(nx.id) + '">' + (locked ? '🔒 ' : '') + esc(nx.title) + ' →</button>';
   }
-  /* Chỉ báo vị trí câu trên thanh phát: "Câu x/N". TTS không có duration
-     thật nên không làm thanh tua — chỉ báo câu là đủ, không giả vờ. */
+  /* Chỉ báo vị trí câu "Câu x/N" — ĐÃ BỎ khỏi thanh phát ở v3 (mẫu Nhai
+     Kanji không có chỗ cho nó; thanh tua + giờ đã cho biết vị trí).
+     Hàm giữ lại để các chỗ gọi cũ (dkRenderSentences/dkMarkSent) không
+     phải sửa: không còn phần tử dkPos nên hàm tự thoát (no-op). */
   function dkUpdatePos(){
     var el = document.getElementById("dkPos");
     if(!el) return;
@@ -12125,7 +12202,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function dkUpdatePlayBtn(){
     var b = document.getElementById("dkPlay");
-    if(b) b.textContent = dkPlaying ? "⏸ Tạm dừng" : "▶ Phát";
+    if(!b) return;
+    b.textContent = dkPlaying ? "⏸" : "▶";
+    b.setAttribute("aria-label", dkPlaying ? "Tạm dừng" : "Phát");
   }
   function dkUpdateToggles(){
     var r = document.getElementById("dkRepeat");
@@ -12161,9 +12240,167 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(charIndex >= s && charIndex < e){ segs[i].classList.add("dk-word-on"); return; }
     }
   }
-  /* Đọc 1 câu bằng giọng máy, theo đúng mẫu speakJP (giọng Nhật đã chọn, cancel
-     rồi chờ 1 nhịp mới phát để Chrome không nuốt utterance, seq chống tiếng
-     sống lại) + onboundary để karaoke theo từ khi trình duyệt hỗ trợ. */
+  /* Thẻ <audio> thật — tạo lười 1 lần (new Audio, theo mẫu shAudio/exAudio),
+     gắn listener 1 lần. Phát bằng MP3 khi bài có audio+timings và file tải
+     được; lỗi tải thì về TTS (dkOnAudioError). */
+  function dkGetAudio(){
+    if(dkAudio) return dkAudio;
+    var a = new Audio();
+    a.preload = "auto";
+    a.addEventListener("timeupdate", dkOnAudioTime);
+    a.addEventListener("loadedmetadata", function(){
+      var sk = document.getElementById("dkSeek");
+      if(sk && isFinite(a.duration)) sk.max = a.duration;
+      dkUpdateSeek();
+    });
+    a.addEventListener("ended", dkOnAudioEnded);
+    a.addEventListener("error", dkOnAudioError);
+    dkAudio = a;
+    return a;
+  }
+  /* Phát MP3, nuốt lỗi promise (iOS chặn phát ngoài thao tác chạm — user
+     bấm Phát lại là được). */
+  function dkAudioPlay(a){
+    try{
+      var pr = a.play();
+      if(pr && pr.catch) pr.catch(function(){});
+    }catch(_){}
+  }
+  /* Nạp audio khi mở bài (không nạp ở thư viện). Bài có audio+timings
+     (số mốc = số câu) thì chế độ mp3 (hiện thanh tua); chưa có thì TTS,
+     ẩn thanh tua. */
+  function dkLoadAudio(){
+    dkSingleShot = false;
+    var n = dkPass && dkPass.sentences ? dkPass.sentences.length : -1;
+    var hasMp3 = !!(dkPass && dkPass.audio && dkPass.timings && dkPass.timings.length === n);
+    dkAudioMode = hasMp3 ? "mp3" : "tts";
+    var row = document.getElementById("dkSeekRow");
+    if(row) row.hidden = (dkAudioMode !== "mp3");
+    var sk = document.getElementById("dkSeek");
+    if(sk){ sk.value = 0; sk.max = 100; }
+    dkUpdateSeek();
+    if(dkAudioMode === "mp3"){
+      var a = dkGetAudio();
+      a.pause();
+      try{ a.currentTime = 0; }catch(_){}
+      a.playbackRate = DK_RATES[dkRateIdx];
+      a.src = dkAudioUrl(dkPass);
+      a.load();
+    }else if(dkAudio){
+      dkAudio.pause();
+      dkAudio.removeAttribute("src");
+      dkAudio.load();
+    }
+  }
+  /* Cập nhật thanh tua + giờ hiện tại/tổng giờ từ vị trí audio. Khi đang
+     kéo thanh (dkScrub) thì không đẩy lại value để khỏi giành tay user. */
+  function dkUpdateSeek(){
+    var cur = (dkAudio && isFinite(dkAudio.currentTime)) ? dkAudio.currentTime : 0;
+    var dur = (dkAudio && isFinite(dkAudio.duration)) ? dkAudio.duration : 0;
+    var tc = document.getElementById("dkTimeCur");
+    var td = document.getElementById("dkTimeDur");
+    if(tc) tc.textContent = dkFmtTime(cur);
+    if(td) td.textContent = dkFmtTime(dur);
+    var sk = document.getElementById("dkSeek");
+    if(sk && !dkScrub) sk.value = cur;
+  }
+  /* timeupdate: cập nhật thanh tua + giờ, xác định câu đang đọc từ
+     timings, xử lý lặp câu và phát lẻ 1 câu. Kiểm tra lặp/phát lẻ TRƯỚC
+     khi cập nhật câu — vì t có thể đã sang câu sau khi timeupdate bắn. */
+  function dkOnAudioTime(){
+    if(!dkPass || !dkAudio) return;
+    var t = dkAudio.currentTime || 0;
+    dkUpdateSeek();
+    /* Lặp câu: tới cuối câu hiện tại thì quay lại đầu câu đó. */
+    if(dkRepeat && dkPlaying && t >= dkSentEnd(dkSentIdx)){
+      dkAudio.currentTime = dkPass.timings[dkSentIdx] || 0;
+      return;
+    }
+    /* Phát lẻ 1 câu (bấm vào câu): tới cuối câu đó thì dừng. */
+    if(dkSingleShot && t >= dkSentEnd(dkSingleIdx)){
+      dkSingleShot = false;
+      dkAudio.pause();
+      dkPlaying = false;
+      dkUpdatePlayBtn();
+      return;
+    }
+    var i = dkSentenceAt(t);
+    if(i !== dkSentIdx){ dkSentIdx = i; dkMarkSent(); }
+    /* Karaoke theo từ — hiện tại chưa có timings cấp từ nên dkWordAt
+       trả -1 (xóa tô từ); xem ghi chú ở dkWordAt. */
+    dkWordHit(dkWordAt(dkSentIdx, t));
+  }
+  /* Hết file audio: lặp câu thì quay lại đầu câu hiện tại; không thì
+     đánh dấu đã đọc hết (bấm Phát lại quay về câu 0 như v1). */
+  function dkOnAudioEnded(){
+    if(dkRepeat && dkPlaying){
+      dkAudio.currentTime = (dkPass && dkPass.timings) ? (dkPass.timings[dkSentIdx] || 0) : 0;
+      dkAudioPlay(dkAudio);
+      return;
+    }
+    dkSingleShot = false;
+    dkPlaying = false;
+    dkFinished = true;
+    dkUpdatePlayBtn();
+    dkUpdateSeek();
+  }
+  /* MP3 tải lỗi (mất file/mất mạng): về TTS, ẩn thanh tua, báo cho user.
+     Nếu đang phát dở thì đọc tiếp bằng giọng máy từ câu hiện tại. Đặt
+     thông báo SAU khi gọi dkPlayFrom vì dkPlayFrom tự xóa trạng thái
+     (dkSetStatus("")) — đặt trước thì thông báo bị xóa ngay. Bỏ qua lỗi
+     khi đã ở chế độ TTS (vd lỗi giả do gỡ src ở dkLoadAudio). */
+  function dkOnAudioError(){
+    if(dkAudioMode !== "mp3") return;
+    dkAudioMode = "tts";
+    var row = document.getElementById("dkSeekRow");
+    if(row) row.hidden = true;
+    if(dkPlaying){
+      dkPlaying = false;
+      dkPlayFrom(dkSentIdx, true);
+    }else if(dkSingleShot){
+      dkSingleShot = false;
+      dkPlayFrom(dkSingleIdx, false);
+    }
+    dkSetStatus("Không tải được file audio — đang dùng giọng máy của thiết bị.");
+  }
+  /* Phát bằng MP3 từ câu i; all=true: phát tiếp hết bài, all=false:
+     chỉ phát câu i rồi dừng. */
+  function dkMp3PlayFrom(i, all){
+    if(!dkPass || dkAudioMode !== "mp3") return;
+    if(!settings.sound){ dkSetStatus("Âm thanh đang tắt — bật Âm thanh trong Cài đặt để nghe."); return; }
+    var a = dkGetAudio();
+    dkSentIdx = Math.max(0, Math.min(i, dkPass.sentences.length - 1));
+    dkPlaying = !!all;
+    dkSingleShot = !all;
+    dkSingleIdx = dkSentIdx;
+    dkUpdatePlayBtn();
+    dkMarkSent();
+    dkSetStatus("");
+    a.playbackRate = DK_RATES[dkRateIdx];
+    var start = (dkPass.timings && dkPass.timings[dkSentIdx] != null) ? dkPass.timings[dkSentIdx] : 0;
+    try{ a.currentTime = start; }catch(_){}
+    dkAudioPlay(a);
+  }
+  /* Kéo thanh tua: tua ngay tới vị trí kéo (nghe được khi kéo); user đã
+     nắm quyền điều khiển nên hủy phát lẻ 1 câu; cập nhật câu hiện tại
+     theo vị trí mới để nút Lặp câu + bấm Phát dùng đúng câu. */
+  function dkOnSeekInput(){
+    if(dkAudioMode !== "mp3" || !dkAudio) return;
+    if(!isFinite(dkAudio.duration) || dkAudio.duration <= 0) return;
+    var sk = document.getElementById("dkSeek");
+    if(!sk) return;
+    var v = parseFloat(sk.value);
+    if(!isFinite(v)) return;
+    dkSingleShot = false;
+    try{ dkAudio.currentTime = Math.max(0, Math.min(v, dkAudio.duration)); }catch(_){}
+    var i = dkSentenceAt(v);
+    if(i !== dkSentIdx){ dkSentIdx = i; dkMarkSent(); }
+    dkUpdateSeek();
+  }
+  function dkOnSeekEnd(){ dkScrub = false; }
+  /* Đọc 1 câu bằng giọng máy TTS (fallback khi MP3 lỗi hoặc bài chưa có
+     audio — giữ nguyên v1). boundary event của trình duyệt (Chrome có,
+     Safari/iOS thường không) cho karaoke theo từ qua dkWordHit. */
   function dkSpeak(i, onend){
     if(!dkPass || !dkPass.sentences[i]){ if(onend) onend(); return; }
     if(!("speechSynthesis" in window)){ dkSetStatus("Thiết bị này chưa hỗ trợ đọc giọng nói."); if(onend) onend(); return; }
@@ -12212,16 +12449,48 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function dkPlaySentence(i){
     dkFinished = false;
     dkStopAudio();
-    dkPlayFrom(i, false);
+    if(!dkPass) return;
+    if(dkAudioMode === "mp3") dkMp3PlayFrom(i, false);
+    else dkPlayFrom(i, false);
   }
+  /* Bấm Phát: đang phát thì tạm dừng; đang dừng thì phát tiếp; đã đọc hết
+     bài thì quay về câu 0. Chế độ MP3: dừng giữa câu rồi bấm Phát thì tiếp
+     tục từ vị trí đang dừng (chỉ khi vẫn còn trong câu đó); ngược lại thì
+     phát lại từ đầu câu hiện tại. */
   function dkTogglePlay(){
-    if(dkPlaying){ dkStopAudio(); return; }
-    if(dkFinished){ dkSentIdx = 0; dkFinished = false; dkMarkSent(); }
+    if(!dkPass) return;
+    if(dkPlaying || dkSingleShot){
+      dkStopAudio();
+      return;
+    }
+    if(dkFinished){
+      dkFinished = false;
+      dkSentIdx = 0;
+      if(dkAudioMode === "mp3") dkMp3PlayFrom(0, true);
+      else dkPlayFrom(0, true);
+      return;
+    }
+    if(dkAudioMode === "mp3" && dkAudio){
+      if(!settings.sound){ dkSetStatus("Âm thanh đang tắt — bật Âm thanh trong Cài đặt để nghe."); return; }
+      var t = dkAudio.currentTime || 0;
+      if(t > 0 && dkSentenceAt(t) === dkSentIdx){
+        dkPlaying = true;
+        dkUpdatePlayBtn();
+        dkSetStatus("");
+        dkAudio.playbackRate = DK_RATES[dkRateIdx];
+        dkAudioPlay(dkAudio);
+        return;
+      }
+      dkMp3PlayFrom(dkSentIdx, true);
+      return;
+    }
     dkPlayFrom(dkSentIdx, true);
   }
   function dkStopAudio(){
     dkSpeakSeq++;
     dkPlaying = false;
+    dkSingleShot = false;
+    if(dkAudio) dkAudio.pause();
     try{ cancelSpeechHard(); }catch(_){}
     dkUpdatePlayBtn();
     var box = document.getElementById("dkSentences");
@@ -12229,18 +12498,24 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function dkStep(d){
     if(!dkPass) return;
-    dkFinished = false;
     var wasPlaying = dkPlaying;
+    var i = dkSentIdx + d;
+    if(i < 0) i = 0;
+    if(i > dkPass.sentences.length - 1) i = dkPass.sentences.length - 1;
+    dkSentIdx = i;
+    dkFinished = false;
     dkStopAudio();
-    dkSentIdx = Math.max(0, Math.min(dkSentIdx + d, dkPass.sentences.length - 1));
     dkMarkSent();
-    var box = document.getElementById("dkSentences");
-    var cur = box && box.querySelector('.dk-sent[data-dk-sent="' + dkSentIdx + '"]');
-    if(cur && cur.scrollIntoView){ try{ cur.scrollIntoView({block: "nearest"}); }catch(_){} }
-    if(wasPlaying) dkPlayFrom(dkSentIdx, true);
+    if(wasPlaying){
+      if(dkAudioMode === "mp3") dkMp3PlayFrom(i, true);
+      else dkPlayFrom(i, true);
+    }
   }
+  /* Tốc độ phát: vòng 0.75 → 1 → 1.25 → 1.5. Chế độ MP3 thì đổi
+     playbackRate ngay cả khi đang phát; TTS thì áp dụng ở câu tiếp theo. */
   function dkSetRate(){
     dkRateIdx = (dkRateIdx + 1) % DK_RATES.length;
+    if(dkAudioMode === "mp3" && dkAudio) dkAudio.playbackRate = DK_RATES[dkRateIdx];
     dkUpdateToggles();
   }
   function dkSetRepeat(){
@@ -12290,6 +12565,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("dkNext").addEventListener("click", function(){ dkStep(1); });
   document.getElementById("dkRepeat").addEventListener("click", dkSetRepeat);
   document.getElementById("dkRate").addEventListener("click", dkSetRate);
+  document.getElementById("dkSeek").addEventListener("input", dkOnSeekInput);
+  document.getElementById("dkSeek").addEventListener("change", dkOnSeekEnd);
+  document.getElementById("dkSeek").addEventListener("pointerdown", function(){ dkScrub = true; });
+  document.getElementById("dkSeek").addEventListener("pointerup", function(){ dkScrub = false; });
+  document.getElementById("dkSeek").addEventListener("pointercancel", function(){ dkScrub = false; });
+  document.getElementById("dkSeek").addEventListener("touchstart", function(){ dkScrub = true; }, {passive: true});
+  document.getElementById("dkSeek").addEventListener("touchend", function(){ dkScrub = false; }, {passive: true});
   document.getElementById("dkFuri").addEventListener("click", dkSetFuri);
   document.getElementById("dkTrans").addEventListener("click", dkSetTrans);
   document.getElementById("dkSentences").addEventListener("click", function(e){
