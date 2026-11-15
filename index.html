@@ -1190,6 +1190,41 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .sh-btns button.rec{border-color:var(--bad); color:var(--bad)}
 .sh-btns button:disabled{opacity:.45; cursor:default}
 
+/* ===== Đọc hiểu AI: thư viện + trang bài karaoke ===== */
+.dk-filter{display:flex; gap:8px; flex-wrap:wrap; padding:16px 0 4px}
+.dk-pill{border:1.5px solid var(--line-strong); background:var(--card); color:var(--ink); border-radius:999px; padding:7px 15px; font-size:14px; font-weight:700; cursor:pointer}
+.dk-pill:hover{border-color:var(--red); text-decoration:none}
+.dk-pill.on{background:var(--red); border-color:var(--red); color:#fff}
+.dk-card{overflow:hidden}
+.dk-card .dk-top{display:block; margin:-15px -17px 10px; padding:7px 17px; border-radius:12px 12px 0 0; font-size:12.5px; font-weight:800; letter-spacing:.04em; color:#fff}
+.dk-lv-N5{background:#2e8b57}
+.dk-lv-N4{background:#1e88e5}
+.dk-lv-N3{background:#e67e22}
+.dk-lv-N2{background:#7e57c2}
+.dk-lv-N1{background:#c0392b}
+.dk-card .dk-meta{font-size:12.5px}
+.dk-bar{position:sticky; top:64px; z-index:40; display:flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--card); border:1.5px solid var(--line-strong); border-radius:12px; padding:10px 12px; margin:14px 0; box-shadow:0 2px 10px rgba(20,16,12,.08)}
+.dk-bar .dk-tgl.on{background:var(--blue); border-color:var(--blue); color:#fff}
+.dk-note{font-size:13px; color:var(--muted)}
+.dk-pass{font-size:18px; line-height:2}
+.dk-sent{padding:8px 10px; border-radius:9px; cursor:pointer}
+.dk-sent:hover{background:var(--card2)}
+.dk-sent.playing{background:#e3f0fd}
+.dk-sent .dk-vi{display:none; font-size:14.5px; color:var(--muted); font-style:italic; line-height:1.6; margin-top:2px}
+.dk-pass.show-vi .dk-sent .dk-vi{display:block}
+.dk-tok{border-radius:4px; padding:0 1px}
+.dk-tok.tok-on{background:#90c6f5}
+.dk-tok.dk-ev{background:#ffe082; text-decoration:underline; text-underline-offset:3px}
+.dk-sent ruby rt{font-size:11px; color:var(--muted)}
+.dk-hv{color:var(--blue); font-weight:700}
+.opt.dk-ok{border-color:var(--ok); background:var(--ok-bg)}
+.opt.dk-ok .no{background:var(--ok); border-color:var(--ok); color:#fff}
+.opt.dk-no{border-color:var(--bad); background:var(--bad-bg)}
+.opt.dk-no .no{background:var(--bad); border-color:var(--bad); color:#fff}
+.dk-quiz .opt:disabled{cursor:default}
+.dk-quiz .opt:disabled:hover{border-color:var(--line-strong)}
+@media (max-width:760px){ .dk-pass{font-size:17px} }
+
 /* ===== Trợ lý Sora: khung chat ===== */
 #soraPanel{width:350px; padding:0; overflow:hidden; display:flex; flex-direction:column; max-height:min(560px,calc(100vh - 120px))}
 #soraPanel.hidden{display:none}
@@ -4557,7 +4592,12 @@ function renderExamHome(){
     '<div class="exam-grid" style="padding:14px 0 36px">' +
     LEVELS.map(function(lv){
       return '<a class="exam-lv" href="#/nghe/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + '</b><span data-ln="' + lv + '"></span></a>';
-    }).join("") + "</div>";
+    }).join("") + "</div>" +
+    '<h2 class="secttl">Đọc hiểu AI</h2>' +
+    "<p style=\"color:var(--muted);font-size:14.5px;line-height:1.6;max-width:760px;margin:0\">Bài đọc ngắn theo từng cấp, có audio giọng máy đọc từng câu kèm chữ sáng theo câu, bản dịch tiếng Việt, từ vựng trọng điểm và câu hỏi kiểm tra.</p>" +
+    '<div class="lesson-grid" style="padding:14px 0 36px">' +
+    '<a class="lesson-card" href="#/dokkai"><b>📖 Thư viện Đọc hiểu AI</b><span>Bài N5 mở miễn phí · Bài N4–N1 cần Premium</span></a>' +
+    "</div>";
   LEVELS.forEach(function(lv){
     ensureListen(lv).then(function(){
       var el = document.querySelector('[data-ln="' + lv + '"]');
@@ -4901,6 +4941,7 @@ function renderListenLevel(lv){
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / ' + lv + "</div>" +
       "<h1>Luyện nghe " + lv + '</h1><p>' + items.length + " hội thoại — chọn một hội thoại để nghe và trả lời câu hỏi.</p></div>" +
       '<div style="padding:14px 0 34px">';
+    h += '<a class="lesson-card" href="#/dokkai?lv=' + lv + '" style="display:block;margin-bottom:10px"><b>📖 Đọc hiểu AI ' + lv + '</b><span>Bài đọc ngắn có audio karaoke, bản dịch và câu hỏi kiểm tra.</span></a>';
     items.forEach(function(it, i){
       h += '<a class="lesson-card" href="#/nghe/' + lv + "/" + i + '" style="display:block;margin-bottom:10px"><b>Hội thoại ' + (i + 1) +
         '</b> <span class="tag jp">' + esc(listenKindName(lv, it.t)) + '</span><span style="display:block" class="jp">' + esc(it.q || "") + "</span></a>";
@@ -5056,6 +5097,323 @@ function renderListenItem(lv, idx){
       });
     });
   }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
+}
+
+/* ================= ĐỌC HIỂU AI =================
+   Thư viện bài đọc ngắn theo cấp (N5–N1) + trang bài có audio karaoke bằng
+   giọng đọc của máy (device TTS), bản dịch từng câu, từ vựng trọng điểm,
+   mẫu ngữ pháp và quiz chấm ngay. Dữ liệu: mobile/assets/dokkai-data.js
+   (window.DOKKAI_PASSAGES) — bài tạo sẵn, lưu sẵn trong app (v1 free,
+   không gọi AI lúc học). N5 mở free, N4–N1 khóa Premium (gate ở
+   skGateForHash theo tiền tố id bài: dk-n4-01 → N4). */
+function ensureDokkai(){ return window.DOKKAI_PASSAGES ? Promise.resolve() : loadJS("mobile/assets/dokkai-data.js"); }
+function dkById(id){ return (window.DOKKAI_PASSAGES || []).filter(function(p){ return p.id === id; })[0] || null; }
+function dkByLevel(lv){ return (window.DOKKAI_PASSAGES || []).filter(function(p){ return p.level === lv; }); }
+function renderDokkaiHome(lvFilter){
+  document.title = "Đọc hiểu AI — Bài đọc theo cấp N5–N1 | SoraKanji";
+  $app.innerHTML = loadingHTML("Đang tải bài đọc…");
+  ensureDokkai().then(function(){
+    var all = window.DOKKAI_PASSAGES || [];
+    var lv = (lvFilter && LEVELS.indexOf(lvFilter) >= 0) ? lvFilter : "";
+    var list = lv ? all.filter(function(p){ return p.level === lv; }) : all;
+    var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / Đọc hiểu AI</div>' +
+      "<h1>Đọc hiểu AI</h1>" +
+      "<p>Bài đọc ngắn theo từng cấp, có audio giọng máy đọc từng câu kèm chữ sáng theo câu, bản dịch tiếng Việt, từ vựng trọng điểm và câu hỏi kiểm tra. Bài N5 mở miễn phí, bài N4–N1 cần Premium.</p></div>" +
+      '<div class="dk-filter">' +
+      '<a class="dk-pill' + (lv === "" ? " on" : "") + '" href="#/dokkai">Tất cả</a>' +
+      LEVELS.map(function(l){ return '<a class="dk-pill' + (lv === l ? " on" : "") + '" href="#/dokkai?lv=' + l + '">' + l + (skLevelLocked(l) ? " 🔒" : "") + "</a>"; }).join("") +
+      "</div>" +
+      '<div class="lesson-grid" style="padding:14px 0 36px">';
+    if(!list.length) h += '<div class="empty-note">Chưa có bài đọc nào ở cấp này.</div>';
+    list.forEach(function(p){
+      var lk = skLevelLocked(p.level);
+      h += '<a class="lesson-card dk-card" href="#/dokkai/' + esc(p.id) + '">' +
+        '<span class="dk-top dk-lv-' + esc(p.level) + '">' + esc(p.level) + (lk ? " · 🔒 Premium" : "") + "</span>" +
+        '<b class="jp">' + esc(p.title) + "</b>" +
+        "<span>" + esc(p.titleVi || "") + "</span>" +
+        '<span class="dk-meta">' + (p.sentences || []).length + " câu · " + (p.quiz || []).length + " câu hỏi</span></a>";
+    });
+    h += "</div>";
+    $app.innerHTML = h;
+  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu đọc hiểu.</div>'; });
+}
+/* ----- Trình phát karaoke bằng giọng đọc của máy (device TTS) ----- */
+var dkCur = null, dkIdx = -1, dkPlaying = false, dkRepeat = false, dkRate = 1, dkFuri = false, dkVi = false, dkUtter = null;
+var dkAnswered = {};
+var DK_RATES = [0.75, 1, 1.25, 1.5];
+function dkPickVoice(){
+  try{
+    var vs = speechSynthesis.getVoices() || [];
+    for(var i = 0; i < vs.length; i++){ if(/^ja/i.test(vs[i].lang)) return vs[i]; }
+  }catch(e){}
+  return null;
+}
+function dkNote(msg){
+  var n = document.getElementById("dkNote");
+  if(n) n.textContent = msg || "";
+}
+function dkMarkPlaying(i){
+  document.querySelectorAll(".dk-sent.playing").forEach(function(el){ el.classList.remove("playing"); });
+  if(i < 0) return;
+  var el = document.querySelector('.dk-sent[data-dsi="' + i + '"]');
+  if(el){
+    el.classList.add("playing");
+    if(dkPlaying) el.scrollIntoView({behavior: "smooth", block: "center"});
+  }
+}
+function dkClearTokens(i){
+  var box = document.querySelector('.dk-sent[data-dsi="' + i + '"]');
+  if(box) box.querySelectorAll(".dk-tok.tok-on").forEach(function(t){ t.classList.remove("tok-on"); });
+}
+function dkMarkToken(i, charIndex){
+  /* Tô sáng token chứa vị trí charIndex — chỉ khi trình duyệt bắn sự kiện
+     boundary (Chrome có, Safari thường không); không có thì chỉ sáng câu. */
+  var box = document.querySelector('.dk-sent[data-dsi="' + i + '"]');
+  if(!box) return;
+  box.querySelectorAll(".dk-tok.tok-on").forEach(function(t){ t.classList.remove("tok-on"); });
+  var toks = box.querySelectorAll(".dk-tok");
+  for(var k = 0; k < toks.length; k++){
+    var s = parseInt(toks[k].getAttribute("data-s"), 10), e = parseInt(toks[k].getAttribute("data-e"), 10);
+    if(charIndex >= s && charIndex < e){ toks[k].classList.add("tok-on"); return; }
+  }
+}
+function dkStop(){
+  dkPlaying = false;
+  dkUtter = null;
+  try{ if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
+  dkMarkPlaying(-1);
+  var pb = document.getElementById("dkPlayBtn");
+  if(pb) pb.textContent = "▶ Phát toàn bài";
+}
+function dkSpeak(i){
+  if(!dkCur) return;
+  var sents = dkCur.sentences || [];
+  var s = sents[i];
+  if(!s){ dkStop(); return; }
+  if(!SET_SOUND){ dkNote("Âm thanh đang tắt — bật lại ở Cài đặt → Âm thanh & giọng đọc."); return; }
+  if(!("speechSynthesis" in window)){ dkNote("Trình duyệt này không có giọng đọc."); return; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  dkIdx = i;
+  dkMarkPlaying(i);
+  dkNote("");
+  var u = new SpeechSynthesisUtterance(s.jp);
+  u.lang = "ja-JP"; u.rate = dkRate;
+  var v = dkPickVoice(); if(v) u.voice = v;
+  u.onboundary = function(ev){ if(ev && typeof ev.charIndex === "number") dkMarkToken(i, ev.charIndex); };
+  u.onend = function(){
+    if(dkUtter !== u) return; /* đã bị hủy / thay bằng utterance khác */
+    dkUtter = null;
+    dkClearTokens(i);
+    if(dkRepeat){ dkSpeak(i); return; }
+    if(!dkPlaying){ dkMarkPlaying(-1); return; } /* phát lẻ 1 câu: dừng + bỏ tô sáng */
+    if(i + 1 < sents.length) dkSpeak(i + 1);
+    else { dkIdx = -1; dkStop(); } /* hết bài: về đầu để lần sau phát lại từ câu 1 */
+  };
+  u.onerror = function(){ if(dkUtter === u){ dkUtter = null; dkPlaying = false; dkMarkPlaying(-1); } };
+  dkUtter = u;
+  try{ speechSynthesis.speak(u); }catch(e){ dkUtter = null; }
+}
+function dkTogglePlay(){
+  if(dkUtter){ dkStop(); return; }
+  dkPlaying = true;
+  var pb = document.getElementById("dkPlayBtn");
+  if(pb) pb.textContent = "■ Dừng";
+  dkSpeak(dkIdx >= 0 ? dkIdx : 0);
+}
+function dkJump(d){
+  if(!dkCur) return;
+  var n = (dkCur.sentences || []).length;
+  var ni = dkIdx < 0 ? 0 : dkIdx + d;
+  if(ni < 0) ni = 0;
+  if(ni >= n) ni = n - 1;
+  dkSpeak(ni);
+}
+function dkTokHTML(furi, jp){
+  var segs = (furi && furi.length) ? furi : [[jp, null]];
+  var out = "", pos = 0;
+  segs.forEach(function(seg){
+    var surf = seg[0] || "", rd = seg[1];
+    var inner = (dkFuri && rd) ? "<ruby>" + esc(surf) + "<rt>" + esc(rd) + "</rt></ruby>" : esc(surf);
+    out += '<span class="dk-tok" data-s="' + pos + '" data-e="' + (pos + surf.length) + '">' + inner + "</span>";
+    pos += surf.length;
+  });
+  return out;
+}
+function dkPassageHTML(){
+  return (dkCur.sentences || []).map(function(s, i){
+    return '<div class="dk-sent" data-dsi="' + i + '" title="Bấm để nghe câu này">' +
+      '<div class="dk-jp jp">' + dkTokHTML(s.furi, s.jp) + "</div>" +
+      '<div class="dk-vi">' + esc(s.vi || "") + "</div></div>";
+  }).join("");
+}
+function dkRenderPassage(){
+  var box = document.getElementById("dkPass");
+  if(!box) return;
+  box.innerHTML = dkPassageHTML();
+  box.classList.toggle("show-vi", dkVi);
+  if(dkIdx >= 0) dkMarkPlaying(dkIdx);
+  Object.keys(dkAnswered).forEach(function(k){
+    var q = (dkCur.quiz || [])[k];
+    if(q && q.evidence) dkHighlightEvidence(q.evidence);
+  });
+}
+function dkQuizHTML(){
+  return (dkCur.quiz || []).map(function(q, qi){
+    return '<div class="qcard"><div class="qn">Câu hỏi ' + (qi + 1) + "/" + dkCur.quiz.length + "</div>" +
+      '<p class="qtext jp">' + esc(q.q) + '</p><div class="opts dk-quiz" id="dkOpts' + qi + '">' +
+      (q.options || []).map(function(o, oi){
+        return '<button type="button" class="opt" data-dkq="' + qi + '" data-dko="' + oi + '"><span class="no">' + (oi + 1) +
+          '</span><span class="jp">' + esc(o) + "</span></button>";
+      }).join("") + '</div><div class="qresult" id="dkRes' + qi + '"></div></div>';
+  }).join("");
+}
+function dkHighlightEvidence(ev){
+  var sents = dkCur.sentences || [];
+  for(var i = 0; i < sents.length; i++){
+    var jp = sents[i].jp || "", at = jp.indexOf(ev);
+    if(at < 0) continue;
+    var end = at + ev.length;
+    var box = document.querySelector('.dk-sent[data-dsi="' + i + '"]');
+    if(!box) return;
+    box.querySelectorAll(".dk-tok").forEach(function(t){
+      var s = parseInt(t.getAttribute("data-s"), 10), e = parseInt(t.getAttribute("data-e"), 10);
+      if(s < end && e > at) t.classList.add("dk-ev");
+    });
+    return;
+  }
+}
+function dkAnswer(qi, oi){
+  if(dkAnswered[qi] != null) return;
+  var q = (dkCur.quiz || [])[qi];
+  if(!q) return;
+  dkAnswered[qi] = oi;
+  var ok = oi === q.answer;
+  var box = document.getElementById("dkOpts" + qi);
+  if(box) box.querySelectorAll(".opt").forEach(function(o){
+    o.disabled = true;
+    var x = parseInt(o.getAttribute("data-dko"), 10);
+    if(x === q.answer) o.classList.add("dk-ok");
+    else if(x === oi) o.classList.add("dk-no");
+  });
+  var res = document.getElementById("dkRes" + qi);
+  if(res){
+    res.className = "qresult show " + (ok ? "right" : "wrong");
+    res.innerHTML = "<b>" + (ok ? "Chính xác! ✓" : "Chưa đúng ✗") + "</b> · Đáp án đúng: <b>" + esc((q.options || [])[q.answer]) + "</b>" +
+      (q.explain ? '<div class="qe">' + esc(q.explain) + "</div>" : "") +
+      (q.tip ? '<div class="qv">Mẹo nhận biết: ' + esc(q.tip) + "</div>" : "") +
+      '<div style="margin-top:10px"><button class="btn ghost sm" type="button" data-dkretry="' + qi + '">Làm lại</button></div>';
+    var rb = res.querySelector("[data-dkretry]");
+    if(rb) rb.addEventListener("click", function(){ dkResetQuiz(qi); });
+  }
+  if(q.evidence) dkHighlightEvidence(q.evidence);
+}
+function dkResetQuiz(qi){
+  delete dkAnswered[qi];
+  var box = document.getElementById("dkOpts" + qi);
+  if(box) box.querySelectorAll(".opt").forEach(function(o){ o.disabled = false; o.classList.remove("dk-ok", "dk-no"); });
+  var res = document.getElementById("dkRes" + qi);
+  if(res){ res.className = "qresult"; res.innerHTML = ""; }
+  document.querySelectorAll(".dk-tok.dk-ev").forEach(function(t){ t.classList.remove("dk-ev"); });
+  Object.keys(dkAnswered).forEach(function(k){
+    var q = (dkCur.quiz || [])[k];
+    if(q && q.evidence) dkHighlightEvidence(q.evidence);
+  });
+}
+function dkGrammarIndex(p, lv){
+  var arr = (window.GRAMMAR_DATA || {})[lv] || [];
+  for(var i = 0; i < arr.length; i++){ if(arr[i] && arr[i].p === p) return i; }
+  return -1;
+}
+function dkSideHTML(){
+  var h = "";
+  if(dkCur.vocab && dkCur.vocab.length){
+    h += '<h3 style="margin:28px 0 6px">Từ vựng trọng điểm</h3><div class="card" style="padding:6px 20px">' +
+      dkCur.vocab.map(function(v){
+        return '<div class="vrow"><span class="vw jp">' + esc(v.w) + '</span><span class="vr jp">' + esc(v.r || "") + "</span>" +
+          (v.hv ? '<span class="dk-hv">' + esc(v.hv) + "</span>" : "") +
+          '<span class="vm">' + esc(v.vi || "") + "</span></div>";
+      }).join("") + "</div>";
+  }
+  if(dkCur.grammar && dkCur.grammar.length){
+    h += '<h3 style="margin:28px 0 6px">Mẫu ngữ pháp trong bài</h3>';
+    dkCur.grammar.forEach(function(g){
+      var lv = g.lv || dkCur.level;
+      h += '<div class="card" style="padding:14px 20px;margin-bottom:10px"><div class="jp" style="font-weight:800;font-size:16.5px">' + esc(g.p) +
+        ' <span class="tag">' + esc(lv) + "</span></div>" +
+        '<p style="margin:6px 0 0">' + esc(g.vi || "") + "</p>" +
+        (g.ex ? '<p class="jp" style="margin:8px 0 0">' + esc(g.ex) + '</p><p style="margin:2px 0 0;color:var(--muted);font-size:14px">' + esc(g.exVi || "") + "</p>" : "") +
+        '<p style="margin:8px 0 0"><a href="#/nguphap/' + esc(lv) + '" data-dkgr="' + esc(g.p) + '" data-dklv="' + esc(lv) + '">Xem mẫu này trong sổ tay ngữ pháp →</a></p></div>';
+    });
+  }
+  return h;
+}
+function renderDokkaiItem(id){
+  $app.innerHTML = loadingHTML("Đang tải bài đọc…");
+  ensureDokkai().then(function(){
+    var p = dkById(id);
+    if(!p){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy bài đọc này.</div>'; return; }
+    document.title = p.title + " — Đọc hiểu AI " + p.level + " | SoraKanji";
+    dkCur = p; dkIdx = -1; dkPlaying = false; dkRepeat = false; dkRate = 1; dkFuri = false; dkVi = false; dkUtter = null; dkAnswered = {};
+    var same = dkByLevel(p.level), pos = 0;
+    for(var k = 0; k < same.length; k++){ if(same[k].id === p.id) pos = k; }
+    var prev = pos > 0 ? same[pos - 1] : null, next = pos < same.length - 1 ? same[pos + 1] : null;
+    var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / ' +
+      '<a href="#/dokkai">Đọc hiểu AI</a> / ' + esc(p.level) + "</div>" +
+      '<h1 class="jp" style="font-size:26px">' + esc(p.title) + "</h1>" +
+      "<p>" + esc(p.titleVi || "") + " · " + esc(p.level) + " · " + (p.sentences || []).length + " câu · " + (p.quiz || []).length + " câu hỏi</p></div>" +
+      '<div style="max-width:800px;padding-bottom:36px">' +
+      '<p style="margin:0 0 4px"><a class="btn ghost sm" href="#/dokkai">← Về danh sách</a></p>' +
+      '<div class="dk-bar" id="dkBar">' +
+      '<button class="btn sm" id="dkPlayBtn" type="button">▶ Phát toàn bài</button>' +
+      '<button class="btn ghost sm" id="dkPrevBtn" type="button">← Câu trước</button>' +
+      '<button class="btn ghost sm" id="dkNextBtn" type="button">Câu sau →</button>' +
+      '<button class="btn ghost sm dk-tgl" id="dkRepBtn" type="button">Lặp câu</button>' +
+      '<button class="btn ghost sm" id="dkRateBtn" type="button">1x</button>' +
+      '<button class="btn ghost sm dk-tgl" id="dkFuriBtn" type="button">Furigana</button>' +
+      '<button class="btn ghost sm dk-tgl" id="dkViBtn" type="button">Bản dịch</button>' +
+      '<span class="dk-note" id="dkNote"></span></div>' +
+      '<div class="card" style="padding:18px 22px"><div class="dk-pass" id="dkPass"></div></div>' +
+      '<h2 class="secttl" style="margin-top:28px">Kiểm tra đọc hiểu</h2>' +
+      dkQuizHTML() +
+      dkSideHTML() +
+      '<div class="kd-nav" style="margin-top:24px">' +
+      (prev ? '<a class="btn ghost sm" href="#/dokkai/' + esc(prev.id) + '">← Bài trước</a>' : "<span></span>") +
+      (next ? '<a class="btn ghost sm" href="#/dokkai/' + esc(next.id) + '">Bài tiếp →</a>' : "<span></span>") +
+      "</div></div>";
+    $app.innerHTML = h;
+    dkRenderPassage();
+    document.getElementById("dkPlayBtn").addEventListener("click", dkTogglePlay);
+    document.getElementById("dkPrevBtn").addEventListener("click", function(){ dkJump(-1); });
+    document.getElementById("dkNextBtn").addEventListener("click", function(){ dkJump(1); });
+    document.getElementById("dkRepBtn").addEventListener("click", function(){ dkRepeat = !dkRepeat; this.classList.toggle("on", dkRepeat); });
+    document.getElementById("dkRateBtn").addEventListener("click", function(){
+      var i = DK_RATES.indexOf(dkRate);
+      dkRate = DK_RATES[(i + 1) % DK_RATES.length];
+      this.textContent = (dkRate === 1 ? "1x" : dkRate + "x");
+    });
+    document.getElementById("dkFuriBtn").addEventListener("click", function(){ dkFuri = !dkFuri; this.classList.toggle("on", dkFuri); dkRenderPassage(); });
+    document.getElementById("dkViBtn").addEventListener("click", function(){
+      dkVi = !dkVi;
+      this.classList.toggle("on", dkVi);
+      var box = document.getElementById("dkPass");
+      if(box) box.classList.toggle("show-vi", dkVi);
+    });
+    document.getElementById("dkPass").addEventListener("click", function(e){
+      var s = e.target.closest ? e.target.closest(".dk-sent") : null;
+      if(!s) return;
+      dkSpeak(parseInt(s.getAttribute("data-dsi"), 10));
+    });
+    $app.querySelectorAll("[data-dkq]").forEach(function(b){
+      b.addEventListener("click", function(){ dkAnswer(parseInt(b.getAttribute("data-dkq"), 10), parseInt(b.getAttribute("data-dko"), 10)); });
+    });
+    /* Nâng link ngữ pháp lên đúng mẫu (best-effort, không chặn trang). */
+    ensureGrammar().then(function(){
+      document.querySelectorAll("[data-dkgr]").forEach(function(a){
+        var gi = dkGrammarIndex(a.getAttribute("data-dkgr"), a.getAttribute("data-dklv"));
+        if(gi >= 0) a.setAttribute("href", "#/nguphap/" + a.getAttribute("data-dklv") + "/" + gi);
+      });
+    }).catch(function(){});
+  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
 }
 
 /* ================= ĐỌC HIỂU ================= */
@@ -5802,6 +6160,11 @@ function skGateForHash(hash){
             segs[1] && LEVELS.indexOf(segs[1]) >= 0){
     lv = segs[1];
     label = ({tuvung: "Từ vựng ", nguphap: "Ngữ pháp ", thi: "Đề thi JLPT ", nghe: "Luyện nghe ", doc: "Đọc hiểu "})[seg] + lv;
+  } else if(seg === "dokkai" && segs[1]){
+    /* Đọc hiểu AI: cấp nằm trong tiền tố id bài (dk-n4-01 → N4). Thư viện
+       #/dokkai không có segs[1] nên luôn mở (thẻ N4+ hiện 🔒 trong đó). */
+    var dm = /^dk-(n[1-5])-/i.exec(segs[1]);
+    if(dm){ lv = dm[1].toUpperCase(); label = "Đọc hiểu AI " + lv; }
   }
   if(lv && skLevelLocked(lv)) return {lv: lv, label: label};
   return null;
@@ -6418,6 +6781,7 @@ function route(){
   if(skSaleTimer){ clearInterval(skSaleTimer); skSaleTimer = null; }
   if(kdAnimTimer){ clearTimeout(kdAnimTimer); kdAnimTimer = null; }
   deckTeardown();
+  dkStop(); /* dừng giọng đọc Đọc hiểu AI khi chuyển trang */
   window.scrollTo(0, 0);
   /* Paywall: nội dung N4+ chỉ mở cho Premium (xem skGateForHash). */
   var gate = skGateForHash(location.hash || "#/");
@@ -6463,6 +6827,11 @@ function route(){
     if(segs[1] && segs[2] != null) renderListenItem(segs[1], segs[2]);
     else if(segs[1]) renderListenLevel(segs[1]);
     else renderListenHome();
+    return;
+  }
+  if(seg === "dokkai"){
+    if(segs[1]) renderDokkaiItem(segs[1]);
+    else renderDokkaiHome(query.lv);
     return;
   }
   if(seg === "doc"){
