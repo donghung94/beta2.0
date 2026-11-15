@@ -5798,6 +5798,12 @@ function renderLockedPage(lv, label, targetHash){
   if(loginBtn) loginBtn.addEventListener("click", function(){
     openAuthModalContinue(function(){ skLoadPremium(true); });
   });
+  /* Chưa đăng nhập: tự mở bảng đăng nhập (user yêu cầu 2026-11-15) — chờ
+     800ms để phiên lưu sẵn (nếu có) kịp khôi phục, tránh hiện bảng oan
+     với người đã đăng nhập; chỉ mở khi vẫn còn ở trang khóa này. */
+  if(!u) setTimeout(function(){
+    if(!webCurrentUser() && document.getElementById("lkCheck")) openAuthModalContinue(function(){ skLoadPremium(true); });
+  }, 800);
   /* Kiểm tra lại Premium (trường hợp vừa kích hoạt / vừa đăng nhập):
      nếu đã Premium thì tự về trang đã định. */
   skLoadPremium(true).then(function(){
@@ -5807,6 +5813,13 @@ function renderLockedPage(lv, label, targetHash){
 }
 /* Hộp thoại khóa cho cú bấm trong trang (tab cấp kanji…) — không rời trang. */
 function skLockedPrompt(label){
+  /* Chưa đăng nhập: hiện bảng đăng nhập trước (user yêu cầu 2026-11-15);
+     đăng nhập xong sẽ tải lại Premium — tài khoản Premium thì trang tự
+     vẽ lại không còn khóa, chưa Premium thì bấm lại để xem gói. */
+  if(!webCurrentUser()){
+    openAuthModalContinue(function(){ skLoadPremium(true); });
+    return;
+  }
   showModal("Nội dung Premium",
     label + " thuộc gói Premium. Gói miễn phí mở toàn bộ nội dung N5 ở mọi mục — nâng cấp để mở N4–N1 trên cả web và app điện thoại.",
     "Xem gói Premium", "Để sau", function(){ goHash("#/nangcap"); });
