@@ -1,8 +1,10 @@
 // SoraKanji Đọc hiểu AI v1 — 10 bài đọc (N5–N1), tạo bằng Gemini free key,
 // kiểm chứng cấp độ độc lập (xem CONTENT-REPORT.md). Nạp lười: mobile/assets/dokkai-data.js
+// v2 (2026-11-15): thêm field img — ảnh minh họa tại mobile/assets/dokkai/<id>.jpg
 window.DOKKAI_PASSAGES = [
  {
   "id": "dk-n5-01",
+  "img": "dk-n5-01.jpg",
   "level": "N5",
   "title": "わたしの せんせい",
   "titleVi": "Thầy giáo của tôi",
@@ -477,6 +479,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n5-02",
+  "img": "dk-n5-02.jpg",
   "level": "N5",
   "title": "はじめての すし",
   "titleVi": "Lần đầu ăn sushi",
@@ -959,6 +962,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n4-01",
+  "img": "dk-n4-01.jpg",
   "level": "N4",
   "title": "駅前の 本屋",
   "titleVi": "Hiệu sách trước ga",
@@ -1773,6 +1777,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n4-02",
+  "img": "dk-n4-02.jpg",
   "level": "N4",
   "title": "花見に 行きました",
   "titleVi": "Tôi đã đi ngắm hoa anh đào",
@@ -2537,6 +2542,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n3-01",
+  "img": "dk-n3-01.jpg",
   "level": "N3",
   "title": "コンビニの おにぎり",
   "titleVi": "Cơm nắm ở cửa hàng tiện lợi",
@@ -3475,6 +3481,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n3-02",
+  "img": "dk-n3-02.jpg",
   "level": "N3",
   "title": "自転車で 通勤",
   "titleVi": "Đạp xe đi làm",
@@ -4111,6 +4118,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n2-01",
+  "img": "dk-n2-01.jpg",
   "level": "N2",
   "title": "せんとうの 文化",
   "titleVi": "Văn hóa nhà tắm công cộng (Sento)",
@@ -5517,6 +5525,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n2-02",
+  "img": "dk-n2-02.jpg",
   "level": "N2",
   "title": "方言の おもしろさ",
   "titleVi": "Cái hay của phương ngữ",
@@ -7019,6 +7028,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n1-01",
+  "img": "dk-n1-01.jpg",
   "level": "N1",
   "title": "手書きの手紙",
   "titleVi": "Thư viết tay",
@@ -8165,6 +8175,7 @@ window.DOKKAI_PASSAGES = [
  },
  {
   "id": "dk-n1-02",
+  "img": "dk-n1-02.jpg",
   "level": "N1",
   "title": "俳句と季節",
   "titleVi": "Thơ haiku và bốn mùa",
