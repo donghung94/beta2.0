@@ -16349,9 +16349,15 @@ function furiHTML(text){
        redirect trên mobile bị mất phiên sau khi Google trả về (2 bản
        sửa vẫn không được, test trực tiếp 14:17 và 14:30 JST).
        Popup giữ nguyên trang nên không cần getRedirectResult. */
-    auth.signInWithPopup(provider).then(function(){
+    auth.signInWithPopup(provider).then(function(cred){
       loginSetBusy(false);
-      closeLogin(); /* onAuthStateChanged cũng bắn user → applyAuthUser cập nhật giao diện */
+      /* Ghi phiên ngay từ credential — giống doLoginSubmit: listener
+         onAuthStateChanged trên mobile bắn chậm/không bắn (đã gây lỗi
+         2026-11-15: popup xong bảng đóng nhưng app vẫn "Chưa đăng nhập"),
+         nên không được trông chờ vào listener. Listener bắn lại sau cũng
+         chỉ ghi đè y hệt (applyAuthUser là lũy đẳng). */
+      if(cred && cred.user) applyAuthUser(cred.user);
+      closeLogin();
     }).catch(function(err){
       loginSetBusy(false);
       loginShowErr(skAuthErrorVI(err));
@@ -16454,7 +16460,12 @@ function furiHTML(text){
       auth.onAuthStateChanged(function(user){ applyAuthUser(user); });
     }
     try{
-      auth.getRedirectResult().then(function(){ startAuthListener(); }).catch(function(err){
+      auth.getRedirectResult().then(function(result){
+        /* Ghi phiên ngay từ credential nếu còn kết quả redirect cũ
+           (giống doLoginSubmit — không trông chờ listener). */
+        if(result && result.user) applyAuthUser(result.user);
+        startAuthListener();
+      }).catch(function(err){
         skRedirectErr = skAuthErrorVI(err);
         /* Bảng có thể đã mở trước (timeout 3s đăng ký listener sớm): hiện
            lỗi ngay, không chờ lần mở bảng sau. */
@@ -16463,6 +16474,18 @@ function furiHTML(text){
       });
       setTimeout(startAuthListener, 3000);
     }catch(e){ startAuthListener(); }
+    /* An toàn khi listener bắn chậm/không bắn (lỗi 2026-11-15): sau 4s,
+       nếu Firebase đã có user mà app chưa ghi phiên thì ghi trực tiếp từ
+       currentUser; nếu không có user mà bảng chưa mở thì mở bảng (bắt
+       buộc đăng nhập). applyAuthUser/openLogin đều lũy đẳng nên gọi thừa
+       vô hại. */
+    setTimeout(function(){
+      try{
+        var u = auth.currentUser;
+        if(u && !signedInEmail) applyAuthUser(u);
+        else if(!u && !signedInEmail && loginSheet && !loginSheet.classList.contains("open")) openLogin();
+      }catch(_){}
+    }, 4000);
     /* Có phiên sẵn (mở lại app): onAuthStateChanged tự bắn ngay, không cần
        gọi thêm — Premium đọc ở listener của paywall. */
   }
