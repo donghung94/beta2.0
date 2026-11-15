@@ -2241,6 +2241,16 @@
   .googlebtn{width:100%; min-height:50px; display:flex; align-items:center; justify-content:center; gap:10px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-family:inherit; font-size:15px; font-weight:700; color:var(--ink); cursor:pointer; margin-bottom:12px;}
   .googlebtn:disabled{opacity:.6; cursor:default;}
   .googlebtn svg{flex:none;}
+  .loginfield{display:flex; align-items:center; gap:10px; box-sizing:border-box; min-height:50px; margin:2px 0 10px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg);}
+  .loginfield:focus-within{border-color:var(--sky);}
+  .login-ic{flex:none; display:flex; color:var(--ink-3);}
+  .login-ic svg{display:block;}
+  .logininput{flex:1; min-width:0; box-sizing:border-box; min-height:46px; padding:0; border:0; border-radius:0; background:transparent; color:var(--ink); font-family:inherit; font-size:15px;}
+  .logininput:focus{outline:none; border-color:transparent;}
+  .auth-or{display:flex; align-items:center; gap:10px; color:var(--ink-2); font-size:12.5px; font-weight:600; margin:2px 0 12px;}
+  .auth-or:before,.auth-or:after{content:""; flex:1; height:1px; background:var(--line);}
+  #loginSheet #loginEmailLink{background:#1e88e5; color:#fff;} /* nút Gửi link đăng nhập xanh như mẫu (cùng mã màu với --blue của bản web) */
+  #loginSheet #loginEmailLink:disabled{opacity:.6; cursor:wait;}
   .sturow{padding:12px 0; border-bottom:1px solid var(--line);}
   .sturow:last-child{border-bottom:none;}
   .stu-top{display:flex; align-items:center; gap:11px;}
@@ -3576,7 +3586,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="sheetgrid" id="sheetGrid"></div>
     </div>
 
-    <!-- đăng nhập Firebase Auth thật (chỉ Google) -->
+    <!-- đăng nhập Firebase Auth thật (Google + link email, không mật khẩu) -->
     <div class="sheet" id="loginSheet" aria-hidden="true">
       <div class="grab"></div>
       <img class="login-mascot" src="assets/chibi.png" alt="">
@@ -3584,7 +3594,16 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <p class="snote">Đăng nhập để đồng bộ tiến trình học của bạn.</p>
       <div id="loginFormWrap">
         <button class="googlebtn" id="loginGoogle" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.5 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg><span>Tiếp tục bằng Google</span></button>
+        <div class="auth-or"><span>HOẶC</span></div>
+        <label class="loginfield">
+          <span class="login-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>
+          <input class="logininput" id="loginEmail" type="email" inputmode="email" autocomplete="email" placeholder="Email" aria-label="Email đăng nhập" />
+        </label>
         <p id="loginMsg" style="font-size:13px; color:var(--red); font-weight:700; min-height:19px; margin:6px 0 10px; line-height:1.5;"></p>
+        <p id="loginOk" hidden style="font-size:13px; color:var(--teal); font-weight:700; margin:6px 0 10px; line-height:1.5;"></p>
+        <div style="display:flex; gap:10px;">
+          <button class="sheetbtn" id="loginEmailLink" type="button" style="flex:1;">Gửi link đăng nhập</button>
+        </div>
       </div>
       <div id="loginAcctWrap" hidden>
         <p class="snote">Bạn đang đăng nhập với <b id="loginAcctEmail"></b><span id="loginAcctAdmin"></span></p>
@@ -17440,16 +17459,17 @@ function furiHTML(text){
      sẵn trong file (giá trị giống hệt SK_FB_CONFIG của web, không khai báo
      thêm config nào). Google: signInWithPopup — giống bản web (redirect
      bị mất phiên trên mobile, đã đổi 2026-11-15 sau 2 bản sửa thất bại;
-     getRedirectResult chỉ còn là an toàn cho redirect cũ). Email: đăng nhập / đăng ký
-     chung 1 form. Mọi thay đổi phiên đều đi qua onAuthStateChanged dưới
+     getRedirectResult chỉ còn là an toàn cho redirect cũ). Email: đăng nhập
+     không mật khẩu bằng link gửi qua email (không ô mật khẩu, không đăng
+     ký). Mọi thay đổi phiên đều đi qua onAuthStateChanged dưới
      đây — nó là điểm ghi DUY NHẤT của signedInEmail / window.SK_USER /
      avatar Google. Premium: khối paywall ở đầu file đã tự đọc Firestore
      khi đăng nhập và xóa cache khi đăng xuất (listener riêng của nó); ở đây
      chỉ dọn thêm cache khi đăng xuất để chắc chắn không còn Premium cũ sau
      khi đổi tài khoản. LƯU Ý: đăng nhập Google KHÔNG chạy trên link xem
      trước githack (Firebase chặn domain lạ — hành vi đúng, không phải lỗi);
-     thử thật trên sorakanji.com/mobile/ sau khi đẩy. Đăng nhập email/mật
-     khẩu thì chạy cả trên bản xem trước. */
+     thử thật trên sorakanji.com/mobile/ sau khi đẩy. Đăng nhập bằng link
+     email cũng chạy trên bản xem trước (miễn link mở về sorakanji.com). */
   var SK_ADMIN_EMAIL = "nongaphao@gmail.com";
   function skAuth(){
     try{
@@ -17481,20 +17501,36 @@ function furiHTML(text){
       "auth/redirect-operation-pending": "Đang chờ kết quả đăng nhập Google — bạn đợi giây lát rồi thử lại nhé.",
       "auth/unauthorized-domain": "Trang này chưa được cấp phép đăng nhập Google — bạn thử trên sorakanji.com sau khi app được đẩy lên nhé.",
       "auth/operation-not-allowed": "Cách đăng nhập này chưa được bật — bạn thử cách khác nhé.",
-      "auth/user-disabled": "Tài khoản này đã bị khóa — bạn liên hệ hỗ trợ SoraKanji để được giúp nhé."
+      "auth/user-disabled": "Tài khoản này đã bị khóa — bạn liên hệ hỗ trợ SoraKanji để được giúp nhé.",
+      "auth/invalid-action-code": "Link đăng nhập đã hết hạn hoặc đã dùng rồi — bạn nhập email để nhận link mới nhé.",
+      "auth/expired-action-code": "Link đăng nhập đã hết hạn — bạn nhập email để nhận link mới nhé.",
+      "auth/quota-exceeded": "Đã gửi quá nhiều link đăng nhập — bạn đợi ít phút rồi thử lại nhé."
     };
     return map[code] || ("Chưa đăng nhập được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.");
   }
   /* ---------- Bảng đăng nhập (loginSheet) ---------- */
   var loginSheet = document.getElementById("loginSheet");
   var loginScrim = document.getElementById("sheetScrim");
+  var loginEmailInput = document.getElementById("loginEmail");
+  var loginEmailLinkBtn = document.getElementById("loginEmailLink");
   var loginMsgEl = document.getElementById("loginMsg");
+  var loginOkEl = document.getElementById("loginOk");
   var skRedirectErr = ""; /* lỗi từ getRedirectResult (nếu có) — hiện khi mở bảng */
+  var skEmailLinkErr = ""; /* lỗi hoàn tất link email lúc mở app (bảng chưa mở) — hiện khi mở bảng */
+  var skPendingEmailLink = ""; /* URL link đăng nhập qua email đang chờ hoàn tất (mở link ở trình duyệt khác, chưa tìm thấy email đã lưu) */
+  var SK_EMAIL_LINK_KEY = "sk_email_link_email"; /* email đã gửi link — lưu local để hoàn tất đăng nhập trên cùng trình duyệt */
   function loginMsg(t){ if(loginMsgEl) loginMsgEl.textContent = t || ""; }
-  function loginShowErr(msg){ loginMsg(msg); }
+  function loginOk(t){ if(loginOkEl){ loginOkEl.textContent = t || ""; loginOkEl.hidden = !t; } }
+  function loginShowErr(msg){ loginOk(""); loginMsg(msg); }
+  function loginShowOk(msg){ loginMsg(""); loginOk(msg); }
   function loginSetBusy(busy){
     var gBtn = document.getElementById("loginGoogle");
     if(gBtn) gBtn.disabled = busy;
+    if(loginEmailLinkBtn){
+      loginEmailLinkBtn.disabled = busy;
+      loginEmailLinkBtn.textContent = busy ? "Đang xử lý…" : (skPendingEmailLink ? "Hoàn tất đăng nhập" : "Gửi link đăng nhập");
+    }
+    if(loginEmailInput) loginEmailInput.disabled = busy;
   }
   function openLogin(){
     var formWrap = document.getElementById("loginFormWrap");
@@ -17512,8 +17548,15 @@ function furiHTML(text){
     }else{
       if(formWrap) formWrap.hidden = false;
       if(acctWrap) acctWrap.hidden = true;
-      loginMsg("");
-      if(skRedirectErr){ loginMsg(skRedirectErr); skRedirectErr = ""; }
+      loginMsg(""); loginOk("");
+      if(loginEmailLinkBtn) loginEmailLinkBtn.textContent = skPendingEmailLink ? "Hoàn tất đăng nhập" : "Gửi link đăng nhập";
+      if(skPendingEmailLink){
+        /* Link đăng nhập mở ở trình duyệt khác (không tìm thấy email đã lưu):
+           hỏi lại email rồi hoàn tất bằng nút "Hoàn tất đăng nhập". */
+        loginMsg("Nhập lại email bạn đã dùng để nhận link đăng nhập nhé.");
+        if(loginEmailInput) loginEmailInput.focus();
+      }else if(skEmailLinkErr){ loginMsg(skEmailLinkErr); skEmailLinkErr = ""; }
+      else if(skRedirectErr){ loginMsg(skRedirectErr); skRedirectErr = ""; }
     }
     loginSheet.classList.add("open");
     loginSheet.setAttribute("aria-hidden", "false");
@@ -17550,6 +17593,77 @@ function furiHTML(text){
       loginSetBusy(false);
       loginShowErr(skAuthErrorVI(err));
     });
+  }
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  /* Đăng nhập không mật khẩu bằng link email (phương án (b), user chốt
+     2026-11-15): nhập email → Firebase gửi link → bấm link trong hộp thư
+     là vào, không cần đăng ký/mật khẩu. Nút này làm 2 việc tùy trạng thái:
+     chưa có link chờ → gửi link mới; đã có link chờ (mở link ở trình
+     duyệt khác) → hoàn tất đăng nhập bằng email vừa nhập. */
+  function doEmailLink(){
+    var auth = skAuth();
+    if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
+    var email = loginEmailInput ? loginEmailInput.value.trim() : "";
+    if(!email){ loginShowErr("Bạn chưa nhập email."); if(loginEmailInput) loginEmailInput.focus(); return; }
+    if(!validEmail(email)){ loginShowErr("Email chưa đúng định dạng — bạn kiểm tra lại email nhé."); if(loginEmailInput) loginEmailInput.focus(); return; }
+    if(skPendingEmailLink){
+      /* Hoàn tất link đang chờ bằng email vừa nhập (không gửi link mới). */
+      loginSetBusy(true);
+      completeEmailLink(auth, email, skPendingEmailLink);
+      return;
+    }
+    loginSetBusy(true);
+    try{ window.localStorage.setItem(SK_EMAIL_LINK_KEY, email); }catch(_){}
+    auth.sendSignInLinkToEmail(email, {
+      url: "https://sorakanji.com/mobile/",
+      handleCodeInApp: true
+    }).then(function(){
+      loginSetBusy(false);
+      loginShowOk("Đã gửi link đăng nhập tới " + email + ". Mở hộp thư và bấm vào link để vào.");
+    }).catch(function(err){
+      loginSetBusy(false);
+      loginShowErr(skAuthErrorVI(err));
+    });
+  }
+  /* Hoàn tất đăng nhập bằng link email: xóa email đã lưu + dọn query khỏi
+     URL sau khi vào (link chỉ dùng được 1 lần, để query lại sẽ báo lỗi khi
+     tải lại trang). */
+  function completeEmailLink(auth, email, linkHref){
+    auth.signInWithEmailLink(email, linkHref).then(function(cred){
+      skPendingEmailLink = "";
+      loginSetBusy(false);
+      try{ window.localStorage.removeItem(SK_EMAIL_LINK_KEY); }catch(_){}
+      try{ window.history.replaceState(null, "", window.location.pathname + window.location.hash); }catch(_){}
+      if(cred && cred.user) applyAuthUser(cred.user);
+      closeLogin();
+    }).catch(function(err){
+      skPendingEmailLink = "";
+      loginSetBusy(false);
+      skEmailLinkErr = skAuthErrorVI(err);
+      if(loginSheet && loginSheet.classList.contains("open")){ loginShowErr(skEmailLinkErr); skEmailLinkErr = ""; }
+    });
+  }
+  /* Xử lý link đăng nhập qua email khi app mở lên — chạy TRƯỚC khi đăng ký
+     listener onAuthStateChanged (xem initMobileAuth): cùng trình duyệt thì
+     hoàn tất ngay bằng email đã lưu; trình duyệt khác thì để lại trạng thái
+     chờ, bảng đăng nhập sẽ hỏi lại email (xem openLogin). */
+  function handleEmailLinkOnLoad(auth){
+    try{
+      if(!auth.isSignInWithEmailLink(window.location.href)) return;
+      if(auth.currentUser){
+        /* Đã có phiên: link không còn cần nữa, dọn query cho sạch URL. */
+        try{ window.history.replaceState(null, "", window.location.pathname + window.location.hash); }catch(_){}
+        return;
+      }
+      var savedEmail = "";
+      try{ savedEmail = window.localStorage.getItem(SK_EMAIL_LINK_KEY) || ""; }catch(_){}
+      if(savedEmail){
+        loginSetBusy(true);
+        completeEmailLink(auth, savedEmail, window.location.href);
+      }else{
+        skPendingEmailLink = window.location.href;
+      }
+    }catch(_){}
   }
   function doLogout(){
     var auth = skAuth();
@@ -17629,6 +17743,11 @@ function furiHTML(text){
   function initMobileAuth(){
     var auth = skAuth();
     if(!auth) return;
+    /* Đăng nhập bằng link email (nếu app mở lên từ link trong hộp thư):
+       hoàn tất ngay nếu cùng trình duyệt, hoặc để lại trạng thái chờ để
+       bảng đăng nhập hỏi lại email — chạy trước listener để lần bắn đầu
+       đã có thể là user thay vì null. */
+    handleEmailLinkOnLoad(auth);
     /* KHÔNG gọi setPersistence(LOCAL) ở đây: LOCAL đã là mặc định của
        Firebase Auth, và gọi nó (bất đồng bộ) ngay trước getRedirectResult
        có thể làm mất kết quả redirect Google — user báo 2026-11-15:
@@ -17680,6 +17799,8 @@ function furiHTML(text){
   document.getElementById("acctLoginBtn").addEventListener("click", openLogin);
   document.getElementById("acctLogoutBtn").addEventListener("click", doLogout);
   document.getElementById("loginGoogle").addEventListener("click", doGoogleLogin);
+  document.getElementById("loginEmailLink").addEventListener("click", doEmailLink);
+  if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doEmailLink(); } });
   document.getElementById("loginCancel2").addEventListener("click", closeLogin);
   document.getElementById("loginLogout").addEventListener("click", doLogout);
   if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open") && signedInUid) closeLogin(); });
