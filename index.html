@@ -1013,6 +1013,19 @@ body.plain{background:#fff; background-image:none}
   }
 }
 
+@media (max-width:480px){
+  /* Man dien thoai hep: trang chu het tran 10px + nut Dang nhap het bi cat.
+     (1) .home-cols > * min-width:0 — grid item mac dinh min-width:auto nen
+     min-content cua o tim kiem (~316px, do input mac dinh size=20) ep track
+     1fr rong 316px trong khi khung chi 292px o 320px.
+     (2) .hdr-app chi hien icon — cum phai header (Android + App Store +
+     chuong + Dang nhap ~351px) vuot khung 300px o 320px, day nut Dang nhap
+     lech 35px. Chu nut la text node nen font-size:0 an di nhung van con
+     trong cay tro nang; svg 15px giu nguyen. */
+  .home-cols > *{min-width:0}
+  .hdr-app{font-size:0; gap:0; padding:6px 8px}
+}
+
 /* ===== Đồng bộ dữ liệu mobile: furigana, bài tập ngữ pháp, trợ từ, chia thể ===== */
 ruby{ruby-align:center}
 ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
