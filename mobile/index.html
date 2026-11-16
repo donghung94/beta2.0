@@ -109,7 +109,7 @@
   .screen{
     position:absolute; inset:0; overflow-y:auto; overscroll-behavior:contain;
     /* padding-bottom 73px (= --tabh 49 + 24): noi dung cuon xuyen qua duoi thanh
-       tab noi; muc cuoi cung van cuon len khoi dinh thanh tab (60px) duoc 13px. */
+       tab noi; muc cuoi cung van cuon len khoi dinh thanh tab (54px) duoc 19px. */
     padding:10px 18px calc(var(--tabh) + 24px); display:none; scrollbar-width:none;
   }
   .screen::-webkit-scrollbar{display:none;}
@@ -117,22 +117,22 @@
 
   /* ---------- Bottom nav kieu Facebook: chi icon, hep (49px + safe-area), NOI ----------
      Tabbar noi nhu thanh dieu huong duoi cua Facebook: bo tron 4 goc, margin
-     12px ba phia (trai/phai/duoi), bong do, khong border-top; noi dung man hinh
+     12px hai ben + 6px duoi, bong do, khong border-top; noi dung man hinh
      cuon xuyen qua ben duoi (nhin thay qua khe ho hai ben va duoi thanh). Chieu
      cao thanh van 48px (nut 44 + padding 2+2); safe-area chuyen xuong margin
-     duoi de thanh noi len tren vung home indicator; dinh thanh o 60px +
+     duoi de thanh noi len tren vung home indicator; dinh thanh o 54px +
      safe-area tinh tu day viewport (--tabh 49px giu nguyen lam "vung tab"
-     cho cac neo; cac neo +12px de bam dinh thanh noi). */
+     cho cac neo; cac neo +6px de bam dinh thanh noi). */
   .tabbar{
-    position:absolute; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); display:grid; grid-template-columns:repeat(5,1fr);
+    position:absolute; left:12px; right:12px; bottom:calc(6px + env(safe-area-inset-bottom)); display:grid; grid-template-columns:repeat(5,1fr);
     background:var(--card); border-radius:24px;
     box-shadow:0 8px 24px rgba(20,16,10,.18), 0 2px 6px rgba(20,16,10,.10);
     padding:2px 6px;
     z-index:60; transition:transform .28s cubic-bezier(.32,.72,.28,1);
   }
-  /* An het thanh noi: truot xuong het chieu cao thanh (100%) + margin duoi 12px
-     + safe-area + 8px du phong — ban cu (100% + 8px) chi du 57px, con lo 4px. */
-  .tabbar.tab-hidden{transform:translateY(calc(100% + 20px + env(safe-area-inset-bottom)));}
+  /* An het thanh noi: truot xuong het chieu cao thanh (100%) + margin duoi 6px
+     + safe-area + 8px du phong = 62px, du cho thanh 48px + margin 6px. */
+  .tabbar.tab-hidden{transform:translateY(calc(100% + 14px + env(safe-area-inset-bottom)));}
   @media (prefers-reduced-motion: reduce){ .tabbar{transition:none;} }
   .tabbtn{
     appearance:none; border:none; background:none; cursor:pointer;
@@ -714,9 +714,12 @@
     position:absolute; inset:0; background:var(--bg); z-index:40;
     transform:translateY(100%); transition:transform .32s cubic-bezier(.32,.72,.28,1);
     display:flex; flex-direction:column;
-    /* Chừa chỗ cho thanh tab dưới: nội dung trang con kết thúc ngay trên thanh tab,
-       nền trang vẫn phủ xuống sau thanh tab (thanh tab luôn nổi lên trên, bấm được) */
-    padding-bottom:var(--tabh);
+    /* KHONG chua padding-bottom cho thanh tab nua: khung cuon (.detailbody /
+       .exambody) keo dai xuong sat day viewport de noi dung cuon xuyen qua
+       duoi thanh tab noi nhu .screen; muc cuoi van cuon len khoi dinh thanh
+       nho padding-bottom cua chinh khung cuon (73px). Chan trang co dinh
+       (.examfoot/.detailfoot) tu chua them padding-bottom de nut khong bi
+       thanh tab (z-60, noi tren overlay) che — xem ghi chu o 2 rule do. */
   }
   .overlay.open{transform:translateY(0);}
   @media (prefers-reduced-motion: reduce){ .overlay{transition:none;} }
@@ -739,7 +742,7 @@
   }
   .examprog{height:5px; background:var(--line); flex:0 0 auto;}
   .examprog i{display:block; height:100%; background:var(--red); width:0%; transition:width .25s;}
-  .exambody{flex:1 1 auto; overflow-y:auto; padding:16px 18px 20px; scrollbar-width:none;}
+  .exambody{flex:1 1 auto; overflow-y:auto; padding:16px 18px calc(var(--tabh) + 24px); scrollbar-width:none;} /* padding-bottom 73px nhu .detailbody */
   .exambody::-webkit-scrollbar{display:none;}
   .mondai{
     background:#FBF3DC; color:#5C4510; border-left:4px solid #C8A24A; border-radius:8px;
@@ -787,7 +790,10 @@
   .ans.sel .an{background:var(--red); border-color:var(--red); color:#fff;}
   .examfoot{
     flex:0 0 auto; background:var(--card); border-top:1px solid var(--line);
-    padding:12px 16px calc(14px + env(safe-area-inset-bottom)); display:flex; gap:10px;
+    /* padding-bottom 69px (= 14 + --tabh 49 + 6): .overlay khong con chua cho
+       thanh tab nua nen chan trang phai tu nang nut len khoi dinh thanh tab
+       noi (54px) 15px, neu khong thanh tab (z-60) se che nut Truoc/Sau. */
+    padding:12px 16px calc(14px + var(--tabh) + 6px); display:flex; gap:10px;
   }
   .navbtn{
     min-height:52px; padding:0 18px; border-radius:13px; border:1.5px solid var(--line);
@@ -805,13 +811,13 @@
   .scrim{position:absolute; inset:0; background:rgba(10,8,6,.45); z-index:50; opacity:0; pointer-events:none; transition:opacity .25s;}
   .scrim.open{opacity:1; pointer-events:auto;}
   /* Bảng trượt dưới (premium/login/answer/plan/avatar): đáy bảng bám ĐỈNH thanh
-     tab nổi (--tabh + 12px margin dưới của thanh = 61px + safe-area). Khi đóng,
+     tab nổi (--tabh + 6px margin dưới của thanh = 55px + safe-area). Khi đóng,
      trượt xuống hết chiều cao bảng + khoảng tới đáy viewport + 8px — bản cũ
      translateY(105%) còn lòi ~35px che thanh tab. */
   .sheet{
-    position:absolute; left:0; right:0; bottom:calc(var(--tabh) + 12px); z-index:51; background:var(--card);
+    position:absolute; left:0; right:0; bottom:calc(var(--tabh) + 6px); z-index:51; background:var(--card);
     border-radius:22px 22px 0 0; padding:10px 18px calc(20px + env(safe-area-inset-bottom));
-    transform:translateY(calc(100% + var(--tabh) + 12px + 8px)); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
+    transform:translateY(calc(100% + var(--tabh) + 6px + 8px)); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
     display:flex; flex-direction:column;
   }
   .sheet.open{transform:translateY(0);}
@@ -910,7 +916,8 @@
   .iconbtn svg{width:21px;height:21px;}
   .detailhead h2{margin:0; font-size:17px; font-weight:800;}
   .detailhead span{font-size:12.5px; color:var(--ink-2); font-weight:600;}
-  .detailbody{flex:1 1 auto; overflow-y:auto; overscroll-behavior:contain; padding:8px 18px 20px; scrollbar-width:none;}
+  /* padding-bottom 73px (= --tabh 49 + 24) nhu .screen: muc cuoi cuon len khoi dinh thanh tab noi (54px) duoc 19px. */
+  .detailbody{flex:1 1 auto; overflow-y:auto; overscroll-behavior:contain; padding:8px 18px calc(var(--tabh) + 24px); scrollbar-width:none;}
   .detailbody::-webkit-scrollbar{display:none;}
 
   /* ---------- Trang Dieu khoan + Chinh sach (overlay, mo tu Cai dat hoac dong dong y duoi nut Dang nhap) ---------- */
@@ -1086,7 +1093,8 @@
   .cmtform button{flex:0 0 auto; min-height:44px; padding:0 16px; border:none; border-radius:11px; background:var(--red); color:#fff; font-family:inherit; font-size:14.5px; font-weight:700; cursor:pointer;}
   .cmtform button:active{background:var(--red-dark);}
   .cmtempty{font-size:14px; color:var(--ink-2); line-height:1.55; padding:4px 0 2px; margin:0;}
-  .detailfoot{flex:0 0 auto; display:flex; gap:10px; padding:12px 16px calc(14px + env(safe-area-inset-bottom)); background:var(--card); border-top:1px solid var(--line);}
+  /* padding-bottom 69px (= 14 + --tabh 49 + 6): nhu .examfoot — nang nut len khoi dinh thanh tab noi (54px) 15px. */
+  .detailfoot{flex:0 0 auto; display:flex; gap:10px; padding:12px 16px calc(14px + var(--tabh) + 6px); background:var(--card); border-top:1px solid var(--line);}
   .detailfoot .cta{margin-top:0; flex:1;}
   .ghostbtn{
     min-height:56px; padding:0 20px; border-radius:16px; border:1.5px solid var(--line);
@@ -1371,14 +1379,14 @@
      luon thay khi cuon phu de. Chi ap cho #sv2Overlay (bai 2 dang dung);
      dock bai 1 (#shadowVideoOverlay, khong con mo duoc) giu nguyen in-flow.
      .detailbody la static nen absolute bam vao .overlay (position:absolute)
-     va KHONG troi theo cuon. bottom:var(--tabh)+12px = ngay tren DINH thanh
-     tab noi (60px + safe-area). padding-right 70px chua nut tro ly Sora (39px o
+     va KHONG troi theo cuon. bottom:var(--tabh)+6px = ngay tren DINH thanh
+     tab noi (54px + safe-area). padding-right 70px chua nut tro ly Sora (39px o
      right:16, z-70 noi tren dock). z-index:5 de dock noi tren khung phu de
      (position:relative, z auto) nhung duoi bong bong giai thich .sv-exp (z-9).
      Khi thanh tab dang an (tab-hidden), dock truot xuong day 0 (:has() —
      trinh duyet cu khong ho tro thi dock van o bottom:var(--tabh)). */
   #sv2Overlay .sv-dock{
-    position:absolute; left:0; right:0; bottom:calc(var(--tabh) + 12px); z-index:5; margin-top:0;
+    position:absolute; left:0; right:0; bottom:calc(var(--tabh) + 6px); z-index:5; margin-top:0;
     padding:6px 70px 6px 14px; background:var(--card);
     border-top:1px solid var(--line); box-shadow:0 -2px 10px rgba(20,20,28,.06);
     display:flex; align-items:center; gap:8px;
@@ -1532,8 +1540,8 @@
   .sv2-subs{
     position:relative;
     max-height:42dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-    scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px 76px;
-    /* padding-bottom 76px (~cao dock 45px 1 hang + dock cao them 12px do
+    scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px 70px;
+    /* padding-bottom 70px (~cao dock 45px 1 hang + dock cao them 6px do
        thanh tab noi + 19px du phong) chua dock ghim: day khung co the nam
        duoi dock khi detailbody o dau trang; padding nay de cau cuoi cuon
        len tren dinh dock thay vi bi che, chi can cuon khung (khong can
@@ -2446,7 +2454,7 @@
   .offlinebar.show{display:flex;}
 
   /* result */
-  .resultwrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; text-align:center;}
+  .resultwrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 28px calc(var(--tabh) + 24px); text-align:center;} /* padding-bottom 73px: nut cuoi cuon len khoi dinh thanh tab noi khi noi dung tran (noi dung can giua dich len ~22px, chap nhan duoc) */
   .resultwrap .score{font-size:56px; font-weight:800; line-height:1; margin:14px 0 6px;}
   .resultwrap h2{margin:0; font-size:21px; font-weight:800;}
   .resultwrap p{color:var(--ink-2); font-size:14.5px; line-height:1.6; margin:6px 0 0; max-width:280px;}
@@ -2587,7 +2595,7 @@
   /* ---------- Trợ lý AI Sora: nút tròn nổi + khung chat hướng dẫn dùng app ---------- */
   /* Khung bọc nút Sora: kéo thả tự do khắp màn hình, thả ra tự dính mép trái/phải (kiểu AssistiveTouch của iPhone) */
   .assistant-fabwrap{
-    position:absolute; right:16px; bottom:calc(var(--tabh) + 26px); z-index:70; /* +12px: giu 14px tren DINH thanh tab noi */
+    position:absolute; right:16px; bottom:calc(var(--tabh) + 20px); z-index:70; /* +6px: giu 15px tren DINH thanh tab noi */
     width:39px; height:39px; touch-action:none; -webkit-user-select:none; user-select:none;
   }
   .assistant-fabwrap.hide, .assistant-fabwrap.dismissed{display:none;}
@@ -2633,9 +2641,9 @@
   .assistant-panel{
     position:absolute; right:12px; z-index:72;
     width:min(366px, calc(100% - 24px));
-    bottom:calc(var(--tabh) + 24px); /* +12px: giu 12px tren dinh thanh tab noi */
-    height:min(572px, calc(100% - var(--tabh) - 104px));
-    max-height:calc(100% - var(--tabh) - 36px);
+    bottom:calc(var(--tabh) + 18px); /* +6px: giu 13px tren dinh thanh tab noi */
+    height:min(572px, calc(100% - var(--tabh) - 98px));
+    max-height:calc(100% - var(--tabh) - 30px);
     background:var(--card); border:1px solid var(--line); border-radius:22px;
     box-shadow:0 22px 50px rgba(20,16,10,.32), 0 4px 14px rgba(20,16,10,.16);
     display:flex; flex-direction:column; overflow:hidden;
