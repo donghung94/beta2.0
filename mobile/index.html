@@ -8728,7 +8728,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         if(pat0 && pat0.length) KanjiCanvas.redraw(KC_ID);
       }
     }
-    if(drawMode !== "free") return;
+    /* Nhận diện chạy ở mọi chế độ TRỪ sheet: phiếu luyện viết tái dùng
+       #candRow làm hàng "Chọn chữ:" (buildSheetChips), nhận diện mà chạy
+       thì renderCand ghi đè mất hàng chọn chữ. */
+    if(drawMode === "sheet") return;
     if(typeof settings !== "undefined" && settings && settings.recog === false) return;
     clearTimeout(kcTimer);
     kcTimer = setTimeout(recognizeDraw, 320);
@@ -9016,7 +9019,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     candRow.classList.add("live", "pop");
   }
   function recognizeDraw(){
-    if(drawMode !== "free" || !kcReady) return;
+    if(drawMode === "sheet" || !kcReady) return;
+    /* Cổng toggle Cài đặt đặt ở đây nữa (không chỉ kcStrokeEnd): đường
+       Hoàn tác gọi thẳng recognizeDraw, trước đây lách được toggle tắt. */
+    if(typeof settings !== "undefined" && settings && settings.recog === false) return;
     if(kcDrawing){ /* đang vẽ dở nét kế tiếp — hoãn, đừng vẽ lại giữa nét */
       clearTimeout(kcTimer);
       kcTimer = setTimeout(recognizeDraw, 160);
@@ -9057,7 +9063,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
        gợi ý mẫu nét đã hiện — không bao giờ để người dùng chờ trống. */
     var upgraded = false;
     function upgrade(chars, engine){
-      if(upgraded || seq !== recogSeq || drawMode !== "free") return;
+      if(upgraded || seq !== recogSeq || drawMode === "sheet") return;
       if(!chars || !chars.length) return;
       upgraded = true;
       renderCand(chars.slice(0, 6), engine, nStrokes);
@@ -9094,8 +9100,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       drawOverlay.querySelector(".detailbody").scrollTop = 0; /* mở lại là về đầu trang con */
       ensureKanjiDB(); /* nạp trước tài nguyên chữ để bấm chip là mở chi tiết ngay */
       if(sheet) buildSheetChips();
-      else if(write) buildWriteGrid();
-      else dakLoad().catch(function(){}); /* nạp trước model offline để mất mạng là dùng ngay */
+      else {
+        if(write) buildWriteGrid();
+        dakLoad().catch(function(){}); /* nạp trước model offline để mất mạng là dùng ngay */
+      }
     });
   }
   /* ---------- Luyện viết: trên cùng là nút chọn cấp N5–N1, dưới là bảng chữ
@@ -9148,6 +9156,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       c.classList.toggle("on", c.getAttribute("data-ch") === e.kanji);
     });
     if(kcReady) KanjiCanvas.erase(KC_ID);
+    hideCand(); /* đổi chữ luyện thì gợi ý cũ (của chữ trước) phải mất theo */
     if(scroll){
       /* Chỉ cuộn khung chi tiết của màn luyện — không dùng scrollIntoView
          vì nó cuộn cả trang ngoài làm khung điện thoại bị đẩy lên */
@@ -9195,7 +9204,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("drawUndo").addEventListener("click", function(){
     if(!kcReady) return;
     KanjiCanvas.deleteLast(KC_ID);
-    if(drawMode === "free"){
+    if(drawMode !== "sheet"){
       var pat = KanjiCanvas["recordedPattern_" + KC_ID];
       if(!pat || !pat.length) hideCand();
       else recognizeDraw();
@@ -9204,14 +9213,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("drawClear").addEventListener("click", function(){
     if(!kcReady) return;
     KanjiCanvas.erase(KC_ID);
-    if(drawMode === "free") hideCand();
+    if(drawMode !== "sheet") hideCand();
   });
   /* Kính lúp: tra cứu chữ đang vẽ = mở trang chi tiết của gợi ý đầu tiên,
      đúng như bấm vào chip đầu tiên. Nay đã có tài nguyên 2.138 chữ nên chữ nào
      có trong tài nguyên đều mở được chi tiết; chữ ngoài tài nguyên thì hiện
      ghi chú gọn như bấm chip. Chưa có gợi ý thì nhắc vẽ trước. */
   document.getElementById("drawSearch").addEventListener("click", function(){
-    if(drawMode !== "free") return;
+    if(drawMode === "sheet") return;
     if(!candFirstChar){
       candNote.textContent = "Vẽ chữ trước đã — vẽ 1 chữ vào ô rồi bấm kính lúp để tra cứu gợi ý đầu tiên.";
       candNote.hidden = false;
@@ -9223,7 +9232,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("candClear").addEventListener("click", function(){
     if(!kcReady) return;
     KanjiCanvas.erase(KC_ID);
-    if(drawMode === "free") hideCand();
+    if(drawMode !== "sheet") hideCand();
   });
   document.getElementById("kdWrite").addEventListener("click", function(){ if(currentKanji) openDraw("trace", currentKanji); });
 
