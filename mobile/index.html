@@ -8140,6 +8140,94 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function showOv(el){ el.classList.add("open"); el.setAttribute("aria-hidden","false"); tabResetPage(); }
   function hideOv(el){ el.classList.remove("open"); el.setAttribute("aria-hidden","true"); }
 
+  /* ---------- Vuot phai de quay lai (swipe-back) ----------
+     Dang mo 1 overlay (trang con) -> vuot ngang sang phai thi dong overlay
+     TREN CUNG, tuong duong bam nut quay lai cua no. Khong co overlay nao mo
+     thi khong lam gi (KHONG doi tab).
+     Co che dong: .click() len nut quay lai THAT (.iconbtn dau tien trong
+     .detailhead/.examhead) de tai dung dung duong dong cua tung overlay
+     (vd closeSv2 dung video/audio + mo lai listenOverlay, closeExam dung
+     timer, closeKanji dung animation net ve). Du phong: hideOv neu khong
+     tim thay nut (hien 42/42 overlay deu co nut).
+     Nguong: dich phai >= 80px, lech doc <= 60px, chi danh gia o touchend
+     (vuot qua roi keo nguoc lai truoc khi nhac tay thi huy). Chi nhan
+     gesture 1 ngon. Bo qua vuot bat dau trong 20px mep trai (vung
+     swipe-back mac dinh cua Safari iOS). Listener passive, khong
+     preventDefault — khong chan cuon doc hay gesture cua trinh duyet.
+     Loai tru (kiem tra o touchstart theo e.target): canvas ve kanji,
+     input/textarea/select (gom #sv2Seek), .sv-dock, .chatbar, flashcard
+     (#wvFlashCard/.flash), nut tro ly Sora (.assistant-fabwrap), hang
+     cuon ngang (scrollWidth > clientWidth + overflow-x auto/scroll),
+     vuot bat dau ngoai overlay, va khi co .sheet/.assistant-panel dang mo.
+     Khong danh nhau voi swipe-down-to-close cua kanjiOverlay (khac truc;
+     neu vuot cheo du ca 2 dieu kien thi swipe-down dong truoc, o touchend
+     overlay da dong nen swipe-back khong lam gi them). */
+  (function(){
+    var phoneEl = document.getElementById("phone");
+    if(!phoneEl) return;
+    var EDGE = 20;    /* px mep trai: vung swipe-back cua Safari iOS */
+    var MIN_DX = 80;  /* dich phai toi thieu */
+    var MAX_DY = 60;  /* lech doc toi da */
+    var startX = null, startY = null, targetOv = null;
+    /* Overlay tren cung trong so overlay dang mo: z-index cao nhat; hoa thi
+       lay cai sau hon trong DOM (cung z-index thi phan tu sau ve len tren). */
+    function topOverlay(){
+      var best = null, bestZ = -1;
+      var list = document.querySelectorAll(".overlay.open");
+      for(var i = 0; i < list.length; i++){
+        var z = parseInt(getComputedStyle(list[i]).zIndex, 10);
+        if(isNaN(z)) z = 0;
+        if(z >= bestZ){ bestZ = z; best = list[i]; }
+      }
+      return best;
+    }
+    function swipeExcluded(t){
+      if(!t || !t.closest) return true;
+      if(t.closest("canvas, input, textarea, select, .sv-dock, .chatbar, #wvFlashCard, .flash, .assistant-fabwrap, .sheet, .assistant-panel, .scrim, .assistant-scrim")) return true;
+      /* Hang cuon ngang (the video, tab the loai, chip goi y kanji): vuot de
+         cuon hang, khong phai quay lai. */
+      var el = t;
+      while(el && el !== targetOv){
+        if(el.scrollWidth > el.clientWidth + 2){
+          var ox = getComputedStyle(el).overflowX;
+          if(ox === "auto" || ox === "scroll") return true;
+        }
+        el = el.parentElement;
+      }
+      return false;
+    }
+    phoneEl.addEventListener("touchstart", function(e){
+      startX = startY = null; targetOv = null;
+      if(e.touches.length !== 1) return;
+      var t = e.touches[0];
+      if(t.clientX < EDGE) return;
+      /* Lop modal (sheet/panel) dang mo thi gesture thuoc ve no. */
+      if(document.querySelector(".sheet.open, .assistant-panel.open")) return;
+      var ov = topOverlay();
+      if(!ov) return;
+      if(!ov.contains(e.target)) return;
+      targetOv = ov; /* gan truoc de swipeExcluded biet dung o overlay nao */
+      if(swipeExcluded(e.target)){ targetOv = null; return; }
+      startX = t.clientX; startY = t.clientY;
+    }, {passive:true});
+    phoneEl.addEventListener("touchend", function(e){
+      if(startX === null || !targetOv) return;
+      var t = e.changedTouches[0];
+      var dx = t.clientX - startX, dy = t.clientY - startY;
+      var ov = targetOv;
+      startX = startY = null; targetOv = null;
+      if(dx < MIN_DX || Math.abs(dy) > MAX_DY) return;
+      if(!ov.classList.contains("open")) return;
+      if(topOverlay() !== ov) return;
+      var btn = ov.querySelector(".detailhead .iconbtn, .examhead .iconbtn");
+      if(btn) btn.click();
+      else hideOv(ov);
+    }, {passive:true});
+    phoneEl.addEventListener("touchcancel", function(){
+      startX = startY = null; targetOv = null;
+    }, {passive:true});
+  })();
+
   /* ---------- Vocabulary data (search + detail) ---------- */
   var VOCAB = [
     {w:"電車", r:"でんしゃ", roma:"densha", hv:"Điện xa", m:"tàu điện", ex:["電車で学校へ行きます。","Tôi đi học bằng tàu điện."]},
