@@ -1989,15 +1989,56 @@
   .leadrow .l-av{position:relative; overflow:hidden;}
   .leadrow .l-av img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
   #rankTop3 .leadrow:last-child{border-bottom:1px solid var(--line);}
+  /* ---------- Bảng xếp hạng kiểu podium: top 3 thẻ lớn + hạng 4–10 ---------- */
+  .rankboard{margin-top:2px;}
+  .rankboard-title{font-size:20px; font-weight:900; text-align:center; margin:8px 0 2px; letter-spacing:-.01em;}
+  .rankboard-sub{text-align:center; font-size:13px; color:var(--ink-2); margin:0 0 12px;}
+  .ranktabs{display:flex; gap:6px; background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:4px; width:fit-content; margin:0 auto 10px;}
+  .ranktab{border:none; background:transparent; font-family:inherit; font-size:13.5px; font-weight:800; color:var(--ink-2); padding:7px 14px; border-radius:999px; cursor:pointer; white-space:nowrap;}
+  .ranktab.active{background:var(--red); color:#fff; box-shadow:0 2px 8px rgba(200,16,46,.35);}
+  .rankcols{display:flex; justify-content:center; gap:14px; font-size:12px; color:var(--ink-3); margin:0 0 6px; flex-wrap:wrap;}
+  /* Podium: 3 thẻ ngang hàng, căn đáy (align-items:flex-end); #1 giữa cao hơn
+     nhờ min-height lớn hơn. padding-top chừa chỗ cho huy chương đè mép trên. */
+  .rankpodium{display:flex; gap:6px; align-items:flex-end; margin-bottom:12px; padding-top:16px;}
+  .rankpod-card{flex:1 1 0; min-width:0; position:relative; border-radius:14px; border:2px solid var(--line); background:var(--card); padding:12px 4px 10px; text-align:center; min-height:156px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:3px;}
+  .rankpod-card.r1{border-color:#E3A008; background:linear-gradient(180deg,#FFFBEB,#FFF6D6); min-height:182px;}
+  .rankpod-card.r2{border-color:#3B82F6; background:linear-gradient(180deg,#EFF6FF,#DBEAFE);}
+  .rankpod-card.r3{border-color:#22C55E; background:linear-gradient(180deg,#F0FDF4,#DCFCE7);}
+  .rankmedal{position:absolute; top:-13px; left:50%; transform:translateX(-50%); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.25);}
+  .rankmedal.m1{background:#E3A008;}
+  .rankmedal.m2{background:#94A3B8;}
+  .rankmedal.m3{background:#CD7F32;}
+  .rankpod-av{width:46px; height:46px; border-radius:50%; overflow:hidden; background:var(--red-soft); color:var(--red); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; position:relative; flex:0 0 auto;}
+  .rankpod-av img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .rankpod-name{font-size:12px; font-weight:800; line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;}
+  .rankprem{display:inline-flex; align-items:center; gap:2px; font-size:10px; font-weight:800; color:#B97A0B; background:#FBF0DA; border-radius:999px; padding:2px 7px; white-space:nowrap;}
+  .rankpod-exp{font-size:13.5px; font-weight:900; color:#B97A0B; white-space:nowrap;}
+  .rankpod-stats{font-size:10.5px; color:var(--ink-2); white-space:nowrap; display:flex; gap:6px; flex-wrap:wrap; justify-content:center;}
+  .rankrows{display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-bottom:10px;}
+  .rankrow{display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line);}
+  .rankrow:last-child{border-bottom:none;}
+  .rankrow .rr-num{width:24px; flex:0 0 auto; font-size:13px; font-weight:800; color:var(--ink-3); text-align:center;}
+  .rankrow .rr-av{width:36px; height:36px; flex:0 0 auto; border-radius:50%; overflow:hidden; background:var(--red-soft); color:var(--red); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; position:relative;}
+  .rankrow .rr-av img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .rankrow .rr-main{flex:1; min-width:0;}
+  .rankrow .rr-main b{display:block; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .rankrow .rr-side{text-align:right; flex:0 0 auto;}
+  .rankrow .rr-exp{display:block; font-size:13.5px; font-weight:900; color:#B97A0B; white-space:nowrap;}
+  .rankrow .rr-sub{display:block; font-size:11.5px; color:var(--ink-2); white-space:nowrap;}
+  .rankme-card{margin-top:0;}
+  @media (prefers-color-scheme: dark){
+    .rankpod-card.r1{background:linear-gradient(180deg,#2E2508,#3A2E0A);}
+    .rankpod-card.r2{background:linear-gradient(180deg,#0E1E33,#12283F);}
+    .rankpod-card.r3{background:linear-gradient(180deg,#0E2416,#12301C);}
+    .rankprem{color:#E5B85C; background:#33270E;}
+    .rankpod-exp,.rankrow .rr-exp{color:#E5B85C;}
+  }
   .bot-tag{display:inline-block; font-size:10px; font-weight:700; line-height:1.4; padding:1px 6px; border-radius:999px; border:1px solid var(--line); color:var(--ink-3); vertical-align:1px; margin-left:5px; white-space:nowrap;}
   .leadrow .l-main{flex:1; min-width:0;}
   .leadrow .l-main b{display:block; font-size:14px;}
   .leadrow .l-main span{font-size:12px; color:var(--ink-2);}
   .leadrow .l-tv{flex:0 0 auto; font-weight:800; font-size:13.5px; color:var(--amber); white-space:nowrap;}
-  /* Bảng xếp hạng mở rộng: hạng 4–10 ẩn mặc định, nút "Xem thêm" ở cuối bảng mới hiện */
-  .rankmore{display:none;}
-  .rankmore.open{display:block;}
-  .leaddots{text-align:center; color:var(--ink-3); font-weight:800; letter-spacing:.35em; font-size:13px; padding:4px 0 2px;}
+  /* (Bảng xếp hạng thu gọn cũ đã bỏ: top 10 hiện đủ luôn, xem .rankboard.) */
   .seemorebtn{
     width:100%; min-height:48px; margin-top:10px; border:1.5px solid var(--line); border-radius:14px;
     background:var(--card); color:var(--red); font-family:inherit; font-size:15px; font-weight:800; cursor:pointer;
@@ -3371,17 +3412,20 @@
         <h1 class="tabtitle">Xếp hạng</h1>
         <p class="tabsub">Cấp độ & thăng cấp — tích EXP từ nhiệm vụ, quiz và đề thi để thăng cấp từ Tân binh lên Tướng.</p>
 
-        <h2 class="secttl" style="margin-top:2px;">Bạn học dẫn đầu tuần này</h2>
-        <div class="card" style="margin-top:0; padding-top:6px; padding-bottom:6px;">
-          <div id="rankTop3"></div>
-          <div class="rankmore" id="rankMore">
-            <div id="rankMoreRows"></div>
-            <div class="leaddots" aria-hidden="true">···</div>
+        <div class="rankboard">
+          <h2 class="rankboard-title">Bảng xếp hạng</h2>
+          <p class="rankboard-sub">Top 10 học viên chăm chỉ</p>
+          <div class="ranktabs" role="tablist" aria-label="Tiêu chí xếp hạng">
+            <button type="button" class="ranktab active" id="rankTabXp" role="tab" aria-selected="true">⚡ Tổng XP</button>
+            <button type="button" class="ranktab" id="rankTabDuel" role="tab" aria-selected="false">⚔️ Đấu trí thắng</button>
           </div>
-          <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 EXP</span></div>
+          <p class="rankcols" id="rankCols"><span>⚡ XP</span><span>🗂 Thẻ ghi nhớ</span><span>📖 Ngày lộ trình</span></p>
+          <div id="rankPodium" class="rankpodium" aria-live="polite"></div>
+          <div id="rankRows410" class="rankrows"></div>
+          <div class="card rankme-card" style="margin-top:0; padding-top:6px; padding-bottom:6px;">
+            <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 EXP</span></div>
+          </div>
         </div>
-        <button class="seemorebtn" id="rankMoreBtn" aria-expanded="false" aria-controls="rankMore"><span id="rankMoreLabel">Xem thêm</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:8px 2px 0;">Bảng rút gọn: mặc định chỉ hiện top 3 của tuần và vị trí của bạn — bấm “Xem thêm” để mở rộng hạng 4–10. Hạng của bạn là 18, cùng một con số với hạng ở Đấu trường.</p>
 
         <div class="card">
           <div class="prof">
@@ -17174,14 +17218,22 @@ function furiHTML(text){
   document.getElementById("meDuelBtn").addEventListener("click", openDuel);
   document.getElementById("meShopBtn").addEventListener("click", openShop);
   document.getElementById("rankDuelCard").addEventListener("click", openDuel);
-  /* Nút "Xem thêm" cuối bảng xếp hạng tuần: mở rộng / thu gọn hạng 4–10 */
-  var rankMoreBtn = document.getElementById("rankMoreBtn");
-  rankMoreBtn.addEventListener("click", function(){
-    var open = document.getElementById("rankMore").classList.toggle("open");
-    rankMoreBtn.classList.toggle("open", open);
-    rankMoreBtn.setAttribute("aria-expanded", open ? "true" : "false");
-    document.getElementById("rankMoreLabel").textContent = open ? "Thu gọn" : "Xem thêm";
-  });
+  /* Tab tiêu chí xếp hạng: "Tổng XP" / "Đấu trí thắng" — đổi thứ tự bảng.
+     (Nút "Xem thêm" cũ đã bỏ: top 10 hiện đủ luôn.) */
+  (function(){
+    var tx = document.getElementById("rankTabXp"), td = document.getElementById("rankTabDuel");
+    if(!tx || !td) return;
+    function setMode(mode){
+      rankSortMode = mode;
+      tx.classList.toggle("active", mode === "xp");
+      td.classList.toggle("active", mode === "duel");
+      tx.setAttribute("aria-selected", mode === "xp" ? "true" : "false");
+      td.setAttribute("aria-selected", mode === "duel" ? "true" : "false");
+      renderBotRank();
+    }
+    tx.addEventListener("click", function(){ setMode("xp"); });
+    td.addEventListener("click", function(){ setMode("duel"); });
+  })();
 
   /* ----- Bot bạn học: đua top tuần + chat tuần (client-side, không backend) ----- */
   /* BOT_BADGE: mặc định TẮT để bot trông như người thật; đổi thành true sẽ hiện nhãn nhỏ "Bot" cạnh tên bot ở Xếp hạng và Phòng chat. */
@@ -17251,27 +17303,79 @@ function furiHTML(text){
     return null;
   }
   function botTagHtml(){ return BOT_BADGE ? '<span class="bot-tag">Bot</span>' : ""; }
-  /* Đua top tuần: điểm = base dao động ±10% theo seed tuần, xếp hạng 1–10 */
-  function renderBotRank(){
+  /* ----- Bảng xếp hạng podium: render nhận 1 danh sách, nguồn dữ liệu tách riêng -----
+     rankBoardData() nuôi bảng bằng bot hiện có (BOTS + seed tuần). USER QUYẾT
+     2026-11-16: GIỮ dữ liệu bot, không dùng dữ liệu thật, không làm backend.
+     Sau này đổi nguồn chỉ cần thay hàm này — renderRankBoard() nhận danh sách
+     [{name, avatar, premium, exp, cards, days, duelWins}] và không biết nguồn. */
+  function rankBoardData(){
     var seed = botWeekSeed();
-    var scored = BOTS.map(function(b, i){
+    return BOTS.map(function(b, i){
       var rnd = mulberry32(seed * 31 + i);
+      /* Lượt rút 1 = điểm EXP tuần (GIỮ NGUYÊN công thức cũ để thứ hạng EXP
+         không đổi); các lượt sau suy ra thêm chỉ số, cùng seed nên ổn định
+         cả tuần trên mọi máy. */
       var pts = Math.round(b.base * (0.90 + rnd() * 0.20) / 10) * 10;
-      return { bot: b, pts: pts };
+      var wins = 8 + Math.floor(rnd() * 42);                 /* 8–49 trận thắng đấu trí */
+      var cards = Math.round(b.base * (0.25 + rnd() * 0.45)); /* thẻ ghi nhớ */
+      var days = 5 + Math.floor(rnd() * 26);                 /* 5–30 ngày lộ trình */
+      var premium = rnd() > 0.4;
+      return { name:b.name, avatar:b.av, premium:premium, exp:pts, cards:cards, days:days, duelWins:wins };
     });
-    scored.sort(function(a, b){ return b.pts - a.pts; });
-    var topHtml = "", moreHtml = "";
-    scored.forEach(function(s, idx){
-      var rank = idx + 1, b = s.bot;
-      var row = '<div class="leadrow"><span class="l-rank' + (rank <= 3 ? " top" : "") + '">' + rank + '</span>'
-        + '<span class="l-av"><img src="' + b.av + '" alt="" onerror="this.remove()">' + b.name.charAt(0) + '</span>'
-        + '<span class="l-main"><b>' + b.name + botTagHtml() + '</b>'
-        + '<span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + b.rk + '"></use></svg>' + b.realm + ' · ' + b.lv + '</span></span>'
-        + '<span class="l-tv">' + fmtN(s.pts) + ' EXP</span></div>';
-      if(rank <= 3) topHtml += row; else moreHtml += row;
+  }
+  var rankSortMode = "xp"; /* "xp" = Tổng XP · "duel" = Đấu trí thắng */
+  /* Chỉ số chính hiển thị = tiêu chí đang xếp hạng: EXP ở tab Tổng XP,
+     số trận thắng ở tab Đấu trí thắng. */
+  function rankMainStat(r){
+    return rankSortMode === "duel" ? ("⚔️ " + fmtN(r.duelWins) + " thắng") : ("⚡ " + fmtN(r.exp) + " XP");
+  }
+  function rankSubStat(r){
+    return rankSortMode === "duel" ? ("⚡ " + fmtN(r.exp) + " XP") : ("🗂 " + fmtN(r.cards));
+  }
+  function rankPodCardHtml(r, rank){
+    var cls = rank === 1 ? "r1" : (rank === 2 ? "r2" : "r3");
+    var stats = rankSortMode === "duel"
+      ? ("<span>⚡ " + fmtN(r.exp) + " XP</span><span>🗂 " + fmtN(r.cards) + "</span>")
+      : ("<span>🗂 " + fmtN(r.cards) + "</span><span>📖 " + r.days + "</span>");
+    return '<div class="rankpod-card ' + cls + '" data-rank="' + rank + '">'
+      + '<span class="rankmedal m' + rank + '">' + rank + '</span>'
+      + '<span class="rankpod-av"><img src="' + esc(r.avatar) + '" alt="" onerror="this.remove()">' + esc(r.name.charAt(0)) + '</span>'
+      + '<span class="rankpod-name">' + esc(r.name) + botTagHtml() + '</span>'
+      + (r.premium ? '<span class="rankprem">👑 Premium</span>' : '')
+      + '<span class="rankpod-exp">' + rankMainStat(r) + '</span>'
+      + '<span class="rankpod-stats">' + stats + '</span></div>';
+  }
+  function rankRowHtml(r, rank){
+    return '<div class="rankrow" data-rank="' + rank + '"><span class="rr-num">' + ("0" + rank).slice(-2) + '</span>'
+      + '<span class="rr-av"><img src="' + esc(r.avatar) + '" alt="" onerror="this.remove()">' + esc(r.name.charAt(0)) + '</span>'
+      + '<span class="rr-main"><b>' + esc(r.name) + botTagHtml() + '</b>'
+      + (r.premium ? '<span class="rankprem">👑 Premium</span>' : '') + '</span>'
+      + '<span class="rr-side"><span class="rr-exp">' + rankMainStat(r) + '</span>'
+      + '<span class="rr-sub">' + rankSubStat(r) + '</span></span></div>';
+  }
+  function renderRankBoard(list){
+    var podium = document.getElementById("rankPodium");
+    var rows = document.getElementById("rankRows410");
+    var cols = document.getElementById("rankCols");
+    if(!podium || !rows) return;
+    var top = list.slice(0, 3);
+    /* DOM theo thứ tự hiển thị: #2 trái, #1 giữa, #3 phải. */
+    podium.innerHTML = (top[1] ? rankPodCardHtml(top[1], 2) : "")
+      + (top[0] ? rankPodCardHtml(top[0], 1) : "")
+      + (top[2] ? rankPodCardHtml(top[2], 3) : "");
+    var html = "";
+    list.slice(3, 10).forEach(function(r, i){ html += rankRowHtml(r, i + 4); });
+    rows.innerHTML = html;
+    if(cols) cols.innerHTML = rankSortMode === "duel"
+      ? "<span>⚔️ Đấu trí thắng</span><span>⚡ XP</span><span>🗂 Thẻ ghi nhớ</span>"
+      : "<span>⚡ XP</span><span>🗂 Thẻ ghi nhớ</span><span>📖 Ngày lộ trình</span>";
+  }
+  function renderBotRank(){
+    var list = rankBoardData();
+    list.sort(function(a, b){
+      return rankSortMode === "duel" ? (b.duelWins - a.duelWins) : (b.exp - a.exp);
     });
-    var t3 = document.getElementById("rankTop3"); if(t3) t3.innerHTML = topHtml;
-    var mr = document.getElementById("rankMoreRows"); if(mr) mr.innerHTML = moreHtml;
+    renderRankBoard(list);
   }
   /* Chat tuần: xáo trộn 8 đoạn theo seed tuần, lấy 3 đoạn đầu (9 tin) */
   function renderBotChat(){
