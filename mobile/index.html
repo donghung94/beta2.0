@@ -8193,7 +8193,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      (vd closeSv2 dung video/audio + mo lai listenOverlay, closeExam dung
      timer, closeKanji dung animation net ve). Du phong: hideOv neu khong
      tim thay nut (hien 42/42 overlay deu co nut).
-     Nguong: dich phai >= 80px, lech doc <= 60px, chi danh gia o touchend
+     Nguong: dich phai >= 30% chieu rong khung #phone (117px o 390, 112px o
+     375, 96px o 320), lech doc <= 60px, chi danh gia o touchend
      (vuot qua roi keo nguoc lai truoc khi nhac tay thi huy). Chi nhan
      gesture 1 ngon. Bo qua vuot bat dau trong 20px mep trai (vung
      swipe-back mac dinh cua Safari iOS). Listener passive, khong
@@ -8210,7 +8211,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var phoneEl = document.getElementById("phone");
     if(!phoneEl) return;
     var EDGE = 20;    /* px mep trai: vung swipe-back cua Safari iOS */
-    var MIN_DX = 80;  /* dich phai toi thieu */
+    var MIN_DX_RATIO = 0.30; /* dich phai toi thieu = 30% chieu rong #phone */
     var MAX_DY = 60;  /* lech doc toi da */
     var startX = null, startY = null, targetOv = null;
     /* Overlay tren cung trong so overlay dang mo: z-index cao nhat; hoa thi
@@ -8260,7 +8261,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var dx = t.clientX - startX, dy = t.clientY - startY;
       var ov = targetOv;
       startX = startY = null; targetOv = null;
-      if(dx < MIN_DX || Math.abs(dy) > MAX_DY) return;
+      /* Nguong theo ti le khung dien thoai (khong phai px co dinh): vuot nhe
+         duoi 30% chieu rong thi khong dong — tranh nhay trang vo tinh. */
+      var minDx = Math.floor(phoneEl.clientWidth * MIN_DX_RATIO);
+      if(dx < minDx || Math.abs(dy) > MAX_DY) return;
       if(!ov.classList.contains("open")) return;
       if(topOverlay() !== ov) return;
       var btn = ov.querySelector(".detailhead .iconbtn, .examhead .iconbtn");
