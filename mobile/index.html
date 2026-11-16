@@ -190,7 +190,7 @@
     background:var(--bg); border-radius:12px; cursor:pointer; border:1px solid var(--line);
   }
   .bar{height:8px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:10px;}
-  .bar i{display:block; height:100%; background:var(--red); border-radius:99px;}
+  .bar i{display:block; height:100%; background:var(--red); border-radius:99px; transform-origin:left center;}
   .bar-note{font-size:12.5px; color:var(--ink-2); margin-top:7px;}
 
   .mocktest{display:flex; gap:14px; align-items:center; cursor:pointer;}
@@ -465,7 +465,7 @@
   .ap-progtext{font-size:13px; font-weight:800; white-space:nowrap;}
   .ap-progtext span{color:var(--ink-3); font-weight:600;}
   .ap-bar{flex:1 1 0; min-width:30px; height:6px; border-radius:99px; background:var(--line); overflow:hidden;}
-  .ap-bar i{display:block; height:100%; width:0%; background:var(--red); border-radius:99px; transition:width .35s ease;}
+  .ap-bar i{display:block; height:100%; width:100%; background:var(--red); border-radius:99px; transform:scaleX(0); transform-origin:left center; transition:transform .35s ease;}
   .ap-status{font-size:12px; color:var(--ink-3); font-weight:600; white-space:nowrap; max-width:38%; overflow:hidden; text-overflow:ellipsis;}
   .ap-controls{display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; flex-wrap:wrap;}
   .ap-nav{
@@ -705,9 +705,9 @@
   .mrow svg{width:21px; height:21px; color:var(--ink-2); flex:0 0 auto;}
   .mrow .chev{margin-left:auto; color:var(--ink-3);}
   .switch{margin-left:auto; width:48px; height:28px; border-radius:99px; background:var(--line); position:relative; flex:0 0 auto; transition:background .15s;}
-  .switch::after{content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transition:left .15s;}
+  .switch::after{content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transform:translateX(0); transition:transform .15s;}
   .switch.on{background:var(--red);}
-  .switch.on::after{left:23px;}
+  .switch.on::after{transform:translateX(20px);}
 
   /* ---------- Overlays (exam, kanji detail, sheets) ---------- */
   .overlay{
@@ -741,7 +741,7 @@
     background:var(--red); color:#fff; font-family:inherit; font-size:15px; font-weight:700;
   }
   .examprog{height:5px; background:var(--line); flex:0 0 auto;}
-  .examprog i{display:block; height:100%; background:var(--red); width:0%; transition:width .25s;}
+  .examprog i{display:block; height:100%; background:var(--red); width:100%; transform:scaleX(0); transform-origin:left center; transition:transform .25s;}
   .exambody{flex:1 1 auto; overflow-y:auto; padding:16px 18px calc(var(--tabh) + 24px); scrollbar-width:none;} /* padding-bottom 73px nhu .detailbody */
   .exambody::-webkit-scrollbar{display:none;}
   .mondai{
@@ -992,7 +992,7 @@
   .ptqcheck:disabled{background:#4A5070; color:#B9BDD3; cursor:default;}
   .ptqnext{width:100%; min-height:48px; border-radius:12px; border:none; background:#C96A00; color:#fff; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; margin-top:14px;}
   .ptqbar{height:5px; border-radius:99px; background:rgba(245,242,234,.15); margin-top:16px; overflow:hidden;}
-  .ptqbar span{display:block; height:100%; background:#3ECF6F; border-radius:99px; transition:width .3s;}
+  .ptqbar span{display:block; height:100%; background:#3ECF6F; border-radius:99px; transform-origin:left center; transition:transform .3s;}
   .ptqkeys{text-align:center; font-size:11.5px; color:#8E93AC; margin-top:10px;}
   .ptqresult{margin-top:16px; border-radius:13px; padding:13px 14px; background:rgba(245,242,234,.07);}
   .ptqresult .ptqr-t{font-size:15.5px; font-weight:800; margin:0 0 8px;}
@@ -1424,9 +1424,9 @@
   .sv-chip.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
   .sv-ap{margin-left:auto; display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--ink);}
   .sv-switch{width:34px; height:20px; flex:0 0 auto; border-radius:99px; border:none; background:var(--line); position:relative; cursor:pointer; padding:0; transition:background .15s;}
-  .sv-switch::after{content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transition:left .15s;}
+  .sv-switch::after{content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transform:translateX(0); transition:transform .15s;}
   .sv-switch[aria-checked="true"]{background:var(--red);}
-  .sv-switch[aria-checked="true"]::after{left:17px;}
+  .sv-switch[aria-checked="true"]::after{transform:translateX(14px);}
   @media (prefers-reduced-motion: reduce){ .sv-switch, .sv-switch::after{transition:none;} }
   .sv-transport{display:flex; align-items:center; justify-content:space-between; margin-top:3px; padding:0 4px;}
   .sv-tbtn{width:30px; height:30px; border:none; background:transparent; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:9px; padding:0;}
@@ -1609,7 +1609,7 @@
   .sv2-sub .unclearnote{display:block; font-size:13px; font-style:italic; color:var(--ink-3); line-height:1.6; padding-top:2px;}
   .sv2-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 15px 15px;}
   .sv2-prog{height:4px; background:var(--line); border-radius:99px; overflow:hidden; margin-bottom:11px;}
-  .sv2-prog i{display:block; height:100%; background:var(--red); border-radius:99px; transition:width .25s ease;}
+  .sv2-prog i{display:block; height:100%; background:var(--red); border-radius:99px; transform-origin:left center; transition:transform .25s ease;}
   @media (prefers-reduced-motion: reduce){ .sv2-prog i{transition:none;} }
   .sv2-count{font-size:12px; font-weight:800; letter-spacing:.05em; color:var(--ink-2);}
   .sv2-ja{font-size:22.5px; font-weight:700; line-height:2.05; margin-top:7px;}
@@ -1884,7 +1884,7 @@
   .mission .m-main b{display:block; font-size:13.5px; line-height:1.5;}
   .mission .m-main span{display:block; font-size:11.5px; color:var(--ink-2); margin-top:1px; line-height:1.35;}
   .mission .m-bar{height:5px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:4px;}
-  .mission .m-bar i{display:block; height:100%; background:var(--red); border-radius:99px;}
+  .mission .m-bar i{display:block; height:100%; background:var(--red); border-radius:99px; transform-origin:left center;}
   .mission .m-reward{flex:0 0 auto; text-align:right;}
   .mission .m-reward b{display:block; font-size:12.5px; color:var(--amber);}
   .mission .m-reward span{font-size:11px; color:var(--ink-3); font-weight:600;}
@@ -1964,7 +1964,7 @@
   .jlptcd-todayhead b{font-size:13.5px;}
   .jlptcd-todayhead span{font-size:11.5px; font-weight:800; color:var(--red); white-space:nowrap;}
   .jlptcd-bar{height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:7px;}
-  .jlptcd-bar i{display:block; height:100%; background:var(--red); border-radius:99px; transition:width .25s;}
+  .jlptcd-bar i{display:block; height:100%; background:var(--red); border-radius:99px; transform-origin:left center; transition:transform .25s;}
   .jlt-row{display:flex; align-items:center; gap:9px; padding:8px 0; border-bottom:1px solid var(--line);}
   .jlt-row:last-child{border-bottom:none;}
   .jlt-chk{
@@ -2252,7 +2252,7 @@
   .pathprog .pp-name span{display:block; font-size:12px; font-weight:600; opacity:.88; margin-top:3px;}
   .pathprog .pp-count{font-size:15px; font-weight:800; white-space:nowrap; font-variant-numeric:tabular-nums;}
   .pathprog .pp-bar{height:9px; border-radius:99px; background:rgba(255,255,255,.32); margin-top:11px; overflow:hidden;}
-  .pathprog .pp-fill{height:100%; border-radius:99px; background:#F5C04E; transition:width .4s ease;}
+  .pathprog .pp-fill{height:100%; border-radius:99px; background:#F5C04E; transform-origin:left center; transition:transform .4s ease;}
   @media (prefers-reduced-motion: reduce){ .pathprog .pp-fill{transition:none;} }
   .pathmap{position:relative; margin-top:36px;}
   .pathmap svg.road{position:absolute; inset:0; width:100%; height:100%;}
@@ -2305,7 +2305,7 @@
   }
   .plan-home b{font-size:13.5px; white-space:nowrap;}
   .plan-home .ph-bar{flex:1 1 auto; height:8px; border-radius:99px; background:var(--line); overflow:hidden;}
-  .plan-home .ph-fill{height:100%; border-radius:99px; background:var(--red); transition:width .4s ease;}
+  .plan-home .ph-fill{height:100%; border-radius:99px; background:var(--red); transform-origin:left center; transition:transform .4s ease;}
   @media (prefers-reduced-motion: reduce){ .plan-home .ph-fill{transition:none;} }
   .plan-home .ph-chev{color:var(--ink-3); flex:0 0 auto;}
   .planmark{
@@ -2387,7 +2387,7 @@
   .dv-mid{flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12.5px; font-weight:700; color:var(--ink-2); text-align:center; line-height:1.45;}
   .dv-mid .stk{color:var(--amber); font-size:11px; font-weight:800;}
   .dtimerbar{height:8px; background:var(--line); border-radius:99px; overflow:hidden;}
-  .dtimerbar i{display:block; height:100%; background:#E3A008; width:100%;}
+  .dtimerbar i{display:block; height:100%; background:#E3A008; width:100%; transform-origin:left center;}
   .dtimerbar i.low{background:var(--red);}
   .dtime{display:flex; justify-content:space-between; gap:10px; font-size:12.5px; font-weight:700; color:var(--ink-2); margin:6px 2px 12px; font-variant-numeric:tabular-nums;}
   .dtime .gain{color:var(--good);}
@@ -2632,7 +2632,7 @@
     width:39px; height:39px; touch-action:none; -webkit-user-select:none; user-select:none;
   }
   .assistant-fabwrap.hide, .assistant-fabwrap.dismissed{display:none;}
-  .assistant-fabwrap.snapping{transition:left .26s cubic-bezier(.32,.72,.28,1), top .26s cubic-bezier(.32,.72,.28,1);}
+  .assistant-fabwrap.snapping{transition:transform .26s cubic-bezier(.32,.72,.28,1);}
   .assistant-fab{
     position:relative; width:100%; height:100%; border-radius:50%; padding:0; cursor:pointer;
     border:2px solid #C9A24B; background:#FFF8EC;
@@ -3187,7 +3187,7 @@
           <div class="jlptcd-phases" id="jlptPhases"></div>
           <div class="jlptcd-today">
             <div class="jlptcd-todayhead"><b>Hôm nay học gì</b><span id="jlptProgTxt"></span></div>
-            <div class="jlptcd-bar"><i id="jlptProgBar" style="width:0%"></i></div>
+            <div class="jlptcd-bar"><i id="jlptProgBar" style="transform:scaleX(0)"></i></div>
             <div id="jlptTodayList"></div>
           </div>
         </div>
@@ -3219,31 +3219,31 @@
           <div class="mission-list">
             <button class="mission" id="missionKanji">
               <span class="m-ic u-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 7v10M7.5 9.5h9"/></svg></span>
-              <span class="m-main"><b>Luyện tập Kanji — Bài 12 Gia đình</b><span>Học 12 kanji · Đã xong 8/12</span><span class="m-bar"><i style="width:67%"></i></span></span>
+              <span class="m-main"><b>Luyện tập Kanji — Bài 12 Gia đình</b><span>Học 12 kanji · Đã xong 8/12</span><span class="m-bar"><i style="transform:scaleX(0.67)"></i></span></span>
               <span class="m-reward"><b>+40</b><span>EXP</span></span>
               <span class="m-state doing">Đang làm</span>
             </button>
             <button class="mission" id="missionQuiz">
               <span class="m-ic u-amber"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4.6 13.4h6.2L9.6 22l8.6-11.6h-6.4Z"/></svg></span>
-              <span class="m-main"><b>Luyện kiếm — Quiz nhanh</b><span>Trả lời đúng 10 câu · Đã đúng 0/10</span><span class="m-bar"><i style="width:0%"></i></span></span>
+              <span class="m-main"><b>Luyện kiếm — Quiz nhanh</b><span>Trả lời đúng 10 câu · Đã đúng 0/10</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
               <span class="m-reward"><b>+30</b><span>EXP</span></span>
               <span class="m-state doing">Đang làm</span>
             </button>
             <button class="mission" id="missionReview">
               <span class="m-ic u-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/><path d="M12 8v4l3 2"/></svg></span>
-              <span class="m-main"><b>Ôn thẻ đến hạn</b><span>Ôn 23 thẻ sắp quên hôm nay</span><span class="m-bar"><i style="width:0%"></i></span></span>
+              <span class="m-main"><b>Ôn thẻ đến hạn</b><span>Ôn 23 thẻ sắp quên hôm nay</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
               <span class="m-reward"><b>+35</b><span>EXP</span></span>
               <span class="m-state">Chưa làm</span>
             </button>
             <button class="mission" id="missionExam">
               <span class="m-ic u-sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></span>
-              <span class="m-main"><b>Xuống núi thí luyện — Thi thử</b><span>Làm 1 đề Test JLPT đầy đủ</span><span class="m-bar"><i style="width:0%"></i></span></span>
+              <span class="m-main"><b>Xuống núi thí luyện — Thi thử</b><span>Làm 1 đề Test JLPT đầy đủ</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
               <span class="m-reward"><b>+60</b><span>EXP</span></span>
               <span class="m-state">Chưa làm</span>
             </button>
             <button class="mission" id="missionRot">
               <span class="m-ic u-amber" id="rotIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></span>
-              <span class="m-main"><b id="rotTitle">Nhiệm vụ luân phiên hôm nay</b><span id="rotSub">Đổi mới mỗi ngày — nghe · đọc · từ vựng · ngữ pháp · shadowing</span><span class="m-bar"><i style="width:0%"></i></span></span>
+              <span class="m-main"><b id="rotTitle">Nhiệm vụ luân phiên hôm nay</b><span id="rotSub">Đổi mới mỗi ngày — nghe · đọc · từ vựng · ngữ pháp · shadowing</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
               <span class="m-reward"><b id="rotReward">+30</b><span>EXP</span></span>
               <span class="m-state">Chưa làm</span>
             </button>
@@ -3513,7 +3513,7 @@
         <p style="font-size:13px;color:var(--ink-2);line-height:1.55;margin:0 2px 10px;">Lên chức bằng <b style="color:var(--ink);">điểm đóng góp</b> — kiếm từ thắng Đấu trường, quyên Xu cho cộng đồng và giúp bạn học trong phòng chat. Điểm này không mua được bằng tiền.</p>
         <div class="realmprog" style="margin:0 0 10px;">
           <div class="rp-top">Tiến độ lên Thành viên tích cực <span id="officePts">145 / 300 điểm</span></div>
-          <div class="bar"><i id="officeBar" style="width:48%"></i></div>
+          <div class="bar"><i id="officeBar" style="transform:scaleX(0.48)"></i></div>
           <p id="officeNote">Bạn đang có 145 điểm đóng góp — còn 155 điểm nữa là lên Thành viên tích cực.</p>
         </div>
         <div id="officeLadder">
@@ -4318,7 +4318,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
 
         <section class="sv2-panel" id="sv2PanelShad" aria-label="Shadowing theo từng câu trong video">
           <div class="sv2-card">
-            <div class="sv2-prog"><i id="sv2Prog" style="width:0%"></i></div>
+            <div class="sv2-prog"><i id="sv2Prog" style="transform:scaleX(0)"></i></div>
             <div class="sv2-count" id="sv2Count">Câu 1 / 23</div>
             <div class="sv2-ja jp" id="sv2Ja"></div>
             <div class="sv2-romaji" id="sv2Romaji"></div>
@@ -7295,7 +7295,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("examTitle").textContent = "Đề chuẩn · N3";
     document.getElementById("examPart").textContent = "Hướng dẫn trước khi thi";
     document.getElementById("timerTxt").textContent = exFmtT(EXS.timeLeft);
-    document.getElementById("examProgBar").style.width = "0%";
+    setBar(document.getElementById("examProgBar"), 0);
     document.getElementById("examConfirm").hidden = true;
     resultEl.hidden = true;
     examBody.hidden = false;
@@ -7451,7 +7451,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("examTitle").textContent = "Test " + testNo + " · " + curLevel;
     document.getElementById("examPart").textContent = "Hướng dẫn trước khi thi";
     document.getElementById("timerTxt").textContent = exFmtT(EXS.timeLeft);
-    document.getElementById("examProgBar").style.width = "0%";
+    setBar(document.getElementById("examProgBar"), 0);
     document.getElementById("examConfirm").hidden = true;
     resultEl.hidden = true;
     examBody.hidden = false;
@@ -7840,7 +7840,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function updateExamMeta(){
     if(!EXS) return;
     document.getElementById("answeredCount").textContent = answeredN() + "/" + EXS.qs.length;
-    document.getElementById("examProgBar").style.width = (answeredN() / EXS.qs.length * 100) + "%";
+    setBar(document.getElementById("examProgBar"), answeredN() / EXS.qs.length * 100);
     document.getElementById("prevBtn").disabled = EXS.cur === 0;
     document.getElementById("nextBtn").disabled = EXS.cur === EXS.qs.length - 1;
     renderSheet();
@@ -8184,6 +8184,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function showOv(el){ skOvRaise(el); el.classList.add("open"); el.setAttribute("aria-hidden","false"); tabResetPage(); }
   function hideOv(el){ el.classList.remove("open"); el.setAttribute("aria-hidden","true"); }
 
+  /* ---------- Thanh tien do chay bang transform (GPU) ----------
+     Fill luon rong 100%, scaleX theo % — nhin giong het width, nhung
+     khong gay layout (width doi se tinh lai layout moi lan, dac biet
+     ton voi thanh timer cap nhat lien tuc nhu dvTimeBar 100ms/lan).
+     Moi cho set width cho thanh tien do deu di qua ham nay. */
+  function setBar(el, pct){
+    if(!el) return;
+    el.style.transform = "scaleX(" + (Math.max(0, Math.min(100, pct)) / 100) + ")";
+  }
+
   /* ---------- Vuot phai de quay lai (swipe-back) ----------
      Dang mo 1 overlay (trang con) -> vuot ngang sang phai thi dong overlay
      TREN CUNG, tuong duong bam nut quay lai cua no. Khong co overlay nao mo
@@ -8206,14 +8216,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      vuot bat dau ngoai overlay, va khi co .sheet/.assistant-panel dang mo.
      Khong danh nhau voi swipe-down-to-close cua kanjiOverlay (khac truc;
      neu vuot cheo du ca 2 dieu kien thi swipe-down dong truoc, o touchend
-     overlay da dong nen swipe-back khong lam gi them). */
+     overlay da dong nen swipe-back khong lam gi them).
+     Hieu ung: trang di theo ngon tay (translateX) trong luc vuot, tha ra
+     duoi nguong thi nay ve (CSS transition .32s cua .overlay); chi theo
+     khi vuot chu yeu ngang (dx > |dy|) de khong danh nhau voi
+     keo-xuong-dong cua sv2 (doc) — moi ben chi cham transform khi minh
+     dang theo (co sbFollow), ben kia khong bi xoa. */
   (function(){
     var phoneEl = document.getElementById("phone");
     if(!phoneEl) return;
     var EDGE = 20;    /* px mep trai: vung swipe-back cua Safari iOS */
     var MIN_DX_RATIO = 0.30; /* dich phai toi thieu = 30% chieu rong #phone */
     var MAX_DY = 60;  /* lech doc toi da */
-    var startX = null, startY = null, targetOv = null;
+    var startX = null, startY = null, targetOv = null, sbFollow = false;
     /* Overlay tren cung trong so overlay dang mo: z-index cao nhat; hoa thi
        lay cai sau hon trong DOM (cung z-index thi phan tu sau ve len tren). */
     function topOverlay(){
@@ -8242,7 +8257,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       return false;
     }
     phoneEl.addEventListener("touchstart", function(e){
-      startX = startY = null; targetOv = null;
+      startX = startY = null; targetOv = null; sbFollow = false;
       if(e.touches.length !== 1) return;
       var t = e.touches[0];
       if(t.clientX < EDGE) return;
@@ -8255,12 +8270,36 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(swipeExcluded(e.target)){ targetOv = null; return; }
       startX = t.clientX; startY = t.clientY;
     }, {passive:true});
+    /* Trang di theo ngon tay trong luc vuot (kieu iOS): chi transform,
+       khong dong layout; passive, khong preventDefault. Chi theo khi vuot
+       chu yeu ngang (dx > |dy|) de khong danh nhau voi keo-xuong-dong
+       cua sv2 (doc) — ben nao dang theo thi ben kia khong cham transform
+       (kiem tra sbFollow truoc khi xoa). */
+    phoneEl.addEventListener("touchmove", function(e){
+      if(startX === null || !targetOv || e.touches.length !== 1) return;
+      if(!targetOv.classList.contains("open")){
+        if(sbFollow){ targetOv.style.transition = ""; targetOv.style.transform = ""; }
+        startX = startY = null; targetOv = null; sbFollow = false; return;
+      }
+      var t = e.touches[0];
+      var dx = t.clientX - startX, dy = t.clientY - startY;
+      if(dx <= 0 || dx <= Math.abs(dy)){
+        if(sbFollow){ targetOv.style.transition = ""; targetOv.style.transform = ""; sbFollow = false; }
+        return;
+      }
+      sbFollow = true;
+      targetOv.style.transition = "none";
+      targetOv.style.transform = "translateX(" + Math.min(dx, phoneEl.clientWidth) + "px)";
+    }, {passive:true});
     phoneEl.addEventListener("touchend", function(e){
       if(startX === null || !targetOv) return;
       var t = e.changedTouches[0];
       var dx = t.clientX - startX, dy = t.clientY - startY;
       var ov = targetOv;
       startX = startY = null; targetOv = null;
+      /* Xoa hieu ung theo ngon: duoi nguong, CSS transition .32s nay
+         overlay ve 0; tren nguong, nut quay lai dong ngay sau do. */
+      if(sbFollow){ ov.style.transition = ""; ov.style.transform = ""; sbFollow = false; }
       /* Nguong theo ti le khung dien thoai (khong phai px co dinh): vuot nhe
          duoi 30% chieu rong thi khong dong — tranh nhay trang vo tinh. */
       var minDx = Math.floor(phoneEl.clientWidth * MIN_DX_RATIO);
@@ -8272,7 +8311,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       else hideOv(ov);
     }, {passive:true});
     phoneEl.addEventListener("touchcancel", function(){
-      startX = startY = null; targetOv = null;
+      if(sbFollow && targetOv){ targetOv.style.transition = ""; targetOv.style.transform = ""; }
+      startX = startY = null; targetOv = null; sbFollow = false;
     }, {passive:true});
   })();
 
@@ -8386,7 +8426,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         '<span class="r1"><h3>Bài ' + (i + 1) + '</h3><span class="cnt">' + part.length + ' CHỮ</span></span>' +
         '<p><span class="jp">' + chars + '</span></p>' +
         '<p class="' + (prog == null ? "" : "prog") + '" data-fprog="' + i + '">' + flashProgText(key, part.length) + '</p>' +
-        '<span class="bar"><i style="width:' + pct + '%"></i></span></button>';
+        '<span class="bar"><i style="transform:scaleX(' + (pct / 100) + ')"></i></span></button>';
     }
     flashLessonsEl.innerHTML = html;
   }
@@ -8412,7 +8452,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       p.classList.add("prog");
       var row = p.closest(".setrow");
       var bar = row ? row.querySelector(".bar i") : null;
-      if(bar) bar.style.width = Math.round(flashKnown / DECK.length * 100) + "%";
+      if(bar) setBar(bar, Math.round(flashKnown / DECK.length * 100));
     }
   }
   function scrollReviewTo(el, offset){
@@ -11448,7 +11488,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function sv2RenderSh(){
     var s = SV2_PRACTICE[sv2ShIdx];
     document.getElementById("sv2Count").textContent = "Câu " + (sv2ShIdx + 1) + " / " + SV2_PRACTICE.length;
-    document.getElementById("sv2Prog").style.width = Math.round((sv2ShIdx + 1) / SV2_PRACTICE.length * 100) + "%";
+    setBar(document.getElementById("sv2Prog"), Math.round((sv2ShIdx + 1) / SV2_PRACTICE.length * 100));
     document.getElementById("sv2Ja").innerHTML = sv2Ruby(s.fj);
     document.getElementById("sv2Romaji").textContent = s.romaji;
     document.getElementById("sv2Vi").textContent = s.vi;
@@ -14238,7 +14278,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var pt = document.getElementById("wvApProg");
     if(pt) pt.innerHTML = (done ? "Hết bài" : "Thẻ " + Math.min(wvFIdx + 1, total)) + " <span>/ " + total + "</span>";
     var bar = document.getElementById("wvApBar");
-    if(bar) bar.style.width = (total ? Math.round((done ? total : wvFIdx) / total * 100) : 0) + "%";
+    if(bar) setBar(bar, total ? Math.round((done ? total : wvFIdx) / total * 100) : 0);
     var icoPlay = document.getElementById("wvApIcoPlay");
     var icoPause = document.getElementById("wvApIcoPause");
     /* Hai icon là phần tử <svg>: gán thuộc tính .hidden không có tác dụng trên SVG
@@ -14648,7 +14688,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function pkRenderTime(){
     pkTimeEl.textContent = pkFmtTime(pkTimeLeft);
     pkTimeEl.classList.toggle("low", pkPlaying && pkTimeLeft <= 30);
-    pkBarEl.style.width = Math.max(0, Math.round(pkTimeLeft / PK_TIME * 100)) + "%";
+    setBar(pkBarEl, Math.max(0, Math.round(pkTimeLeft / PK_TIME * 100)));
   }
   function pkStopTimer(){
     if(pkTimer){ clearInterval(pkTimer); pkTimer = null; }
@@ -15436,7 +15476,7 @@ function furiHTML(text){
         '<p style="font-size:12px; color:#B9BDD3; margin:8px 0 0;">Bấm vào đáp án để nghe giọng đọc dạng chia đúng.</p></div>' +
         '<button class="ptqnext" data-cj-act="next">' + (qz.idx + 1 >= qz.items.length ? "Xem kết quả" : "Câu tiếp (Enter)") + '</button>';
     }
-    h += '<div class="ptqbar"><span style="width:' + Math.round(qz.idx / qz.items.length * 100) + '%"></span></div>' +
+    h += '<div class="ptqbar"><span style="transform:scaleX(' + (Math.round(qz.idx / qz.items.length * 100) / 100) + ')"></span></div>' +
       '<div class="ptqkeys">Enter kiểm tra đáp án · Enter lần nữa để sang câu tiếp theo</div></div>';
     box.innerHTML = h;
     if(focusInput && !qz.locked){
@@ -15805,7 +15845,7 @@ function furiHTML(text){
         '<p style="font-size:12px; color:#B9BDD3; margin:8px 0 0;">Bấm vào câu để nghe giọng đọc câu hoàn chỉnh.</p></div>' +
         '<button class="ptqnext" data-pt-act="next">' + (qz.idx + 1 >= qz.items.length ? "Xem kết quả" : "Câu tiếp (Enter)") + '</button>';
     }
-    h += '<div class="ptqbar"><span style="width:' + Math.round(qz.idx / qz.items.length * 100) + '%"></span></div>' +
+    h += '<div class="ptqbar"><span style="transform:scaleX(' + (Math.round(qz.idx / qz.items.length * 100) / 100) + ')"></span></div>' +
       '<div class="ptqkeys">Phím 1–' + q.opts.length + ' chọn trợ từ · Enter kiểm tra / sang câu</div></div>';
     box.innerHTML = h;
   }
@@ -16410,7 +16450,7 @@ function furiHTML(text){
     document.getElementById("tkQuizTitle").textContent = "Tokutei Xây dựng";
     document.getElementById("tkQuizSub").textContent = "Đang tải đề…";
     document.getElementById("tkQuizTimer").textContent = "60:00";
-    document.getElementById("tkQuizProgBar").style.width = "0%";
+    setBar(document.getElementById("tkQuizProgBar"), 0);
     document.getElementById("tkQuizFoot").style.display = "none";
     document.getElementById("tkQuizSubmit").style.display = "none";
     body.innerHTML = '<p class="wvinfo" style="margin-top:16px;">Đang tải đề…</p>';
@@ -16477,7 +16517,7 @@ function furiHTML(text){
     var q = TKQ.qs[TKQ.cur], cur = TKQ.cur, n = TKQ.qs.length;
     var answered = TKQ.user[cur] !== null;
     document.getElementById("tkQuizTimer").textContent = tkFmtT(TKQ.timeLeft);
-    document.getElementById("tkQuizProgBar").style.width = ((cur + 1) / n * 100) + "%";
+    setBar(document.getElementById("tkQuizProgBar"), (cur + 1) / n * 100);
     var html = '<div class="tk-qhead"><span class="tk-qidx">Câu ' + (cur + 1) + '/' + n + '</span></div>';
     if(cur === 0 && TKQ.videoUrl) html += '<a class="tk-vidbtn" href="' + esc(TKQ.videoUrl) + '" target="_blank" rel="noopener">▶ Xem video bài giảng</a>';
     html += '<p class="tk-qtext jp">' + tkFuri(q.q) + '</p>';
@@ -16846,7 +16886,7 @@ function furiHTML(text){
     document.getElementById("pathProgCard").innerHTML =
       '<div class="pp-top"><div class="pp-name">Ngày ' + Math.min(done + 1, 30) + ' / 30<span>Lộ trình ' + lv + ' · Chặng ' + r.n + ' — ' + r.courseLbl + '</span></div>' +
       '<div class="pp-count">' + done + '/30 ✓</div></div>' +
-      '<div class="pp-bar"><div class="pp-fill" style="width:' + Math.round(done / 30 * 100) + '%"></div></div>';
+      '<div class="pp-bar"><div class="pp-fill" style="transform:scaleX(' + (Math.round(done / 30 * 100) / 100) + ')"></div></div>';
 
     var ROW = 92, W = 360, H = ROW * days.length;
     var xs = days.map(function(_, i){ return i % 2 === 0 ? 238 : 122; }); /* xen kẽ phải / trái */
@@ -16921,7 +16961,7 @@ function furiHTML(text){
     document.getElementById("pathSteps").innerHTML =
       '<button type="button" class="plan-home" id="pathPlanHome">' +
       '<b>Lộ trình · ' + plv + ' — Ngày ' + Math.min(pdone + 1, 30) + ' / 30</b>' +
-      '<span class="ph-bar"><span class="ph-fill" style="display:block; width:' + Math.round(pdone / 30 * 100) + '%"></span></span>' +
+      '<span class="ph-bar"><span class="ph-fill" style="display:block; transform:scaleX(' + (Math.round(pdone / 30 * 100) / 100) + ')"></span></span>' +
       '<svg class="ph-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>' +
       '</button>';
     document.getElementById("pathPlanHome").addEventListener("click", openPath);
@@ -17073,7 +17113,7 @@ function furiHTML(text){
     var sub = el.querySelector(".m-main span");
     if(sub) sub.textContent = subText;
     var bar = el.querySelector(".m-bar i");
-    if(bar) bar.style.width = Math.min(100, Math.round(done / total * 100)) + "%";
+    if(bar) setBar(bar, Math.min(100, Math.round(done / total * 100)));
     var st = el.querySelector(".m-state");
     if(st){
       st.textContent = isDone ? "Đã xong ✓" : (done > 0 ? "Đang làm" : "Chưa làm");
@@ -17249,7 +17289,7 @@ function furiHTML(text){
     setTxt("officePts", fmtN(state.cong) + " / " + fmtN(of.nextAt) + " điểm");
     setTxt("officeNote", "Bạn đang có " + fmtN(state.cong) + " điểm đóng góp" + (of.next ? " — còn " + fmtN(of.need) + " điểm nữa là lên " + of.next + "." : " — đã ở chức vụ cao nhất."));
     var ob = document.getElementById("officeBar");
-    if(ob) ob.style.width = Math.min(100, Math.round(state.cong / (of.nextAt || 1) * 100)) + "%";
+    if(ob) setBar(ob, Math.min(100, Math.round(state.cong / (of.nextAt || 1) * 100)));
     document.querySelectorAll("[data-buy]").forEach(function(btn){
       if(btn.classList.contains("owned")) return;
       btn.disabled = false; /* nút luôn bấm được — thiếu tiền thì bấm vào sẽ báo rõ còn thiếu bao nhiêu */
@@ -17318,7 +17358,7 @@ function furiHTML(text){
   }
   function updateDTime(){
     var bar = document.getElementById("dvTimeBar");
-    bar.style.width = (dTimeLeft / 15 * 100) + "%";
+    setBar(bar, dTimeLeft / 15 * 100);
     bar.classList.toggle("low", dTimeLeft < 5);
     setTxt("dvTimeTxt", dTimeLeft.toFixed(1) + " giây");
   }
@@ -17398,8 +17438,8 @@ function furiHTML(text){
     setTxt("drOppScore", fmtN(dOpp.score));
     setTxt("drOppName", dOpp.name);
     var mx = Math.max(dScore, dOpp.score, 1);
-    document.getElementById("drMyBar").style.width = Math.round(dScore / mx * 100) + "%";
-    document.getElementById("drOppBar").style.width = Math.round(dOpp.score / mx * 100) + "%";
+    setBar(document.getElementById("drMyBar"), Math.round(dScore / mx * 100));
+    setBar(document.getElementById("drOppBar"), Math.round(dOpp.score / mx * 100));
     setTxt("drNote", dOpp.name + " (" + dOpp.realm + ") đã đấu bộ đề này trước bạn — đúng luật đấu lệch giờ, điểm của đối thủ chỉ hiện khi bạn đấu xong. Tổng thời gian: bạn " + Math.round(dUsed) + " giây · đối thủ " + dOpp.time + " giây" + (tie ? " — điểm bằng nhau nên phân thắng bại theo thời gian." : "."));
     if(win){
       state.tuvi += 100; state.cong += 15; state.linh += 20; state.wins++;
@@ -18846,8 +18886,8 @@ function furiHTML(text){
     });
     document.getElementById("jlptProgTxt").textContent =
       "Giai đoạn " + (curPhase + 1) + " · Đã xong " + doneCount + "/" + items.length;
-    document.getElementById("jlptProgBar").style.width =
-      (items.length ? Math.round(doneCount / items.length * 100) : 0) + "%";
+    setBar(document.getElementById("jlptProgBar"),
+      items.length ? Math.round(doneCount / items.length * 100) : 0);
   }
   renderJlptCard();
 
@@ -20691,13 +20731,23 @@ function furiHTML(text){
       }
     }, true);
     var dragState = null;
+    var fabSnapTarget = null, fabSnapTimer = null; /* dinh mep dang cho (E3c) */
     fabWrap.addEventListener("pointerdown", function(e){
       if(fabClose && e.target && e.target.closest && e.target.closest("#assistantFabClose")) return;
-      dragState = { id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, l: 0, t: 0 };
+      /* Dang dinh mep do (transform chua chot): chot vi tri truoc khi keo
+         tiep, keo left + transform cong don lam nut nhay. */
+      if(fabSnapTarget !== null){
+        clearTimeout(fabSnapTimer);
+        fabWrap.classList.remove("snapping");
+        fabWrap.style.transform = "";
+        fabWrap.style.left = fabSnapTarget + "px";
+        fabSnapTarget = null;
+      }
+      dragState = { id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, l: 0, t: 0, parent: fabWrap.offsetParent };
     });
     fabWrap.addEventListener("pointermove", function(e){
       if(!dragState || e.pointerId !== dragState.id) return;
-      var parent = fabWrap.offsetParent;
+      var parent = dragState.parent;
       if(!parent) return;
       var dx = e.clientX - dragState.sx, dy = e.clientY - dragState.sy;
       if(!dragState.moved){
@@ -20705,13 +20755,18 @@ function furiHTML(text){
         dragState.moved = true;
         var pr = parent.getBoundingClientRect(), wr = fabWrap.getBoundingClientRect();
         dragState.l = wr.left - pr.left; dragState.t = wr.top - pr.top;
+        /* Cache kich thuoc khung + nut 1 lan luc bat dau keo: doc
+           clientWidth/offsetWidth moi pointermove se ep trinh duyet tinh
+           lai layout ngay sau lan ghi left/top truoc do (layout thrash). */
+        dragState.pw = parent.clientWidth; dragState.ph = parent.clientHeight;
+        dragState.w = fabWrap.offsetWidth; dragState.h = fabWrap.offsetHeight;
         fabWrap.style.right = "auto"; fabWrap.style.bottom = "auto";
         fabWrap.style.left = dragState.l + "px"; fabWrap.style.top = dragState.t + "px";
         fabWrap.classList.add("dragging");
         try{ fabWrap.setPointerCapture(e.pointerId); }catch(_){}
       }
-      var pw = parent.clientWidth, ph = parent.clientHeight;
-      var w = fabWrap.offsetWidth, h = fabWrap.offsetHeight, m = 6;
+      var pw = dragState.pw, ph = dragState.ph;
+      var w = dragState.w, h = dragState.h, m = 6;
       var nl = Math.min(Math.max(dragState.l + dx, m), Math.max(m, pw - w - m));
       var nt = Math.min(Math.max(dragState.t + dy, m), Math.max(m, ph - h - m));
       fabWrap.style.left = nl + "px"; fabWrap.style.top = nt + "px";
@@ -20729,9 +20784,17 @@ function furiHTML(text){
       var pw = parent.clientWidth, w = fabWrap.offsetWidth, m = 12;
       var cur = parseFloat(fabWrap.style.left) || 0;
       var target = (cur + w / 2 < pw / 2) ? m : Math.max(m, pw - w - m);
+      /* Dinh mep bang transform (GPU) thay cho left (layout): truot toi
+         mep bang translateX roi chot left khi xong. */
+      fabSnapTarget = target;
       fabWrap.classList.add("snapping");
-      fabWrap.style.left = target + "px";
-      setTimeout(function(){ fabWrap.classList.remove("snapping"); }, 320);
+      fabWrap.style.transform = "translateX(" + (target - cur) + "px)";
+      fabSnapTimer = setTimeout(function(){
+        fabSnapTarget = null;
+        fabWrap.classList.remove("snapping");
+        fabWrap.style.transform = "";
+        fabWrap.style.left = target + "px";
+      }, 320);
     };
     fabWrap.addEventListener("pointerup", endFabDrag);
     fabWrap.addEventListener("pointercancel", endFabDrag);
