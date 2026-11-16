@@ -790,14 +790,22 @@
   /* bottom sheet */
   .scrim{position:absolute; inset:0; background:rgba(10,8,6,.45); z-index:50; opacity:0; pointer-events:none; transition:opacity .25s;}
   .scrim.open{opacity:1; pointer-events:auto;}
+  /* Bảng trượt dưới (premium/login/answer/plan/avatar): đáy bảng bám chiều cao
+     thật của thanh tab (76px + safe-area; --tabh 70px thiếu 6px nên bảng cũ lấn
+     lên thanh tab). Khi đóng, trượt xuống hết chiều cao bảng + khoảng tới đáy
+     viewport + 8px — bản cũ translateY(105%) còn lòi ~35px che nhãn thanh tab. */
   .sheet{
-    position:absolute; left:0; right:0; bottom:var(--tabh); z-index:51; background:var(--card);
+    position:absolute; left:0; right:0; bottom:calc(76px + env(safe-area-inset-bottom)); z-index:51; background:var(--card);
     border-radius:22px 22px 0 0; padding:10px 18px calc(20px + env(safe-area-inset-bottom));
-    transform:translateY(105%); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
+    transform:translateY(calc(100% + 76px + env(safe-area-inset-bottom) + 8px)); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
     display:flex; flex-direction:column;
   }
   .sheet.open{transform:translateY(0);}
   @media (prefers-reduced-motion: reduce){ .sheet{transition:none;} }
+  @media (max-width:480px){
+    /* Bảng/scrim bám viewport trên mobile (xem ghi chú ở .sheet). */
+    .sheet,.scrim{position:fixed;}
+  }
   .grab{width:44px; height:5px; border-radius:99px; background:var(--line); margin:2px auto 14px;}
   .sheet h3{margin:0 0 4px; font-size:16.5px; font-weight:800;}
   .sheet .snote{font-size:13px; color:var(--ink-2); margin:0 0 14px;}
@@ -3863,12 +3871,14 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <button class="sv-cattab" type="button" role="tab" data-cat="anime" aria-selected="false">Anime</button>
             <button class="sv-cattab" type="button" role="tab" data-cat="daily" aria-selected="false">Đời thường</button>
             <button class="sv-cattab" type="button" role="tab" data-cat="jlpt" aria-selected="false">JLPT</button>
+            <button class="sv-cattab" type="button" role="tab" data-cat="karaoke" aria-selected="false">Karaoke</button>
           </div>
           <div id="svCatPanels">
             <div class="sv-catpanel" id="svCat-podcast"></div>
             <div class="sv-catpanel" id="svCat-anime" hidden></div>
             <div class="sv-catpanel" id="svCat-daily" hidden></div>
             <div class="sv-catpanel" id="svCat-jlpt" hidden></div>
+            <div class="sv-catpanel" id="svCat-karaoke" hidden></div>
           </div>
           <div class="wv-endpad" aria-hidden="true"></div>
         </div>
@@ -5157,6 +5167,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   <script src="assets/exam-bank-n3.js"></script>
   <script src="assets/exam-bank-n2.js"></script>
   <script src="assets/exam-bank-n1.js"></script>
+  <script src="assets/sv-lessons.js"></script>
   <!-- Firebase compat SDK — CHỈ để gọi callable makeLessonFromVideo (tính năng dán link YouTube tự tạo bài shadowing); app không dùng Firebase cho việc gì khác trong bản này -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
@@ -5263,7 +5274,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return showPremiumPrompt();
   }
   /* 10 video Shadowing miễn phí = 10 video đầu theo THỨ TỰ HIỂN THỊ:
-     thể loại theo SV_CATS (Podcast → Anime → Đời thường → JLPT), trong
+     thể loại theo SV_CATS (Podcast → Anime → Đời thường → JLPT → Karaoke), trong
      mỗi thể loại theo chuỗi (thứ tự xuất hiện đầu tiên), trong mỗi chuỗi
      theo thứ tự mảng SV_VIDEOS. Tính lười + cache vì SV_CATS/SV_VIDEOS
      khai báo ở phần sau của file. */
@@ -9718,25 +9729,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("closeRead").addEventListener("click", function(){ hideOv(readOverlay); });
   lsRenderLevels();
 
-  /* ---------- Shadowing bằng video (bản thử 1 bài): YouTube nhúng + phụ đề đồng bộ ----------
-     Video của chính kênh SoraKanji (Unlisted để thử): ID r_o5gRWkkaA, hội thoại n5-1-1
-     (ga tàu, hỏi tàu đi Tokyo + mua vé). Phụ đề + giải thích VIẾT SẴN (9 câu, mốc thời
-     gian đo trên audio gốc) — lúc chạy KHÔNG gọi API nào. Bấm câu: nhảy video tới câu
-     đó + hiện giải thích. Trình phát nạp qua YouTube IFrame API khi mở lần đầu.
-     Không có link mở ra YouTube: iframe được phủ lớp chặn click (sv-shield) nên bấm
-     vào khung video chỉ phát/dừng trong app, không bị kéo ra ngoài. */
-  var SV_ID = "r_o5gRWkkaA";
-  var SV_SUBS = [
-    {start:0.00, end:5.36, spk:"男", ja:"すみません、東京駅へ行きたいんですが、この電車は東京駅へ行きますか。", furi:"すみません、東京[とうきょう]駅[えき]へ行きたいんですが、この電車は東京[とうきょう]駅[えき]へ行きますか。", vi:"Xin lỗi, tôi muốn đi ga Tokyo. Tàu này có tới ga Tokyo không ạ?", exp:"～たいんですが: ～たい là “muốn”, thêm んです để giải thích lý do một cách lịch sự khi nhờ vả. Từ mới: 東京駅 (とうきょうえき, ga Tokyo), 電車 (でんしゃ, tàu điện)."},
-    {start:6.06, end:9.02, spk:"女", ja:"いいえ、この電車は東京駅へ行きません。", furi:"いいえ、この電車は東京[とうきょう]駅[えき]へ行きません。", vi:"Không ạ, tàu này không đi ga Tokyo.", exp:"Phủ định lịch sự: 行きます (đi) → 行きません (không đi). Mẫu ～へ行きません = “không đi đến…”."},
-    {start:9.52, end:10.82, spk:"女", ja:"次の電車に乗ってください。", furi:"次[つぎ]の電車に乗[の]ってください。", vi:"Anh đi chuyến tàu tiếp theo nhé.", exp:"～てください: “hãy…” — nhờ vả, yêu cầu lịch sự. Từ mới: 次 (つぎ, tiếp theo), 乗る (のる, lên tàu/xe)."},
-    {start:11.47, end:11.94, spk:"男", ja:"そうですか。", furi:"そうですか。", vi:"Vậy à.", exp:"そうですか: “Vậy à / Thế à” — đáp lại khi vừa nghe thông tin mới, không phải câu hỏi thật sự."},
-    {start:12.36, end:12.91, spk:"男", ja:"わかりました。", furi:"わかりました。", vi:"Tôi hiểu rồi.", exp:"わかりました: dạng lịch sự quá khứ của わかる (hiểu) — “Tôi hiểu rồi”, dùng khi đã nắm được thông tin."},
-    {start:13.89, end:15.51, spk:"男", ja:"あの、切符はどこで買いますか。", furi:"あの、切符[きっぷ]はどこで買[か]いますか。", vi:"À, vé thì mua ở đâu ạ?", exp:"あの: từ đệm khi ngập ngừng trước khi hỏi. Từ mới: 切符 (きっぷ, vé). どこで + 買いますか: hỏi “mua ở đâu” (で chỉ nơi diễn ra hành động)."},
-    {start:16.10, end:17.64, spk:"女", ja:"あちらの券売機で買えますよ。", furi:"あちらの券売機[けんばいき]で買[か]えますよ。", vi:"Anh mua được ở máy bán vé đằng kia đấy.", exp:"あちら: “đằng kia” (xa cả người nói và người nghe). Từ mới: 券売機 (けんばいき, máy bán vé). ～で買えます: 買える là thể khả năng của 買う — “có thể mua”."},
-    {start:18.22, end:19.83, spk:"女", ja:"東京駅まで300円です。", furi:"東京[とうきょう]駅[えき]まで300円です。", vi:"Đến ga Tokyo là 300 yên.", exp:"～まで + số tiền: “đến ga Tokyo là 300 yên” — まで chỉ điểm đến, phạm vi. 円 (えん, yên)."},
-    {start:20.35, end:21.32, spk:"男", ja:"ありがとうございます。", furi:"ありがとうございます。", vi:"Cảm ơn ạ.", exp:"ありがとうございます: “Cảm ơn” dạng lịch sự, dùng với người lạ, nhân viên."}
-  ];
+  /* MIRROR 2026-11-16: bai mau SV1 (9 cau) DA BO — du lieu shadowing
+     nay nam trong assets/sv-lessons.js (139 bai). SV_ID/SV_SUBS chi
+     con la stub rong de player sv* cu (khong con entry point) khong
+     gap bien undefined; xem SPEC-MIRROR.md muc "SV1". */
+  var SV_ID = "";
+  var SV_SUBS = [];
   var svOverlay = document.getElementById("shadowVideoOverlay");
   var svPlayer = null, svReady = false, svTimer = null, svCur = -1, svLoop = false, svShowFuri = true, svShowVi = true, svExpIdx = -1;
   /* Kiểu app mẫu: tự ngắt câu (svAutoPause), karaoke từng cụm từ (svSegs),
@@ -9744,25 +9742,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var svAutoPause = false, svAutoP = -1, svRates = [1, 1.25, 1.5, 0.75, 0.5], svRateIdx = 0;
   var svSegs = [], svKaraKey = "", svLastT = 0;
   function svEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-  /* Video shadowing có sẵn — mỗi video thuộc 1 thể loại (cat) + 1 chuỗi (series).
-     Thêm video làm tay: thêm 1 entry với đúng cat + series là tự hiện thành thẻ
-     trong hàng lướt ngang của thể loại đó (series mới = hàng mới). lines = số câu
-     phụ đề thật (bài 2 có 24 dòng SV2_SUBS nhưng 1 dòng trống nên tính 23 câu).
-     Thumb Marigold dùng ảnh YouTube vì ảnh bìa local chưa có trên repo. */
-  var SV_VIDEOS = [
-    {id: "PFvoDVgrroA", cat: "daily", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
-     name: "マリーゴールド (Marigold)", level: "", lines: 50, dur: "5:22",
-     thumb: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
-     alt: "Ảnh xem trước video bài hát Marigold"},
-    {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
-     name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
-     thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-swiss-podcast.jpg",
-     alt: "Ảnh xem trước video Easy N5 Japanese Podcast của kênh OkkeiJapanese"},
-    {id: "r_o5gRWkkaA", cat: "daily", series: "Shadowing mẫu N5", channel: "Tiếng Nhật Thực Chiến",
-     name: "Ở nhà ga: hỏi tàu đi Tokyo", level: "N5", lines: 9, dur: "0:22",
-     thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-tokyo-station.jpg",
-     alt: "Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga"}
-  ];
+  /* MIRROR 2026-11-16: SV_VIDEOS (139 bai) nap tu assets/sv-lessons.js —
+     file nay KHONG dinh nghia lai (khai bao lai o day se che du lieu asset). */
   function svOpenLesson(){
     svPlaysBump(SV_ID);
     hideOv(listenOverlay);
@@ -9774,8 +9755,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svStartKaraLoop();
   }
   /* ----- Luyện nghe: tab video + hàng lướt ngang ----- */
-  /* 2 tab trên cùng (Video có sẵn / Video tôi tạo) + 4 tab thể loại
-     Podcast / Anime / Đời thường / JLPT + hàng video lướt ngang kiểu app mẫu.
+  /* 2 tab trên cùng (Video có sẵn / Video tôi tạo) + 5 tab thể loại
+     Podcast / Anime / Đời thường / JLPT / Karaoke + hàng video lướt ngang kiểu app mẫu.
      Mỗi thẻ: thumb 16:9 + thời lượng + nhãn cấp + tên + kênh + lượt xem/số câu.
      Mỗi hàng chỉ hiện tối đa 4 thẻ; chuỗi có hơn 4 video thì khung cuối là thẻ
      "Xem thêm" dẫn tới trang danh sách tất cả video của chuỗi đó.
@@ -9783,8 +9764,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      số câu lấy từ dữ liệu bài thật, không bịa. Video user tự tạo lưu danh sách
      (chỉ videoId + thông tin hiển thị) ở localStorage "sk_sv_mine"; nội dung
      bài nằm trong cache server theo videoId nên mở lại không cần tạo lại. */
-  var SV_CATS = ["podcast", "anime", "daily", "jlpt"];
-  var SV_CAT_LABEL = {podcast: "Podcast", anime: "Anime", daily: "Đời thường", jlpt: "JLPT"};
+  var SV_CATS = ["podcast", "anime", "daily", "jlpt", "karaoke"];
+  var SV_CAT_LABEL = {podcast: "Podcast", anime: "Anime", daily: "Đời thường", jlpt: "JLPT", karaoke: "Karaoke"};
   var svTopTab = "ready";
   var svCat = "podcast";
   function svPlaysLoad(){ try{ var p = JSON.parse(window.localStorage.getItem("sk_sv_plays") || "{}"); return (p && typeof p === "object") ? p : {}; }catch(_){ return {}; } }
@@ -9854,7 +9835,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function svOpenCard(id){
     if(!premiumGateVideo(id)) return;
-    if(id === SV_ID){ svOpenLesson(); return; }
+    /* MIRROR 2026-11-16: bo nhanh SV1 — bai mau SV1 da bo, mo bai qua SVU_DATA. */
     if(typeof SVU_DATA !== "undefined" && SVU_DATA[id]){ svuActivate(SVU_DATA[id]); return; }
     /* Bài user tạo ở phiên trước: chưa có trong SVU_DATA, tải lại từ cache server. */
     svuOpenMine(id);
@@ -10092,6 +10073,23 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       }
     });
   }
+  /* Tô sáng karaoke theo CHỈ SỐ cụm (dùng khi câu có mốc giờ từng từ wt):
+     cụm trước chỉ số → .done (đã đọc), cụm tại chỉ số → .now (đang đọc),
+     còn lại trống. Cùng kiểu class với svSweepFill, chỉ khác cách chọn cụm. */
+  function svSweepFillIdx(spans, idx){
+    spans.forEach(function(wd, j){
+      wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
+      wd.style.webkitTextFillColor = ""; wd.style.color = "";
+      wd.classList.remove("sweep");
+      if(j < idx){
+        wd.classList.add("done"); wd.classList.remove("now");
+      } else if(j === idx){
+        wd.classList.remove("done"); wd.classList.add("now");
+      } else {
+        wd.classList.remove("done"); wd.classList.remove("now");
+      }
+    });
+  }
   /* Xóa sạch trạng thái karaoke trong 1 khung (khi đổi câu / đóng bài) —
      cả class lẫn style inline còn sót từ kiểu cũ, không thì trạng thái cũ còn sót lại. */
   function svClearSweep(root){
@@ -10102,17 +10100,25 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       wd.style.webkitTextFillColor = ""; wd.style.color = "";
     });
   }
-  /* Karaoke: tỉ lệ thời gian đã qua trong câu → các cụm từ đã đọc được tô đỏ +
-     gạch chân, cụm đang đọc được bọc khung đỏ kiểu Miraa (xem svSweepFill). Thời điểm
-     từng cụm từ nội suy đều theo số ký tự vì phụ đề viết sẵn chỉ có mốc đầu/cuối câu */
+  /* Karaoke: tỉ lệ thời gian đã qua trong câu → cụm đã đọc tô đỏ + gạch chân,
+     cụm đang đọc bọc khung (class .now). Câu nào có mốc giờ từng từ (s.wt,
+     cùng độ dài với số cụm) thì khung nhảy theo mốc thật; còn lại nội suy
+     đều theo số ký tự như cũ. */
   function svKaraoke(t){
     if(svCur < 0 || !svSegs[svCur]) return;
     var s = SV_SUBS[svCur], info = svSegs[svCur];
-    var frac = (t - s.start) / Math.max(0.01, s.end - s.start);
-    if(frac < 0) frac = 0; if(frac > 1) frac = 1;
     var line = document.querySelectorAll("#svLines .sv-line")[svCur];
     if(!line) return;
-    svSweepFill(line.querySelectorAll(".sv-w"), info, frac);
+    var spans = line.querySelectorAll(".sv-w");
+    if(s.wt && s.wt.length === info.segs.length){
+      var idx = 0;
+      for(var k = 0; k < s.wt.length; k++){ if(t >= s.wt[k]) idx = k; else break; }
+      svSweepFillIdx(spans, idx);
+      return;
+    }
+    var frac = (t - s.start) / Math.max(0.01, s.end - s.start);
+    if(frac < 0) frac = 0; if(frac > 1) frac = 1;
+    svSweepFill(spans, info, frac);
   }
   /* Vòng lặp karaoke: cập nhật trạng thái các cụm từ mỗi khung hình (~60fps)
      thay vì 120ms một lần. Tự dừng khi đóng trang; mở lại thì svOpenLesson khởi
@@ -10372,52 +10378,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     hideOv(svOverlay); svRenderRows(); showOv(listenOverlay);
   });
 
-  /* ---------- Shadowing bằng video (bài 2): Easy N5 Japanese Podcast — kênh OkkeiJapanese ----------
-     Video Shorts của NGƯỜI KHÁC (ID mKPRQF70PvA, 1:01): giữ nguyên video gốc, không tải
-     lại/up lại — nhúng bằng YouTube IFrame API với host youtube-nocookie, facade ảnh bìa
-     lưu trong app (assets/sv2-facade-swiss.jpg), bấm mới nạp trình phát — đúng cơ chế
-     facade của bài 1. Phủ lớp chặn click (sv-shield) nên bấm vào video chỉ phát/dừng.
-     Phụ đề SỬA TAY từ phụ đề tự động của YouTube (bản gốc có 4 lỗi nhận dạng) — dùng đúng
-     danh sách câu đã sửa dưới đây, KHÔNG dùng bản gốc. Câu ở 0:50 phụ đề gốc nghe chưa rõ
-     nên CHỈ hiện ở tab Phụ đề kèm ghi chú, không đưa vào luyện tập (unclear).
-     4 tab: Phụ đề (bấm câu → video nhảy tới mốc đó và phát + hiện bong bóng giải
-     thích của câu đó; câu đang nói được tô sáng, karaoke chạy theo từng cụm từ,
-     khung tự cuộn giữ câu đang đọc ở giữa — cùng cơ chế với bài 1) ·
-     Shadowing (phát đúng đoạn câu trong CHÍNH video, không dùng TTS; ghi âm chấm điểm
-     bằng đúng cơ chế Web Speech miễn phí của v105: scBegin/scStop/scResultFor/scPanelHTML) ·
-     Chính tả (nghe đoạn, gõ lại, so từng ký tự với câu đúng) · Điền từ (một từ nội dung bị
-     che; chấp nhận chữ Hán hoặc hiragana theo cách đọc). fj = furigana dạng "漢字[かんじ]"
-     viết tay theo đúng cách đọc furi đã duyệt. */
-  var SV2_ID = "mKPRQF70PvA";
-  var SV2_DUR = 62;
-  var SV2_SUBS = [
-    {t:0,  ja:"スイスで何をしましたか?", fj:"スイスで何[なに]をしましたか?", furi:"スイスでなにをしましたか?", romaji:"suisu de nani wo shimashita ka?", vi:"Bạn đã làm gì ở Thụy Sĩ?", blank:["何","なに"], exp:"～で: trợ từ chỉ nơi diễn ra hành động — “làm gì Ở đâu” thì dùng で sau nơi chốn. 何 (なに, cái gì) + を + しましたか: câu hỏi quá khứ “đã làm gì?”; しました là quá khứ lịch sự của する (làm)."},
-    {t:2,  ja:"アルプスの山に登ったり、電車で旅行したりしました。", fj:"アルプスの山[やま]に登[のぼ]ったり、電車[でんしゃ]で旅行[りょこう]したりしました。", furi:"アルプスのやまにのぼったり、でんしゃでりょこうしたりしました。", romaji:"arupusu no yama ni nobottari, densha de ryokou shitari shimashita.", vi:"Mình đã leo núi Alps và đi du lịch bằng tàu điện.", blank:["電車","でんしゃ"], exp:"～たり、～たりします: liệt kê một vài việc tiêu biểu trong số nhiều việc đã làm (“nào là leo núi, nào là đi du lịch…”); cách làm: động từ thể た + り. Từ mới: 登る (のぼる, leo), 旅行 (りょこう, du lịch). 電車で: で ở đây chỉ phương tiện — đi BẰNG tàu."},
-    {t:2,  ja:"すごいね。", fj:"すごいね。", furi:"すごいね。", romaji:"sugoi ne.", vi:"Tuyệt nhỉ.", blank:["すごい","すごい"], exp:"すごい: tính từ い “tuyệt vời, ghê thật” — thốt lên khi ấn tượng. ね ở cuối câu: chia sẻ cảm xúc, mong người nghe đồng cảm (“…nhỉ”)."},
-    {t:9,  ja:"たくさん色々なことができました。", fj:"たくさん色々[いろいろ]なことができました。", furi:"たくさんいろいろなことができました。", romaji:"takusan iroiro na koto ga dekimashita.", vi:"Mình đã làm được rất nhiều thứ.", blank:["色々","いろいろ"], exp:"～ことができます: “có thể làm…” — こと biến động từ thành danh từ (“việc…”). できました là quá khứ của できる (có thể). Từ mới: たくさん (nhiều), 色々 (いろいろ, đủ loại, nhiều thứ)."},
-    {t:12, ja:"いいですね。", fj:"いいですね。", furi:"いいですね。", romaji:"ii desu ne.", vi:"Hay quá nhỉ.", blank:["いい","いい"], exp:"いい: tính từ “tốt, hay” (dạng gốc là よい). ～ですね: vừa nhận xét vừa chia sẻ cảm nhận với người nghe — “Hay quá nhỉ”."},
-    {t:12, ja:"いいな。", fj:"いいな。", furi:"いいな。", romaji:"ii na.", vi:"Thích thật.", blank:["いい","いい"], exp:"な ở cuối câu: tự nhủ, cảm thán một mình, thân mật hơn ね — “Thích thật đấy”. Chỉ dùng với người thân, bạn bè; khi nói lịch sự thì dùng ね."},
-    {t:12, ja:"どのぐらいスイスにいましたか?", fj:"どのぐらいスイスにいましたか?", furi:"どのぐらいスイスにいましたか?", romaji:"dono gurai suisu ni imashita ka?", vi:"Bạn ở Thụy Sĩ bao lâu?", blank:["スイス","すいす"], exp:"どのぐらい: “khoảng bao lâu / chừng nào” — hỏi về độ dài thời gian hoặc lượng. いました là quá khứ của います (ở, có mặt — dùng cho người và động vật): “đã ở (bao lâu)”."},
-    {t:18, ja:"1ヶ月ぐらいいました。", fj:"1ヶ月[いっかげつ]ぐらいいました。", furi:"いっかげつぐらいいました。", romaji:"ikkagetsu gurai imashita.", vi:"Mình ở khoảng một tháng.", blank:["1ヶ月","いっかげつ"], exp:"1ヶ月 (いっかげつ): “1 tháng” — ヶ月 (かげつ) là đơn vị đếm số tháng. ぐらい đặt sau số lượng = “khoảng, chừng”: 1ヶ月ぐらい = “khoảng 1 tháng”."},
-    {t:20, ja:"長いですね。", fj:"長[なが]いですね。", furi:"ながいですね。", romaji:"nagai desu ne.", vi:"Dài nhỉ.", blank:["長い","ながい"], exp:"長い (ながい): tính từ い “dài” — dùng được cho cả độ dài và thời gian. Câu cảm thán + ですね: “Dài nhỉ / Lâu nhỉ”."},
-    {t:23, ja:"はい。", fj:"はい。", furi:"はい。", romaji:"hai.", vi:"Vâng.", exp:"はい: “vâng / dạ” — đáp lại lịch sự khi được hỏi, hoặc xác nhận điều người kia vừa nói."},
-    {t:24, ja:"うん。", fj:"うん。", furi:"うん。", romaji:"un.", vi:"Ừ.", exp:"うん: “ừ” — cách đáp thân mật thay cho はい, chỉ dùng với gia đình, bạn bè thân. Không dùng với cấp trên hay người lạ."},
-    {t:25, ja:"実は友達がスイス人なので", fj:"実[じつ]は友達[ともだち]がスイス人[じん]なので", furi:"じつはともだちがスイスじんなので", romaji:"jitsu wa tomodachi ga suisu-jin na node", vi:"Thật ra bạn mình là người Thụy Sĩ nên…", blank:["友達","ともだち"], exp:"実は (じつは): “thật ra là…” — mở đầu khi thổ lộ điều người nghe chưa biết. ～ので: “vì… nên…” — nêu lý do một cách nhẹ nhàng. ～人 (じん) sau tên nước chỉ quốc tịch: スイス人 = người Thụy Sĩ. Từ mới: 友達 (ともだち, bạn bè)."},
-    {t:29, ja:"はい。", fj:"はい。", furi:"はい。", romaji:"hai.", vi:"Vâng.", exp:"はい ở đây là tiếng đệm khi nghe kể (aizuchi): “vâng (cứ nói tiếp đi)” — tỏ ý mình vẫn đang lắng nghe, chứ không phải trả lời câu hỏi."},
-    {t:30, ja:"家に泊まりました。", fj:"家[いえ]に泊[と]まりました。", furi:"いえにとまりました。", romaji:"ie ni tomarimashita.", vi:"Mình đã ở nhờ nhà bạn ấy.", blank:["家","いえ"], exp:"泊まる (とまる): “ở lại qua đêm, trọ”. ～に泊まる: に chỉ nơi mình ở lại (nhà bạn, khách sạn…). 泊まりました là quá khứ lịch sự. Từ mới: 家 (いえ, nhà)."},
-    {t:32, ja:"良かったですね。", fj:"良[よ]かったですね。", furi:"よかったですね。", romaji:"yokatta desu ne.", vi:"Tốt quá nhỉ.", blank:["良かった","よかった"], exp:"良かった (よかった): quá khứ của いい/よい (tốt) — “đã tốt, may quá”. 良かったですね: mừng thay cho người nghe — “Tốt quá nhỉ”."},
-    {t:34, ja:"だからお金をあまり使いませんでした。", fj:"だからお金[かね]をあまり使[つか]いませんでした。", furi:"だからおかねをあまりつかいませんでした。", romaji:"dakara okane wo amari tsukaimasen deshita.", vi:"Nên mình không tốn nhiều tiền.", blank:["お金","おかね"], exp:"だから: “vì thế, cho nên” — nối câu chỉ nguyên nhân với kết quả. あまり + câu phủ định: “không … lắm”. 使いませんでした: quá khứ phủ định lịch sự của 使う (つかう, dùng, tiêu). Từ mới: お金 (おかね, tiền)."},
-    {t:34, ja:"スイスは物価が高いですよね。", fj:"スイスは物価[ぶっか]が高[たか]いですよね。", furi:"スイスはぶっかはたかいですよね。", romaji:"suisu wa bukka ga takai desu yo ne.", vi:"Vật giá ở Thụy Sĩ đắt đỏ nhỉ.", blank:["物価","ぶっか"], exp:"物価 (ぶっか): “vật giá, mức giá sinh hoạt”. 高い (たかい): tính từ い “đắt; cao”. ～よね ở cuối câu: vừa khẳng định vừa rủ người nghe đồng tình — “…đúng không nhỉ”."},
-    {t:44, ja:"すごく高いです。", fj:"すごく高[たか]いです。", furi:"すごくたかいです。", romaji:"sugoku takai desu.", vi:"Đắt lắm.", blank:["高い","たかい"], exp:"すごく: “rất, cực kỳ” — phó từ chỉ mức độ cao (dạng trạng từ của すごい). すごく高いです: “Đắt lắm (đấy)”."},
-    {t:45, ja:"すごく高いですね。", fj:"すごく高[たか]いですね。", furi:"すごくたかいですね。", romaji:"sugoku takai desu ne.", vi:"Đắt lắm nhỉ.", blank:["すごく","すごく"], exp:"Giống câu “すごく高いです” ngay trước nhưng thêm ね ở cuối: từ chỗ tự khẳng định một mình thành chia sẻ cảm nhận với người nghe — “Đắt lắm nhỉ”."},
-    {t:46, ja:"日本より高いです。", fj:"日本[にほん]より高[たか]いです。", furi:"にほんよりたかいです。", romaji:"nihon yori takai desu.", vi:"Đắt hơn ở Nhật.", blank:["日本","にほん"], exp:"～より: đặt sau mốc đem ra so sánh — 日本より高い = “đắt hơn (so với) Nhật”. Mẫu so sánh hơn: A は B より + tính từ."},
-    {t:48, ja:"そうですよね。", fj:"そうですよね。", furi:"そうですよね。", romaji:"sou desu yo ne.", vi:"Đúng vậy nhỉ.", blank:["そう","そう"], exp:"そうです: “đúng vậy” — đồng ý với điều vừa nghe. Thêm よね thành “Đúng vậy nhỉ”: vừa khẳng định vừa tìm sự đồng tình."},
-    {t:50, unclear:true},
-    {t:59, ja:"高い、高かったですか?", fj:"高[たか]い、高[たか]かったですか?", furi:"たかい、たかかったですか?", romaji:"takai, takakatta desu ka?", vi:"Đắt không, có đắt không?", blank:["高かった","たかかった"], exp:"高かった (たかかった): quá khứ của tính từ い 高い — bỏ い, thêm かった. Hỏi lại bằng ～ですか để xác nhận điều mình vừa nghe: “(Có) đắt không?”."},
-    {t:61, ja:"はい。", fj:"はい。", furi:"はい。", romaji:"hai.", vi:"Vâng.", exp:"はい: “vâng” — trả lời khẳng định ngắn gọn cho câu hỏi ～ですか ở ngay trước."}
-  ];
-  var SV2_PRACTICE = SV2_SUBS.filter(function(s){ return !s.unclear; });
-  var SV2_FILL = SV2_PRACTICE.filter(function(s){ return !!s.blank; });
+  /* MIRROR 2026-11-16: bai 2 goc SV2 (23 cau) DA BO — du lieu shadowing
+     nay nam trong assets/sv-lessons.js (139 bai). SV2_* chi con la trang
+     thai runtime cua player sv2*: svuActivate() nap bai vao truoc khi mo
+     (giong sorakanji-app); xem SPEC-MIRROR.md muc "SV2". */
+  var SV2_ID = "";
+  var SV2_DUR = 0;
+  var SV2_SUBS = [];
+  var SV2_PRACTICE = [];
+  var SV2_FILL = [];
   /* Cuối đoạn của 1 câu = mốc bắt đầu của câu có mốc LỚN HƠN gần nhất (nhiều câu trùng
      mốc giây nên lấy mốc khác gần nhất phía sau); câu cuối kết thúc ở hết video */
   function sv2EndOf(s){
@@ -10427,25 +10396,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     for(var i = 0; i < SV2_SUBS.length; i++){ if(SV2_SUBS[i].t > s.t) return SV2_SUBS[i].t; }
     return SV2_DUR;
   }
-  /* Khung thời gian riêng của TỪNG câu cho tô sáng + karaoke: nhiều câu trùng
-     mốc giây nên các câu cùng mốc chia đều khoảng tới mốc khác gần nhất phía
-     sau — nhờ vậy câu nào cũng có lượt được tô sáng (trước đây tick lấy câu
-     CUỐI cùng trong nhóm trùng mốc, các câu ngắn như 「いいですね」「いいな」
-     bị câu sau nuốt mất, chưa kịp hiện đã nhảy qua). Nội suy đều như cách
-     karaoke bài 1 nội suy theo số ký tự trong câu */
+  /* MIRROR 2026-11-16: SV2_WIN tinh san luc nap cho bai 2 cu da bo — nay
+     svuActivate() lay win tu SVU_DATA cua tung bai. */
   var SV2_WIN = [];
-  (function(){
-    var i = 0;
-    while(i < SV2_SUBS.length){
-      var j = i;
-      while(j + 1 < SV2_SUBS.length && SV2_SUBS[j + 1].t === SV2_SUBS[i].t) j++;
-      var gS = SV2_SUBS[i].t;
-      var gE = (j + 1 < SV2_SUBS.length) ? SV2_SUBS[j + 1].t : SV2_DUR;
-      var n = j - i + 1, span = (gE - gS) / n;
-      for(var k = i; k <= j; k++) SV2_WIN[k] = {start: gS + span * (k - i), end: gS + span * (k - i + 1)};
-      i = j + 1;
-    }
-  })();
   /* Tách 1 câu thành các cụm từ cho karaoke — cùng thuật toán với svSegments
      của bài 1 (cụm chữ Hán/số/ヶ/々 trước "[" là 1 cụm kèm cách đọc; phần kana
      còn lại cắt nhỏ tại dấu câu, sau trợ từ, tối đa 5 ký tự) */
@@ -10677,17 +10630,26 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
   }
   /* ----- Tab Phụ đề ----- */
-  /* Karaoke như bài 1: cụm đã qua tô đỏ + gạch chân, cụm đang đọc bọc khung
-     đỏ kiểu Miraa (xem svSweepFill) — tỉ lệ thời gian đã qua trong khung của câu. */
+  /* Karaoke như bài 1: cụm đã đọc tô đỏ, cụm đang đọc bọc khung
+     (xem svSweepFill) — câu nào có mốc giờ từng từ (wt) thì khung nhảy theo
+     mốc thật; còn lại tỉ lệ thời gian đã qua trong khung của câu. */
   function sv2Karaoke(t){
     if(sv2CurSub < 0 || !sv2Segs[sv2CurSub]) return;
     var w = SV2_WIN[sv2CurSub], info = sv2Segs[sv2CurSub];
     if(!w || !info) return;
-    var frac = (t - w.start) / Math.max(0.01, w.end - w.start);
-    if(frac < 0) frac = 0; if(frac > 1) frac = 1;
     var row = document.querySelectorAll("#sv2Subs .sv2-sub")[sv2CurSub];
     if(!row) return;
-    svSweepFill(row.querySelectorAll(".sv-w"), info, frac);
+    var spans = row.querySelectorAll(".sv-w");
+    var s = SV2_SUBS[sv2CurSub];
+    if(s && s.wt && s.wt.length === info.segs.length){
+      var idx = 0;
+      for(var k = 0; k < s.wt.length; k++){ if(t >= s.wt[k]) idx = k; else break; }
+      svSweepFillIdx(spans, idx);
+      return;
+    }
+    var frac = (t - w.start) / Math.max(0.01, w.end - w.start);
+    if(frac < 0) frac = 0; if(frac > 1) frac = 1;
+    svSweepFill(spans, info, frac);
   }
   /* Vòng lặp karaoke cho player 2 (như svKaraLoop của bài 1). */
   var sv2KaraRaf = 0;
@@ -11450,98 +11412,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     appId: "1:753379492663:web:baff34f2c0bac00e02d0b2"
   };
   var SVU_NOT_READY = "Tính năng chưa sẵn sàng — function chưa được deploy, thử lại sau";
-  /* Bản gốc của bài 2, giữ nguyên không đổi: mỗi lần mở bài 2 (hoặc bài tự tạo)
-     đều nạp lại dữ liệu qua svuActivate() nên các bài không lẫn nhau. SVU_DATA
-     là sổ đăng ký mọi bài mở bằng player sv2*, khóa theo video ID. */
-  var SV2_ORIG = {
-    id: SV2_ID, dur: SV2_DUR, subs: SV2_SUBS, win: SV2_WIN, practice: SV2_PRACTICE, fill: SV2_FILL,
-    headTitle: "Shadowing · Video N5",
-    headSub: "Easy N5 Japanese Podcast · kênh OkkeiJapanese",
-    srcNote: "Phụ đề đã sửa tay từ phụ đề tự động của YouTube; video gốc của kênh OkkeiJapanese.",
-    facadeImg: "assets/sv2-facade-swiss.jpg",
-    facadeAlt: "Ảnh xem trước video Easy N5 Japanese Podcast: người dẫn chương trình của kênh OkkeiJapanese",
-    facadeLabel: "Phát video Easy N5 Japanese Podcast của kênh OkkeiJapanese"
-  };
-  var SVU_DATA = {};
-  SVU_DATA[SV2_ORIG.id] = SV2_ORIG;
+  /* MIRROR 2026-11-16: ban goc bai 2 (SV2-ORIG) DA BO cung bai 2.
+     SVU_DATA la so dang ky moi bai mo bang player sv2*, khoa theo video ID —
+     du lieu 139 bai co san nap tu assets/sv-lessons.js. CHU Y: script chinh
+     chay trong IIFE nen khoi tao SVU_DATA = {} o day se CHE (shadow) bien
+     global cua asset; phai lay qua window.SVU_DATA. */
+  var SVU_DATA = window.SVU_DATA || {};
 
-  /* ---------- Bài 3: マリーゴールド — học tiếng Nhật qua bài hát (Vietsub + Romaji) ----------
-     Video THƯỜNG 16:9 (không phải Shorts), ID PFvoDVgrroA, 5:22, đăng Ẩn trên kênh
-     Tiếng Nhật Thực Chiến. 50 câu lấy ĐÚNG từ marigold-lesson.json đã soát tay
-     (start/end chính xác tới phần thập phân, jp/reading/romaji/vi/notes/tokens);
-     fj dựng từ tokens bằng đúng luật svuFjFromTokens. Khác bài 2 (phụ đề chỉ có
-     mốc bắt đầu, câu sau nối câu trước): bài này mỗi câu có mốc kết thúc riêng
-     (trường e) — khung SV3_WIN lấy đúng start→end từng câu nên các đoạn không
-     lời (dạo nhạc 0–15s, nhạc giữa 183–198s, outro sau 267s) không tô câu nào,
-     và sv2EndOf dừng đoạn phát đúng ở cuối câu nhờ trường e. Mở bằng chính
-     player sv2* qua svuActivate (wide: khung video nằm ngang 16:9). */
-  var SV3_ID = "PFvoDVgrroA";
-  var SV3_DUR = 322;
-  var SV3_SUBS = [
-    {t:15, e:18.9, ja:"風の強さがちょっと", fj:"風[かぜ]の強[つよ]さがちょっと", furi:"かぜのつよさがちょっと", romaji:"kaze no tsuyosa ga chotto", vi:"Cơn gió hơi mạnh một chút", blank:["強さ","つよさ"], exp:"風の強さ (かぜのつよさ): sức gió; ちょっと: một chút, hơi"},
-    {t:19.2, e:23.2, ja:"心を揺さぶりすぎて", fj:"心[こころ]を揺さぶり[ゆさぶり]すぎて", furi:"こころをゆさぶりすぎて", romaji:"kokoro wo yusaburi sugite", vi:"Khiến trái tim tôi xao động quá đỗi", blank:["心","こころ"], exp:"心 (こころ): trái tim; 揺さぶる (ゆさぶる): lay động, xao động; ～すぎる: quá mức"},
-    {t:23.3, e:28.9, ja:"真面目に見つめた", fj:"真面目[まじめ]に見つめ[みつめ]た", furi:"まじめにみつめた", romaji:"majime ni mitsumeta", vi:"Tôi đã nhìn cậu thật nghiêm túc", blank:["真面目","まじめ"], exp:"真面目に (まじめに): một cách nghiêm túc; 見つめる (みつめる): nhìn chăm chú, ngắm nhìn"},
-    {t:28.9, e:33.3, ja:"君が恋しい", fj:"君[きみ]が恋しい[こいしい]", furi:"きみがこいしい", romaji:"kimi ga koishii", vi:"Tôi nhớ cậu", blank:["恋しい","こいしい"], exp:"君 (きみ): cậu, bạn; 恋しい (こいしい): nhớ nhung, khao khát gặp"},
-    {t:33.4, e:36.6, ja:"でんぐり返しの日々", fj:"でんぐり返し[でんぐりがえし]の日々[ひび]", furi:"でんぐりがえしのひび", romaji:"dengurigaeshi no hibi", vi:"Những ngày tháng đảo lộn", blank:["日々","ひび"], exp:"でんぐり返し: lộn nhào, trồng cây chuối — chỉ những ngày rối tung; 日々 (ひび): ngày tháng"},
-    {t:36.7, e:40.76, ja:"可哀想なふりをして", fj:"可哀想[かわいそう]なふりをして", furi:"かわいそうなふりをして", romaji:"kawaisou na furi wo shite", vi:"Giả vờ đáng thương", blank:["可哀想","かわいそう"], exp:"可哀想な (かわいそうな): đáng thương; ふりをする: giả vờ"},
-    {t:41.76, e:47.2, ja:"だらけてみたけど", fj:"だらけてみたけど", furi:"だらけてみたけど", romaji:"darakete mita kedo", vi:"Tôi đã thử sống buông thả, nhưng…", blank:["だらけて","だらけて"], exp:"だらける: buông thả, lười biếng; ～てみる: thử làm; けど: nhưng"},
-    {t:47.3, e:51.6, ja:"希望の光は", fj:"希望[きぼう]の光[ひかり]は", furi:"きぼうのひかりは", romaji:"kibou no hikari wa", vi:"Ánh sáng của hy vọng", blank:["希望","きぼう"], exp:"希望 (きぼう): hy vọng; 光 (ひかり): ánh sáng"},
-    {t:51.7, e:57.3, ja:"目の前でずっと輝いている", fj:"目[め]の前[まえ]でずっと輝い[かがやい]ている", furi:"めのまえでずっとかがやいている", romaji:"me no mae de zutto kagayaite iru", vi:"Vẫn luôn tỏa sáng ngay trước mắt tôi", blank:["輝いている","かがやいている"], exp:"目の前 (めのまえ): ngay trước mắt; ずっと: mãi, luôn; 輝く (かがやく): tỏa sáng"},
-    {t:57.4, e:59.32, ja:"幸せだ", fj:"幸せ[しあわせ]だ", furi:"しあわせだ", romaji:"shiawase da", vi:"Thật hạnh phúc", blank:["幸せ","しあわせ"], exp:"幸せ (しあわせ): hạnh phúc"},
-    {t:59.32, e:64.3, ja:"麦わらの帽子の君が", fj:"麦わら[むぎわら]の帽子[ぼうし]の君[きみ]が", furi:"むぎわらのぼうしのきみが", romaji:"mugiwara no boushi no kimi ga", vi:"Cậu đội chiếc mũ rơm", blank:["帽子","ぼうし"], exp:"麦わら (むぎわら): rơm lúa mạch; 帽子 (ぼうし): cái mũ"},
-    {t:64.4, e:69.1, ja:"揺れたマリーゴールドに似てる", fj:"揺れ[ゆれ]たマリーゴールドに似[に]てる", furi:"ゆれたマリーゴールドににてる", romaji:"yureta mariigoorudo ni niteru", vi:"Trông giống bông cúc vạn thọ đang đung đưa", blank:["似てる","にてる"], exp:"揺れる (ゆれる): đung đưa; マリーゴールド: cúc vạn thọ; ～に似てる: giống như"},
-    {t:69.1, e:74, ja:"あれは空がまだ青い夏のこと", fj:"あれは空[そら]がまだ青い[あおい]夏[なつ]のこと", furi:"あれはそらがまだあおいなつのこと", romaji:"are wa sora ga mada aoi natsu no koto", vi:"Đó là chuyện mùa hè khi bầu trời còn xanh", blank:["空","そら"], exp:"空 (そら): bầu trời; まだ青い: vẫn còn xanh; 夏 (なつ): mùa hè"},
-    {t:74.1, e:78.44, ja:"懐かしいと笑えたあの日の恋", fj:"懐かしい[なつかしい]と笑え[わらえ]たあの日[ひ]の恋[こい]", furi:"なつかしいとわらえたあのひのこい", romaji:"natsukashii to waraeta ano hi no koi", vi:"Mối tình ngày ấy mà giờ tôi có thể cười nhớ về", blank:["恋","こい"], exp:"懐かしい (なつかしい): thân thương, hoài niệm; 笑える (わらえる): có thể cười; 恋 (こい): tình yêu"},
-    {t:78.44, e:82.3, ja:"「もう離れないで」と", fj:"「もう離れ[はなれ]ないで」と", furi:"「もうはなれないで」と", romaji:"「mou hanarenaide」 to", vi:"“Đừng rời xa tớ nữa” —", blank:["離れ","はなれ"], exp:"もう～ないで: đừng… nữa; 離れる (はなれる): rời xa; と: trích dẫn lời nói"},
-    {t:82.4, e:87.6, ja:"泣きそうな目で見つめる君を", fj:"泣き[なき]そうな目[め]で見つめる[みつめる]君[きみ]を", furi:"なきそうなめでみつめるきみを", romaji:"nakisou na me de mitsumeru kimi wo", vi:"Cậu nhìn tôi với đôi mắt như sắp khóc", blank:["見つめる","みつめる"], exp:"泣きそうな (なきそうな): như sắp khóc; 目 (め): mắt; 見つめる: nhìn chăm chú"},
-    {t:87.7, e:91.6, ja:"雲のような優しさでそっとぎゅっと", fj:"雲[くも]のような優し[やさし]さでそっとぎゅっと", furi:"くものようなやさしさでそっとぎゅっと", romaji:"kumo no you na yasashisa de sotto gyutto", vi:"Với sự dịu dàng như mây, nhẹ nhàng và thật chặt", blank:["雲","くも"], exp:"雲 (くも): mây; 優しさ (やさしさ): sự dịu dàng; そっと: nhẹ nhàng; ぎゅっと: thật chặt"},
-    {t:91.7, e:97.58, ja:"抱きしめて 抱きしめて 離さない", fj:"抱きしめ[だきしめ]て 抱きしめ[だきしめ]て 離さ[はなさ]ない", furi:"だきしめて だきしめて はなさない", romaji:"dakishimete dakishimete hanasanai", vi:"Ôm chặt cậu, ôm chặt cậu, không buông ra", blank:["抱きしめて","だきしめて"], exp:"抱きしめる (だきしめる): ôm chặt; 離さない (はなさない): không buông ra"},
-    {t:101.48, e:105.2, ja:"本当の気持ち全部", fj:"本当[ほんとう]の気持ち[きもち]全部[ぜんぶ]", furi:"ほんとうのきもちぜんぶ", romaji:"hontou no kimochi zenbu", vi:"Tất cả cảm xúc thật của tôi", blank:["気持ち","きもち"], exp:"本当の (ほんとうの): thật sự; 気持ち (きもち): cảm xúc; 全部 (ぜんぶ): tất cả"},
-    {t:105.3, e:108.68, ja:"吐き出せるほど強くはない", fj:"吐き出せる[はきだせる]ほど強く[つよく]はない", furi:"はきだせるほどつよくはない", romaji:"hakidaseru hodo tsuyoku wa nai", vi:"Tôi không đủ mạnh mẽ để nói hết ra", blank:["吐き出せる","はきだせる"], exp:"吐き出す (はきだす): nói ra, trút ra; ～ほど: đến mức; 強くはない: không mạnh mẽ"},
-    {t:109.58, e:114.8, ja:"でも不思議なくらいに", fj:"でも不思議[ふしぎ]なくらいに", furi:"でもふしぎなくらいに", romaji:"demo fushigi na kurai ni", vi:"Nhưng lạ thay", blank:["不思議","ふしぎ"], exp:"でも: nhưng; 不思議な (ふしぎな): kỳ lạ; くらい: đến mức"},
-    {t:114.9, e:118.92, ja:"絶望は見えない", fj:"絶望[ぜつぼう]は見え[みえ]ない", furi:"ぜつぼうはみえない", romaji:"zetsubou wa mienai", vi:"Tôi chẳng thấy tuyệt vọng đâu cả", blank:["絶望","ぜつぼう"], exp:"絶望 (ぜつぼう): tuyệt vọng; 見えない (みえない): không nhìn thấy"},
-    {t:118.92, e:124.7, ja:"目の奥にずっと写るシルエット", fj:"目[め]の奥[おく]にずっと写る[うつる]シルエット", furi:"めのおくにずっとうつるシルエット", romaji:"me no oku ni zutto utsuru shiruetto", vi:"Bóng hình vẫn luôn in sâu trong mắt tôi", blank:["写る","うつる"], exp:"目の奥 (めのおく): sâu trong mắt; 写る (うつる): in, phản chiếu; シルエット: bóng hình"},
-    {t:124.8, e:126.42, ja:"大好きさ", fj:"大好き[だいすき]さ", furi:"だいすきさ", romaji:"daisuki sa", vi:"Tôi yêu lắm", blank:["大好き","だいすき"], exp:"大好き (だいすき): rất thích, yêu lắm; さ: nhấn mạnh, thân mật"},
-    {t:126.42, e:132, ja:"柔らかな肌を寄せあい", fj:"柔らか[やわらか]な肌[はだ]を寄せ[よせ]あい", furi:"やわらかなはだをよせあい", romaji:"yawaraka na hada wo yoseai", vi:"Kề sát làn da mềm mại vào nhau", blank:["肌","はだ"], exp:"柔らかな (やわらかな): mềm mại; 肌 (はだ): làn da; 寄せあう (よせあう): kề sát vào nhau"},
-    {t:132.16, e:136.9, ja:"少し冷たい空気を2人", fj:"少し[すこし]冷たい[つめたい]空気[くうき]を2[ふた]人[り]", furi:"すこしつめたいくうきをふたり", romaji:"sukoshi tsumetai kuuki wo futari", vi:"Hai đứa cùng hít thở làn không khí se lạnh", blank:["空気","くうき"], exp:"少し (すこし): một chút; 冷たい (つめたい): lạnh; 空気 (くうき): không khí; 2人 (ふたり): hai người"},
-    {t:136.96, e:140.9, ja:"かみしめて歩く今日という日に", fj:"かみしめて歩く[あるく]今日[きょう]という日[ひ]に", furi:"かみしめてあるくきょうというひに", romaji:"kamishimete aruku kyou toiu hi ni", vi:"Vừa bước đi vừa nhấm nháp ngày hôm nay", blank:["歩く","あるく"], exp:"かみしめる: nhấm nháp, ngẫm nghĩ; 歩く (あるく): bước đi; 今日 (きょう): hôm nay"},
-    {t:140.98, e:146.5, ja:"何と名前をつけようかなんて話して", fj:"何と[なんと]名前[なまえ]をつけようかなんて話し[はなし]て", furi:"なんとなまえをつけようかなんてはなして", romaji:"nanto namae wo tsukeyou ka nante hanashite", vi:"Vừa trò chuyện xem nên đặt tên gì cho ngày hôm nay", blank:["名前","なまえ"], exp:"何と (なんと): tên gì; 名前 (なまえ): tên; つける: đặt; ～なんて: như là; 話す (はなす): trò chuyện"},
-    {t:146.72, e:151.4, ja:"ああ アイラブユーの言葉じゃ", fj:"ああ アイラブユーの言葉[ことば]じゃ", furi:"ああ アイラブユーのことばじゃ", romaji:"aa ai rabu yuu no kotoba ja", vi:"Ôi, chỉ nói “Anh yêu em” thôi thì", blank:["言葉","ことば"], exp:"ああ: ôi; アイラブユー: I love you; 言葉 (ことば): lời nói; じゃ = では"},
-    {t:151.5, e:155.3, ja:"足りないからとキスして", fj:"足り[たり]ないからとキスして", furi:"たりないからとキスして", romaji:"tarinai kara to kisu shite", vi:"Vì chưa đủ nên tôi hôn cậu", blank:["キス","キス"], exp:"足りない (たりない): không đủ; から: vì; キスする: hôn"},
-    {t:155.4, e:159.72, ja:"雲がまだ2人の影を残すから", fj:"雲[くも]がまだ2[ふた]人[り]の影[かげ]を残す[のこす]から", furi:"くもがまだふたりのかげをのこすから", romaji:"kumo ga mada futari no kage wo nokosu kara", vi:"Vì đám mây vẫn còn lưu lại bóng hình hai đứa", blank:["影","かげ"], exp:"雲 (くも): mây; 影 (かげ): bóng; 残す (のこす): để lại"},
-    {t:159.72, e:165.8, ja:"いつまでも いつまでも このまま", fj:"いつまでも いつまでも このまま", furi:"いつまでも いつまでも このまま", romaji:"itsumademo itsumademo kono mama", vi:"Mãi mãi, mãi mãi như thế này", blank:["いつまでも","いつまでも"], exp:"いつまでも: mãi mãi; このまま: cứ như thế này"},
-    {t:165.9, e:171.1, ja:"遥か遠い場所にいても", fj:"遥か[はるか]遠い[とおい]場所[ばしょ]にいても", furi:"はるかとおいばしょにいても", romaji:"haruka tooi basho ni ite mo", vi:"Dù ở nơi thật xa", blank:["場所","ばしょ"], exp:"遥か (はるか): xa xôi; 遠い (とおい): xa; 場所 (ばしょ): nơi chốn; ～ても: dù… cũng"},
-    {t:171.2, e:173.82, ja:"繋がっていたいなあ", fj:"繋がっ[つながっ]ていたいなあ", furi:"つながっていたいなあ", romaji:"tsunagatte itai naa", vi:"Tôi vẫn muốn được gắn kết với cậu", blank:["繋がっていたい","つながっていたい"], exp:"繋がる (つながる): gắn kết; ～ていたい: muốn vẫn…; なあ: cảm thán"},
-    {t:174, e:178.5, ja:"2人の想いが", fj:"2[ふた]人[り]の想い[おもい]が", furi:"ふたりのおもいが", romaji:"futari no omoi ga", vi:"Ước gì tình cảm của hai đứa", blank:["想い","おもい"], exp:"2人 (ふたり): hai người; 想い (おもい): tình cảm, nỗi lòng"},
-    {t:178.6, e:183, ja:"同じでありますように", fj:"同じ[おなじ]でありますように", furi:"おなじでありますように", romaji:"onaji de arimasu you ni", vi:"Được giống nhau", blank:["同じ","おなじ"], exp:"同じ (おなじ): giống nhau; ～でありますように: cầu mong… (dạng trang trọng của ～ように)"},
-    {t:198.14, e:202.4, ja:"麦わらの帽子の君が", fj:"麦わら[むぎわら]の帽子[ぼうし]の君[きみ]が", furi:"むぎわらのぼうしのきみが", romaji:"mugiwara no boushi no kimi ga", vi:"Cậu đội chiếc mũ rơm", blank:["帽子","ぼうし"], exp:"麦わら (むぎわら): rơm lúa mạch; 帽子 (ぼうし): cái mũ"},
-    {t:202.5, e:207.26, ja:"揺れたマリーゴールドに似てる", fj:"揺れ[ゆれ]たマリーゴールドに似[に]てる", furi:"ゆれたマリーゴールドににてる", romaji:"yureta mariigoorudo ni niteru", vi:"Trông giống bông cúc vạn thọ đang đung đưa", blank:["似てる","にてる"], exp:"揺れる (ゆれる): đung đưa; マリーゴールド: cúc vạn thọ; ～に似てる: giống như"},
-    {t:207.26, e:212.1, ja:"あれは空がまだ青い夏のこと", fj:"あれは空[そら]がまだ青い[あおい]夏[なつ]のこと", furi:"あれはそらがまだあおいなつのこと", romaji:"are wa sora ga mada aoi natsu no koto", vi:"Đó là chuyện mùa hè khi bầu trời còn xanh", blank:["空","そら"], exp:"空 (そら): bầu trời; まだ青い: vẫn còn xanh; 夏 (なつ): mùa hè"},
-    {t:212.2, e:216.54, ja:"懐かしいと笑えたあの日の恋", fj:"懐かしい[なつかしい]と笑え[わらえ]たあの日[ひ]の恋[こい]", furi:"なつかしいとわらえたあのひのこい", romaji:"natsukashii to waraeta ano hi no koi", vi:"Mối tình ngày ấy mà giờ tôi có thể cười nhớ về", blank:["恋","こい"], exp:"懐かしい (なつかしい): thân thương, hoài niệm; 笑える (わらえる): có thể cười; 恋 (こい): tình yêu"},
-    {t:216.54, e:220.5, ja:"「もう離れないで」と", fj:"「もう離れ[はなれ]ないで」と", furi:"「もうはなれないで」と", romaji:"「mou hanarenaide」 to", vi:"“Đừng rời xa tớ nữa” —", blank:["離れ","はなれ"], exp:"もう～ないで: đừng… nữa; 離れる (はなれる): rời xa; と: trích dẫn lời nói"},
-    {t:220.6, e:225.7, ja:"泣きそうな目で見つめる君を", fj:"泣き[なき]そうな目[め]で見つめる[みつめる]君[きみ]を", furi:"なきそうなめでみつめるきみを", romaji:"nakisou na me de mitsumeru kimi wo", vi:"Cậu nhìn tôi với đôi mắt như sắp khóc", blank:["見つめる","みつめる"], exp:"泣きそうな (なきそうな): như sắp khóc; 目 (め): mắt; 見つめる: nhìn chăm chú"},
-    {t:225.8, e:229.8, ja:"雲のような優しさでそっとぎゅっと", fj:"雲[くも]のような優し[やさし]さでそっとぎゅっと", furi:"くものようなやさしさでそっとぎゅっと", romaji:"kumo no you na yasashisa de sotto gyutto", vi:"Với sự dịu dàng như mây, nhẹ nhàng và thật chặt", blank:["雲","くも"], exp:"雲 (くも): mây; 優しさ (やさしさ): sự dịu dàng; そっと: nhẹ nhàng; ぎゅっと: thật chặt"},
-    {t:229.88, e:234.72, ja:"抱きしめて離さない", fj:"抱きしめ[だきしめ]て離さ[はなさ]ない", furi:"だきしめてはなさない", romaji:"dakishimete hanasanai", vi:"Ôm chặt cậu, không buông ra", blank:["抱きしめて","だきしめて"], exp:"抱きしめる (だきしめる): ôm chặt; 離さない (はなさない): không buông ra"},
-    {t:234.98, e:239.6, ja:"ああ アイラブユーの言葉じゃ", fj:"ああ アイラブユーの言葉[ことば]じゃ", furi:"ああ アイラブユーのことばじゃ", romaji:"aa ai rabu yuu no kotoba ja", vi:"Ôi, chỉ nói “Anh yêu em” thôi thì", blank:["言葉","ことば"], exp:"ああ: ôi; アイラブユー: I love you; 言葉 (ことば): lời nói; じゃ = では"},
-    {t:239.7, e:243.6, ja:"足りないからとキスして", fj:"足り[たり]ないからとキスして", furi:"たりないからとキスして", romaji:"tarinai kara to kisu shite", vi:"Vì chưa đủ nên tôi hôn cậu", blank:["キス","キス"], exp:"足りない (たりない): không đủ; から: vì; キスする: hôn"},
-    {t:243.7, e:248.06, ja:"雲がまだ2人の影を残すから", fj:"雲[くも]がまだ2[ふた]人[り]の影[かげ]を残す[のこす]から", furi:"くもがまだふたりのかげをのこすから", romaji:"kumo ga mada futari no kage wo nokosu kara", vi:"Vì đám mây vẫn còn lưu lại bóng hình hai đứa", blank:["影","かげ"], exp:"雲 (くも): mây; 影 (かげ): bóng; 残す (のこす): để lại"},
-    {t:248.06, e:254.5, ja:"いつまでも いつまでも このまま", fj:"いつまでも いつまでも このまま", furi:"いつまでも いつまでも このまま", romaji:"itsumademo itsumademo kono mama", vi:"Mãi mãi, mãi mãi như thế này", blank:["いつまでも","いつまでも"], exp:"いつまでも: mãi mãi; このまま: cứ như thế này"},
-    {t:256.16, e:258.72, ja:"離さない", fj:"離さ[はなさ]ない", furi:"はなさない", romaji:"hanasanai", vi:"Không buông ra", blank:["離さない","はなさない"], exp:"離さない (はなさない): không buông ra, không rời xa"},
-    {t:260.32, e:267.42, ja:"いつまでも いつまでも 離さない", fj:"いつまでも いつまでも 離さ[はなさ]ない", furi:"いつまでも いつまでも はなさない", romaji:"itsumademo itsumademo hanasanai", vi:"Mãi mãi, mãi mãi không buông ra", blank:["離さない","はなさない"], exp:"いつまでも: mãi mãi; 離さない (はなさない): không buông ra"}
-  ];
-  var SV3_WIN = SV3_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
-  SVU_DATA[SV3_ID] = {
-    id: SV3_ID, dur: SV3_DUR, subs: SV3_SUBS, win: SV3_WIN,
-    practice: SV3_SUBS.slice(),
-    fill: SV3_SUBS.filter(function(s){ return !!s.blank; }),
-    headTitle: "Shadowing · Bài hát",
-    headSub: "マリーゴールド - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
-    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video đăng ẩn trên kênh Tiếng Nhật Thực Chiến.",
-    facadeImg: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
-    facadeAlt: "Ảnh xem trước video bài hát Marigold: bông cúc vạn thọ đỏ trên mặt nước",
-    facadeLabel: "Phát video bài hát Marigold — học tiếng Nhật qua bài hát",
-    wide: true
-  };
+  /* MIRROR 2026-11-16: du lieu bai 3 Marigold (SV3) nay nam trong
+     assets/sv-lessons.js (ban trong asset moi hon: co them wt 48/50 cau) —
+     block inline cu da bo de tranh trung lap. */
   /* Khung thời gian riêng từng câu — cùng thuật toán SV2_WIN của bài 2: các câu
      chung một mốc giây chia đều khoảng tới mốc khác gần nhất phía sau */
   function svuComputeWin(subs, dur){
@@ -11558,7 +11438,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     return win;
   }
-  /* Nạp 1 bài (bài 2 gốc hoặc bài tự tạo) vào player sv2* rồi mở bằng sv2OpenLesson() */
+  /* Nạp 1 bài (bài có sẵn hoặc bài tự tạo) vào player sv2* rồi mở bằng sv2OpenLesson() */
   function svuActivate(d){
     svPlaysBump(d.id);
     SV2_ID = d.id; SV2_DUR = d.dur; SV2_SUBS = d.subs; SV2_WIN = d.win;
@@ -11725,7 +11605,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var parsed = svuExtractId(raw);
     if(parsed.error){ svuShowMsg(parsed.error, true); svuInput.focus(); return; }
     /* Link trùng bài đã có sẵn trong danh sách thì mở luôn bài đó */
-    if(parsed.id === SV_ID){ svuShowMsg("", false); svOpenLesson(); return; }
+    /* MIRROR 2026-11-16: bo nhanh SV1 — link cu SV1 (neu dan) se tao bai moi qua backend. */
     if(SVU_DATA[parsed.id]){ svuShowMsg("", false); svuActivate(SVU_DATA[parsed.id]); return; }
     var fn = svuGetFn();
     if(!fn){ svuShowMsg(SVU_NOT_READY, true); return; }
