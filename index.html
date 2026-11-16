@@ -1003,7 +1003,7 @@ body.plain{background:#fff; background-image:none}
 }
 
 @media (max-width:480px){
-  /* Man dien thoai: vNav chi hien icon — 10 muc vua dung 1 hang, khong con tran ngang.
+  /* Man dien thoai: vNav chi hien icon — 11 muc vua dung 1 hang, khong con tran ngang.
      Nhan chu an khoi layout nhung van giu cho trinh doc man hinh (sr-only). */
   .vnav{padding:4px; gap:1px}
   .vnav a{flex:1 1 0; min-width:0; padding:6px 4px; position:relative; justify-content:center}
@@ -1887,6 +1887,7 @@ body:has(.sv2-page) footer.site{padding-bottom:81px; padding-bottom:calc(81px + 
   <a href="#/tuvung" data-nav="tango"><span class="vi">👑</span><span>Từ vựng</span></a>
   <a href="#/nguphap" data-nav="bunpo"><span class="vi">文</span><span>Ngữ pháp</span></a>
   <a href="#/thi" data-nav="jlpt"><span class="vi">試</span><span>Luyện JLPT</span></a>
+  <a href="#/shadowing" data-nav="shadowing"><span class="vi">🎙️</span><span>Shadowing</span></a>
   <a href="#/canhan" data-nav="canhan"><span class="vi">👤</span><span>Lộ trình cá nhân</span></a>
   <a href="#/daluu" data-nav="daluu"><span class="vi">🔖</span><span>Mục đã lưu</span></a>
   <a href="#/trondoi" data-nav="trondoi" class="hot"><span class="vi">💎</span><span>Nâng Premium</span></a>
@@ -7391,6 +7392,17 @@ function renderListenHome(){
     svInitCatalog();
   }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
 }
+/* Trang Shadowing rieng (#/shadowing): chi danh muc video shadowing, khong
+   kem 5 the hoi thoai JLPT nhu trang Luyen nghe. Tai dung khung danh muc
+   svCatalogSectionHTML() + svInitCatalog() (nap luoi sv-lessons.js). */
+function renderShadowingPage(){
+  document.title = "Shadowing bằng video | SoraKanji";
+  $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Shadowing</div>' +
+    "<h1>Shadowing</h1>" +
+    "<p>Luyện nghe — nhại theo video có phụ đề song ngữ, karaoke từng từ và chấm điểm phát âm.</p></div>" +
+    '<div style="padding:6px 0 34px">' + svCatalogSectionHTML() + "</div>";
+  svInitCatalog();
+}
 function renderListenLevel(lv){
   document.title = "Luyện nghe " + lv + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải hội thoại…");
@@ -10119,9 +10131,15 @@ function renderAdminDashboard(){
 }
 
 /* ================= ROUTER ================= */
-var NAV_MAP = {"": "kanji", kanji: "kanji", tuvung: "tango", nguphap: "bunpo", thi: "jlpt",
+var NAV_MAP = {"": "kanji", kanji: "kanji", tuvung: "tango", nguphap: "bunpo", thi: "jlpt", shadowing: "shadowing",
   canhan: "canhan", daluu: "daluu", trondoi: "trondoi", trongam: "bunpo",
   xephang: "xephang", congdong: "congdong", nangcap: "nangcap", caidat: "caidat"};
+/* Trang bai video shadowing (#/nghe/video/...) van sang muc Shadowing o vNav;
+   cac trang Luyen nghe khac (#/nghe, #/nghe/N5, #/nghe/N5/3) khong sang muc
+   nao nhu truoc. Dung chung cho route() va syncNavToHash(). */
+function skNavSeg(seg, sub){
+  return (seg === "nghe" && sub === "video") ? "shadowing" : seg;
+}
 function setNav(seg){
   var key = NAV_MAP[seg] || "";
   document.querySelectorAll("#vNav a").forEach(function(a){
@@ -10137,8 +10155,8 @@ function setNav(seg){
    không tab nào sáng; tab Sora Kanji chỉ sáng ở trang chủ / mục Kanji. */
 function syncNavToHash(){
   var raw = (location.hash || "#/").replace(/^#/, "");
-  var seg = raw.split("?")[0].split("/").filter(Boolean)[0] || "";
-  setNav(seg);
+  var parts = raw.split("?")[0].split("/").filter(Boolean);
+  setNav(skNavSeg(parts[0] || "", parts[1]));
 }
 var _skLastRouted = null; /* hash mà route() xử lý gần nhất — cho lớp điều hướng dự phòng bên dưới */
 function route(){
@@ -10153,7 +10171,7 @@ function route(){
     query[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || "");
   });
   var seg = segs[0] || "";
-  setNav(seg);
+  setNav(skNavSeg(seg, segs[1]));
   if(seg !== "kanji" || !segs[1]) document.body.classList.remove("plain");
   var isPlayer = seg === "thi" && segs[3] === "lam";
   if(!isPlayer && exTimer){ clearInterval(exTimer); exTimer = null; }
@@ -10209,6 +10227,7 @@ function route(){
     else renderListenHome();
     return;
   }
+  if(seg === "shadowing"){ renderShadowingPage(); return; }
   if(seg === "dokkai"){
     if(segs[1]) renderDokkaiItem(segs[1]);
     else renderDokkaiHome(query.lv);
