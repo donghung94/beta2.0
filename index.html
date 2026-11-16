@@ -6986,9 +6986,9 @@ function sv2SpeakJP(word){
 
 /* ----- Khoa video khi W1 chua ap (du phong) -----
    Thu tu uu tien: svCardLocked()/svFreeIds() cua W1 neu co; neu chua co thi
-   tinh lai theo dung luat mobile (10 video dau theo thu tu hien thi:
-   the loai theo SV_CATS, trong moi the loai theo chuoi xuat hien dau tien,
-   trong moi chuoi theo thu tu mang SV_VIDEOS). Neu W1 da ap 1 phan
+   tinh lai theo dung luat mobile (1 video dau tien cua MOI the loai:
+   the loai theo SV_CATS, moi the loai lay video dau tien cua chuoi xuat
+   hien dau tien theo thu tu mang SV_VIDEOS). Neu W1 da ap 1 phan
    (SV_CATS/svGroupByCat co san) thi dung lai chung; neu khong thi dung
    thu tu the loai cung cua mobile + gom nhom noi bo. */
 var sv2FreeIdsCache = null;
@@ -7012,13 +7012,15 @@ function sv2FreeIdsFallback(){
         row.videos.push(v);
       });
     }
+    var perCat = (typeof SV_FREE_PER_CAT === "number") ? SV_FREE_PER_CAT : 1;
     cats.forEach(function(cat){
-      (groups[cat] || []).forEach(function(row){
-        row.videos.forEach(function(v){ ids.push(v.id); });
-      });
+      var rows = groups[cat] || [];
+      if(rows.length){
+        rows[0].videos.slice(0, perCat).forEach(function(v){ ids.push(v.id); });
+      }
     });
   }catch(_){}
-  sv2FreeIdsCache = ids.slice(0, 10);
+  sv2FreeIdsCache = ids;
   return sv2FreeIdsCache;
 }
 function sv2IsLockedFallback(id){
@@ -7365,7 +7367,7 @@ function renderSvVideoPage(vid){
         document.title = "Video Premium | SoraKanji";
         $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / Video shadowing</div>' +
           '<h1>Video này thuộc gói Premium</h1>' +
-          '<p>Gói miễn phí mở 10 video shadowing đầu tiên — nâng cấp để mở toàn bộ video trên cả web và app điện thoại.</p></div>' +
+          '<p>Gói miễn phí mở 1 video shadowing đầu tiên mỗi mục (5 video) — nâng cấp để mở toàn bộ video trên cả web và app điện thoại.</p></div>' +
           '<div style="padding:6px 0 34px"><a class="btn" href="#/nangcap">Xem gói Premium</a> ' +
           '<a class="btn ghost" href="#/nghe" style="margin-left:8px">Về Luyện nghe</a></div>';
         return;
@@ -7481,7 +7483,7 @@ function renderListenLevel(lv){
    Khong port player SV1 (svOpenLesson/svRenderLines/svKaraoke...) va svu*. */
 var SV_CATS = ["podcast", "anime", "daily", "jlpt", "karaoke"];
 var SV_CAT_LABEL = {podcast: "Podcast", anime: "Anime", daily: "Đời thường", jlpt: "JLPT", karaoke: "Karaoke"};
-var SV_FREE_COUNT = 10;
+var SV_FREE_PER_CAT = 1; /* 1 video Shadowing mien phi dau tien cua moi the loai (5 tab = 5 video) */
 var SV_ROW_MAX = 4;
 var svTopTab = "ready";
 var svCat = "podcast";
@@ -7519,11 +7521,12 @@ function svGroupByCat(videos){
   return out;
 }
 
-/* 10 video Shadowing mien phi = 10 video dau theo THU TU HIEN THI: the loai
-   theo SV_CATS (Podcast -> Anime -> Doi thuong -> JLPT -> Karaoke), trong moi
-   the loai theo chuoi (thu tu xuat hien dau tien), trong moi chuoi theo thu
-   tu mang SV_VIDEOS. Chi cache khi da co du lieu (neu goi truoc khi nap thi
-   tra [] tam thoi, khong khoa cache rong nhu ban mobile). */
+/* 1 video Shadowing mien phi DAU TIEN cua MOI the loai (5 video = 5 tab
+   ngang): the loai theo SV_CATS (Podcast -> Anime -> Doi thuong -> JLPT ->
+   Karaoke), moi the loai lay video dau tien cua chuoi dau tien (thu tu xuat
+   hien dau tien) theo thu tu mang SV_VIDEOS. Chi cache khi da co du lieu
+   (neu goi truoc khi nap thi tra [] tam thoi, khong khoa cache rong nhu
+   ban mobile). */
 var svFreeIdsCache = null;
 function svFreeIds(){
   if(svFreeIdsCache) return svFreeIdsCache;
@@ -7531,13 +7534,14 @@ function svFreeIds(){
   try{
     var groups = svGroupByCat(window.SV_VIDEOS || []);
     SV_CATS.forEach(function(cat){
-      (groups[cat] || []).forEach(function(row){
-        row.videos.forEach(function(v){ ids.push(v.id); });
-      });
+      var rows = groups[cat] || [];
+      if(rows.length){
+        rows[0].videos.slice(0, SV_FREE_PER_CAT).forEach(function(v){ ids.push(v.id); });
+      }
     });
   }catch(_){}
-  if(window.SV_VIDEOS) svFreeIdsCache = ids.slice(0, SV_FREE_COUNT);
-  return ids.slice(0, SV_FREE_COUNT);
+  if(window.SV_VIDEOS) svFreeIdsCache = ids;
+  return ids;
 }
 function svIsCurated(id){
   var list = window.SV_VIDEOS || [];
@@ -7545,7 +7549,7 @@ function svIsCurated(id){
   return false;
 }
 /* The video co khoa: nam trong danh sach Shadowing co san, chua co Premium,
-   va khong thuoc 10 video mien phi dau tien. Dung skIsPremium() cua web. */
+   va khong thuoc 5 video mien phi (1 bai dau tien moi muc). Dung skIsPremium() cua web. */
 function svCardLocked(id){
   return svIsCurated(id) && !skIsPremium() && svFreeIds().indexOf(id) < 0;
 }
@@ -7679,7 +7683,7 @@ function svCatalogSectionHTML(){
   }).join("");
   var ready = svTopTab === "ready";
   return '<h2 class="secttl" style="margin-top:8px">Shadowing bằng video</h2>' +
-    '<p class="hint" style="margin:0 0 12px">Luyện nghe — nhại theo video có phụ đề song ngữ. Gói miễn phí mở 10 video đầu tiên, Premium mở toàn bộ video.</p>' +
+    '<p class="hint" style="margin:0 0 12px">Luyện nghe — nhại theo video có phụ đề song ngữ. Gói miễn phí mở 1 video đầu tiên mỗi mục (5 video), Premium mở toàn bộ video.</p>' +
     '<div class="seg sv-toptabs" id="svTopTabs" role="tablist">' +
       '<button type="button" id="svTopReady" role="tab" aria-selected="' + (ready ? 'true' : 'false') + '" class="' + (ready ? 'on' : '') + '">Video có sẵn</button>' +
       '<button type="button" id="svTopMine" role="tab" aria-selected="' + (!ready ? 'true' : 'false') + '" class="' + (!ready ? 'on' : '') + '">Video tôi tạo</button>' +
@@ -9958,7 +9962,7 @@ function renderTermsPage(){
     "</ul>" +
     "<h2>3. Gói miễn phí và gói trả phí</h2>" +
     "<ul>" +
-    "<li><b>Miễn phí:</b> toàn bộ nội dung cấp độ N5 ở mọi mục, cùng 10 video song ngữ.</li>" +
+    "<li><b>Miễn phí:</b> toàn bộ nội dung cấp độ N5 ở mọi mục, cùng 1 video song ngữ mỗi mục (5 video).</li>" +
     "<li><b>Gói Năm:</b> mở toàn bộ nội dung N4–N1 trong 12 tháng kể từ ngày kích hoạt.</li>" +
     "<li><b>Gói Trọn đời:</b> mở toàn bộ nội dung N4–N1 không giới hạn thời gian.</li>" +
     "</ul>" +
