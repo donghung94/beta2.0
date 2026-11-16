@@ -1444,7 +1444,19 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 
 /* ----- Cum dieu khien duoi video: thanh tien trinh; chip Furigana/Ban dich +
    cong tac Tu ngat cau; nut cau truoc – lap cau – phat lon – cau sau – toc do ----- */
-.sv-dock{margin-top:6px;}
+/* Dock dieu khien ghim day viewport nhu app: thanh tien trinh + nut phat/tam dung
+   luon thay khi cuon phu de. left:92px o desktop de khong de len sidebar .vnav
+   (rong 92px); padding-right 86px de chừa nut tro ly Sora (#soraFab 58px o
+   right:20px, z-90 noi tren dock z-85). Chieu cao dock ~65px (noi dung 53px +
+   padding 6px tren/duoi) — cac padding-bottom 81px duoi day = 65 + 16 du phong. */
+.sv-dock{
+  position:fixed; left:0; right:0; bottom:0; z-index:85; margin-top:0;
+  padding:6px 86px 6px 14px; padding-bottom:calc(6px + env(safe-area-inset-bottom, 0px));
+  background:var(--card); border-top:1px solid var(--line); box-shadow:0 -2px 10px rgba(20,20,28,.06);
+}
+@media (min-width:761px){ .sv-dock{left:92px;} }
+/* Khi dang o trang bai hoc, footer chừa them 81px duoi de dong cuoi khong bi dock che */
+body:has(.sv2-page) footer.site{padding-bottom:81px; padding-bottom:calc(81px + env(safe-area-inset-bottom, 0px));}
 .sv-seekrow{display:flex; align-items:center; gap:7px;}
 .sv-seekrow .sv-t{font-size:10.5px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums; min-width:26px;}
 .sv-seekrow .sv-t:last-child{text-align:right;}
@@ -1478,13 +1490,13 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .sv-speedbtn:active{background:var(--red-soft);}
 
 /* ----- 4 tab Phu de / Shadowing / Chinh ta / Dien tu ----- */
-.sv2-tabs{display:flex; gap:5px; margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:4px;}
+.sv2-tabs{display:flex; gap:5px; margin-top:8px; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:3px;}
 .sv2-tab{
   flex:1 1 0; min-width:0; border:none; background:transparent; color:var(--muted); cursor:pointer;
-  font-family:inherit; font-size:13px; font-weight:700; padding:8px 2px; border-radius:9px; white-space:nowrap;
+  font-family:inherit; font-size:12.5px; font-weight:700; padding:5px 2px; border-radius:9px; white-space:nowrap;
 }
 .sv2-tab.on{background:var(--red); color:#fff;}
-.sv2-panel{display:none; margin-top:12px;}
+.sv2-panel{display:none; margin-top:6px;}
 .sv2-panel.on{display:block;}
 
 /* ----- Khung phu de cuon rieng: doc toi dau, khung tu cuon toi do;
@@ -1494,19 +1506,20 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
    vao giua khung (thieu no, offsetTop bi do theo to tien xa o ngoai trang). */
 .sv2-subs{
   position:relative;
-  max-height:42dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px;
+  max-height:64dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:4px 4px 81px;
+  padding-bottom:calc(81px + env(safe-area-inset-bottom, 0px));
 }
 .sv2-sub{
-  width:100%; display:flex; gap:11px; align-items:flex-start; text-align:left; cursor:pointer;
-  font-family:inherit; color:var(--ink); background:transparent; border:none; border-radius:12px; padding:10px 11px; margin-bottom:2px;
+  width:100%; display:flex; gap:8px; align-items:flex-start; text-align:left; cursor:pointer;
+  font-family:inherit; color:var(--ink); background:transparent; border:none; border-radius:12px; padding:5px 11px; margin-bottom:1px;
 }
 .sv2-sub .tm{flex:0 0 auto; font-size:12px; font-weight:800; color:var(--muted); font-variant-numeric:tabular-nums; padding-top:5px;}
 .sv2-sub .tx{flex:1 1 auto; min-width:0;}
 .sv2-sub .ja{display:block; font-size:16.5px; font-weight:600; line-height:1.95;}
 .sv2-sub .ja ruby{ruby-align:center;}
 .sv2-sub .ja rt{font-size:.52em; font-weight:600; color:var(--muted);}
-.sv2-sub .vi{display:block; font-size:13px; color:var(--muted); margin-top:1px; line-height:1.5;}
+.sv2-sub .vi{display:block; font-size:13px; color:var(--muted); margin-top:0; line-height:1.5;}
 .sv2-sub.active{background:var(--red-soft);}
 /* Karaoke: cum tu da doc trong cau dang phat to do + gach chan */
 .sv2-sub .sv-w.done{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
@@ -1676,18 +1689,18 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
   .sv-all-entry{gap:10px; padding:8px;}
   .sv-all-thumb{flex-basis:104px;}
   .svu-btn{padding:10px 12px;}
-  .sv2-tab{font-size:12.5px; padding:7px 2px;}
+  .sv2-tab{font-size:12.5px; padding:5px 2px;}
   .sv2-ja{font-size:20px;}
   .sv2-fillja{font-size:18px;}
 }
 /* W3-CSS:END */
 /* GLUE: .sv2-page (markup W2) — luoi 2 cot desktop, mirror quy tac .sv2-layout cua W3 */
-.sv2-page{display:block;}
+.sv2-page{display:block; padding-bottom:81px; padding-bottom:calc(81px + env(safe-area-inset-bottom, 0px));}
 @media (min-width:1024px){
   .sv2-page{display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:22px; align-items:start;}
   .sv2-page .sv2-col-video{min-width:0; position:sticky; top:66px;}
   .sv2-page .sv2-col-tabs{min-width:0;}
-  .sv2-page .sv2-subs{max-height:calc(100vh - 220px);}
+  .sv2-page .sv2-subs{max-height:calc(100vh - 312px); max-height:calc(100vh - 312px - env(safe-area-inset-bottom, 0px));}
 }
 
 
