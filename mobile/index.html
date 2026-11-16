@@ -1372,8 +1372,21 @@
     position:absolute; left:0; right:0; bottom:var(--tabh); z-index:5; margin-top:0;
     padding:6px 70px 6px 14px; background:var(--card);
     border-top:1px solid var(--line); box-shadow:0 -2px 10px rgba(20,20,28,.06);
+    display:flex; align-items:center; gap:8px;
   }
   #phone:has(#tabbar.tab-hidden) #sv2Overlay .sv-dock{bottom:0;}
+  /* Dock sv2 1 HANG: seekrow trai (flex:1, co gian) + transport phai
+     (flex:none) cung hang. Chi ap cho #sv2Overlay — dock bai 1
+     (#shadowVideoOverlay) giu nguyen 2 hang. Nut thu nho 2px (tbtn 30->28,
+     bigplay 34->32) de slider van du rong o 320px: dock inner 236px -
+     transport 92px - gap 8px - 2 nhan gio 52px - gap seekrow 14px = slider
+     66px do that (375px: 121px, 390px: 136px; thap hon uoc tinh 4px do
+     chrome mac dinh cua input range). Dock cao 45px (32 + 12
+     padding + 1 vien) thay vi 63px. */
+  #sv2Overlay .sv-seekrow{flex:1 1 auto; min-width:0;}
+  #sv2Overlay .sv-transport{flex:0 0 auto; margin-top:0; padding:0; gap:2px;}
+  #sv2Overlay .sv-tbtn{width:28px; height:28px;}
+  #sv2Overlay .sv-bigplay{width:32px; height:32px;}
   .sv-seekrow{display:flex; align-items:center; gap:7px;}
   .sv-seekrow .sv-t{font-size:10.5px; font-weight:700; color:var(--ink-2); font-variant-numeric:tabular-nums; min-width:26px;}
   .sv-seekrow .sv-t:last-child{text-align:right;}
@@ -1459,15 +1472,21 @@
   /* ---------- Shadowing video bài 2 (Shorts dọc, kênh OkkeiJapanese): 4 tab
      Phụ đề / Shadowing / Chính tả / Điền từ dưới video; giữ tông SoraKanji ---------- */
   .sv2-videowrap{aspect-ratio:16/9; width:100%; margin:0 auto;}
+  /* Tab chung khung voi video: goc duoi video vuong lai, tab lam dai day
+     cua cung khung (goc duoi bo 14px o .sv2-tabs, cung ban kinh voi video). */
+  #sv2Overlay .sv2-videowrap{border-radius:14px 14px 0 0;}
   /* Bài video nằm ngang 16:9 (bài hát Marigold): cùng khung sv2, chỉ đổi tỉ lệ */
   .sv2-videowrap.wide{aspect-ratio:16/9; width:100%;}
   .sv2-seek{flex:1; min-width:0; -webkit-appearance:none; appearance:none; height:4px; border-radius:99px; background:var(--line); outline:none; cursor:pointer;}
   .sv2-seek::-webkit-slider-thumb{-webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--red); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;}
   .sv2-seek::-moz-range-thumb{width:11px; height:11px; border-radius:50%; background:var(--red); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;}
-  .sv2-tabs{display:flex; gap:5px; margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:4px;}
+  /* Thanh tab nho ~10% (gap 5->4, padding khung 4->3, font 13->12 o
+     .sv2-tab) + gan sat day khung video: margin-top 12->0, bo vien tren
+     (video khong co vien nen khong vien doi), goc duoi bo 14px theo khung. */
+  .sv2-tabs{display:flex; gap:4px; margin-top:0; background:var(--card); border:1px solid var(--line); border-top:none; border-radius:0 0 14px 14px; padding:3px;}
   .sv2-tab{
     flex:1 1 0; min-width:0; border:none; background:transparent; color:var(--ink-2); cursor:pointer;
-    font-family:inherit; font-size:13px; font-weight:700; padding:8px 2px; border-radius:9px; white-space:nowrap;
+    font-family:inherit; font-size:12px; font-weight:700; padding:7px 2px; border-radius:8px; white-space:nowrap;
   }
   .sv2-tab.on{background:var(--red); color:#fff;}
   .sv2-panel{display:none; margin-top:12px;}
@@ -1479,11 +1498,13 @@
   .sv2-subs{
     position:relative;
     max-height:42dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-    scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px 76px;
-    /* padding-bottom 76px (~cao dock 63px + 13px du phong) chua dock ghim:
-       day khung co the nam duoi dock khi detailbody o dau trang; padding nay
-       de cau cuoi cuon len tren dinh dock thay vi bi che, chi can cuon khung
-       (khong can cuon them trang) o ca 390x844 va 375x667. */
+    scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px 64px;
+    /* padding-bottom 64px (~cao dock 45px + 19px du phong) chua dock ghim 1
+       hang: day khung co the nam duoi dock khi detailbody o dau trang;
+       padding nay de cau cuoi cuon len tren dinh dock thay vi bi che, chi
+       can cuon khung (khong can cuon them trang) o ca 390x844, 375x667
+       va 320x568 (o 320px day khung sat dock nen can du phong 19px thay
+       vi 13px nhu truoc: voi 58px cau cuoi dung dung dinh dock, 0px le). */
   }
   .sv2-sub{
     width:100%; display:flex; gap:11px; align-items:flex-start; text-align:left; cursor:pointer;
