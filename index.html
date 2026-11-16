@@ -1192,6 +1192,51 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .l-main b{display:block; font-size:15.5px}
 .l-main span{font-size:13px; color:var(--muted)}
 .l-tv{font-weight:800; color:var(--ink); white-space:nowrap; font-size:14.5px}
+
+/* ===== Bảng xếp hạng kiểu podium (top 3 + hạng 4–10) =====
+   Dùng biến màu sẵn của theme web (#nk-theme): --gold (vàng đồng, hạng 1),
+   --blue (xanh, hạng 2), --green (xanh lá, hạng 3). */
+.rk-head{text-align:center; margin:2px 0 0}
+.rk-head h2{font-size:27px; font-weight:900; letter-spacing:-.015em; margin:0 0 4px}
+.rk-head p{color:var(--muted); margin:0; font-size:14.5px}
+.rk-tabs{display:flex; gap:4px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:3px; width:max-content; max-width:100%; margin:16px auto 10px; box-shadow:var(--shadow)}
+.rk-tab{border:0; background:transparent; font:inherit; font-weight:700; font-size:14.5px; color:var(--muted); padding:8px 18px; border-radius:9px; cursor:pointer; white-space:nowrap}
+.rk-tab.on{background:var(--red); color:#fff}
+.rk-cols{display:flex; justify-content:center; flex-wrap:wrap; gap:8px 22px; color:var(--muted); font-size:13.5px; margin:8px 0 24px}
+.rk-podium{display:flex; gap:14px; align-items:flex-end; margin-top:20px}
+.rk-card{position:relative; flex:1; min-width:0; min-height:212px; border:2px solid var(--line); border-radius:16px; padding:30px 10px 16px; text-align:center; box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px}
+.rk-card.r1{min-height:252px; border-color:var(--gold); background:linear-gradient(180deg,var(--red-soft),var(--card))}
+.rk-card.r2{border-color:var(--blue); background:linear-gradient(180deg,var(--blue-soft),var(--card))}
+.rk-card.r3{border-color:var(--green); background:linear-gradient(180deg,var(--green-soft),var(--card))}
+.rk-medal{position:absolute; top:-17px; left:50%; transform:translateX(-50%); width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; color:#fff; border:2px solid #fff; box-shadow:0 3px 8px rgba(20,30,50,.3)}
+.r1 .rk-medal{background:#f5b301}
+.r2 .rk-medal{background:#7aa7d9}
+.r3 .rk-medal{background:#cd7f32}
+.rk-av{flex:none; width:72px; height:72px; border-radius:50%; background:var(--blue-soft); color:var(--blue-dark); font-size:28px; font-weight:800; display:flex; align-items:center; justify-content:center; overflow:hidden}
+.rk-avimg img{width:100%; height:100%; object-fit:cover}
+.rk-name{font-size:16.5px; font-weight:800; overflow-wrap:anywhere}
+.rk-prem{display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:700; color:#b97a0e; background:#fdf3d7; border-radius:999px; padding:2px 8px; white-space:nowrap}
+.rk-stats{display:flex; flex-wrap:wrap; justify-content:center; gap:4px 14px; font-size:13.5px; color:var(--muted); margin-top:4px}
+.rk-xp{color:var(--gold); font-weight:800; font-size:16px; white-space:nowrap}
+.rk-rows{margin-top:14px; display:flex; flex-direction:column; gap:10px}
+.rk-row{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px 16px; box-shadow:var(--shadow)}
+.rk-row .rk-av{width:42px; height:42px; font-size:17px}
+.rk-num{flex:none; width:28px; font-weight:900; color:var(--muted); font-size:15px}
+.rk-row-main{flex:1; min-width:0}
+.rk-row-main b{display:block; font-size:15.5px; overflow-wrap:anywhere}
+.rk-row-main .rk-prem{margin-top:2px}
+.rk-me-tag{display:block; font-size:12.5px; color:var(--muted)}
+.rk-row-stats{display:flex; gap:16px; align-items:center; font-size:13.5px; color:var(--muted); white-space:nowrap}
+.rk-row-stats .rk-xp{font-size:15.5px}
+.rk-me{border:2px solid var(--red); background:var(--red-soft)}
+@media (max-width:640px){
+  .rk-podium{flex-direction:column; align-items:stretch; gap:26px}
+  .rk-card{min-height:0}
+  .rk-card.r1{order:-1; min-height:0}
+  .rk-head h2{font-size:23px}
+  .rk-row{padding:10px 12px; gap:10px}
+  .rk-row-stats{gap:10px}
+}
 .realmrow{display:flex; align-items:center; gap:13px; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:12px 16px; margin-bottom:9px}
 .realmrow .r-ic{flex:none; width:42px; height:42px; border-radius:11px; background:var(--card2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700}
 .realmrow .r-main{flex:1; min-width:0}
@@ -8600,18 +8645,122 @@ var WEEK_TOP = [ /* bảng tuần như bản mobile hiển thị */
   {name: "Hải Đăng", realm: "Binh nhì", lv: "N5", tv: "1.505"},
   {name: "Thanh Tùng", realm: "Binh nhì", lv: "N4", tv: "1.330"}
 ];
+/* ===== Bảng xếp hạng kiểu podium (top 3 + hạng 4–10) =====
+   Render nhận danh sách [{name, avatar, premium, exp, cards, days, duelWins}]
+   — sau này đổi nguồn dữ liệu thật chỉ cần thay rankBoardData().
+   TẠM THỜI nuôi bằng bot: WEEK_TOP là mảng bot tĩnh của web (không có seed
+   tuần như mobile); các trường cards/days/duelWins/premium suy ra xác định
+   (deterministic) từ tên bot qua rankHash, nên bảng ổn định giữa các lần tải.
+   Avatar web dùng chữ cái đầu (kiểu l-av cũ) — chưa map ảnh bot-avatars vì
+   tên bot web không khớp id bot-01..10 của mobile. */
+function rankHash(s){ var x = 0; for(var i = 0; i < s.length; i++){ x = (x * 31 + s.charCodeAt(i)) >>> 0; } return x; }
+function rankBoardData(){
+  return WEEK_TOP.map(function(r){
+    var a = rankHash(r.name), b = rankHash(r.name.split("").reverse().join(""));
+    return {
+      name: r.name,
+      avatar: r.name.charAt(0),
+      premium: (a % 3 === 0),
+      exp: parseInt(String(r.tv).replace(/\./g, ""), 10) || 0,
+      cards: 150 + (a % 5000),
+      days: 5 + (a % 80),
+      duelWins: 2 + (b % 55)
+    };
+  });
+}
+function rankFmtK(n){ if(n >= 1000){ var v = Math.round(n / 100) / 10; return (v % 1 === 0 ? String(v | 0) : String(v)) + "k"; } return String(n); }
+var rankTabMode = "xp"; /* 'xp' = Tổng XP · 'duel' = Đấu trí thắng */
+function rankSorted(mode){
+  var list = rankBoardData();
+  if(mode === "duel") list.sort(function(x, y){ return (y.duelWins - x.duelWins) || (y.exp - x.exp); });
+  else list.sort(function(x, y){ return y.exp - x.exp; });
+  return list;
+}
+function rankPremHTML(p){ return p ? '<span class="rk-prem">👑 Premium</span>' : ""; }
+function rankPrimaryHTML(r, mode){
+  return mode === "duel"
+    ? '<span class="rk-xp">⚔️ ' + r.duelWins + ' thắng</span>'
+    : '<span class="rk-xp">⚡ ' + rankFmtK(r.exp) + ' XP</span>';
+}
+function rankPodiumHTML(list, mode){
+  var top = list.slice(0, 3); /* [1,2,3] theo thứ tự xếp hạng */
+  var order = [top[1], top[0], top[2]]; /* hiển thị: #2 trái, #1 giữa, #3 phải */
+  var ranks = [2, 1, 3];
+  return '<div class="rk-podium">' + order.map(function(r, k){
+    var rk = ranks[k];
+    return '<div class="rk-card r' + rk + '" data-rank="' + rk + '">' +
+      '<span class="rk-medal" aria-hidden="true">' + rk + '</span>' +
+      '<span class="rk-av">' + esc(r.avatar) + '</span>' +
+      '<b class="rk-name">' + esc(r.name) + '</b>' + rankPremHTML(r.premium) +
+      '<div class="rk-stats">' + rankPrimaryHTML(r, mode) +
+      '<span>🗂 ' + r.cards + '</span><span>📖 ' + r.days + '</span></div></div>';
+  }).join("") + "</div>";
+}
+function rankRowsHTML(list, mode){
+  return '<div class="rk-rows">' + list.slice(3, 10).map(function(r, k){
+    var rk = k + 4;
+    return '<div class="rk-row" data-rank="' + rk + '">' +
+      '<span class="rk-num">' + (rk < 10 ? "0" + rk : rk) + '</span>' +
+      '<span class="rk-av">' + esc(r.avatar) + '</span>' +
+      '<span class="rk-row-main"><b>' + esc(r.name) + '</b>' + rankPremHTML(r.premium) + '</span>' +
+      '<span class="rk-row-stats">' + rankPrimaryHTML(r, mode) +
+      '<span class="rk-cards">🗂 ' + r.cards + '</span></span></div>';
+  }).join("") + "</div>";
+}
+/* Hàng "Bạn": web chưa có ví EXP (wallet chỉ có trên mobile — adapter web
+   trả undefined cho doc wallet) nên hạng + EXP tạm dùng số demo giống bản
+   mobile (Hạng 18 · 1.240 EXP); tên + avatar lấy từ tài khoản đang đăng nhập
+   (webCurrentUser), chưa đăng nhập thì hiện "Bạn". Khi web có ví EXP thật,
+   chỉ cần thay rankMeData(). */
+function rankMeData(){
+  var u = null;
+  try{ u = webCurrentUser(); }catch(e){ u = null; }
+  return {
+    name: (u && (u.name || u.email)) ? (u.name || u.email) : "Bạn",
+    photo: (u && u.photoURL) ? u.photoURL : "",
+    rank: 18, exp: 1240
+  };
+}
+function rankMeHTML(){
+  var m = rankMeData();
+  var av = m.photo
+    ? '<span class="rk-av rk-avimg"><img src="' + esc(m.photo) + '" alt=""></span>'
+    : '<span class="rk-av">' + esc(m.name.charAt(0).toUpperCase()) + '</span>';
+  return '<div class="rk-row rk-me" data-rank="me">' +
+    '<span class="rk-num">' + m.rank + '</span>' + av +
+    '<span class="rk-row-main"><b>' + esc(m.name) + '</b>' +
+    (m.name === "Bạn" ? "" : '<span class="rk-me-tag">Bạn</span>') + '</span>' +
+    '<span class="rk-row-stats"><span class="rk-xp">⚡ ' + rankFmtK(m.exp) + ' XP</span></span></div>';
+}
+function rankBoardHTML(mode){
+  var list = rankSorted(mode);
+  var firstLbl = mode === "duel" ? "⚔️ Đấu trí thắng" : "⚡ XP";
+  return '<div class="rk-head"><h2>Bảng xếp hạng</h2><p>Top 10 học viên chăm chỉ</p></div>' +
+    '<div class="rk-tabs" role="tablist" aria-label="Tiêu chí xếp hạng">' +
+    '<button type="button" class="rk-tab' + (mode === "xp" ? " on" : "") + '" data-mode="xp" role="tab" aria-selected="' + (mode === "xp") + '">⚡ Tổng XP</button>' +
+    '<button type="button" class="rk-tab' + (mode === "duel" ? " on" : "") + '" data-mode="duel" role="tab" aria-selected="' + (mode === "duel") + '">⚔️ Đấu trí thắng</button></div>' +
+    '<div class="rk-cols"><span>' + firstLbl + '</span><span>🗂 Thẻ ghi nhớ</span><span>📖 Ngày lộ trình</span></div>' +
+    rankPodiumHTML(list, mode) + rankRowsHTML(list, mode) + rankMeHTML();
+}
+function renderRankBoard(){
+  var box = document.getElementById("rankBoard");
+  if(!box) return;
+  box.innerHTML = rankBoardHTML(rankTabMode);
+  var tabs = box.querySelectorAll(".rk-tab");
+  for(var i = 0; i < tabs.length; i++){
+    tabs[i].addEventListener("click", function(){
+      rankTabMode = this.getAttribute("data-mode");
+      renderRankBoard();
+    });
+  }
+}
 function renderRankPage(){
   document.title = "Xếp hạng & cấp bậc | SoraKanji";
   document.body.classList.remove("plain");
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Xếp hạng</div>' +
     "<h1>Xếp hạng</h1>" +
     "<p>Cấp bậc quân đội — tích EXP từ nhiệm vụ, quiz và đề thi để thăng cấp từ Tân binh lên Tướng.</p></div>" +
-    '<h2 class="secttl">Bạn học dẫn đầu tuần này</h2><div class="card" style="padding:6px 20px">' +
-    WEEK_TOP.map(function(r, i){
-      return '<div class="leadrow"><span class="l-rank' + (i < 3 ? " top" : "") + '">' + (i + 1) + '</span>' +
-        '<span class="l-av">' + esc(r.name.charAt(0)) + '</span><span class="l-main"><b>' + esc(r.name) + "</b><span>" +
-        esc(r.realm) + " · " + esc(r.lv) + '</span></span><span class="l-tv">' + esc(r.tv) + " EXP</span></div>";
-    }).join("") + "</div>" +
+    '<div id="rankBoard"></div>' +
     '<h2 class="secttl">Thang cấp bậc</h2>' +
     REALM_LADDER.map(function(r){
       return '<div class="realmrow"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' + esc(r.n) +
@@ -8625,6 +8774,7 @@ function renderRankPage(){
     }).join("") +
     '<p style="padding-bottom:34px"><a class="btn" href="#/thi">Luyện thi để tích EXP</a></p>';
   $app.innerHTML = h;
+  renderRankBoard();
 }
 
 /* ================= CÁ NHÂN HOÁ ================= */
