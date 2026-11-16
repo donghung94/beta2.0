@@ -1532,10 +1532,13 @@
      tab/nút hàng đầu bị che hẳn nếu padding-top:0. Nội dung vẫn tràn lên
      cao hơn thanh tiêu đề cũ (68px) và cuộn xuyên qua dưới nút khi cuộn.
      Chỉ các overlay mở đầu bằng media tràn viền mới giữ padding-top:0:
-     video (sv2, shadowVideo), khung vẽ (draw), chữ lớn căn giữa (kanji,
-     vocab, about) — nút nổi chỉ đè góc media, không che nội dung quan trọng. */
+     video (sv2, shadowVideo), chữ lớn căn giữa (kanji, vocab, about) —
+     nút nổi chỉ đè góc media, không che nội dung quan trọng. draw RA
+     KHOI nhom nay (2026-11-16, sua hoi quy Luyen viet): o che do Luyen
+     viet, dau trang la hang nut cap N5-N1 (tuong tac) chu khong phai
+     media — nut noi de len nut N5, bam N5 thanh bam nut quay lai. */
   .detailbody{padding-top:60px;}
-  #sv2Overlay .detailbody, #shadowVideoOverlay .detailbody, #drawOverlay .detailbody,
+  #sv2Overlay .detailbody, #shadowVideoOverlay .detailbody,
   #kanjiOverlay .detailbody, #vocabOverlay .detailbody, #aboutOverlay .detailbody{padding-top:0;}
   /* Khung phu de keo dai xuong het man hinh (2026-11-16): .detailbody
      thanh flex column, panel Phu de flex:1, khung .sv2-subs flex:1
@@ -7034,10 +7037,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       doneBtn.style.display = pool ? "" : "none";
       doneBtn.textContent = pool && pool.done ? "Đã thuộc ✓ Bấm để bỏ dấu" : "Đánh dấu đã thuộc";
       hideOv(drawOverlay);
-      kanjiOverlay.classList.add("open");
-      kanjiOverlay.setAttribute("aria-hidden", "false");
+      showOv(kanjiOverlay);
       kanjiOverlay.querySelector(".detailbody").scrollTop = 0;
-      tabResetPage();
     });
   }
   function openKanji(k, cell){ openKanjiFor(k ? k.ch : "", k, cell); }
@@ -7301,9 +7302,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.querySelector(".examfoot").style.display = "none";
     document.getElementById("submitBtn").style.display = "none";
     renderIntro();
-    examOverlay.classList.add("open");
-    examOverlay.setAttribute("aria-hidden", "false");
-    tabResetPage();
+    showOv(examOverlay);
   }
   function renderIntroOfficial(){
     var pass = window.EXAM_PASS180.N3;
@@ -7459,9 +7458,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.querySelector(".examfoot").style.display = "none";
     document.getElementById("submitBtn").style.display = "none";
     renderIntro();
-    examOverlay.classList.add("open");
-    examOverlay.setAttribute("aria-hidden", "false");
-    tabResetPage();
+    showOv(examOverlay);
   }
   function renderIntro(){
     if(EXS.official){ renderIntroOfficial(); return; }
@@ -8149,7 +8146,42 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     synth.cancel();
     setTimeout(function(){ if(seq === speakSeq){ try{ synth.cancel(); }catch(e){} } }, 120);
   }
-  function showOv(el){ el.classList.add("open"); el.setAttribute("aria-hidden","false"); tabResetPage(); }
+  /* ---------- Thu tu chong overlay (z-index) ----------
+     showOv cap z-index tang dan theo thu tu mo thuc te: overlay mo sau
+     luon nam tren overlay mo truoc. Truoc day showOv chi them class
+     .open, z-index giu nguyen theo CSS (.overlay 40, .overlay.front 46)
+     nen 2 overlay cung z thi cai sau hon trong DOM ve len tren — mo
+     Luyen viet (#drawOverlay) tu Kanji hub (#kjOverlay) thi draw mo
+     DUOI hub (nguoi dung van thay hub, bam nut N5 trung nut quay lai
+     #closeKj cua hub). Cung loi voi kana/shadow mo tu hub, va draw che
+     do trace mo tu chi tiet Kanji (#kanjiOverlay z:58).
+     z cap = (z cao nhat trong so overlay dang mo) + 1, tinh tu DOM that
+     nen dung ca khi mo lai overlay da mo. Cap o 49 de luon nam duoi
+     scrim (50) / sheet (51) / tabbar (60) / bang Premium (70) / Sora
+     (70-72). Het slot (z toi 49) thi danh lai z cho cac overlay dang mo
+     theo thu tu hien tai (41, 42, ...) roi cap tiep — stack thuc te chi
+     1-4 lop. Dieu khoan/Chinh sach (z:60 theo CSS) khong cap lai: chung
+     phai o tren modal dang nhap (sheet 51) theo thiet ke, va khong co
+     overlay nao mo tu chung. Vuot-phai-quay-lai doc z-index de tim
+     overlay tren cung nen van dung: overlay mo sau co z cao nhat. */
+  function skOvRaise(el){
+    if(!el || el.id === "termsOverlay" || el.id === "privacyOverlay") return;
+    var open = document.querySelectorAll(".overlay.open");
+    var list = [], max = 40;
+    for(var i = 0; i < open.length; i++){
+      var z = parseInt(getComputedStyle(open[i]).zIndex, 10);
+      if(isNaN(z) || z < 41 || z > 49) continue; /* bo qua lop CSS dac biet (terms 60...) */
+      list.push({o: open[i], z: z});
+      if(z > max) max = z;
+    }
+    if(max >= 49){
+      list.sort(function(a, b){ return a.z - b.z; });
+      for(var j = 0; j < list.length; j++) list[j].o.style.zIndex = 41 + j;
+      max = 40 + list.length;
+    }
+    el.style.zIndex = max + 1;
+  }
+  function showOv(el){ skOvRaise(el); el.classList.add("open"); el.setAttribute("aria-hidden","false"); tabResetPage(); }
   function hideOv(el){ el.classList.remove("open"); el.setAttribute("aria-hidden","true"); }
 
   /* ---------- Vuot phai de quay lai (swipe-back) ----------
