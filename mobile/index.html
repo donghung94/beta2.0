@@ -6356,13 +6356,26 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Khi có bảng trượt (.sheet) hoặc khung Sora (.assistant-panel) đang mở thì
      ép hiện thanh tab (MutationObserver) để bảng luôn bám đúng vị trí. */
   var tabbarEl = document.getElementById("tabbar");
-  var tabLastY = 0, tabAcc = 0, tabLocked = false;
+  var tabLastY = 0, tabAcc = 0, tabLocked = false, tabLastEl = null;
   function tabShow(){ if(tabbarEl) tabbarEl.classList.remove("tab-hidden"); }
   function tabHide(){ if(tabbarEl && !tabLocked) tabbarEl.classList.add("tab-hidden"); }
-  function tabOnScroll(){
-    var scr = document.querySelector(".screen.active");
-    if(!scr) return;
-    var y = scr.scrollTop, dy = y - tabLastY;
+  /* Mo trang moi (tab/overlay): thanh tab luon hien lai (trang moi dang o dau),
+     lay lai moc cuon de khong tinh delta xuyen container. */
+  function tabResetPage(){ tabShow(); tabLastY = 0; tabAcc = 0; tabLastEl = null; }
+  function tabOnScroll(e){
+    var el = (e && e.target) || document.querySelector(".screen.active");
+    /* Chi container cuon CAP TRANG moi dieu khien thanh tab: .screen (tab chinh),
+       .detailbody (trang con overlay), .exambody (de thi JLPT/Tokutei),
+       .resultwrap (man ket qua thi/dau). Khung cuon NOI BO khong dieu khien:
+       #sv2Subs tu cuon theo cau dang phat (gan vao se lam thanh tab + dock
+       nhay lien tuc khi xem video), .missions-scroll/.assistant-msgs/bang
+       sheet chi la khung phu trong trang. */
+    if(!el || !el.classList || !(el.classList.contains("screen") || el.classList.contains("detailbody") || el.classList.contains("exambody") || el.classList.contains("resultwrap"))) return;
+    var y = el.scrollTop;
+    /* Doi container cuon (sang tab/trang khac): lay lai moc, khong tinh delta
+       xuyen container (se nhay trang thai sai). */
+    if(el !== tabLastEl){ tabLastEl = el; tabLastY = y; tabAcc = 0; if(y <= 8) tabShow(); return; }
+    var dy = y - tabLastY;
     tabLastY = y;
     if(y <= 8){ tabShow(); tabAcc = 0; return; }
     if((dy > 0 && tabAcc < 0) || (dy < 0 && tabAcc > 0)) tabAcc = 0;
@@ -6370,9 +6383,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(tabAcc > 10) tabHide();
     else if(tabAcc < -10) tabShow();
   }
-  document.querySelectorAll(".screen").forEach(function(s){
-    s.addEventListener("scroll", tabOnScroll, {passive:true});
-  });
+  /* 1 listener capture tren #phone bat moi cuon cua container con (scroll
+     khong bubble nhung co capture) — gom ca .detailbody/.exambody/.resultwrap
+     cua 42 overlay; tabOnScroll loc theo whitelist nen khung cuon noi bo
+     (#sv2Subs, .missions-scroll, .assistant-msgs, bang sheet...) khong anh
+     huong. */
+  document.getElementById("phone").addEventListener("scroll", tabOnScroll, {capture:true, passive:true});
   new MutationObserver(function(){
     var locked = !!document.querySelector(".sheet.open, .assistant-panel.open");
     if(locked !== tabLocked){ tabLocked = locked; if(locked) tabShow(); }
@@ -6883,6 +6899,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       kanjiOverlay.classList.add("open");
       kanjiOverlay.setAttribute("aria-hidden", "false");
       kanjiOverlay.querySelector(".detailbody").scrollTop = 0;
+      tabResetPage();
     });
   }
   function openKanji(k, cell){ openKanjiFor(k ? k.ch : "", k, cell); }
@@ -7148,6 +7165,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     renderIntro();
     examOverlay.classList.add("open");
     examOverlay.setAttribute("aria-hidden", "false");
+    tabResetPage();
   }
   function renderIntroOfficial(){
     var pass = window.EXAM_PASS180.N3;
@@ -7305,6 +7323,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     renderIntro();
     examOverlay.classList.add("open");
     examOverlay.setAttribute("aria-hidden", "false");
+    tabResetPage();
   }
   function renderIntro(){
     if(EXS.official){ renderIntroOfficial(); return; }
@@ -7992,7 +8011,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     synth.cancel();
     setTimeout(function(){ if(seq === speakSeq){ try{ synth.cancel(); }catch(e){} } }, 120);
   }
-  function showOv(el){ el.classList.add("open"); el.setAttribute("aria-hidden","false"); }
+  function showOv(el){ el.classList.add("open"); el.setAttribute("aria-hidden","false"); tabResetPage(); }
   function hideOv(el){ el.classList.remove("open"); el.setAttribute("aria-hidden","true"); }
 
   /* ---------- Vocabulary data (search + detail) ---------- */
