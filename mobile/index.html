@@ -1492,19 +1492,31 @@
   /* Thanh tab nho ~10% (gap 5->4, padding khung 4->3, font 13->12 o
      .sv2-tab) + gan sat day khung video: margin-top 12->0, bo vien tren
      (video khong co vien nen khong vien doi), goc duoi bo 14px theo khung. */
-  /* ---------- Trình phát sv2: nút quay lại NỔI, bỏ thanh tiêu đề ----------
-     .detailhead tách khỏi flex column thành absolute góc trên-trái; chữ tiêu
-     đề ẩn (GIỮ thẻ trong DOM — svuActivate ghi textContent vào
-     #sv2HeadTitle/#sv2HeadSub vẫn chạy, không cần sửa JS). Nút iconbtn vốn
-     đã tròn 48px, thêm bóng đổ để nổi trên video. .detailbody padding-top 0
-     để video bắt đầu sát mép trên, nội dung cuộn xuyên qua dưới nút nổi.
-     pointer-events:none trên .detailhead (chỉ nút bấm được) để vùng trong
-     suốt quanh nút tròn không chặn chạm vào video bên dưới.
-     CHỈ #sv2Overlay — .detailhead của các overlay khác giữ nguyên. */
-  #sv2Overlay .detailhead{position:absolute; top:12px; left:12px; z-index:20; padding:0; margin:0; pointer-events:none;}
-  #sv2Overlay .detailhead > div{display:none;}
-  #sv2Overlay .detailhead .iconbtn{box-shadow:0 4px 14px rgba(20,16,10,.28), 0 1px 4px rgba(20,16,10,.18); pointer-events:auto;}
-  #sv2Overlay .detailbody{padding-top:0;}
+  /* ---------- Nút quay lại NỔI cho MỌI overlay (không chỉ sv2) ----------
+     .detailhead tách khỏi flex column thành absolute full-width ở đỉnh overlay
+     (left+right 12px để nút phụ margin-left:auto dạt sang góc trên-phải);
+     chữ tiêu đề ẩn (GIỮ thẻ trong DOM — JS ghi textContent vào các h2/span
+     vẫn chạy, không cần sửa JS). Nút iconbtn vốn đã tròn 48px, thêm bóng đổ
+     để nổi trên nội dung. pointer-events:none trên .detailhead (chỉ nút bấm
+     được) để vùng trong suốt không chặn chạm vào nội dung bên dưới.
+     Nút phụ cũng nổi theo: loa ở chi tiết Kanji/Từ vựng (#speakKanji,
+     #speakVocab — .iconbtn), nút đổi cấp ở Lộ trình (#pathChangeBtn —
+     .pathbtn, không phải .iconbtn nên cần rule riêng). Overlay thi dùng
+     .examhead riêng (đồng hồ + nút Nộp bài) — KHÔNG đổi, giữ nguyên. */
+  .detailhead{position:absolute; top:12px; left:12px; right:12px; z-index:20; padding:0; margin:0; pointer-events:none;}
+  .detailhead > div{display:none;}
+  .detailhead .iconbtn{box-shadow:0 4px 14px rgba(20,16,10,.28), 0 1px 4px rgba(20,16,10,.18); pointer-events:auto;}
+  .detailhead .pathbtn{box-shadow:0 4px 14px rgba(20,16,10,.28), 0 1px 4px rgba(20,16,10,.18); pointer-events:auto;}
+  /* Hàng đầu các overlay thường chừa 60px (= nút 48px + top 12px) để không
+     bị nút nổi che — đo thật: tiêu đề wvsec mất ~5 chữ, wvinfo mất 2 dòng,
+     tab/nút hàng đầu bị che hẳn nếu padding-top:0. Nội dung vẫn tràn lên
+     cao hơn thanh tiêu đề cũ (68px) và cuộn xuyên qua dưới nút khi cuộn.
+     Chỉ các overlay mở đầu bằng media tràn viền mới giữ padding-top:0:
+     video (sv2, shadowVideo), khung vẽ (draw), chữ lớn căn giữa (kanji,
+     vocab, about) — nút nổi chỉ đè góc media, không che nội dung quan trọng. */
+  .detailbody{padding-top:60px;}
+  #sv2Overlay .detailbody, #shadowVideoOverlay .detailbody, #drawOverlay .detailbody,
+  #kanjiOverlay .detailbody, #vocabOverlay .detailbody, #aboutOverlay .detailbody{padding-top:0;}
   .sv2-tabs{display:flex; gap:4px; margin-top:0; background:var(--card); border:1px solid var(--line); border-top:none; border-radius:0 0 14px 14px; padding:3px;}
   .sv2-tab{
     flex:1 1 0; min-width:0; border:none; background:transparent; color:var(--ink-2); cursor:pointer;
