@@ -1525,6 +1525,22 @@
   .detailbody{padding-top:60px;}
   #sv2Overlay .detailbody, #shadowVideoOverlay .detailbody, #drawOverlay .detailbody,
   #kanjiOverlay .detailbody, #vocabOverlay .detailbody, #aboutOverlay .detailbody{padding-top:0;}
+  /* Khung phu de keo dai xuong het man hinh (2026-11-16): .detailbody
+     thanh flex column, panel Phu de flex:1, khung .sv2-subs flex:1
+     (min-height:0 de khung co lai vua khong gian con) thay vi
+     max-height:42dvh. padding-bottom 73px cua .detailbody (toan cuc,
+     spec overlay-float) bo rieng cho sv2 de day khung cham VH (dock +
+     thanh tab noi de len tren khung, z-index cao hon). .overlay da het
+     padding-bottom o spec overlay-float nen khong can override them.
+     Chi ap cho #sv2Overlay. */
+  #sv2Overlay .detailbody{display:flex; flex-direction:column; padding-bottom:0;}
+  #sv2Overlay .detailbody > .sv2-videowrap, #sv2Overlay .detailbody > .sv2-tabs{flex:none;}
+  #sv2PanelSubs.on{display:flex; flex-direction:column; flex:1 1 auto; min-height:0;}
+  /* .wv-endpad (110px, spacer cuoi trang dung chung) se co lai con ~30px
+     trong flex column va chan day khung cach VH 30px — an rieng o sv2
+     (aria-hidden, chi la khoang dem; padding-bottom cua khung da lo
+     khoang trong cuoi khung). */
+  #sv2Overlay .wv-endpad{display:none;}
   .sv2-tabs{display:flex; gap:4px; margin-top:0; background:var(--card); border:1px solid var(--line); border-top:none; border-radius:0 0 14px 14px; padding:3px;}
   .sv2-tab{
     flex:1 1 0; min-width:0; border:none; background:transparent; color:var(--ink-2); cursor:pointer;
@@ -1539,13 +1555,15 @@
      trang → khung cuộn tuột đi đâu, không thấy câu đang đọc) */
   .sv2-subs{
     position:relative;
-    max-height:42dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-    scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px 70px;
-    /* padding-bottom 70px (~cao dock 45px 1 hang + dock cao them 6px do
-       thanh tab noi + 19px du phong) chua dock ghim: day khung co the nam
-       duoi dock khi detailbody o dau trang; padding nay de cau cuoi cuon
-       len tren dinh dock thay vi bi che, chi can cuon khung (khong can
-       cuon them trang) o ca 390x844, 375x667 va 320x568. */
+    flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 4px calc(var(--tabh) + 6px + 45px + 14px);
+    /* flex:1 thay max-height:42dvh: khung lap day chieu cao con lai cua
+       .detailbody (video + tab o tren, day khung cham VH). padding-bottom
+       114px = dinh dock (var(--tabh) 49 + dock nang 6 + cao dock 45) +
+       14px du phong: cau cuoi + ghi chu nguon (nay nam trong khung) cuon
+       len tren dinh dock thay vi bi che o ca 390x844, 375x667, 320x568.
+       70px cua spec overlay-float chi du khi khung con ngan (day khung
+       tren dinh dock); khung da dai den VH thi phai >= 100px + du phong. */
   }
   .sv2-sub{
     width:100%; display:flex; gap:11px; align-items:flex-start; text-align:left; cursor:pointer;
@@ -11219,6 +11237,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
        dựng lại danh sách (innerHTML sẽ xóa nó), lát gắn lại + ghim lại */
     var expEl = document.getElementById("sv2Exp");
     var expInBox = !!(expEl && expEl.parentNode === box);
+    /* Ghi chu nguon song trong khung cuon (cung kieu bong bong exp): giu
+       lai truoc khi innerHTML xoa no, lat gan lai cuoi khung. */
+    var noteEl = document.getElementById("sv2SrcNote");
     sv2Segs = SV2_SUBS.map(function(s){
       if(s.unclear) return null;
       var segs = sv2Segments(s.fj), cum = [], tot = 0;
@@ -11268,6 +11289,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       box.appendChild(expEl);
       if(sv2ExpIdx >= 0) sv2PlaceExp();
     }
+    /* Ghi chu nguon la muc cuoi trong khung phu de (cuon cung cac cau);
+       truoc day no nam duoi khung trong .detailbody, khung keo dai den VH
+       thi khong con cho cho no o ngoai. Chi hien o tab Phu de. */
+    if(noteEl) box.appendChild(noteEl);
   }
   /* ----- Tab Shadowing: thẻ câu + phát đoạn + ghi âm chấm điểm (cơ chế v105) ----- */
   var sv2ShIdx = 0;
