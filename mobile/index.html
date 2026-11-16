@@ -1356,6 +1356,11 @@
      iframe YouTube không nhận click trực tiếp nên không bị kéo ra ngoài YouTube */
   .sv-videowrap iframe, .sv-videowrap #svPlayer{position:absolute; inset:0; width:100%; height:100%; border:0; display:block; pointer-events:none;}
   .sv-shield{position:absolute; inset:0; z-index:2; cursor:pointer; background:transparent;}
+  /* Gợi ý cử chỉ kéo-xuống-để-quay-lại: chip nhỏ đè cuối khung video, chỉ hiện
+     khi #sv2Overlay có class .sv2-showhint (3 lần mở bài đầu, tự mờ sau 3s —
+     sv2ShowDragHint). pointer-events:none nên không bao giờ chặn chạm video. */
+  .sv2-draghint{position:absolute; left:50%; bottom:10px; z-index:3; transform:translateX(-50%); padding:5px 12px; border-radius:99px; background:rgba(20,16,10,.72); color:#fff; font-size:12px; line-height:1.4; white-space:nowrap; opacity:0; transition:opacity .4s; pointer-events:none;}
+  #sv2Overlay.sv2-showhint .sv2-draghint{opacity:1;}
   .sv-facade{position:absolute; inset:0; width:100%; height:100%; border:0; padding:0; margin:0; background:#14141c; cursor:pointer; display:block;}
   .sv-facade img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
   .sv-facade .sv-play{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:66px; height:47px; background:var(--red); border-radius:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,.4); pointer-events:none;}
@@ -1515,6 +1520,13 @@
   .detailhead > div{display:none;}
   .detailhead .iconbtn{box-shadow:0 4px 14px rgba(20,16,10,.28), 0 1px 4px rgba(20,16,10,.18); pointer-events:auto;}
   .detailhead .pathbtn{box-shadow:0 4px 14px rgba(20,16,10,.28), 0 1px 4px rgba(20,16,10,.18); pointer-events:auto;}
+  /* Trình phát sv2: BỎ nút quay lại — quay lại bằng cử chỉ dí vào video rồi
+     kéo xuống (sv2InitDragDown, xem JS). GIỮ thẻ trong DOM: svuActivate vẫn
+     ghi textContent vào #sv2HeadTitle/#sv2HeadSub, cử chỉ đóng gọi
+     closeSv2.click() nên nút phải còn tồn tại (display:none vẫn nhận
+     .click() bằng code). CHỈ #sv2Overlay — .detailhead các overlay khác
+     giữ nguyên nút nổi. */
+  #sv2Overlay .detailhead{display:none;}
   /* Hàng đầu các overlay thường chừa 60px (= nút 48px + top 12px) để không
      bị nút nổi che — đo thật: tiêu đề wvsec mất ~5 chữ, wvinfo mất 2 dòng,
      tab/nút hàng đầu bị che hẳn nếu padding-top:0. Nội dung vẫn tràn lên
@@ -10760,7 +10772,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function sv2LoadPlayer(autoplay){
     if(sv2Player){ if(autoplay && sv2Player.playVideo) sv2Player.playVideo(); return; }
     var wrap = document.getElementById("sv2VideoWrap");
-    wrap.innerHTML = '<div id="sv2Player"></div><div class="sv-shield" id="sv2Shield" role="button" aria-label="Phát hoặc tạm dừng video"></div>';
+    wrap.innerHTML = '<div id="sv2Player"></div><div class="sv-shield" id="sv2Shield" role="button" aria-label="Phát hoặc tạm dừng video"></div>' + '<span class="sv2-draghint" aria-hidden="true">↓ Kéo video xuống để quay lại</span>';
     document.getElementById("sv2Shield").addEventListener("click", sv2TogglePlay);
     function create(){
       sv2Player = new YT.Player("sv2Player", {
@@ -11670,6 +11682,79 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     hideOv(sv2Overlay); svRenderRows(); svRenderMine(); showOv(listenOverlay);
   });
 
+  /* ---------- Trình phát sv2: dí vào video rồi KÉO XUỐNG để quay lại ----------
+     Thay nút quay lại (detailhead sv2 đã display:none). Gắn trên #sv2VideoWrap
+     — khung chứa cả facade lúc chưa phát và shield lúc đang phát — nên cử chỉ
+     chạy được ở cả 2 trạng thái (gắn riêng vào #sv2Shield sẽ mất đường về khi
+     chưa bấm phát lần nào, vì lúc đó trong khung chỉ có nút facade).
+     - Chạm nhẹ (di chuyển <10px): không chặn gì, click chạy như cũ (mở player
+       / phát-dừng).
+     - Kéo XUỐNG, chủ yếu dọc (dy > 10 và dy > |dx|): nhận gesture, preventDefault
+       để chặn cuộn detailbody, overlay đi theo ngón tay (translateY theo dy).
+     - Thả ra với dy >= 90px: đóng player bằng ĐÚNG cơ chế của nút quay lại
+       (closeSv2.click() — nút ẩn vẫn nhận .click() bằng code, kèm đủ dọn dẹp
+       ghi âm/timer/dừng video). Thả ra dưới ngưỡng: nảy về vị trí cũ.
+     - Kéo ngang nhường cho vuốt-phải-quay-lại (gắn trên overlay, đường phụ),
+       kéo lên nhường cho cuộn trang — handler này không stopPropagation. */
+  var sv2Drag = null; /* {x0, y0, dy, active} */
+  function sv2InitDragDown(){
+    var wrap = document.getElementById("sv2VideoWrap");
+    if(!wrap || wrap.__sv2DragBound) return;
+    wrap.__sv2DragBound = true;
+    wrap.addEventListener("touchstart", function(e){
+      if(!e.touches || e.touches.length !== 1) return;
+      var t = e.touches[0];
+      sv2Drag = {x0: t.clientX, y0: t.clientY, dy: 0, active: false};
+    }, {passive: true});
+    wrap.addEventListener("touchmove", function(e){
+      if(!sv2Drag || !e.touches || e.touches.length !== 1) return;
+      var t = e.touches[0];
+      var dx = t.clientX - sv2Drag.x0, dy = t.clientY - sv2Drag.y0;
+      if(!sv2Drag.active){
+        if(dy > 10 && dy > Math.abs(dx)){ sv2Drag.active = true; }
+        else return;
+      }
+      e.preventDefault(); /* chặn cuộn detailbody trong lúc kéo */
+      sv2Drag.dy = Math.max(0, dy);
+      var ov = document.getElementById("sv2Overlay");
+      ov.style.transition = "none";
+      ov.style.transform = "translateY(" + sv2Drag.dy + "px)";
+    }, {passive: false});
+    function sv2DragEnd(){
+      if(!sv2Drag) return;
+      var d = sv2Drag; sv2Drag = null;
+      var ov = document.getElementById("sv2Overlay");
+      if(!d.active) return; /* chạm nhẹ: để click chạy như cũ */
+      ov.style.transition = "";
+      ov.style.transform = "";
+      if(d.dy >= 90){
+        var btn = document.getElementById("closeSv2");
+        if(btn) btn.click();
+      }
+      /* Dưới ngưỡng: transform về "" + transition khôi phục → overlay nảy về 0. */
+    }
+    wrap.addEventListener("touchend", sv2DragEnd, {passive: true});
+    wrap.addEventListener("touchcancel", function(){
+      if(!sv2Drag) return;
+      sv2Drag = null;
+      var ov = document.getElementById("sv2Overlay");
+      ov.style.transition = ""; ov.style.transform = "";
+    }, {passive: true});
+  }
+  sv2InitDragDown();
+
+  /* Gợi ý cử chỉ kéo-xuống: chip "↓ Kéo video xuống để quay lại" hiện 3 giây
+     trong 3 lần mở bài đầu tiên (đếm bằng localStorage), sau đó không hiện nữa. */
+  function sv2ShowDragHint(){
+    var ov = document.getElementById("sv2Overlay");
+    var n = 0;
+    try{ n = parseInt(localStorage.getItem("sk_sv2_draghint_n") || "0", 10) || 0; }catch(e){}
+    if(n >= 3) return;
+    try{ localStorage.setItem("sk_sv2_draghint_n", String(n + 1)); }catch(e){}
+    ov.classList.add("sv2-showhint");
+    setTimeout(function(){ ov.classList.remove("sv2-showhint"); }, 3000);
+  }
+
   /* ---------- Dán link YouTube → tự tạo bài shadowing (bài của người học) ----------
      Ô nhập nằm trong tab "Video tôi tạo" (trang Luyện nghe). Luồng:
      validate link ngay ở client theo đúng luật parse của backend
@@ -11745,8 +11830,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     wrap.classList.toggle("wide", !!d.wide);
     wrap.innerHTML = '<button class="sv-facade" type="button" id="sv2Facade" aria-label="' + svEsc(d.facadeLabel) + '">' +
       (d.facadeImg ? '<img src="' + svEsc(d.facadeImg) + '" alt="' + svEsc(d.facadeAlt) + '">' : "") +
-      '<span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>';
+      '<span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>' + '<span class="sv2-draghint" aria-hidden="true">↓ Kéo video xuống để quay lại</span>';
     document.getElementById("sv2Facade").addEventListener("click", function(){ sv2LoadPlayer(true); });
+    sv2ShowDragHint();
     sv2OpenLesson();
   }
   /* Parse + validate link — bản port nguyên luật của backend src/videoId.js
