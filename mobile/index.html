@@ -37,7 +37,7 @@
     --page-bg:#E9E7E1;
     --shadow:0 24px 60px rgba(20,16,10,.22), 0 4px 14px rgba(20,16,10,.12);
     --radius:18px;
-    --tabh:calc(70px + env(safe-area-inset-bottom));
+    --tabh:calc(49px + env(safe-area-inset-bottom));
   }
   @media (prefers-color-scheme: dark){
     :root{
@@ -108,23 +108,28 @@
   .screens{flex:1 1 auto; position:relative; overflow:hidden;}
   .screen{
     position:absolute; inset:0; overflow-y:auto; overscroll-behavior:contain;
-    padding:10px 18px 108px; display:none; scrollbar-width:none;
+    padding:10px 18px calc(var(--tabh) + 32px); display:none; scrollbar-width:none;
   }
   .screen::-webkit-scrollbar{display:none;}
   .screen.active{display:block;}
 
-  /* ---------- Bottom nav ---------- */
+  /* ---------- Bottom nav kieu Facebook: chi icon, hep (49px + safe-area) ----------
+     Tabbar absolute bam day .phone (khong chiem cho flex) de truot an/hien theo
+     cuon ma khong de lai khoang trong; noi dung man hinh chua padding-bottom
+     theo --tabh. Nut cao 44px (du chuan cham), icon 24px. */
   .tabbar{
-    flex:0 0 auto; display:grid; grid-template-columns:repeat(5,1fr);
+    position:absolute; left:0; right:0; bottom:0; display:grid; grid-template-columns:repeat(5,1fr);
     background:var(--card); border-top:1px solid var(--line);
-    padding:8px 6px calc(10px + env(safe-area-inset-bottom));
-    z-index:60;
+    padding:2px 6px calc(2px + env(safe-area-inset-bottom));
+    z-index:60; transition:transform .28s cubic-bezier(.32,.72,.28,1);
   }
+  .tabbar.tab-hidden{transform:translateY(calc(100% + 8px));}
+  @media (prefers-reduced-motion: reduce){ .tabbar{transition:none;} }
   .tabbtn{
     appearance:none; border:none; background:none; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; gap:3px;
-    padding:7px 2px 4px; border-radius:12px; color:var(--ink-3);
-    font-family:inherit; font-size:11px; font-weight:600; min-height:52px; justify-content:center;
+    display:flex; align-items:center; justify-content:center;
+    padding:10px 2px; border-radius:12px; color:var(--ink-3);
+    font-family:inherit; min-height:44px;
   }
   .tabbtn svg{width:24px; height:24px;}
   .tabbtn.on{color:var(--red);}
@@ -790,14 +795,14 @@
   /* bottom sheet */
   .scrim{position:absolute; inset:0; background:rgba(10,8,6,.45); z-index:50; opacity:0; pointer-events:none; transition:opacity .25s;}
   .scrim.open{opacity:1; pointer-events:auto;}
-  /* Bảng trượt dưới (premium/login/answer/plan/avatar): đáy bảng bám chiều cao
-     thật của thanh tab (76px + safe-area; --tabh 70px thiếu 6px nên bảng cũ lấn
-     lên thanh tab). Khi đóng, trượt xuống hết chiều cao bảng + khoảng tới đáy
-     viewport + 8px — bản cũ translateY(105%) còn lòi ~35px che nhãn thanh tab. */
+  /* Bảng trượt dưới (premium/login/answer/plan/avatar): đáy bảng bám --tabh
+     (chiều cao thật của thanh tab, 49px + safe-area). Khi đóng, trượt xuống
+     hết chiều cao bảng + khoảng tới đáy viewport + 8px — bản cũ translateY(105%)
+     còn lòi ~35px che thanh tab. */
   .sheet{
-    position:absolute; left:0; right:0; bottom:calc(76px + env(safe-area-inset-bottom)); z-index:51; background:var(--card);
+    position:absolute; left:0; right:0; bottom:var(--tabh); z-index:51; background:var(--card);
     border-radius:22px 22px 0 0; padding:10px 18px calc(20px + env(safe-area-inset-bottom));
-    transform:translateY(calc(100% + 76px + env(safe-area-inset-bottom) + 8px)); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
+    transform:translateY(calc(100% + var(--tabh) + 8px)); transition:transform .3s cubic-bezier(.32,.72,.28,1); max-height:72%;
     display:flex; flex-direction:column;
   }
   .sheet.open{transform:translateY(0);}
@@ -1894,18 +1899,6 @@
     box-shadow:inset 0 0 0 2px rgba(255,255,255,.55), 0 4px 10px rgba(20,16,10,.12);
   }
   .appgrid .a-ic svg{width:46px; height:46px;}
-
-  /* ---------- Bottom nav: Home ở giữa ---------- */
-  .tabbar{grid-template-columns:repeat(5,1fr); align-items:end;}
-  .tabbtn .fabhome{
-    width:52px; height:52px; border-radius:50%; background:var(--red); color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    margin-top:-24px; border:3px solid var(--card);
-    box-shadow:0 6px 16px rgba(200,16,46,.35);
-  }
-  .tabbtn .fabhome svg{width:26px; height:26px;}
-  .tabbtn.homebtn{color:var(--ink-3);}
-  .tabbtn.homebtn.on{color:var(--red);}
 
   /* ---------- Xếp hạng ---------- */
   .realmrow{
@@ -3495,27 +3488,22 @@
       </section>
     </div>
 
-    <!-- bottom nav: Xếp hạng · Phòng chat · HOME (giữa) · Cá nhân · Cài đặt -->
+    <!-- bottom nav kieu Facebook: chi icon, 5 nut ngang hang (Xep hang - Phong chat - Home - Ca nhan - Cai dat) -->
     <nav class="tabbar" id="tabbar">
-      <button class="tabbtn" data-tab="rank">
+      <button class="tabbtn" data-tab="rank" aria-label="Xếp hạng">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/><path d="M7 6H4a2 2 0 0 0 0 4h3M17 6h3a2 2 0 0 1 0 4h-3"/></svg>
-        Xếp hạng
       </button>
-      <button class="tabbtn" data-tab="chat">
+      <button class="tabbtn" data-tab="chat" aria-label="Phòng chat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z"/></svg>
-        Phòng chat
       </button>
-      <button class="tabbtn homebtn on" data-tab="home">
-        <span class="fabhome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg></span>
-        Home
+      <button class="tabbtn on" data-tab="home" aria-label="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
       </button>
-      <button class="tabbtn" data-tab="me">
+      <button class="tabbtn" data-tab="me" aria-label="Cá nhân">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
-        Cá nhân
       </button>
-      <button class="tabbtn" data-tab="settings">
+      <button class="tabbtn" data-tab="settings" aria-label="Cài đặt">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2.1-1.63-2-3.46-2.49 1a7 7 0 0 0-2.42-1.4L13.66 2.6h-3.32l-.39 2.51a7 7 0 0 0-2.42 1.4l-2.49-1-2 3.46L5.14 10.6a7 7 0 0 0 0 2.8l-2.1 1.63 2 3.46 2.49-1a7 7 0 0 0 2.42 1.4l.39 2.51h3.32l.39-2.51a7 7 0 0 0 2.42-1.4l2.49 1 2-3.46L18.86 13.4c.1-.45.14-.92.14-1.4Z"/></svg>
-        Cài đặt
       </button>
     </nav>
 
@@ -6329,6 +6317,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
     var target = document.getElementById(screens[name]);
     if(target) target.scrollTop = 0;
+    tabShow(); tabLastY = 0; tabAcc = 0; /* doi tab: luon hien lai thanh tab (man moi dang o dau) */
   }
   document.querySelectorAll(".tabbtn").forEach(function(b){
     b.addEventListener("click", function(){
@@ -6340,6 +6329,35 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       goTab(b.dataset.tab);
     });
   });
+  /* ---------- Thanh tab dưới ẩn/hiện theo cuộn (kiểu Facebook) ----------
+     Container cuộn là từng .screen.active (mỗi màn tự cuộn, window không cuộn).
+     Ngưỡng TÍCH LŨY theo hướng 10px: cuộn chậm (5px/event) vẫn ẩn sau 10px
+     tích lũy; rung lắc đổi hướng liên tục thì tabAcc reset nên không nhấp nháy.
+     Khi có bảng trượt (.sheet) hoặc khung Sora (.assistant-panel) đang mở thì
+     ép hiện thanh tab (MutationObserver) để bảng luôn bám đúng vị trí. */
+  var tabbarEl = document.getElementById("tabbar");
+  var tabLastY = 0, tabAcc = 0, tabLocked = false;
+  function tabShow(){ if(tabbarEl) tabbarEl.classList.remove("tab-hidden"); }
+  function tabHide(){ if(tabbarEl && !tabLocked) tabbarEl.classList.add("tab-hidden"); }
+  function tabOnScroll(){
+    var scr = document.querySelector(".screen.active");
+    if(!scr) return;
+    var y = scr.scrollTop, dy = y - tabLastY;
+    tabLastY = y;
+    if(y <= 8){ tabShow(); tabAcc = 0; return; }
+    if((dy > 0 && tabAcc < 0) || (dy < 0 && tabAcc > 0)) tabAcc = 0;
+    tabAcc += dy;
+    if(tabAcc > 10) tabHide();
+    else if(tabAcc < -10) tabShow();
+  }
+  document.querySelectorAll(".screen").forEach(function(s){
+    s.addEventListener("scroll", tabOnScroll, {passive:true});
+  });
+  new MutationObserver(function(){
+    var locked = !!document.querySelector(".sheet.open, .assistant-panel.open");
+    if(locked !== tabLocked){ tabLocked = locked; if(locked) tabShow(); }
+  }).observe(document.getElementById("phone"), {attributes:true, subtree:true, attributeFilter:["class"]});
+
   document.querySelectorAll("[data-goto]").forEach(function(b){
     b.addEventListener("click", function(){
       var g = b.dataset.goto;
