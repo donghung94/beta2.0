@@ -612,7 +612,6 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
 .legal ul{margin:0 0 12px; padding-left:22px; font-size:15px; line-height:1.75}
 .legal li{margin-bottom:6px}
 .legal .legal-updated{font-size:13.5px; color:var(--muted); margin:0 0 6px}
-.legal-draft{border:1px solid #e8c85a; background:#fff8e1; border-radius:10px; padding:12px 14px; font-size:14px; font-weight:700; color:#7a5b00; margin:0 0 12px}
 .auth-terms{margin:14px 0 0; font-size:12.5px; line-height:1.6; color:var(--muted); text-align:center}
 .auth-terms a{color:var(--blue); font-weight:600}
 .user-menu-head{padding:8px 10px 7px; border-bottom:1px solid var(--line); margin-bottom:4px}
@@ -9941,15 +9940,14 @@ function renderSettingsPage(){
    Điều khoản sử dụng + Chính sách quyền riêng tư — nội dung viết riêng cho
    SoraKanji (xem ~/workspace/terms-privacy/). Hai trang công khai, không
    paywall, không cần đăng nhập (link tới từ modal đăng nhập + Cài đặt).
-   Mục hoàn tiền (Điều khoản §5) đang là DỰ THẢO chờ user duyệt — giữ
-   nguyên hộp cảnh báo, không gỡ. */
+   Mục hoàn tiền (Điều khoản §5) đã được user duyệt 17/11/2026 — văn bản chính thức. */
 function renderTermsPage(){
   document.title = "Điều khoản sử dụng | SoraKanji";
   document.body.classList.remove("plain");
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Điều khoản sử dụng</div>' +
     "<h1>Điều khoản sử dụng</h1></div>" +
     '<div class="legal">' +
-    '<p class="legal-updated">Cập nhật lần cuối: 15/11/2026</p>' +
+    '<p class="legal-updated">Cập nhật lần cuối: 17/11/2026</p>' +
     "<h2>1. Dịch vụ</h2>" +
     "<p>SoraKanji là ứng dụng học tiếng Nhật dành cho người Việt, cung cấp các nội dung luyện thi JLPT và học Kanji: từ vựng, ngữ pháp, kanji, luyện nghe, đọc hiểu và thi thử. Dịch vụ hoạt động trên web (sorakanji.com) và trên điện thoại.</p>" +
     "<p>Bằng việc tạo tài khoản hoặc sử dụng SoraKanji, bạn đồng ý với các điều khoản dưới đây.</p>" +
@@ -9975,7 +9973,6 @@ function renderTermsPage(){
     "<li>Mỗi đơn hàng gắn với tài khoản đã đăng nhập lúc mua; gói đã kích hoạt không chuyển sang tài khoản khác.</li>" +
     "</ul>" +
     "<h2>5. Chính sách hoàn tiền</h2>" +
-    '<div class="legal-draft">DỰ THẢO — chờ chủ sở hữu SoraKanji duyệt.</div>' +
     "<p>Gói đã kích hoạt không được hoàn tiền, trừ trường hợp lỗi kỹ thuật phía SoraKanji (ví dụ: đã thanh toán nhưng gói không được kích hoạt sau 24 giờ, hoặc tài khoản bị lỗi không sử dụng được nội dung đã mua). Trong trường hợp đó, bạn liên hệ hỗ trợ để được xử lý hoàn tiền hoặc kích hoạt lại.</p>" +
     "<h2>6. Quyền sở hữu nội dung</h2>" +
     "<ul>" +
