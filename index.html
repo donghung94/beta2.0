@@ -1358,6 +1358,12 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .svm-thumb img{width:100%; height:100%; object-fit:cover; display:block}
 .svm-dur{position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,.8); color:#fff; font-size:12px; font-weight:700; padding:2px 6px; border-radius:4px}
 .svm-meta{display:block; font-size:12.5px; color:var(--muted); margin-top:4px}
+/* Nut xoa the "Video toi tao": boc the trong .svm-wrap de nut nam NGOAI
+   the <a> (button trong anchor la HTML khong hop le). */
+.svm-wrap{position:relative}
+.svm-del{position:absolute; top:6px; right:6px; z-index:2; width:28px; height:28px; border:none; border-radius:50%; background:rgba(0,0,0,.65); color:#fff; font-size:18px; line-height:1; font-family:inherit; cursor:pointer; padding:0 0 2px}
+.svm-del:hover{background:var(--red)}
+.svm-del:focus-visible{outline:2px solid var(--red); outline-offset:2px}
 /* ================= W3-CSS:BEGIN — Shadowing video (port tu mobile, ban desktop) ================= */
 /* Ghi chu bien CSS: chi dung bien co trong CA HAI :root cua web
    (--card/--card2/--line/--line-strong/--red/--red-dark/--red-soft/--ink/
@@ -5773,11 +5779,12 @@ function skSvMineSectionHTML(){
   }
   var cards = mine.map(function(v){
     var thumb = "https://i.ytimg.com/vi/" + encodeURIComponent(v.id) + "/mqdefault.jpg";
-    return '<a class="card svm-card" href="#/nghe/video/' + encodeURIComponent(v.id) + '">' +
+    return '<div class="svm-wrap"><a class="card svm-card" href="#/nghe/video/' + encodeURIComponent(v.id) + '">' +
       '<span class="svm-thumb"><img src="' + thumb + '" alt="Ảnh xem trước video: ' + esc(v.title || "") + '" loading="lazy">' +
       (v.dur ? '<span class="svm-dur">' + esc(v.dur) + '</span>' : '') + '</span>' +
       '<b>' + esc(v.title || v.id) + '</b>' +
-      '<span class="svm-meta">Video của bạn' + (v.lines ? ' · ' + v.lines + ' câu' : '') + '</span></a>';
+      '<span class="svm-meta">Video của bạn' + (v.lines ? ' · ' + v.lines + ' câu' : '') + '</span></a>' +
+      '<button type="button" class="svm-del" data-del-vid="' + esc(v.id) + '" aria-label="Xóa video: ' + esc(v.title || v.id) + '">×</button></div>';
   }).join("");
   return h + '<div class="svm-grid">' + cards + '</div>';
 }
@@ -7595,6 +7602,41 @@ function svMineAdd(entry){
   svMineSave(m);
 }
 
+/* Xoa video tu tao khoi danh sach cua user (co xac nhan truoc vi video
+   ton cong tao qua backend). Chi xoa khoi sk_sv_mine — cache bai hoc o
+   backend (Firestore sv_lessons) giu nguyen nen dan lai cung link thi bai
+   cu van ve tu cache. Dong bo xoa: ghi tombstone qua
+   SKSync.markVideoRemoved(id) TRUOC khi luu danh sach moi (module sync
+   moi co API nay; module cu chua co thi guard bo qua, xoa chi o local).
+   svMineSave sau do goi schedulePush "videos" nen tombstone duoc day
+   len server cung danh sach moi. */
+function svMineDelete(id){
+  var v = svMineLoad().filter(function(x){ return x.id === id; })[0];
+  if(!v) return;
+  var title = v.title || v.id;
+  showModal("Xóa video tự tạo",
+    "Xóa \"" + title + "\" khỏi danh sách của bạn? Bài học đã tạo vẫn còn trên máy chủ — dán lại link là mở lại được.",
+    "Xóa", "Hủy", function(){
+      if(window.SKSync && typeof SKSync.markVideoRemoved === "function"){
+        try{ SKSync.markVideoRemoved(id); }catch(_){}
+      }
+      var m = svMineLoad().filter(function(x){ return x.id !== id; });
+      svMineSave(m);
+      if(typeof svRenderMine === "function"){ try{ svRenderMine(); }catch(_){} }
+    });
+}
+function svBindMineDel(root){
+  var scope = (root && root.querySelector) ? root : document;
+  scope.querySelectorAll(".svm-del:not([data-del-bound])").forEach(function(btn){
+    btn.setAttribute("data-del-bound", "1");
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      svMineDelete(btn.getAttribute("data-del-vid"));
+    });
+  });
+}
+
 /* Video user luu chi co videoId + thong tin hien thi — dung lai dang the video.
    Thumb mqdefault (quy tac du an; ban mobile dung hqdefault o day). */
 function svMineToCard(v){
@@ -7676,6 +7718,7 @@ function svRenderMine(){
   var paste = (typeof svuBoxHTML === "function") ? svuBoxHTML() : "";
   box.innerHTML = paste + skSvMineSectionHTML();
   if(typeof svuBindBox === "function"){ try{ svuBindBox(box); }catch(_){} }
+  if(typeof svBindMineDel === "function"){ try{ svBindMineDel(box); }catch(_){} }
 }
 /* Trang "xem tat ca video cua 1 chuoi": luoi day du + nut quay lai #/nghe. */
 function svOpenAllList(title, videos){
