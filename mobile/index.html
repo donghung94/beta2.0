@@ -704,6 +704,8 @@
   .mrow:last-child{border-bottom:none;}
   .mrow svg{width:21px; height:21px; color:var(--ink-2); flex:0 0 auto;}
   .mrow .chev{margin-left:auto; color:var(--ink-3);}
+  .mrow.danger{color:var(--red);}
+  .mrow.danger svg{color:var(--red);}
   .switch{margin-left:auto; width:48px; height:28px; border-radius:99px; background:var(--line); position:relative; flex:0 0 auto; transition:background .15s;}
   .switch::after{content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); transform:translateX(0); transition:transform .15s;}
   .switch.on{background:var(--red);}
@@ -3641,6 +3643,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/></svg>
             Chính sách quyền riêng tư
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="menu">
+          <button class="mrow danger" id="setDeleteAccountBtn" type="button" aria-label="Xóa tài khoản — xóa vĩnh viễn tài khoản, tiến độ học, gói Premium và dữ liệu đã lưu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>
+            Xóa tài khoản
           </button>
         </div>
         <p id="setMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:12px 2px 0; line-height:1.5;"></p>
@@ -8093,6 +8101,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("setTermsBtn").addEventListener("click", function(){ showOv(document.getElementById("termsOverlay")); });
   document.getElementById("closeTerms").addEventListener("click", function(){ hideOv(document.getElementById("termsOverlay")); });
   document.getElementById("setPrivacyBtn").addEventListener("click", function(){ showOv(document.getElementById("privacyOverlay")); });
+  document.getElementById("setDeleteAccountBtn").addEventListener("click", skDeleteAccount);
   document.getElementById("closePrivacy").addEventListener("click", function(){ hideOv(document.getElementById("privacyOverlay")); });
   document.getElementById("loginTermsLink").addEventListener("click", function(e){ e.preventDefault(); showOv(document.getElementById("termsOverlay")); });
   document.getElementById("loginPrivacyLink").addEventListener("click", function(e){ e.preventDefault(); showOv(document.getElementById("privacyOverlay")); });
@@ -18298,6 +18307,91 @@ function furiHTML(text){
       }catch(_){ clearTimeout(skLogoutTimer); doSignOut(); }
     }else{ doSignOut(); }
   }
+  /* ---------- Xóa tài khoản (Apple bắt buộc, Guideline 5.1.1) ----------
+     Mục "Xóa tài khoản" ở tab Cài đặt. Xác nhận → xóa doc Firestore
+     kanji_progress/{uid} kèm subcollection sync → xóa Firebase Auth user
+     → dọn sạch localStorage của app → app về bảng đăng nhập bắt buộc.
+     Đơn hàng sk_orders KHÔNG động vào (hồ sơ giao dịch; rules cũng cấm
+     client xóa đơn). Thứ tự bắt buộc: Firestore TRƯỚC, deleteUser SAU —
+     sau deleteUser token hết hiệu lực nên không xóa Firestore được nữa.
+     Firebase chỉ cho deleteUser khi vừa đăng nhập gần đây (ngưỡng ~5 phút
+     theo auth_time): kiểm tra user.metadata.lastSignInTime TRƯỚC khi xóa
+     dữ liệu (lệch an toàn 4 phút) — phiên cũ thì báo đăng nhập lại, không
+     động vào dữ liệu nào, tránh xóa mất tiến độ rồi mới biết không xóa
+     được tài khoản. */
+  var skDeletingAccount = false; /* đang xóa tài khoản: applyAuthUser(null) thấy cờ này thì dọn sạch localStorage thay vì chỉ dọn key đồng bộ */
+  function skDelDb(){
+    try{
+      var app = premiumFbApp();
+      return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
+    }catch(_){ return null; }
+  }
+  /* Xóa toàn bộ localStorage của app (mọi key sk_*). Sao chép mẫu quét
+     prefix của SKSync.clearLocalForLogout (chụp danh sách key trước rồi
+     mới xóa). Key firebase:authUser:* là của Firebase SDK, SDK tự dọn
+     khi đăng xuất/xóa user nên không động vào. */
+  function skClearAppStorage(){
+    try{
+      var keys = [];
+      for(var i = 0; i < window.localStorage.length; i++) keys.push(window.localStorage.key(i));
+      keys.forEach(function(k){ if(k && k.indexOf("sk_") === 0){ try{ window.localStorage.removeItem(k); }catch(_){} } });
+    }catch(_){}
+  }
+  function skDeleteAccount(){
+    var btn = document.getElementById("setDeleteAccountBtn");
+    var auth = skAuth();
+    var user = auth ? auth.currentUser : null;
+    if(!user || !signedInUid){ setMsg("Bạn chưa đăng nhập — đăng nhập rồi thử lại nhé."); return; }
+    var lastSignIn = 0;
+    try{ lastSignIn = Date.parse((user.metadata && user.metadata.lastSignInTime) || "") || 0; }catch(_){}
+    if(!lastSignIn || (Date.now() - lastSignIn) > 4*60*1000){
+      setMsg("Vì lý do bảo mật, bạn cần đăng nhập lại rồi thử xóa lại nhé — đăng xuất ở tab Cá nhân, đăng nhập lại rồi quay lại Cài đặt.");
+      return;
+    }
+    if(!confirm("Xóa vĩnh viễn tài khoản của bạn?\nTài khoản, tiến độ học, gói Premium và dữ liệu đã lưu sẽ bị xóa hết và KHÔNG khôi phục được. Đơn hàng đã thanh toán vẫn được lưu lại để đối soát.")) return;
+    if(btn) btn.disabled = true;
+    setMsg("Đang xóa tài khoản…");
+    /* Dừng đồng bộ ngay để lần đẩy đang chờ debounce không ghi lại doc vừa xóa; lỗi thì bật lại như cũ. */
+    try{ if(typeof SKSync !== "undefined") SKSync.setEnabled(false); }catch(_){}
+    var db = skDelDb();
+    var uid = user.uid;
+    function skDelFail(msg){
+      try{ if(typeof SKSync !== "undefined") SKSync.setEnabled(!!settings.sync); }catch(_){}
+      if(btn) btn.disabled = false;
+      setMsg(msg);
+    }
+    if(!db){ skDelFail("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại nhé."); return; }
+    db.collection("kanji_progress").doc(uid).collection("sync").get().then(function(snap){
+      var dels = [];
+      snap.forEach(function(d){ dels.push(d.ref.delete()); });
+      return Promise.all(dels);
+    }).then(function(){
+      return db.collection("kanji_progress").doc(uid).delete();
+    }).then(function(){
+      /* Xóa Auth user CUỐI CÙNG. Listener onAuthStateChanged sẽ bắn null
+         → applyAuthUser thấy cờ skDeletingAccount thì dọn sạch
+         localStorage rồi tải lại trang (bảng đăng nhập bắt buộc hiện lên). */
+      skDeletingAccount = true;
+      return user.delete();
+    }).then(function(){
+      /* Dự phòng khi listener chưa kịp bắn: dọn local ngay tại đây
+         (lũy đẳng — applyAuthUser cũng dọn khi cờ đang bật). */
+      skClearAppStorage();
+    }).catch(function(err){
+      skDeletingAccount = false;
+      var code = (err && err.code) || "";
+      if(code === "auth/requires-recent-login"){
+        /* Hiếm (đã kiểm tra lastSignInTime trước): dữ liệu máy chủ có thể
+           đã xóa nhưng tài khoản vẫn còn — đăng nhập lại rồi xóa lại là
+           xong; dữ liệu local CHƯA xóa nên đăng nhập lại sẽ đồng bộ lại. */
+        skDelFail("Bạn cần đăng nhập lại rồi thử xóa lại nhé — đăng xuất ở tab Cá nhân, đăng nhập lại rồi quay lại Cài đặt.");
+      }else if(code === "permission-denied"){
+        skDelFail("Máy chủ từ chối xóa dữ liệu — bạn thử lại nhé. Nếu vẫn lỗi, liên hệ hỗ trợ SoraKanji.");
+      }else{
+        skDelFail("Chưa xóa được tài khoản" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.");
+      }
+    });
+  }
   /* Điểm ghi duy nhất của phiên đăng nhập: onAuthStateChanged gọi hàm này
      với user Firebase thật (hoặc null khi đăng xuất). Cập nhật email hiển
      thị, quyền Admin, window.SK_USER (cùng dạng với bản web), ảnh Google,
@@ -18348,6 +18442,9 @@ function furiHTML(text){
            tải lại trang để biến RAM cũng về trạng thái trống (tránh dữ
            liệu cũ trong RAM bị ghi lại sau khi tài khoản mới đăng nhập). */
         if(typeof SKSync !== "undefined"){ try{ SKSync.clearLocalForLogout(); }catch(_){} }
+        /* Đang xóa tài khoản: dọn SẠCH localStorage của app (mọi key sk_*),
+           không chỉ nhóm key đồng bộ — rồi tải lại trang như đăng xuất. */
+        if(skDeletingAccount){ skDeletingAccount = false; try{ skClearAppStorage(); }catch(_){} }
         try{ window.location.reload(); }catch(_){}
       }
     }
