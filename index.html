@@ -1266,6 +1266,8 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .setrow{display:flex; align-items:center; gap:13px; width:100%; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:15px 17px; margin-bottom:10px; font-size:15.5px; font-weight:700; color:var(--ink); cursor:pointer}
 .setrow .sub{display:block; font-size:13px; font-weight:500; color:var(--muted); margin-top:2px}
 .setrow .grow{flex:1; min-width:0}
+.setrow.danger{color:var(--bad); border-color:var(--bad)}
+.setrow.danger .sub{color:var(--muted)}
 .switch{flex:none; width:48px; height:27px; border-radius:99px; background:var(--line-strong); position:relative; transition:background .15s}
 .switch::after{content:""; position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:left .15s}
 .switch.on{background:var(--green)}
@@ -9885,12 +9887,111 @@ function applySoraVisibility(){
     if(panel) panel.classList.add("hidden");
   }
 }
+/* ================= XÓA TÀI KHOẢN (#/caidat → Tài khoản) =================
+   Apple (Guideline 5.1.1) bắt buộc app có đăng nhập phải cho xóa tài khoản
+   trong app. Luồng: xác nhận (showModal) → xóa dữ liệu Firestore →
+   deleteUser → xóa localStorage của app → về trạng thái chưa đăng nhập.
+   THỨ TỰ BẮT BUỘC — Firestore TRƯỚC deleteUser: rules chỉ cho owner xóa
+   doc kanji_progress/{uid} + subcollection sync khi còn đăng nhập; xóa Auth
+   trước thì không còn quyền xóa dữ liệu (permission-denied, dữ liệu mồ côi).
+   Hệ quả: nếu deleteUser lỗi auth/requires-recent-login thì dữ liệu
+   Firestore đã xóa rồi, tài khoản còn — user đăng nhập lại rồi xóa tiếp,
+   lần 2 xóa Firestore là no-op. Đơn hàng sk_orders GIỮ LẠI (hồ sơ giao
+   dịch của shop); localStorage chỉ giữ sk_view + sk_device_id (cài đặt
+   máy, không phải dữ liệu tài khoản). */
+var skDeletingAccount = false;
+function skDeleteAccountErrorVI(err){
+  var code = (err && err.code) || "";
+  if(code === "auth/requires-recent-login")
+    return "Phiên đăng nhập của bạn đã cũ nên chưa xóa được tài khoản — bạn đăng xuất rồi đăng nhập lại, sau đó thử xóa lại nhé. (Tiến độ học trên máy chủ đã được xóa theo yêu cầu của bạn.)";
+  if(code === "auth/network-request-failed" || code === "unavailable" || code === "deadline-exceeded")
+    return "Không kết nối được mạng — kiểm tra kết nối rồi thử lại nhé.";
+  if(code === "permission-denied")
+    return "Bạn không có quyền xóa dữ liệu này — bạn đăng nhập lại rồi thử lại nhé.";
+  return "Chưa xóa được tài khoản" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.";
+}
+function skDeleteAccountClearLocal(){
+  try{ if(window.SKSync) SKSync.clearLocalForLogout(); }catch(e){}
+  try{
+    var keep = {"sk_view": 1, "sk_device_id": 1};
+    var keys = [];
+    for(var i = 0; i < window.localStorage.length; i++) keys.push(window.localStorage.key(i));
+    keys.forEach(function(k){
+      if(k && k.indexOf("sk_") === 0 && !keep[k]){
+        try{ window.localStorage.removeItem(k); }catch(e){}
+      }
+    });
+  }catch(e){}
+}
+function skDeleteAccountAsk(){
+  if(skDeletingAccount) return;
+  showModal("Xóa tài khoản",
+    "Xóa vĩnh viễn tài khoản của bạn cùng toàn bộ tiến độ học, gói Premium và dữ liệu đã lưu trên mọi thiết bị. Việc này không khôi phục được. Đơn hàng đã mua vẫn được shop lưu làm hồ sơ giao dịch.",
+    "Xóa tài khoản", "Hủy", function(){ skDeleteAccountDo(); });
+}
+function skDeleteAccountDo(){
+  if(skDeletingAccount) return;
+  var u = skAuthUser();
+  var auth = skAuth();
+  var fu = auth ? auth.currentUser : null;
+  var db = skDb();
+  if(!u || !fu){
+    showModal("Không xóa được tài khoản", "Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết — bạn đăng nhập lại rồi thử xóa lại nhé.", "Đã hiểu", "Đóng", function(){});
+    return;
+  }
+  if(!db){
+    showModal("Không xóa được tài khoản", "Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại nhé.", "Đã hiểu", "Đóng", function(){});
+    return;
+  }
+  skDeletingAccount = true;
+  var btn = document.getElementById("setDelAcc");
+  if(btn) btn.disabled = true;
+  var msg = document.getElementById("setMsg");
+  if(msg) msg.textContent = "Đang xóa tài khoản…";
+  /* Dừng đồng bộ trước để lần đẩy đang chờ debounce không tạo lại doc. */
+  try{ if(window.SKSync) SKSync.stopListener(); }catch(e){}
+  var docRef = db.collection("kanji_progress").doc(u.uid);
+  docRef.collection("sync").get().then(function(snap){
+    var jobs = [];
+    snap.forEach(function(d){ jobs.push(d.ref.delete()); });
+    return Promise.all(jobs);
+  }).then(function(){
+    return docRef.delete();
+  }).then(function(){
+    return fu.delete();
+  }).then(function(){
+    skDeleteAccountClearLocal();
+    window.SK_USER = null;
+    SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
+    skDeletingAccount = false;
+    renderHeaderUser();
+    renderSettingsPage();
+    showModal("Đã xóa tài khoản", "Tài khoản của bạn đã được xóa vĩnh viễn cùng tiến độ học và dữ liệu đã lưu. Cảm ơn bạn đã học cùng SoraKanji.", "Đã hiểu", "Đóng", function(){ location.hash = "#/"; });
+  }).catch(function(err){
+    skDeletingAccount = false;
+    if(btn) btn.disabled = false;
+    if(msg) msg.textContent = "";
+    showModal("Không xóa được tài khoản", skDeleteAccountErrorVI(err), "Đã hiểu", "Đóng", function(){});
+  });
+}
+
 function renderSettingsPage(){
   document.title = "Cài đặt | SoraKanji";
   document.body.classList.remove("plain");
   var standalone = false;
   try{ standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true; }catch(e){}
   var online = typeof navigator.onLine === "boolean" ? navigator.onLine : true;
+  var cu = webCurrentUser();
+  /* Mục Tài khoản (chỉ khi đã đăng nhập): tên + email + nút Xóa tài khoản.
+     Apple bắt buộc tính năng xóa tài khoản phải tìm thấy được trong app,
+     nên đặt ngay đầu Cài đặt, không giấu trong menu con. */
+  var accSec = cu ?
+    '<h2 class="secttl">Tài khoản</h2>' +
+    '<div class="card"><b style="font-size:16px">' + esc(cu.name || cu.email || "Học viên") + "</b>" +
+    (cu.email ? '<p style="margin:6px 0 0;font-size:13.5px;color:var(--muted)">' + esc(cu.email) + "</p>" : "") +
+    "</div>" +
+    '<button class="setrow danger" id="setDelAcc"><span class="grow">Xóa tài khoản<span class="sub">Xóa vĩnh viễn tài khoản, tiến độ học, Premium và dữ liệu đã lưu — không khôi phục được</span></span><span aria-hidden="true">›</span></button>'
+    : "";
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Cài đặt</div>' +
     "<h1>Cài đặt</h1><p>Âm thanh, trợ lý Sora và cách cài SoraKanji lên điện thoại như một ứng dụng.</p></div>" +
     '<div style="max-width:780px;padding-bottom:36px">' +
@@ -9914,6 +10015,7 @@ function renderSettingsPage(){
     '<video controls playsinline preload="metadata" poster="mobile/assets/poster-install-android.jpg" src="mobile/assets/android-cai-sorakanji.mp4" aria-label="Video hướng dẫn cài SoraKanji trên Android"></video>' +
     '<p><b>Android (Chrome):</b> mở menu <b>⋮</b> → <b>“Cài ứng dụng”</b> hoặc <b>“Thêm vào Màn hình chính”</b> → <b>Cài đặt</b>. Bấm phát video để xem từng bước.</p></div>' +
     "</div></div>" +
+    accSec +
     '<h2 class="secttl">Tùy chọn</h2>' +
     '<button class="setrow" id="setSound"><span class="grow">Âm thanh &amp; giọng đọc<span class="sub">Tắt thì giọng đọc tiếng Nhật ở từ vựng, ví dụ và shadowing sẽ im</span></span>' +
     '<span class="switch' + (SET_SOUND ? " on" : "") + '" id="swSound"></span></button>' +
@@ -9965,6 +10067,8 @@ function renderSettingsPage(){
   });
   document.getElementById("setTerms").addEventListener("click", function(){ location.hash = "#/dieukhoan"; });
   document.getElementById("setPrivacy").addEventListener("click", function(){ location.hash = "#/chinhsach"; });
+  var delBtn = document.getElementById("setDelAcc");
+  if(delBtn) delBtn.addEventListener("click", function(){ skDeleteAccountAsk(); });
   /* --- Quản trị: liên kết mạng xã hội (chỉ admin mới thấy mục này) --- */
   if(webIsAdmin()){
     var fbEl = document.getElementById("skFbUrl"),
