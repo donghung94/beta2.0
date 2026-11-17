@@ -1290,6 +1290,7 @@
   .sv-toptab.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
   .sv-toptab:active{transform:scale(.97);}
   #svPanelReady[hidden], #svPanelMine[hidden], .sv-catpanel[hidden]{display:none;}
+  #rdPanelJlpt[hidden], #rdPanelAi[hidden]{display:none;}
   .sv-cattabs{display:flex; gap:6px; margin:0 0 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
   .sv-cattabs::-webkit-scrollbar{display:none;}
   .sv-cattab{
@@ -4091,8 +4092,8 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <button class="sv-cattab" type="button" role="tab" data-dklv="N2" aria-selected="false">N2</button>
           <button class="sv-cattab" type="button" role="tab" data-dklv="N1" aria-selected="false">N1</button>
         </div>
-        <p class="wvinfo" id="dkLibInfo">Đang tải bài đọc…</p>
-        <div id="dkLibList"></div>
+        <p class="wvinfo dk-lib-info" id="dkLibInfo">Đang tải bài đọc…</p>
+        <div id="dkLibList" class="dk-lib-list"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -4411,12 +4412,30 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="iconbtn" id="closeRead" aria-label="Quay lại — đóng Đọc hiểu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2>Đọc hiểu</h2><span>Chọn cấp độ — luyện đọc theo dạng bài JLPT</span></div>
+        <div><h2>Đọc hiểu</h2><span id="rdHeadSub">Bài đọc ngắn theo cấp — nghe, đọc theo, làm quiz</span></div>
       </div>
       <div class="detailbody">
-        <h3 class="wvsec">Đọc hiểu theo cấp JLPT</h3>
-        <p class="wvinfo">200 bài đọc tự viết mới hoàn toàn theo đúng chuẩn từng cấp (chỉ dùng kanji, từ vựng và ngữ pháp đến cấp đó; furigana cho N5/N4/N3, N2/N1 đọc chữ Hán trần như đề thật) — đọc bài, trả lời câu hỏi, xem giải thích tiếng Việt và từ vựng cuối bài. N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng như đề JLPT thật; mỗi dạng 10 bài.</p>
-        <div id="rdLevels"></div>
+        <div class="sv-cattabs" id="rdTabs" role="tablist" aria-label="Chọn loại bài đọc">
+          <button class="sv-cattab" type="button" role="tab" data-rdtab="jlpt" aria-selected="false">Đọc hiểu JLPT</button>
+          <button class="sv-cattab on" type="button" role="tab" data-rdtab="ai" aria-selected="true">Đọc hiểu AI</button>
+        </div>
+        <div id="rdPanelJlpt" hidden>
+          <h3 class="wvsec">Đọc hiểu theo cấp JLPT</h3>
+          <p class="wvinfo">200 bài đọc tự viết mới hoàn toàn theo đúng chuẩn từng cấp (chỉ dùng kanji, từ vựng và ngữ pháp đến cấp đó; furigana cho N5/N4/N3, N2/N1 đọc chữ Hán trần như đề thật) — đọc bài, trả lời câu hỏi, xem giải thích tiếng Việt và từ vựng cuối bài. N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng như đề JLPT thật; mỗi dạng 10 bài.</p>
+          <div id="rdLevels"></div>
+        </div>
+        <div id="rdPanelAi">
+          <div class="sv-cattabs" role="tablist" aria-label="Lọc bài đọc theo cấp">
+          <button class="sv-cattab on" type="button" role="tab" data-dklv="ALL" aria-selected="true">Tất cả</button>
+          <button class="sv-cattab" type="button" role="tab" data-dklv="N5" aria-selected="false">N5</button>
+          <button class="sv-cattab" type="button" role="tab" data-dklv="N4" aria-selected="false">N4</button>
+          <button class="sv-cattab" type="button" role="tab" data-dklv="N3" aria-selected="false">N3</button>
+          <button class="sv-cattab" type="button" role="tab" data-dklv="N2" aria-selected="false">N2</button>
+          <button class="sv-cattab" type="button" role="tab" data-dklv="N1" aria-selected="false">N1</button>
+          </div>
+          <p class="wvinfo dk-lib-info" id="rdAiInfo">Đang tải bài đọc…</p>
+          <div id="rdAiList" class="dk-lib-list"></div>
+        </div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -5510,7 +5529,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var to = document.getElementById("tokuteiOverlay");
       if(to && to.classList.contains("open") && typeof tkRender === "function") tkRender();
       var dko = document.getElementById("dkLibOverlay");
-      if(dko && dko.classList.contains("open") && typeof dkRenderLib === "function") dkRenderLib();
+      if(((dko && dko.classList.contains("open")) || (ro && ro.classList.contains("open"))) && typeof dkRenderLib === "function") dkRenderLib();
     }catch(_){}
   }
   /* ---------- Đọc Premium từ Firestore ---------- */
@@ -10342,7 +10361,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function svSetCat(cat){
     svCat = cat;
-    document.querySelectorAll(".sv-cattab").forEach(function(b){
+    document.querySelectorAll("[data-cat]").forEach(function(b){
       var on = b.getAttribute("data-cat") === cat;
       b.classList.toggle("on", on);
       b.setAttribute("aria-selected", on ? "true" : "false");
@@ -10355,7 +10374,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function svInitListenTabs(){
     document.getElementById("svTopReady").addEventListener("click", function(){ svSetTopTab("ready"); });
     document.getElementById("svTopMine").addEventListener("click", function(){ svSetTopTab("mine"); });
-    document.querySelectorAll(".sv-cattab").forEach(function(b){
+    document.querySelectorAll("[data-cat]").forEach(function(b){
       b.addEventListener("click", function(){ svSetCat(b.getAttribute("data-cat")); });
     });
     document.getElementById("closeSvAll").addEventListener("click", function(){
@@ -12428,6 +12447,57 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   rdRenderLevels();
 
+  /* ---------- Đọc hiểu: 2 tab ngang JLPT | AI (mặc định AI) ----------
+     Ô Đọc hiểu mở 1 trang duy nhất: tab trái JLPT (luồng chọn cấp → dạng
+     bài → danh sách → trang đọc như cũ), tab phải AI (thư viện dokkai 50
+     bài, tái dùng đúng code render của thư viện riêng trong Luyện nghe).
+     Mặc định vào trang thì tab AI đang chọn, dù AI nằm bên phải. */
+  var rdTab = "ai"; /* tab đang chọn trong trang Đọc hiểu */
+  var dkPassFrom = "dkLib"; /* nguồn mở trang bài dokkai: "dkLib" (thư viện riêng) | "readTab" (tab AI) */
+  /* Nạp dữ liệu dokkai cho tab AI (lần đầu chọn tab); tái dùng đúng máy nạp
+     lười dkLoadData nên không tải 2 lần nếu thư viện Luyện nghe đã nạp. */
+  function rdEnsureAi(){
+    if(dkPassages().length){ dkRenderLib(); return; }
+    document.querySelectorAll(".dk-lib-info").forEach(function(el){ el.textContent = "Đang tải bài đọc…"; });
+    dkLoadData(function(ok){
+      if(ok) dkRenderLib();
+      else document.querySelectorAll(".dk-lib-info").forEach(function(el){ el.textContent = "Không tải được bài đọc — kiểm tra mạng rồi mở lại nhé."; });
+    });
+  }
+  function rdSetTab(tab){
+    rdTab = tab;
+    document.querySelectorAll("#rdTabs .sv-cattab").forEach(function(b){
+      var on = b.getAttribute("data-rdtab") === tab;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    var pj = document.getElementById("rdPanelJlpt");
+    var pa = document.getElementById("rdPanelAi");
+    if(pj) pj.hidden = (tab !== "jlpt");
+    if(pa) pa.hidden = (tab !== "ai");
+    var sub = document.getElementById("rdHeadSub");
+    if(sub) sub.textContent = (tab === "ai")
+      ? "Bài đọc ngắn theo cấp — nghe, đọc theo, làm quiz"
+      : "Chọn cấp độ — luyện đọc theo dạng bài JLPT";
+    if(tab === "ai") rdEnsureAi();
+    var b = readOverlay.querySelector(".detailbody");
+    if(b) b.scrollTop = 0;
+  }
+  /* Điểm vào trang Đọc hiểu (ô Home, nhiệm vụ luân phiên, lộ trình/Sora):
+     luôn mở tab AI trước. Điều hướng nội bộ (quay lại từ chọn dạng bài)
+     vẫn mở overlay trực tiếp để giữ đúng tab đang đi (JLPT). */
+  function rdOpenPage(){
+    rdSetTab("ai");
+    showOv(readOverlay);
+  }
+  document.querySelectorAll("#rdTabs .sv-cattab").forEach(function(b){
+    b.addEventListener("click", function(){ rdSetTab(b.getAttribute("data-rdtab")); });
+  });
+  document.getElementById("rdAiList").addEventListener("click", function(e){
+    var t = e.target.closest ? e.target.closest("[data-dk-id]") : null;
+    if(t){ dkPassFrom = "readTab"; dkOpenPassage(t.getAttribute("data-dk-id")); }
+  });
+
   /* ================= ĐỌC HIỂU AI (v3): thư viện + trang bài karaoke + quiz =================
      Nằm trong Luyện nghe (điểm vào: nút "Thư viện bài đọc" cuối trang Luyện nghe,
      ngoài 2 tab video nên hiện ở cả 2 tab). Data: assets/dokkai-data.js
@@ -12573,7 +12643,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function dkSetLibLv(lv){
     dkLibLv = lv;
-    document.querySelectorAll("#dkLibOverlay .sv-cattab").forEach(function(b){
+    document.querySelectorAll("[data-dklv]").forEach(function(b){
       var on = b.getAttribute("data-dklv") === lv;
       b.classList.toggle("on", on);
       b.setAttribute("aria-selected", on ? "true" : "false");
@@ -12596,11 +12666,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return html;
   }
   function dkRenderLib(){
-    var info = document.getElementById("dkLibInfo");
-    var list = document.getElementById("dkLibList");
+    /* Thu vien hien o 2 cho (thu vien rieng trong Luyen nghe + tab AI trong
+       trang Doc hieu): ve vao MOI khung .dk-lib-info/.dk-lib-list de 2 cho
+       luon dong bo, khong nhan doi logic. */
     var all = dkPassages();
-    if(info) info.textContent = all.length ? ("Có " + all.length + " bài đọc — bài N5 mở miễn phí, bài N4–N1 cần Premium.") : "Chưa có bài đọc nào.";
-    if(list) list.innerHTML = dkLibHTML();
+    var txt = all.length ? ("Có " + all.length + " bài đọc — bài N5 mở miễn phí, bài N4–N1 cần Premium.") : "Chưa có bài đọc nào.";
+    document.querySelectorAll(".dk-lib-info").forEach(function(el){ el.textContent = txt; });
+    var html = dkLibHTML();
+    document.querySelectorAll(".dk-lib-list").forEach(function(el){ el.innerHTML = html; });
   }
   function dkOpenPassage(id){
     var p = dkFindPassage(id);
@@ -12624,7 +12697,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     dkUpdatePlayBtn();
     dkUpdateToggles();
     dkSetStatus("");
-    hideOv(dkLibOverlay);
+    hideOv(dkPassFrom === "readTab" ? readOverlay : dkLibOverlay);
     showOv(dkPassOverlay);
     var b = dkPassOverlay.querySelector(".detailbody");
     if(b) b.scrollTop = 0;
@@ -13174,18 +13247,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     hideOv(dkLibOverlay);
     showOv(listenOverlay);
   });
-  document.querySelectorAll("#dkLibOverlay .sv-cattab").forEach(function(b){
+  document.querySelectorAll("[data-dklv]").forEach(function(b){
     b.addEventListener("click", function(){ dkSetLibLv(b.getAttribute("data-dklv")); });
   });
   document.getElementById("dkLibList").addEventListener("click", function(e){
     var t = e.target.closest ? e.target.closest("[data-dk-id]") : null;
-    if(t) dkOpenPassage(t.getAttribute("data-dk-id"));
+    if(t){ dkPassFrom = "dkLib"; dkOpenPassage(t.getAttribute("data-dk-id")); }
   });
   document.getElementById("closeDkPass").addEventListener("click", function(){
     dkStopAudio();
     hideOv(dkPassOverlay);
     dkRenderLib();
-    showOv(dkLibOverlay);
+    if(dkPassFrom === "readTab"){ rdSetTab("ai"); showOv(readOverlay); }
+    else showOv(dkLibOverlay);
   });
   document.getElementById("dkPlay").addEventListener("click", dkTogglePlay);
   document.getElementById("dkPrev").addEventListener("click", function(){ dkStep(-1); });
@@ -16716,7 +16790,7 @@ function furiHTML(text){
       else if(a === "grammar") openGrammar();
       else if(a === "jlpt") goTab("jlpt");
       else if(a === "listen") showOv(document.getElementById("listenOverlay"));
-      else if(a === "read") showOv(document.getElementById("readOverlay"));
+      else if(a === "read") rdOpenPage();
       else if(a === "tokutei") openTokutei();
       else if(a === "review" || a === "flash") goTab("review");
       else if(a === "draw") openDraw("free", null);
@@ -16739,7 +16813,7 @@ function furiHTML(text){
   document.getElementById("missionRot").addEventListener("click", function(){
     var k = missionsState.rotKind;
     if(k === "listen") showOv(document.getElementById("listenOverlay"));
-    else if(k === "read") showOv(document.getElementById("readOverlay"));
+    else if(k === "read") rdOpenPage();
     else if(k === "vocab") openWords();
     else if(k === "grammar") openGrammar();
     else if(k === "shadow"){ shRender(); showOv(shadowOverlay); }
@@ -18902,7 +18976,7 @@ function furiHTML(text){
       if(b) b.click();
     }
     else if(kind === "listen") showOv(document.getElementById("listenOverlay"));
-    else if(kind === "read") showOv(document.getElementById("readOverlay"));
+    else if(kind === "read") rdOpenPage();
   }
   function renderJlptCard(){
     var card = document.getElementById("jlptCard");
