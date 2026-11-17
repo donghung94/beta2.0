@@ -19,7 +19,7 @@ window.TOKUTEI_SETS["g1_1"] = {
       "vi": "Phao 浮標（ふひょう） là thiết bị dùng để làm gì?",
       "explain": "浮標（ふひょう） là thiết bị được đặt xung quanh khu vực thi công trên biển để **báo hiệu cho tàu thuyền khác biết** về khu vực công trường.",
       "tip": "💡 Nhớ: ‘浮’ = nổi, ‘標’ = dấu hiệu → vật nổi báo hiệu trên mặt nước.",
-      "img": "assets/tokutei/5102.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/5102.png"
     },
     {
       "q": "問2　型枠（かたわく）の間隔（かんかく）を一定（いってい）に保（たも）ち、パイプを締（し）めるための部材（ぶざい）は何（なに）か。【117】",
@@ -46,7 +46,7 @@ window.TOKUTEI_SETS["g1_1"] = {
       "vi": "Hình ảnh trên là loại công trình nào?",
       "explain": "Hình cho thấy máy lu lèn mặt đường → là 舗装（ほそう）工事（こうじ） (thi công lát đường, trải nhựa)**.",
       "tip": "💡 Nhớ:  舗装（ほそう）mặt đường; lu xe → trải nhựa.",
-      "img": "assets/tokutei/0005.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0005.png"
     },
     {
       "q": "問4　河川工事（かせんこうじ）で起（お）こりやすい事故（じこ）は何（なに）か。正しいものを選べ。【180】",
@@ -86,7 +86,7 @@ window.TOKUTEI_SETS["g1_1"] = {
       "vi": "Đây là gì?",
       "explain": "Hình là **ケーソン (Caisson)** – khối bê tông rỗng lớn dùng trong công trình cảng, đê, neo giữ ở đáy biển.",
       "tip": "💡 Nhớ: ケーソン thường có ô vuông rỗng trên mặt, dùng làm chân móng ở biển.",
-      "img": "assets/tokutei/0006.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0006.png"
     },
     {
       "q": "問7　工事（こうじ）現場（げんば）では、バックホウの法面（のりめん）からの事故（じこ）はなんですか？",
@@ -217,7 +217,7 @@ window.TOKUTEI_SETS["g1_1"] = {
       "vi": "Đây là dụng cụ gì?",
       "explain": "Đây là **バーナー (đầu đốt)** – dùng để hàn, gia nhiệt bằng ngọn lửa khí oxy + axetylen.",
       "tip": "💡 Nhớ: バーナー＝burner → đầu đốt ngọn lửa.",
-      "img": "assets/tokutei/1753.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/1753.png"
     },
     {
       "q": "問17　クローラ式（しき）の走行装置（そうこうそうち）の前面に排土板（はいどばん）を装着（そうちゃく）し、掘削（くっさく）と運搬（うんぱん）を行う機械（きかい）は何か。【100】",
@@ -283,7 +283,7 @@ window.TOKUTEI_SETS["g1_1"] = {
       "vi": "Dụng cụ trong hình là gì?",
       "explain": "Đây là フォームタイ回（まわ）し – dụng cụ chuyên dùng để siết hoặc tháo thanh form-tie trong cốp pha.",
       "tip": "💡 Nhớ: ‘回（まわ）し’ = vặn → dụng cụ để vặn thanh tie (フォームタイ).",
-      "img": "assets/tokutei/0021.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0021.png"
     },
     {
       "q": "問22　材料（ざいりょう）を大きさ（おおきさ）によって仕分（しわ）けることができる網（あみ）がついた道具（どうぐ）は何（なに）というか【137】",
@@ -349,7 +349,7 @@ window.TOKUTEI_SETS["g1_1"] = {
       "vi": "Dụng cụ trong hình dùng để làm gì?",
       "explain": "Đây là **thiết bị đo kích thước phần mối nối hàn áp lực 圧接部（あっせつぶ） – dùng để đo đường kính và bề rộng chỗ nối thép.",
       "tip": "💡 Nhớ: 圧接部（あっせつぶ）のふくらみの直径（ちょっけい）→ thiết bị đo kích thước mối hàn.",
-      "img": "assets/tokutei/0001.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0001.png"
     },
     {
       "q": "問27　品質（ひんしつ）管理（かんり）は何（なに）か。正（ただ）しいものを選（えら）べ。【145】",
@@ -423,7 +423,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Cờ an toàn vệ sinh 安全（あんぜん）衛生（えいせい） có ý nghĩa là gì?",
       "explain": "Cờ có nền trắng và dấu thập xanh là **biểu tượng cho an toàn và vệ sinh lao động 安全（あんぜん）衛生（えいせい）.",
       "tip": "💡 Nhớ: 緑＝an toàn, 十字＝biểu tượng y tế → tượng trưng cho an toàn & sức khỏe.",
-      "img": "assets/tokutei/0031.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0031.png"
     },
     {
       "q": "問32　下（した）の写真（しゃしん）の道具（どうぐ）について正（ただ）しい説明（せつめい）を選（えら）びなさい。【130】",
@@ -437,7 +437,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Dụng cụ trong hình là gì, và mô tả nào đúng?",
       "explain": "Đây là **ポンチ (punch)** – dùng búa gõ tạo vết lõm hoặc đục lỗ tròn nhỏ trên kim loại, da, vải…",
       "tip": "💡 Nhớ: ポンチ＝Punch → dụng cụ đục dấu, tạo vết lõm tròn nhỏ.",
-      "img": "assets/tokutei/0032.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0032.png"
     },
     {
       "q": "問33　掘削（くっさく）作業（さぎょう）で、土壁（どかべ）がどの事故（じこ）が発生（はっせい）するか。適切（てきせつ）なものを選（えら）べ。【179】",
@@ -477,7 +477,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Trắc đạc bằng トランシット Transit là gì?",
       "explain": "**トランシット (Transit)** là thiết bị có kính ngắm, dùng để **đo góc ngang và dọc** trong công tác trắc địa.",
       "tip": "💡 Transit = đo góc (ngang, dọc); Level = đo cao → đừng nhầm nhé!",
-      "img": "assets/tokutei/45.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/45.png"
     },
     {
       "q": "問36　法面（のりめん）保護（ほご）工事（こうじ）において、正（ただ）しくないものを選（えら）べ。【149】",
@@ -517,7 +517,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Hình này là loại công việc gì?",
       "explain": "Hình cho thấy đang vận hành **クレーン（cần cẩu）**, nên đây là **クレーン作業（さぎょう）**.",
       "tip": "💡 Nhớ: クレーン＝cần cẩu, 玉掛＝móc cáp → khác nhau nhé!",
-      "img": "assets/tokutei/0038.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0038.png"
     },
     {
       "q": "問39　機械（きかい）土工事（どこうじ）として、乗（の）り降（お）りする場合（ばあい）は何（なん）としますか。適切（てきせつ）なものを一（ひと）つ選（えら）べ。【157】",
@@ -609,7 +609,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Dụng cụ trong hình là gì, mô tả nào đúng?",
       "explain": "Đây là **やっとこ (kẹp sắt)** – dùng để **kẹp hoặc cầm thanh sắt đang nung nóng** khi rèn hoặc hàn.",
       "tip": "💡 Nhớ: やっとこ = kẹp sắt → dùng để gắp vật kim loại nóng.",
-      "img": "assets/tokutei/0045.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0045.png"
     },
     {
       "q": "問46　シールド面（めん）付きヘルメットの適切（てきせつ）な工事（こうじ）は何（なに）か。【117】",
@@ -636,7 +636,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Thiết bị trong hình là gì?",
       "explain": "Hình cho thấy **ラムシリンダ (Ram Cylinder)** – thiết bị thủy lực tạo lực ép, dùng trong hàn nối hoặc nén thép.",
       "tip": "💡 Nhớ: シリンダ＝ống xi lanh → thiết bị ép thủy lực.",
-      "img": "assets/tokutei/0047.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0047.png"
     },
     {
       "q": "問48　ホッパは何（なに）ですか。適切（てきせつ）なものを選（えら）べ。【120】",
@@ -663,7 +663,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Dụng cụ trong hình là gì?",
       "explain": "Đây là **ワイヤーブラシ (bàn chải sắt)** – dùng để chà rỉ sét, sơn cũ, hoặc làm sạch bề mặt kim loại.",
       "tip": "💡 Nhớ: ブラシ = brush → ワイヤーブラシ = bàn chải kim loại.",
-      "img": "assets/tokutei/0049.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0049.png"
     },
     {
       "q": "問50　玉掛（たまがけ）作業（さぎょう）はどんな作業（さぎょう）ですか。【154】",
@@ -768,7 +768,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Đây là loại máy gì?",
       "explain": "Hình minh họa là **スクレーパー (Scraper)** — máy dùng để cào, san, và vận chuyển đất trong công trình san lấp.",
       "tip": "💡 Nhớ: スクレーパー = máy cào đất (scrape = cào, nạo).",
-      "img": "assets/tokutei/0057.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0057.png"
     },
     {
       "q": "問58　地表（ちひょう）面（めん）および敷（し）砕（さい）石（せき）などの路盤（ろばん）材（ざい）を平坦（へいたん）に仕上（しあ）げるための機械（きかい）は何（なん）ですか？【101】",
@@ -795,7 +795,7 @@ window.TOKUTEI_SETS["g1_2"] = {
       "vi": "Khối vuông (caramel block) trong hình được sử dụng với mục đích gì?",
       "explain": "**キャラメルブロック** là khối vữa (mortar block) đặt dưới cốt thép sàn để giữ **độ dày lớp bê tông bảo vệ かぶり厚(あつ)さ** đúng tiêu chuẩn.",
       "tip": "💡 キャラメルブロック = khối đỡ thép, giúp giữ khoảng cách giữa cốt thép và sàn bê tông.",
-      "img": "assets/tokutei/0059.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0059.png"
     },
     {
       "q": "問60　鉄筋（てっきん）どうしを縛（しば）り固定（こてい）する工具（こうぐ）は何（なに）ですか。適切（てきせつ）なものを選（えら）べ。【114】",
@@ -855,7 +855,7 @@ window.TOKUTEI_SETS["g1_3"] = {
       "vi": "Công cụ uốn thép trong hình có chức năng gì?",
       "explain": "**鉄筋ベンダー (Rebar Bender)** là dụng cụ dùng để **uốn cong thép 曲（ま）げる** theo thiết kế.",
       "tip": "💡 ベンダー = từ 'bender' (uốn cong) → công cụ uốn thép.",
-      "img": "assets/tokutei/0063.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0063.png"
     },
     {
       "q": "問64　電動（でんどう）鉄筋（てっきん）カッターの定義（ていぎ）は何（なに）か。【113】",
@@ -960,7 +960,7 @@ window.TOKUTEI_SETS["g1_3"] = {
       "vi": "Đây là loại thí nghiệm gì?",
       "explain": "Hình ảnh cho thấyスランプ試験（しけん） – dùng để kiểm tra **độ sệt và tính lưu động của bê tông tươi (生コン)**.",
       "tip": "💡 Đo độ sụt của bê tông để xác định độ linh động khi đổ khuôn.",
-      "img": "assets/tokutei/0072.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0072.png"
     },
     {
       "q": "問73　絵（え）に道具（どうぐ）の名前（なまえ）は何（なに）か。【134】",
@@ -974,7 +974,7 @@ window.TOKUTEI_SETS["g1_3"] = {
       "vi": "Cái búa trong hình có tên là gì?",
       "explain": "**ゴムハンマー (Búa cao su)** dùng để gõ nhẹ khi cần điều chỉnh vật liệu mà không làm hỏng bề mặt.",
       "tip": "💡 ゴム = cao su → búa đầu cao su, dùng khi cần lực nhẹ.",
-      "img": "assets/tokutei/0073.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0073.png"
     },
     {
       "q": "問74　以下（いか）の写真（しゃしん）は何（なに）か。【111】",
@@ -988,7 +988,7 @@ window.TOKUTEI_SETS["g1_3"] = {
       "vi": "Hình dưới đây là thiết bị gì?",
       "explain": "**安全（あんぜん）ブロック (Thiết bị an toàn rơi)** là thiết bị chống rơi khi làm việc trên cao – nếu người rơi, dây sẽ tự khóa lại để ngăn ngã.",
       "tip": "💡 安全 = an toàn → dùng trong công tác trên cao (高所作業).",
-      "img": "assets/tokutei/0071.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0071.png"
     },
     {
       "q": "問75　内蔵（ないぞう）されたハンマーの打撃力（だげきりょく）を使（つか）ってボルトを回（まわ）して、締（し）め付（つ）ける電動（でんどう）工具（こうぐ）の名前（なまえ）は何（なに）か。【112】",
@@ -1080,7 +1080,7 @@ window.TOKUTEI_SETS["g1_3"] = {
       "vi": "Phần kim loại cố định chân giàn giáo (ベース金具) được đóng đinh cố định ở đâu?",
       "explain": "ベース金具（かなぐ） được cố định bằng đinh **trên tấm ván (敷板) đặt trên mặt đất 地面（じめん）の上（うえ）** để tạo nền phẳng và vững cho giàn giáo.",
       "tip": "💡 ベース金具（かなぐ） = bộ phận kim loại dưới chân giàn giáo.",
-      "img": "assets/tokutei/0081.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0081.png"
     },
     {
       "q": "問82　建地（たてじ）と梁（はり）の固定（こてい）方法（ほうほう）について、柱（はしら）と梁（はり）を現場（げんば）で直接（ちょくせつ）接合（せつごう）する工法（こうほう）は何（なん）というか。【162】",
@@ -1107,7 +1107,7 @@ window.TOKUTEI_SETS["g1_3"] = {
       "vi": "Công trình trong hình gọi là gì?",
       "explain": "Đây là **ウェルポイント工事（こうじ） (Well point work)** – công trình hạ mực nước ngầm bằng cách hút nước ra khỏi đất trước khi thi công móng hoặc nền.",
       "tip": "💡 Well point = hệ thống ống hút nước ngầm.",
-      "img": "assets/tokutei/0083.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0083.png"
     },
     {
       "q": "問84　ウェルポイント工事（こうじ）はどんな工事（こうじ）か。正しい答えを選べ。【155】",
@@ -1232,7 +1232,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Hình này là công việc gì?",
       "explain": "Hình mô tả **クレーン作業（công việc vận hành cần cẩu）**, sử dụng cần trục để nâng và di chuyển vật nặng.",
       "tip": "💡 クレーン = cần cẩu, dùng để nâng – hạ vật nặng.",
-      "img": "assets/tokutei/0092.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0092.png"
     },
     {
       "q": "問93　この作業（さぎょう）は何（なに）と呼（よ）びますか。【152】",
@@ -1246,7 +1246,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Công việc trong hình này được gọi là gì?",
       "explain": "Đây là **玉掛け作業（たまかけさぎょう）**, tức là công việc móc buộc vật nặng (ở đây là khối bê tông lớn) để cẩu lên bằng cần cẩu.",
       "tip": "💡 玉掛け = móc, treo vật nặng vào móc cẩu, thường có người hướng dẫn ra hiệu.",
-      "img": "assets/tokutei/0093.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0093.png"
     },
     {
       "q": "問94　防波堤（ぼうはてい）や岸壁（がんぺき）など海（うみ）の構造物（こうぞうぶつ）をつくるときに使（つか）う、コンクリートでできた大型（おおがた）の箱（はこ）は何（なん）というか。【106】",
@@ -1273,7 +1273,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Công việc trong hình là gì?",
       "explain": "Hình cho thấy công nhân đang **vặn chặt フォームタイ (form tie)** – thanh nối cốp pha. Đây là công việc **フォームタイの締め付け作業**.",
       "tip": "💡 フォームタイ là thanh kim loại dùng để cố định khoảng cách giữa hai ván khuôn (型枠).",
-      "img": "assets/tokutei/0095.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0095.png"
     },
     {
       "q": "問96　コンクリート圧送（あっそう）工事（こうじ）はどんな工事（こうじ）か。【169】",
@@ -1300,7 +1300,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Bức ảnh dưới đây là loại công việc nào?",
       "explain": "Đây là **剪定作業（せんていさぎょう）** – công việc cắt tỉa cây cảnh trong công trình sân vườn hoặc công viên.",
       "tip": "💡 剪定 = tỉa cành, chỉnh dáng cây cho gọn và đẹp.",
-      "img": "assets/tokutei/0097.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0097.png"
     },
     {
       "q": "問98　アスファルトの定義（ていぎ）は次（つぎ）のどれですか。",
@@ -1444,7 +1444,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Bộ phận được khoanh đỏ trong ảnh là loại vật liệu nào?",
       "explain": "Đây là **腕木（うでぎ）**, là thanh kim loại dùng để **đỡ tấm sàn giàn giáo (足場板)** từ phía dưới.",
       "tip": "💡 腕木 thường gắn ở khung giàn giáo, giúp chịu tải trọng của sàn thao tác.",
-      "img": "assets/tokutei/0108.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0108.png"
     },
     {
       "q": "問109　布板（ぬのいた）はどこに引（ひ）っ掛（か）けて固定（こてい）するか。【110】",
@@ -1484,7 +1484,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Công việc hàn hồ quang (アーク溶接) là loại kỹ thuật gì?",
       "explain": "Là kỹ thuật **dùng dòng điện để hàn chảy kim loại**, thường thấy trong xây dựng, cầu, giàn thép.",
       "tip": "💡 溶接（ようせつ）＝ hàn kim loại bằng điện.",
-      "img": "assets/tokutei/0111.png",
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0111.png",
       "hira": "もん111　アークようせつさぎょうは　どんな　ぎじゅつ　か。"
     },
     {
@@ -1616,7 +1616,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "Tàu bơm hút bùn (ポンプ浚渫船) là loại tàu gì?",
       "explain": "**ポンプ浚渫船（しゅんせつせん）** là tàu dùng máy bơm hút bùn đất ở đáy biển lên, hút cả bùn và nước cùng lúc.",
       "tip": "💡 浚渫（しゅんせつ）= nạo vét (hút bùn).",
-      "img": "assets/tokutei/0121.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0121.png"
     },
     {
       "q": "問122　パイルドライバーはなんですか。",
@@ -1760,7 +1760,7 @@ window.TOKUTEI_SETS["g1_4"] = {
       "vi": "WBGT dùng để đo chỉ số gì?",
       "explain": "**WBGT** (Wet Bulb Globe Temperature) là **chỉ số đo mức độ nóng bức (暑さ指数)**, giúp đánh giá nguy cơ say nắng và mệt mỏi do nhiệt trên công trường.",
       "tip": "💡 WBGT = chỉ số nhiệt kết hợp độ ẩm, nhiệt độ và bức xạ mặt trời.",
-      "img": "assets/tokutei/0132.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0132.png"
     }
   ]
 };

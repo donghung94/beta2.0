@@ -104,7 +104,7 @@ window.TOKUTEI_SETS["g3_1"] = {
       "vi": "Trong các hình trên, đâu là loại xe cần trục bánh xích (Crawler Crane)?",
       "explain": "Crawler Crane (Bánh xích) là loại cần trục di chuyển bằng hệ thống bánh xích giống như xe tăng, giúp nó đứng vững trên nền đất yếu. Hình số 2 chính là loại cần trục này.\n\nTừ vựng:\nクローラクレーン: Cần trục bánh xích\n適切(てきせつ): Thích hợp\n一(ひと)つ: Một cái\n違(ちが)います: Khác / Sai",
       "tip": "💡 Ghi nhớ: Crawler (クローラ) nghĩa là bánh xích. Nhìn hình nào có hệ thống bánh xích thì chọn.",
-      "img": "assets/tokutei/12-1.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/12-1.png"
     },
     {
       "id": 8,
@@ -189,7 +189,7 @@ window.TOKUTEI_SETS["g3_1"] = {
       "vi": "Trong phương pháp nối cơ học (Mechanical joint), vật dụng nào sau đây là phù hợp để sử dụng?",
       "explain": "Phương pháp nối cơ học (Mechanical joint) là cách nối các ống hoặc thanh thép bằng các phụ kiện cơ khí thay vì hàn hay dùng keo. Haujingu kan tsugite (mối nối ống dạng khớp nối/housing) là một linh kiện điển hình trong phương pháp này để liên kết các đường ống một cách chắc chắn và linh hoạt.\n\nTừ vựng:\n接合(せつごう): Nối / Liên kết\n方法(ほうほう): Phương pháp\n適切(てきせつ): Phù hợp\n溶接(ようせつ)棒(ぼう): Que hàn\n管(かん)継手(つぎて): Mối nối ống / Khớp nối ống\n接着(せっちゃく)剤(ざい): Keo dán",
       "tip": "💡 Ghi nhớ: Phương pháp Mechanical (メカニカル) tức là dùng cơ khí. Trong các phương án, chỉ có mối nối (継手) là linh kiện cơ khí để lắp ráp, không phải dùng nhiệt (hàn) hay hóa chất (keo).",
-      "img": "assets/tokutei/13.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/13.png"
     },
     {
       "id": 14,
@@ -274,7 +274,7 @@ window.TOKUTEI_SETS["g3_1"] = {
       "vi": "Trong kết nối loe ống (flare) của đường ống môi chất lạnh, vai trò của đai ốc loe (flare nut) là gì?",
       "explain": "Trong mối nối loe, đai ốc loe (flare nut) có nhiệm vụ ép chặt phần đầu ống đã được loe vào đầu nối (union). Lực ép này tạo ra sự tiếp xúc kín khít giữa hai bề mặt kim loại, giúp ngăn chặn rò rỉ môi chất lạnh mà không cần dùng keo hay hàn.\n\nTừ vựng:\n冷媒(れいばい) (Chất làm lạnh): Môi chất dùng trong hệ thống lạnh.\n配管(はいかん) (Đường ống): Hệ thống ống dẫn.\n接合(せつごう) (Kết nối/Liên kết): Việc nối các đoạn ống lại với nhau.\n役割(やくわり) (Vai trò): Chức năng chính.\n圧着(あっちゃく) (Ép chặt): Dùng lực ép để tạo độ khít.\n銅管(どうかん) (Ống đồng): Loại ống dẫn bằng đồng.",
       "tip": "💡 Mẹo nhớ: Khi thấy cụm từ フレアナット (Đai ốc loe), hãy chọn đáp án có từ 圧着(あっちゃく) (Ép chặt) hoặc シール (Làm kín/Seal) vì đó là nhiệm vụ chính của đai ốc.",
-      "img": "assets/tokutei/14.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/14.png"
     },
     {
       "id": 20,
@@ -423,7 +423,7 @@ window.TOKUTEI_SETS["g3_2"] = {
       "vi": "Nắp đậy cuối (end cover) được sử dụng cho mục đích nào?",
       "explain": "Trong thi công điện và đường ống, nắp đậy cuối (end cover) thường được sử dụng để bịt đầu các đường ống hoặc cố định vị trí cáp, bảo vệ phần đầu cáp hoặc ống khỏi tác động môi trường hoặc cố định chúng vào các mặt phẳng như sàn hoặc đất.\n\nTừ vựng:\n用途(ようと) (Công dụng): Mục đích sử dụng.\n使用(しよう) (Sử dụng): Dùng vào việc gì đó.\n固定(こてい) (Cố định): Giữ chặt một chỗ.\n地面(じめん) (Mặt đất): Bề mặt đất.\n配管(はいかん) (Đường ống): Hệ thống ống dẫn.\n断熱(だんねつ) (Cách nhiệt): Ngăn chặn sự truyền nhiệt.",
       "tip": "💡 Mẹo nhớ: Khi thấy từ エンド(えんど)カバー(かばー) (Nắp đậy cuối), hãy chọn đáp án có chứa từ 固定(こてい) (Cố định) vì chức năng của nó là giữ chặt phần cuối của cáp hoặc ống.",
-      "img": "assets/tokutei/16.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/16.png"
     },
     {
       "id": 5,
@@ -466,7 +466,7 @@ window.TOKUTEI_SETS["g3_2"] = {
       "vi": "Lĩnh vực nào mà sợi cáp quang đặc biệt được ứng dụng rộng rãi nhất?",
       "explain": "Sợi cáp quang (hikari fiber) truyền dẫn thông tin bằng ánh sáng thay vì dòng điện. Nhờ tốc độ truyền tải cực cao, băng thông lớn và không bị nhiễu điện từ, nó là công nghệ cốt lõi trong lĩnh vực truyền thông dữ liệu tốc độ cao như internet băng thông rộng. Sợi quang không dùng để dẫn điện hay đo áp suất không khí.\n\nTừ vựng:\n光(ひかり)ファイバー(ふぁいばー) (Cáp quang): Sợi thủy tinh truyền tín hiệu ánh sáng.\n活躍(かつやく) (Hoạt động/Ứng dụng): Việc phát huy năng lực trong một lĩnh vực.\n分野(ぶんや) (Lĩnh vực): Phạm vi hoạt động hoặc chuyên môn.\n高速(こうそく) (Tốc độ cao): Vận tốc nhanh.\n通信(つうしん) (Truyền thông/Thông tin): Việc truyền tải dữ liệu.\n使用(しよう) (Sử dụng): Dùng vào mục đích nào đó.",
       "tip": "💡 Mẹo nhớ: Khi thấy từ 光(ひかり)ファイバー(ふぁいばー) (Cáp quang), hãy chọn ngay đáp án có chứa từ 通信(つうしん) (Truyền thông) hoặc データ(でーた) (Dữ liệu) vì đây là công dụng chính của nó.",
-      "img": "assets/tokutei/17.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/17.png"
     },
     {
       "id": 8,
@@ -495,7 +495,7 @@ window.TOKUTEI_SETS["g3_2"] = {
       "vi": "Mục đích chung của van (valve) và cửa chặn (damper) là gì?",
       "explain": "Trong các hệ thống kỹ thuật, van (ben) được dùng cho đường ống chất lỏng/khí và cửa chặn (damper) được dùng cho đường ống gió. Cả hai đều có chức năng chung là đóng/ngắt dòng chảy hoặc điều chỉnh lưu lượng (lượng chất lỏng hoặc lượng gió) đi qua hệ thống. Chúng không dùng để cố định ống hay đo nhiệt độ.\n\nTừ vựng:\n弁(べん) (Van): Thiết bị điều khiển dòng chất lỏng hoặc khí trong ống.\n共通(きょうつう) (Chung): Điểm tương đồng giữa hai hay nhiều đối tượng.\n目的(もくてき) (Mục đích): Ý nghĩa hoặc chức năng sử dụng.\n流れ(ながれ) (Dòng chảy): Sự di chuyển của chất lỏng hoặc chất khí.\n量(りょう) (Lượng): Số lượng hoặc lưu lượng.\n調整(ちょうせい) (Điều chỉnh): Việc thay đổi mức độ cho phù hợp.",
       "tip": "💡 Mẹo nhớ: Khi thấy xuất hiện cả 弁(べん) (Van) và ダンパー(だんぱー) (Cửa chặn), hãy chọn ngay đáp án có cụm từ 流れ(ながれ) (Dòng chảy) và 調整(ちょうせい) (Điều chỉnh).",
-      "img": "assets/tokutei/18.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/18.png"
     },
     {
       "id": 10,
@@ -552,7 +552,7 @@ window.TOKUTEI_SETS["g3_2"] = {
       "vi": "Vấn đề nào dễ xảy ra đối với ống gió điều hòa không thực hiện thi công bảo ôn?",
       "explain": "Trong hệ thống điều hòa không khí, sự chênh lệch nhiệt độ giữa không khí bên trong và bên ngoài ống gió rất lớn. Nếu không có lớp bảo ôn (cách nhiệt), hơi nước trong không khí sẽ ngưng tụ thành giọt nước trên bề mặt hoặc bên trong ống gió, gây ra hiện tượng đọng sương (ketsuro). Điều này có thể dẫn đến rỉ sét, nấm mốc và hư hỏng trần nhà.\n\nTừ vựng:\n保温(ほおん)工事(こうじ) (Thi công bảo ôn): Việc lắp đặt lớp cách nhiệt.\n空調(くうちょう)用(よう)ダクト(だくと) (Ống gió điều hòa): Ống dẫn khí trong hệ thống làm mát/sưởi.\n発生(はっせい) (Phát sinh): Việc nảy sinh vấn đề.\n問題(もんだい) (Vấn đề): Sự cố hoặc khó khăn.\n結露(けつろ) (Đọng sương): Hiện tượng hơi nước ngưng tụ.\n内(ない) (Bên trong): Phía trong của vật thể.",
       "tip": "💡 Mẹo nhớ: Khi thấy nhắc đến việc KHÔNG làm 保(ほ)温(おん) (Bảo ôn) cho ống gió, hãy chọn ngay đáp án có từ 結(けつ)露(ろ) (Đọng sương) vì đây là hậu quả trực tiếp của việc thiếu cách nhiệt.",
-      "img": "assets/tokutei/19.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/19.png"
     },
     {
       "id": 14,
@@ -707,7 +707,7 @@ window.TOKUTEI_SETS["g3_2"] = {
       "vi": "Từ ngày 2 tháng 1 năm 2022, khi độ cao của sàn thao tác vượt quá bao nhiêu mét thì bắt buộc phải đeo dây an toàn toàn thân (Full Harness)?",
       "explain": "Theo quy định mới về an toàn lao động tại Nhật Bản, để ngăn ngừa tai nạn ngã từ trên cao, việc sử dụng thiết bị chống rơi loại toàn thân (Full Harness) đã trở thành bắt buộc. Đối với các công trình xây dựng thông thường, tiêu chuẩn này áp dụng khi làm việc ở độ cao trên 6.75m. Đối với các công việc khác, tiêu chuẩn có thể là trên 5m.\n\nTừ vựng:\n作業床(さぎょうゆか) (Sàn thao tác): Nơi đứng để làm việc trên cao.\n高さ(たかさ) (Độ cao): Khoảng cách thẳng đứng.\n場合(ばあい) (Trường hợp): Hoàn cảnh cụ thể.\n墜落制止用器具(ついらくせいしようきぐ) (Thiết bị chống rơi ngã): Dụng cụ bảo hộ ngăn rơi từ trên cao.\n装着(そうちゃく) (Trang bị/Đeo): Việc mặc hoặc gắn thiết bị bảo hộ.\n義務付け(ぎむづけ) (Bắt buộc): Quy định phải thực hiện theo luật.",
       "tip": "💡 Mẹo nhớ: Khi nhắc đến mốc thời gian 2022 và thiết bị フルハーネス(ふるはーねす) (Full Harness), con số quan trọng cần chọn chính là 6.75m.",
-      "img": "assets/tokutei/20.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/20.png"
     },
     {
       "id": 25,
@@ -1102,7 +1102,7 @@ window.TOKUTEI_SETS["g3_4"] = {
       "vi": "Trong công việc xây dựng, ống mực (sumitsubo) chủ yếu được sử dụng để làm gì?",
       "explain": "Ống mực (sumitsubo) là một dụng cụ truyền thống quan trọng trong xây dựng tại Nhật Bản. Nó bao gồm một cuộn dây đi qua một khoang chứa mực. Khi kéo dây ra và bật nhẹ trên bề mặt vật liệu, sợi dây thấm mực sẽ để lại một đường thẳng tắp và dài. Dụng cụ này giúp thợ xây dựng xác định đường cắt hoặc vị trí lắp đặt chính xác trên các bề mặt lớn như sàn, tường hoặc gỗ.\n\nTừ vựng:\n墨(すみ)つぼ (Ống mực): Dụng cụ bật mực để kẻ đường thẳng.\n建設作業(けんせつさぎょう) (Công việc xây dựng): Hoạt động thi công công trình.\n主に(おもに) (Chủ yếu): Mục đích quan trọng nhất.\n使用(しよう) (Sử dụng): Việc dùng công cụ.\n材料(ざいりょう) (Vật liệu): Các loại gỗ, thép, bê tông trong thi công.\n表面(ひょうめん) (Bề mặt): Phần phía ngoài của vật liệu.\n長い(ながい) (Dài): Khoảng cách lớn.\n直線(ちょくせん) (Đường thẳng): Đường không gấp khúc.\n引く(ひく) (Kẻ/Vạch): Thao tác tạo ra đường nét.",
       "tip": "💡 Mẹo nhớ: Khi thấy từ 墨(すみ)つぼ (Ống mực), hãy chọn ngay đáp án có cụm từ 直(ちょく)線(せん) (Đường thẳng) vì chức năng duy nhất của mực là kẻ đường thẳng.",
-      "img": "assets/tokutei/21.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/21.png"
     },
     {
       "id": 2,
@@ -1117,7 +1117,7 @@ window.TOKUTEI_SETS["g3_4"] = {
       "vi": "Trong các phương án sau, đâu là ví dụ phù hợp về công việc xây dựng sử dụng máy cân bằng laser (máy bắn cốt)?",
       "explain": "Máy cân bằng laser (Laser Sumidashiki) là thiết bị hiện đại sử dụng chùm tia laser để phát ra các đường thẳng đứng và nằm ngang chính xác trên tường, sàn hoặc trần nhà. Công dụng chính của nó là để xác định các đường tiêu chuẩn (kijunsen), giúp người thợ lắp đặt tường ngăn, đóng trần thạch cao hoặc lát gạch đảm bảo được độ thẳng và độ cao đồng nhất cho toàn bộ công trình.\n\nTừ vựng:\n墨出し器(すみだしき) (Máy bắn cốt/Máy cân bằng): Thiết bị định vị bằng mực hoặc laser.\n建築作業(けんせつさぎょう) (Công việc xây dựng): Hoạt động thi công.\n適切(てきせつ) (Phù hợp): Đúng đắn.\n基準線出し(きじゅんせんだし) (Lấy đường tiêu chuẩn): Việc xác định các đường mốc để thi công.\n壁(かべ) (Tường): Vách ngăn công trình.\n天井(てんじょう) (Trần nhà): Phần phía trên bên trong phòng.\n鉄筋(てっきん) (Cốt thép): Thanh thép trong bê tông.\n溶接(ようせつ) (Hàn): Nối kim loại bằng nhiệt.\n計量(けいりょう) (Đo lường/Cân đo): Xác định khối lượng hoặc số lượng.\n塗装(とそう) (Sơn): Phủ màu bề mặt.\n仕上げ(しあげ) (Hoàn thiện): Công đoạn cuối cùng của sản phẩm.",
       "tip": "💡 Mẹo nhớ: Khi thấy từ レーザー(れーざー) (Laser) hoặc 墨出し器(すみだしき) (Máy bắn cốt), hãy chọn ngay đáp án có chứa 基準線(きじゅんせん) (Đường tiêu chuẩn) vì đây là chức năng chính của thiết bị này.",
-      "img": "assets/tokutei/22.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/22.png"
     },
     {
       "id": 3,
@@ -1132,7 +1132,7 @@ window.TOKUTEI_SETS["g3_4"] = {
       "vi": "Máy thủy bình (level) được sử dụng tại công trường xây dựng với mục đích gì?",
       "explain": "Máy thủy bình (Level) là một thiết bị quang học dùng để thiết lập hoặc kiểm tra các điểm nằm trên cùng một mặt phẳng nằm ngang. Trong xây dựng, thiết bị này cực kỳ quan trọng để đo đạc cao độ (suijun), giúp xác định độ chênh lệch về chiều cao giữa các điểm, từ đó đảm bảo nền móng, sàn và các kết cấu khác được thi công đúng cao độ thiết kế.\n\nTừ vựng:\n建設現場(けんせつげんば) (Công trường xây dựng): Nơi thực hiện các hoạt động thi công.\n目的(もくてき) (Mục đích): Đích đến của việc sử dụng thiết bị.\n使用(しよう) (Sử dụng): Việc vận hành công cụ.\n水準(すいじゅん) (Thủy bình/Cao độ): Mặt phẳng nằm ngang tiêu chuẩn.\n測量(そくりょう) (Đo đạc/Trắc địa): Công tác đo thực địa.\n高さ(たかさ) (Chiều cao/Cao độ): Khoảng cách thẳng đứng.\n切断(せつだん) (Cắt đứt): Làm rời vật liệu.\n強度(きょうど) (Cường độ/Độ bền): Khả năng chịu lực.\n測定(そくてい) (Đo lường): Xác định thông số kỹ thuật.\n表面(ひょうめん) (Bề mặt): Phần phía ngoài của vật thể.\n磨く(みがく) (Mài/Đánh bóng): Làm nhẵn bề mặt.",
       "tip": "💡 Mẹo nhớ: Khi nhắc đến レベル(れべる) (Level/Máy thủy bình), hãy chọn ngay đáp án có chứa từ 水準(すいじゅん) (Thủy bình) hoặc 高さ(たかさ) (Chiều cao) vì đây là chức năng đo độ cao đặc trưng của máy.",
-      "img": "assets/tokutei/23.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/23.png"
     },
     {
       "id": 4,
@@ -1259,7 +1259,7 @@ window.TOKUTEI_SETS["g3_4"] = {
       "vi": "Vai trò chính của PAS (Pole Air Switch - Công tắc khí treo cột) được sử dụng trong thiết bị thu phát biến áp cao áp là gì?",
       "explain": "PAS (Pole Air Switch) là một thiết bị đóng cắt bảo vệ thường được lắp đặt trên các cột điện đầu vào của các cơ sở sử dụng điện cao áp. Vai trò chính của nó là kiểm soát việc cung cấp điện cao áp (koatsu denki) vào trong khuôn viên (shikichinai) của khách hàng. Đặc biệt, PAS giúp ngăn chặn sự cố lan rộng bằng cách ngắt kết nối khi có sự cố điện xảy ra bên trong hệ thống của khách hàng, tránh gây ảnh hưởng đến mạng lưới điện chung của công ty điện lực.\n\nTừ vựng:\n高圧(こうあつ) (Cao áp): Điện áp mức độ cao.\n受変電設備(じゅへんでんせつび) (Thiết bị thu phát biến áp): Hệ thống tiếp nhận và biến đổi điện năng.\n使う(つかう) (Sử dụng): Vận hành công cụ.\n主な(おもな) (Chủ yếu): Vai trò quan trọng nhất.\n役割(やくわり) (Vai trò): Nhiệm vụ của thiết bị.\n低圧(ていあつ) (Thấp áp): Điện áp mức độ thấp.\n電流(でんりゅう) (Dòng điện): Luồng điện chạy trong mạch.\n供給(きょうきゅう) (Cung cấp): Việc đưa điện năng đến nơi sử dụng.\n完全(かんぜん) (Hoàn toàn): Trạng thái triệt để.\n遮断(しゃだん) (Ngắt/Chặn): Việc ngắt dòng điện.\n敷地内(しきちない) (Trong khuôn viên): Khu vực bên trong công trình.\n制御(せいぎょ) (Kiểm soát/Điều khiển): Việc quản lý hoạt động hệ thống.\n電圧(でんあつ) (Điện áp): Hiệu điện thế.\n変換(へんかん) (Biến đổi): Thay đổi trạng thái hoặc giá trị.",
       "tip": "💡 Mẹo nhớ: Khi nhắc đến PAS (Pole Air Switch), hãy nhớ đây là thiết bị đầu vào gắn trên cột điện để 制御(せいぎょ) (Kiểm soát) việc 供給(きょうきゅう) (Cung cấp) điện vào 敷地内(しきちない) (Trong khuôn viên).",
-      "img": "assets/tokutei/24.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/24.png"
     },
     {
       "id": 13,
@@ -1534,7 +1534,7 @@ window.TOKUTEI_SETS["g3_5"] = {
       "vi": "Cách sử dụng chính xác của kềm bấm cốt (Atchaku penchi) là gì?",
       "explain": "Kềm bấm cốt (Atchaku penchi) là dụng cụ chuyên dụng trong ngành điện dùng để kết nối dây dẫn với đầu cốt. Cơ chế hoạt động của nó là tác động một áp lực (atsuryoku) cực mạnh lên thân đầu cốt, làm cho kim loại của đầu cốt biến dạng và bám chặt vào lõi dây điện. Quá trình này tạo ra một mối nối (setsugou) cơ khí chắc chắn và đảm bảo tính dẫn điện tốt mà không cần hàn chì.\n\nTừ vựng:\n圧着(あっちゃく) (Bấm cốt/Ép nối): Việc dùng áp lực để kết nối.\n使い方(つかいかた) (Cách sử dụng): Phương pháp dùng công cụ.\n正しい(ただしい) (Chính xác): Đúng quy định.\n圧着端子(あっちゃくたんし) (Đầu cốt): Linh kiện nối đầu dây.\n圧力(あつりょく) (Áp lực): Sức ép tác động lên bề mặt.\n加える(くわえる) (Thêm vào/Tác động): Thực hiện một lực lên vật.\n接合(せつごう) (Tiếp hợp/Nối): Việc gắn kết các bộ phận lại.\n電線(でんせん) (Dây điện): Dây dẫn năng lượng.\n削る(けずる) (Gọt/Bào): Thao tác làm mỏng bề mặt.\n使用(しよう) (Sử dụng): Việc dùng công cụ.\n絶縁(ぜつえん) (Cách điện): Ngăn dòng điện thoát ra.\n外す(はずす) (Tháo ra): Lấy vật ra khỏi vị trí cố định.",
       "tip": "💡 Mẹo nhớ: Khi thấy cụm từ 圧(あっ)着(ちゃく) (Bấm cốt), hãy chọn ngay đáp án có chứa từ 圧(あつ)力(りょく) (Áp lực) và 接(せつ)合(ごう) (Tiếp hợp) vì đây là nguyên lý làm việc của loại kềm này.",
-      "img": "assets/tokutei/25.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/25.png"
     },
     {
       "id": 7,
@@ -1661,7 +1661,7 @@ window.TOKUTEI_SETS["g3_5"] = {
       "vi": "Thiết bị làm căng dây cứu sinh (Oya-zuna kinchou-ki) được khuyến khích sử dụng trong tình huống nào?",
       "explain": "Thiết bị làm căng dây cứu sinh (Oya-zuna kinchou-ki) là dụng cụ dùng để kéo căng sợi dây thừng chủ (dây cứu sinh) trong thi công trên cao. Khi làm việc tại những vị trí nguy hiểm có độ cao lớn (kousho sagyou), dây cứu sinh (oyazuna) phải được căng chắc chắn để người lao động có thể móc dây an toàn vào. Việc sử dụng thiết bị căng dây giúp đảm bảo dây không bị trùng, giảm thiểu độ rơi tự do và ngăn ngừa tai nạn ngã từ trên cao.\n\nTừ vựng:\n親綱緊張器(おやづなきんちょうき) (Thiết bị làm căng dây cứu sinh): Dụng cụ làm căng dây thừng chủ.\n使用(しよう) (Sử dụng): Việc dùng công cụ.\n推奨(すいしょう) (Khuyến khích): Khuyên nên dùng.\n状況(じょうきょう) (Tình huống): Hoàn cảnh cụ thể.\n室内(しつない) (Trong nhà): Không gian bên trong công trình.\n配線作業(はいせんさぎょう) (Công việc đi dây): Thao tác lắp đặt dây điện.\n安全帯(あんぜんたい) (Dây đai an toàn): Thiết bị bảo hộ cá nhân.\n場合(ばあい) (Trường hợp): Tình huống xảy ra.\n高所作業(こうしょさぎょう) (Làm việc trên cao): Thao tác ở vị trí có độ cao lớn.\n親綱(おやづな) (Dây cứu sinh/Dây thừng chủ): Sợi dây chính để móc dây bảo hộ.\n必要(ひつよう) (Cần thiết): Điều bắt buộc phải có.\n地上(ちじょう) (Trên mặt đất): Vị trí dưới thấp.",
       "tip": "💡 Mẹo nhớ: Khi thấy cụm từ 親(おや)綱(づな) (Dây cứu sinh), hãy chọn ngay đáp án có chứa từ 高(こう)所(しょ)作(さ)業(ぎょう) (Làm việc trên cao) vì hai thứ này luôn đi đôi với nhau để bảo vệ an toàn.",
-      "img": "assets/tokutei/27.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/27.png"
     },
     {
       "id": 16,
@@ -1690,7 +1690,7 @@ window.TOKUTEI_SETS["g3_5"] = {
       "vi": "Vai trò của thiết bị ngắt mạch (cầu dao tự động) và thiết bị cách ly là gì?",
       "explain": "Trong hệ thống điện, thiết bị ngắt mạch (shadanki) và thiết bị cách ly (danroki) đóng vai trò cực kỳ quan trọng trong việc đảm bảo an toàn. Chức năng chính của chúng là ngắt dòng điện (denki wo shadan suru) khi cần thiết, chẳng hạn như khi xảy ra sự cố quá tải, ngắn mạch hoặc khi cần tạm ngừng cấp điện để thực hiện công tác bảo trì, sửa chữa nhằm ngăn ngừa các rủi ro về giật điện và hỏa hoạn.\n\nTừ vựng:\n遮断器(しゃだんき) (Thiết bị ngắt mạch/Cầu dao): Thiết bị tự động ngắt điện khi có sự cố.\n断路器(だんろき) (Thiết bị cách ly): Dụng cụ dùng để cách ly mạch điện.\n役割(やくわり) (Vai trò): Chức năng hoặc nhiệm vụ.\n電気(でんき) (Điện): Năng lượng điện.\n遮断(しゃだん) (Ngắt/Cắt): Hành động làm gián đoạn dòng chảy.\n増加(ぞうか) (Tăng lên): Làm cho nhiều hơn.\n配線(はいせん) (Đi dây/Hệ thống dây điện): Cách bố trí dây dẫn.\n固定(こてい) (Cố định): Giữ chặt tại một chỗ.\n電圧(でんあつ) (Điện áp): Hiệu điện thế.\n下げる(さげる) (Hạ thấp/Giảm): Làm cho thấp xuống.",
       "tip": "💡 Mẹo nhớ: Khi thấy tên thiết bị có chứa chữ 遮(しゃ)断(だん) (Ngắt) hoặc 断(だん) (Cắt), hãy chọn ngay đáp án có cụm từ 電(でん)気(き)を遮(しゃ)断(だん)する (Ngắt điện).",
-      "img": "assets/tokutei/28.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/28.png"
     },
     {
       "id": 18,
@@ -1733,7 +1733,7 @@ window.TOKUTEI_SETS["g3_5"] = {
       "vi": "Trong các đặc điểm của dây cáp thép (wire rope), đặc điểm nào sau đây là chính xác?",
       "explain": "Dây cáp thép (wire rope) được tạo thành bằng cách bện nhiều sợi thép nhỏ lại với nhau, giúp nó có khả năng chịu lực cực tốt. Đặc điểm nổi bật nhất của loại dây này là có lực bền kéo (hippari tsuyosa) rất lớn, cho phép nâng hạ hoặc kéo các vật có trọng lượng nặng một cách an toàn và bền bỉ trong các công trình xây dựng.\n\nTừ vựng:\n特徴(とくちょう) (Đặc điểm): Tính chất riêng biệt để nhận dạng.\n正しい(ただしい) (Chính xác): Đúng với thực tế.\n柔軟性(じゅうなんせい) (Tính mềm dẻo): Khả năng uốn lượn dễ dàng.\n鉄線(てっせん) (Sợi sắt/thép): Các sợi kim loại nhỏ.\n衝撃(しょうげき) (Va đập/Xung kích): Lực tác động mạnh bất ngờ.\n弱い(よわい) (Yếu): Khả năng chịu đựng kém.\n引っ張り強さ(ひっぱりつよさ) (Lực bền kéo): Khả năng chịu lực khi bị kéo căng.\n大きい(おおきい) (Lớn): Mức độ cao.",
       "tip": "💡 Mẹo nhớ: Khi nhắc đến đặc điểm của ワイヤーロープ(わいやーろーぷ) (Dây cáp thép), hãy chọn đáp án có cụm từ 引(ひ)っ張(ぱ)り強(つよ)さ (Lực bền kéo) đi kèm với 大(おお)きい (Lớn).",
-      "img": "assets/tokutei/29.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/29.png"
     },
     {
       "id": 21,
@@ -1854,7 +1854,7 @@ window.TOKUTEI_SETS["g3_6"] = {
       "vi": "Đây là công việc gì? Hãy chọn một đáp án đúng.",
       "explain": "Trong hình, người thợ đang dùng mũi vạch để kẻ đường dấu lên tấm kim loại. Đây gọi là công việc vạch dấu.\n\nTừ vựng:\n作業(さぎょう) - Công việc\n正(ただ)しい - Đúng\n一(ひと)つ - Một cái\n選(えら)ぶ - Chọn\n切断(せつだん) - Cắt\n曲(ま)げ - Uốn\n溶接(ようせつ) - Hàn",
       "tip": "💡 Ghi nhớ: Thấy hình dùng bút nhọn kẻ vạch trên kim loại thì chọn ngay ケガキ.",
-      "img": "assets/tokutei/352.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/352.png"
     },
     {
       "id": 56,
@@ -2065,7 +2065,7 @@ window.TOKUTEI_SETS["g3_6"] = {
       "vi": "Tên của dụng cụ này là gì?",
       "explain": "Máy trong hình là thiết bị đo chỉ số WBGT (nhiệt độ cầu ướt) dùng để đánh giá mức độ căng thẳng nhiệt, giúp phòng chống nguy cơ say nắng say nóng.\n\nTừ vựng:\n道具(どうぐ): Dụng cụ\n名前(なまえ): Tên\n何(なに): Cái gì\n計測器(けいそくき): Máy đo / Thiết bị đo lường\n重量(じゅうりょう): Trọng lượng\n測定器(そくていき): Máy đo\n水量(すいりょう): Lượng nước\n音量(おんりょう): Âm lượng",
       "tip": "💡 Ghi nhớ: Thấy hình thiết bị có quả cầu đen và vạch số điện tử thì đó là máy đo WBGT 計測器(けいそくき) dùng để đo nhiệt độ phòng say nắng.",
-      "img": "assets/tokutei/385.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/385.png"
     },
     {
       "id": 81.5,
@@ -2340,7 +2340,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Hình vẽ là loại máy gì?",
       "explain": "Hình ảnh là một chiếc xe lu dùng để đầm nén đất và mặt đường, tương ứng với 転圧機(てんあつき). Các lựa chọn khác bao gồm ダンプトラック là xe tải ben, ホイールローダー là máy xúc lật, và 油圧(ゆあつ)ショベル là máy xúc đào thủy lực.\n\nTừ vựng:\n図(ず): Hình vẽ\n何(なん): Cái gì\n機械(きかい): Máy móc\n転圧機(てんあつき): Máy đầm nén\n油圧(ゆあつ): Thủy lực",
       "tip": "💡 Ghi nhớ: Nhìn thấy xe lu có bánh trụ lăn lớn phía trước thì chọn 転圧機(てんあつき) Máy đầm nén.",
-      "img": "assets/tokutei/301.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/301.png"
     },
     {
       "id": "3",
@@ -2369,7 +2369,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Thiết bị trong ảnh được sử dụng với mục đích gì?",
       "explain": "Thiết bị trong ảnh là bút thử điện, dùng để kiểm tra xem một vật hay dòng điện có đang mang điện hay không 電気(でんき)を帯(お)びているかどうかを調(しら)べる機器(きき)です.\n\nTừ vựng:\n写真(しゃしん): Bức ảnh\n機器(きき): Thiết bị\n目的(もくてき): Mục đích\n使用(しよう): Sử dụng\n電気(でんき): Điện\n帯(お)びている: Mang (điện)\n調(しら)べる: Kiểm tra",
       "tip": "💡 Ghi nhớ: Thấy hình bút thử điện thì chọn đáp án có chữ 電気(でんき) Điện và 調(しら)べる Kiểm tra.",
-      "img": "assets/tokutei/302.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/302.png"
     },
     {
       "id": "6",
@@ -2398,7 +2398,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Tên của vật tư trong ảnh dùng khi kết nối dây điện là gì?",
       "explain": "Hình ảnh là đầu nối cắm nhanh 差(さ)し込(こ)みコネクタ, dùng để nối các đầu dây điện lại với nhau một cách dễ dàng bằng cách cắm trực tiếp.\n\nTừ vựng:\n電線(でんせん): Dây điện\n接続(せつぞく): Kết nối\n時(とき): Khi\n部材(ぶざい): Vật tư\n名前(なまえ): Tên",
       "tip": "💡 Ghi nhớ: Thấy hình các cục nối dây điện trong suốt có màu thì chọn 差(さ)し込(こ)みコネクタ Đầu nối cắm.",
-      "img": "assets/tokutei/303.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/303.png"
     },
     {
       "id": "7",
@@ -2413,7 +2413,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Dụng cụ tuốt vỏ bọc dây điện là gì?",
       "explain": "Dụng cụ trong hình và được nhắc tới trong câu hỏi là kìm tuốt dây điện ワイヤーストリッパー, dùng để bóc lớp vỏ cách điện của dây dẫn.\n\nTừ vựng:\n被覆(ひふく): Vỏ bọc\n剥(む)き取(と)る: Bóc ra / Tuốt ra\n工具(こうぐ): Dụng cụ",
       "tip": "💡 Ghi nhớ: Thấy 被覆(ひふく) Vỏ bọc và 剥(む)き取(と)る Bóc ra thì chọn ワイヤーストリッパー Kìm tuốt dây.",
-      "img": "assets/tokutei/304.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/304.png"
     },
     {
       "id": "8",
@@ -2428,7 +2428,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Hãy chọn ổ cắm âm tường.",
       "explain": "Ổ cắm âm tường là hình C. Hình A là ổ cắm nổi, hình B là khung gắn thiết bị, hình D là aptomat.\n\nTừ vựng:\n埋(う)め込(こ)み: Âm tường\n選(えら)べ: Hãy chọn",
       "tip": "💡 Ghi nhớ: Thấy 埋(う)め込(こ)み Âm tường và コンセント Ổ cắm thì chọn hình C.",
-      "img": "assets/tokutei/305.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/305.png"
     },
     {
       "id": "9",
@@ -2443,7 +2443,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Hãy chọn nhược điểm của cáp quang.",
       "explain": "Cáp quang 光(ひかり)ファイバー có nhược điểm là dễ bị hỏng hoặc ảnh hưởng do trầy xước, uốn cong hoặc bụi bẩn 傷(きず)や曲(ま)げ、汚(よご)れに弱(よわ)い. Các đáp án còn lại đều là ưu điểm.\n\nTừ vựng:\n光(ひかり): Quang / Ánh sáng\n短所(たんしょ): Nhược điểm\n損失(そんしつ): Tổn thất\n傷(きず): Vết thương / Trầy xước\n曲(ま)げ: Uốn cong\n汚(よご)れ: Bụi bẩn\n弱(よわ)い: Yếu / Kém\n伝送容量(でんそうようりょう): Dung lượng truyền tải",
       "tip": "💡 Ghi nhớ: Thấy 短所(たんしょ) Nhược điểm thì chọn đáp án có chữ 弱(よわ)い Yếu / Kém chịu đựng.",
-      "img": "assets/tokutei/306.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/306.png"
     },
     {
       "id": "12",
@@ -2458,7 +2458,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Hãy chọn loại đầu nối quang trong ảnh.",
       "explain": "Hình ảnh hiển thị đầu nối quang chuẩn SC SCコネクタ, đặc trưng bởi phần đầu nối hình vuông bằng nhựa thường có màu xanh dương và cơ chế cắm rút.\n\nTừ vựng:\n写真(しゃしん): Bức ảnh\n光(ひかり): Quang / Ánh sáng\n種類(しゅるい): Loại / Chủng loại\n選(えら)べ: Hãy chọn",
       "tip": "💡 Ghi nhớ: Thấy đầu nối quang màu xanh dương có hình vuông dài thì chọn SCコネクタ.",
-      "img": "assets/tokutei/307.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/307.png"
     },
     {
       "id": 14,
@@ -2543,7 +2543,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Dụng cụ trong hình được gọi là gì?",
       "explain": "Đây là mặt bích (Flange), một phụ kiện dùng để kết nối các đoạn ống, van hoặc thiết bị khác bằng cách bắt bu lông với nhau.\n\nTừ vựng:\n写真(しゃしん): Hình ảnh\n器具(きぐ): Dụng cụ/Thiết bị",
       "tip": "💡 Mẹo: Nhìn hình hai miếng kim loại tròn ốp vào nhau có bắt vít thì chọn フランジ Mặt bích.",
-      "img": "assets/tokutei/318.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/318.png"
     },
     {
       "id": 19,
@@ -2670,7 +2670,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Dụng cụ trong hình được gọi là gì?",
       "explain": "Đây là cái đục dẹt (chisel), một dụng cụ cầm tay bằng kim loại thường được sử dụng kết hợp với búa để đục, gọt, hoặc cắt bớt các phần kim loại, bê tông thừa.\n\nTừ vựng:\n写真(しゃしん): Hình ảnh\n工具(こうぐ): Dụng cụ\n平(ひら): Phẳng/Dẹt\n金(かね): Kim loại (trong từ cưa sắt)",
       "tip": "💡 Mẹo: Nhìn thấy thanh kim loại thẳng, trơn, một đầu vát dẹt và mài sắc để đục thì chọn ngay 平(ひら)タガネ Đục dẹt.",
-      "img": "assets/tokutei/329.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/329.png"
     },
     {
       "id": 30,
@@ -2685,7 +2685,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Cái búa gỗ cỡ lớn dùng để đóng cọc được gọi là gì? Hãy chọn đáp án đúng.",
       "explain": "Kakeya là loại búa gỗ lớn, cán dài, đầu búa rất to và nặng, chuyên dùng để đóng cọc gỗ lớn xuống đất.\n\nTừ vựng:\n杭(くい): Cọc\n打(う)ち込(こ)む: Đóng xuống\n大型(おおがた): Cỡ lớn\n木(き)づち: Búa gỗ",
       "tip": "💡 Mẹo: Thấy từ 杭(くい) Cọc và 大型(おおがた)の木(き)づち Búa gỗ lớn thì chọn かけや Búa đóng cọc.",
-      "img": "assets/tokutei/330.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/330.png"
     },
     {
       "id": 31,
@@ -2784,7 +2784,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Dụng cụ trong ảnh được sử dụng với mục đích gì?",
       "explain": "Dụng cụ trong ảnh là pa lăng xích lắc tay, ứng dụng nguyên lý đòn bẩy và ròng rọc để nâng hạ vật nặng てこや滑車(かっしゃ)の原理(げんり)を応用(おうよう)した、重(おも)いものを上(あ)げ下(さ)げできる (Ứng dụng đòn bẩy và ròng rọc để nâng hạ vật nặng).\n\nTừ vựng:\n写真(しゃしん): Bức ảnh\n工具(こうぐ): Dụng cụ\n何(なん): Cái gì\n目的(もくてき): Mục đích\n使用(しよう): Sử dụng\n滑車(かっしゃ): Ròng rọc\n原理(げんり): Nguyên lý\n応用(おうよう): Ứng dụng\n重(おも)い: Nặng\n上(あ)げ下(さ)げ: Nâng hạ\n釘(くぎ): Đinh\n抜(ぬ)く: Nhổ ra\n引(ひ)き締(し)める: Siết chặt",
       "tip": "💡 Ghi nhớ: Thấy pa lăng xích có dây xích và móc câu thì chọn đáp án có chữ 重(おも)いものを上(あ)げ下(さ)げ Nâng hạ vật nặng.",
-      "img": "assets/tokutei/375.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/375.png"
     },
     {
       "id": "38",
@@ -2855,7 +2855,7 @@ window.TOKUTEI_SETS["g3_7"] = {
       "vi": "Phương pháp nối trong ảnh gọi là gì?",
       "explain": "Hình ảnh cho thấy loại khớp nối ống gồm 2 nửa ốp bên ngoài và siết lại bằng bu lông, đây là khớp nối vỏ bọc ハウジング管継手(かんつぎて).\n\nTừ vựng:\n写真(しゃしん): Bức ảnh\n接合方法(せつごうほうほう): Phương pháp nối\n何(なん): Cái gì\n継手(つぎて): Khớp nối\n管継手(かんつぎて): Khớp nối ống",
       "tip": "Ghi nhớ: Thấy loại khớp nối có hai nửa ốp vòng quanh ống thì chọn ハウジング管継手(かんつぎて) Khớp nối housing.",
-      "img": "assets/tokutei/345.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/345.png"
     },
     {
       "id": "46",

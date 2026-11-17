@@ -90,7 +90,7 @@ window.TOKUTEI_SETS["t1"] = {
       "vi": "Công trình trong hình là loại nào?",
       "explain": "Hình cho thấy hệ thống ống nước thải và cấp nước — đây là công trình 給排水（きゅうはいすい）設備（せつび）工事（こうじ）cấp thoát nước.\n\nTừ vựng:\n給排水（きゅうはいすい）: Cấp thoát nước\n設備（せつび）: Thiết bị\n工事（こうじ）: Công trình / Thi công\nガス設備（せつび）: Thiết bị gas\n衛生（えいせい）器具（きぐ）: Thiết bị vệ sinh (bồn cầu, chậu rửa...)\n給湯（きゅうとう）: Cấp nước nóng",
       "tip": "💡 Mẹo nhớ: Thấy hình 配管（はいかん）（ống nước）, đường ống hệ thống → nghĩ ngay đến 給排水（きゅうはいすい）（cấp thoát nước）. Nếu là 給湯器（きゅうとうき）（máy nước nóng）hay 貯湯槽（ちょとうそう）（bình trữ nóng）mới chọn 給湯（きゅうとう）.",
-      "img": "assets/tokutei/IMG_3607.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3607.jpeg"
     },
     {
       "id": 7,
@@ -189,7 +189,7 @@ window.TOKUTEI_SETS["t1"] = {
       "vi": "Hình dưới đây là công trình gì?",
       "explain": "Hình cho thấy khung xương thép được lắp đặt — đây là 鋼製（こうせい）下地（したじ）工事（こうじ）, tức là công trình lắp đặt khung xương kim loại để làm tường hoặc trần.\n\nTừ vựng:\n鋼製（こうせい）: Làm bằng thép\n下地（したじ）: Khung nền / Lớp nền\n工事（こうじ）: Công trình / Thi công\nボード貼（は）り: Dán tấm board\n床（ゆか）仕上（しあ）げ: Hoàn thiện sàn\nカーテン: Rèm cửa",
       "tip": "💡 Mẹo nhớ: Thấy hình 鉄骨（てっこつ）（khung thép）chưa được 仕上（しあ）げ（hoàn thiện）gì → đó là 下地（したじ）（khung nền）. 鋼製（こうせい）= bằng 鋼（こう）（thép）→ 鋼製（こうせい）下地（したじ）工事（こうじ）= lắp 金属（きんぞく）（kim loại）khung nền.",
-      "img": "assets/tokutei/0156.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0156.png"
     },
     {
       "id": 14,
@@ -204,7 +204,7 @@ window.TOKUTEI_SETS["t1"] = {
       "vi": "Theo hình minh họa, đây là loại công trình nào?",
       "explain": "Công nhân đang làm việc trên xe nâng, xử lý dây điện phía trên không trung. Đây là 架空（かくう）配線（はいせん）工事（こうじ）, tức là công trình lắp đặt đường dây điện trên không.\n\nTừ vựng:\n地中（ちちゅう）: Dưới lòng đất\n架空（かくう）: Trên không / Treo trên cao\n配線（はいせん）: Lắp dây điện / Đi dây\n工事（こうじ）: Công trình / Thi công\n電灯（でんとう）: Đèn điện\n設備（せつび）: Thiết bị",
       "tip": "💡 Mẹo nhớ: 架空（かくう）= treo trên 空（そら）（không trung）(架 = giá đỡ, 空 = trời). Thấy 電線（でんせん）（dây điện）trên 柱（はしら）（cột）hoặc 高所（こうしょ）（cao）→ 架空（かくう）配線（はいせん）工事（こうじ）. Dây chôn dưới đất → 地中（ちちゅう）配線（はいせん）工事（こうじ）.",
-      "img": "assets/tokutei/IMG_3608.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3608.jpeg"
     },
     {
       "id": 15,
@@ -275,7 +275,7 @@ window.TOKUTEI_SETS["t1"] = {
       "vi": "Phương pháp nung nóng phần nối giữa hai thanh thép và ép lại theo trục gọi là gì?",
       "explain": "Đây là ガス圧接（あっせつ）継手（つぎて）, tức là phương pháp nối thép bằng hàn ép khí gas — sử dụng nhiệt và áp lực dọc trục để nối chặt hai đầu thép.\n\nTừ vựng:\n鉄筋（てっきん）: Thép cốt / Thanh cốt thép\n部分（ぶぶん）: Bộ phận / Phần\n加熱（かねつ）: Nung nóng\n軸方向（じくほうこう）: Theo chiều trục / Dọc trục\n圧力（あつりょく）: Áp lực\n接合（せつごう）する: Nối / Ghép lại\n工法（こうほう）: Công pháp / Phương pháp thi công\nガス圧接（あっせつ）: Hàn ép bằng khí gas\n継手（つぎて）: Mối nối\n溶接（ようせつ）: Hàn\nアーク溶接: Hàn hồ quang\nろう接（せつ）: Hàn thiếc / Hàn mềm",
       "tip": "💡 Mẹo nhớ: Thấy từ khóa 加熱（かねつ）（nung）+ 軸方向（じくほうこう）（dọc trục）+ 圧力（あつりょく）（ép）→ đây chính xác là ガス圧接（あっせつ）継手（つぎて）（hàn ép khí gas）. Không nhầm với アーク溶接（ようせつ）（hàn hồ quang dùng điện, không ép 軸（じく）（trục））.",
-      "img": "assets/tokutei/IMG_3609.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3609.jpeg"
     },
     {
       "id": 20,
@@ -402,7 +402,7 @@ window.TOKUTEI_SETS["t1"] = {
       "vi": "Phương pháp thi công nào dùng để hút và thoát nước ngầm ra khỏi lòng đất?",
       "explain": "Hình vẽ mô tả hệ thống ống hút nước ngầm với bể và bơm trung gian — đây là ウォルポイント工事（こうじ）, dùng để hạ mực nước ngầm trước khi thi công móng hoặc tầng hầm.\n\nTừ vựng:\n地下水（ちかすい）: Nước ngầm\n排水（はいすい）: Thoát nước\n工法（こうほう）: Phương pháp thi công\nウォルポイント: Well Point (hạ mực nước ngầm)\n推進（すいしん）トンネル: Đào hầm đẩy / Jack & bore\nさく井（せい）: Khoan giếng\n海洋（かいよう）土木（どぼく）: Công trình biển / Công trình hàng hải",
       "tip": "💡 Mẹo nhớ: ウォルポイント = Well Point = hệ thống 針（はり）（kim）hút 地下水（ちかすい）（nước ngầm）cắm xung quanh 掘削（くっさく）（hố đào）→ 水位（すいい）（mực nước）を下（さ）げる（hạ xuống）trước khi thi công 基礎（きそ）（móng）. Thấy 地下水（ちかすい）排水（はいすい）→ chọn ウォルポイント.",
-      "img": "assets/tokutei/IMG_3610.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3610.jpeg"
     },
     {
       "id": 29,
@@ -494,7 +494,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Dựa theo hình minh họa, đây là loại công trình nào?",
       "explain": "Đây là 防波堤（ぼうはてい）工事（こうじ）– công trình 防波堤（ぼうはてい）（đê chắn sóng）, được xây dựng để ngăn 波（なみ）（sóng biển）và bảo vệ 港（みなと）（cảng）hoặc khu vực ven biển.\n\nTừ vựng:\n防波堤（ぼうはてい）: Đê chắn sóng / Đê phá sóng\n潜水（せんすい）: Lặn / Thợ lặn\n橋梁（きょうりょう）: Cầu / Kết cấu cầu\n防潮堤（ぼうちょうてい）: Đê chắn triều / Đê ngăn nước biển\n工事（こうじ）: Công trình / Thi công",
       "tip": "💡 Mẹo nhớ: 防波堤（ぼうはてい）= 防（ぼう）（ngăn）+ 波（なみ）（sóng）+ 堤（てい）（đê）→ đê ngăn 波（なみ）（sóng）. Khác với 防潮堤（ぼうちょうてい）= ngăn 潮（しお）（thủy triều）. Thấy hình đê ngoài 海（うみ）（biển）/港（みなと）（cảng）→ chọn 防波堤（ぼうはてい）.",
-      "img": "assets/tokutei/IMG_3611.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3611.jpeg"
     },
     {
       "id": 35,
@@ -537,7 +537,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Dựa theo hình minh họa, đây là loại công trình gì?",
       "explain": "Hình cho thấy phần 鉄骨（てっこつ）（khung thép）của tòa nhà đang được lắp dựng phía trên mặt đất. Đây là 地上（ちじょう）躯体（くたい）工事（こうじ）– công trình kết cấu thân trên mặt đất. Công đoạn này bao gồm lắp 鉄骨（てっこつ）（khung thép）、柱（はしら）（cột）、梁（はり）（dầm）、床（ゆか）（sàn）sau khi phần 基礎（きそ）（móng）đã hoàn thành.\n\nTừ vựng:\n地上（ちじょう）: Trên mặt đất\n地下（ちか）: Dưới mặt đất\n躯体（くたい）: Kết cấu thân công trình (khung, cột, dầm, sàn)\n工事（こうじ）: Công trình / Thi công\n基礎（きそ）: Nền móng\n岸壁（がんぺき）: Bờ kè / Cầu cảng\n解体（かいたい）: Phá dỡ / Tháo dỡ",
       "tip": "💡 Mẹo nhớ: Thấy hình 鉄骨（てっこつ）（khung thép）đang dựng TRÊN MẶT ĐẤT → 地上（ちじょう）躯体（くたい）工事（こうじ）. Nếu đang làm DƯỚI ĐẤT → 地下（ちか）躯体（くたい）工事（こうじ）. 地上（ちじょう）= trên, 地下（ちか）= dưới.",
-      "img": "assets/tokutei/IMG_3314.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3314.jpeg"
     },
     {
       "id": 38,
@@ -552,7 +552,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Thiết bị trong hình là loại nào sau đây?",
       "explain": "Đây là 免震（めんしん）装置（そうち）– thiết bị cách chấn chống 地震（じしん）（động đất）, được lắp giữa phần 基礎（きそ）（móng）và kết cấu tòa nhà để hấp thụ 振動（しんどう）（chấn động）khi xảy ra 地震（じしん）（động đất）.\n\nTừ vựng:\n装置（そうち）: Thiết bị / Bộ máy\n防水（ぼうすい）: Chống thấm nước\n免震（めんしん）: Cách chấn / Chống động đất\n空調（くうちょう）: Điều hòa không khí\n自動（じどう）: Tự động\n加圧（かあつ）: Tăng áp / Gia áp",
       "tip": "💡 Mẹo nhớ: 免震（めんしん）= 免（めん）（miễn, tránh）+ 震（しん）（rung/動地震（じしん））→ 装置（そうち）（thiết bị）giúp 建物（たてもの）（công trình）TRÁNH tác động của 地震（じしん）（động đất）. Thường thấy dưới 柱（はしら）（chân cột）hoặc giữa 基礎（きそ）（móng）và 床（ゆか）（sàn）.",
-      "img": "assets/tokutei/IMG_3315.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3315.jpeg"
     },
     {
       "id": 39,
@@ -567,7 +567,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Hình dưới đây là thiết bị gì?",
       "explain": "Đây là スプリンクラー（sprinkler）– đầu phun nước chữa cháy tự động được lắp trên 天井（てんじょう）（trần nhà）. Khi 温度（おんど）（nhiệt độ）tăng cao do 火災（かさい）（cháy）, đầu 感知（かんち）（cảm ứng）sẽ kích hoạt và phun 水（みず）（nước）dập lửa.\n\nTừ vựng:\nスプリンクラー: Đầu phun nước chữa cháy tự動（じどう）(Sprinkler)\n火災（かさい）: Hỏa hoạn / Đám cháy\n受信機（じゅしんき）: Máy thu tín hiệu / Bảng điều khiển báo cháy\n消火（しょうか）ポンプ: Máy bơm chữa cháy\n保温（ほおん）: Giữ nhiệt\n保冷器（ほれいき）: Thiết bị giữ lạnh",
       "tip": "💡 Mẹo nhớ: スプリンクラー（Sprinkler）= đầu 噴水（ふんすい）（phun nước）自動（じどう）（tự động）gắn trên 天井（てんじょう）（trần nhà）. Khi có 火災（かさい）（hỏa hoạn）→ 自動（じどう）（tự động）phun 水（みず）（nước）→ chọn ngay スプリンクラー.",
-      "img": "assets/tokutei/5101.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/5101.png"
     },
     {
       "id": 40,
@@ -582,7 +582,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Đây là công việc gì? Hãy chọn đáp án đúng.",
       "explain": "Ảnh cho thấy hai thanh 鉄筋（てっきん）（thép）được nối bằng phương pháp 溶接（ようせつ）継手（つぎて）（hàn nối bằng điện）, thường dùng trong thi công kết cấu 鉄筋（てっきん）（thép cốt）.\n\nTừ vựng:\n溶接（ようせつ）: Hàn / Hàn điện\n継手（つぎて）: Mối nối\nガス圧接（あっせつ）: Hàn ép bằng khí gas\n鉄筋（てっきん）: Thép cốt / Thanh cốt thép\n配筋（はいきん）: Bố trí thép / Buộc thép",
       "tip": "💡 Mẹo nhớ: 溶接（ようせつ）継手（つぎて）= hàn nối bằng 電気（でんき）（điện）→ thấy 火花（ひばな）（tia lửa điện）hoặc mối 溶接（ようせつ）（hàn）điện → chọn 溶接（ようせつ）継手（つぎて）. Khác với ガス圧接（あっせつ）（dùng 火（ひ）gas + ép 軸（じく）trục, mối nối 膨（ふく）らむ（phình ra））.",
-      "img": "assets/tokutei/IMG_2526.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_2526.jpeg"
     },
     {
       "id": 41,
@@ -597,7 +597,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Bức ảnh thể hiện công trình nào đang được thực hiện?",
       "explain": "工（こう）員（いん）（Công nhân）đang đổ 生（なま）コンクリート（bê tông tươi）xuống 型枠（かたわく）（khuôn）– đây là コンクリート打設（だせつ）工事（こうじ）– công trình đổ 打設（だせつ）（đầm bê tông）, nhằm tạo 床（ゆか）（mặt sàn）hoặc nền 基礎（きそ）（bê tông）vững chắc.\n\nTừ vựng:\nコンクリート: Bê tông\n打設（だせつ）: Đổ bê tông / Đầm bê tông\n工事（こうじ）: Công trình / Thi công\n機械（きかい）土工事（どこうじ）: Công trình đất bằng máy\nサッシ工事（こうじ）: Công trình lắp khung cửa nhôm\n屋根（やね）工事（こうじ）: Công trình mái nhà",
       "tip": "💡 Mẹo nhớ: Thấy hình đổ 生（なま）コンクリート（bê tông tươi）từ 車（くるま）（xe）bơm hoặc 型枠（かたわく）（khuôn）→ コンクリート打設（だせつ）工事（こうじ）. 打設（だせつ）= đổ và 締（し）め固（かた）め（đầm）コンクリート（bê tông）vào 型枠（かたわく）（khuôn）.",
-      "img": "assets/tokutei/IMG_3317.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3317.jpeg"
     },
     {
       "id": 42,
@@ -682,7 +682,7 @@ window.TOKUTEI_SETS["t2"] = {
       "vi": "Hình dưới đây thể hiện công tác gì?",
       "explain": "Đây là công tác 法面（のりめん）整形（せいけい）– san gọt, tạo 形（かたち）（hình）mái 斜面（しゃめん）（taluy）bằng 機械（きかい）（máy）xúc. Mục đích là làm phẳng và chỉnh 傾斜（けいしゃ）（độ dốc）mái 法面（のりめん）（taluy）sau khi 盛土（もりど）（đắp）hoặc 掘削（くっさく）（đào）.\n\nTừ vựng:\n法面（のりめん）: Mái dốc / Mái taluy\n整形（せいけい）: Tạo hình / Chỉnh hình\n掘削（くっさく）: Đào đất\n積（つ）み込（こ）み: Xúc lên xe / Chất lên\n押土（おしど）: Đẩy đất / Ủi đất",
       "tip": "💡 Mẹo nhớ: 法面（のりめん）= 斜面（しゃめん）（mái dốc taluy）. 整形（せいけい）= tạo 形（かたち）（hình）/ chỉnh 形（かたち）（dáng）. Thấy hình 機械（きかい）（máy）xúc đang gọt/làm phẳng 傾斜面（けいしゃめん）（mái dốc nghiêng）→ chọn 法面（のりめん）整形（せいけい）.",
-      "img": "assets/tokutei/0207.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0207.png"
     },
     {
       "id": 48,
@@ -1209,7 +1209,7 @@ window.TOKUTEI_SETS["t3"] = {
       "vi": "Dựa vào hình minh họa, đây là loại máy nào?",
       "explain": "Đây là コンクリートポンプ車 – xe bơm bê tông. Xe dùng cần vươn dài để bơm bê tông từ máy trộn đến vị trí cần thi công, thường dùng trong xây dựng nhà cao tầng và cầu đường.\n\nTừ vựng:\nタワークレーン: Cần cẩu tháp\nコンクリートポンプ車（しゃ）: Xe bơm bê tông\nエアスプレー塗装（とそう）: Phun sơn bằng khí nén\n一輪車（いちりんしゃ）: Xe cút kít (xe 1 bánh)\nコンクリート: Bê tông\nポンプ: Bơm",
       "tip": "💡 Mẹo nhớ: Thấy xe có CẦN DÀI vươn ra và đầu ống để BƠM BÊ TÔNG → コンクリートポンプ車. Khác với タワークレーン (cần cẩu dựng thẳng đứng để nâng vật nặng).",
-      "img": "assets/tokutei/3340.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/3340.png"
     },
     {
       "id": 86,
@@ -1678,7 +1678,7 @@ window.TOKUTEI_SETS["t4"] = {
       "vi": "Biểu đồ này thể hiện kết quả khảo sát theo từng nhóm tuổi về dân số lao động (労働力人口).",
       "explain": "Đáp án đúng: 労働力（ろうどうりょく）人口（じんこう）— Dựa vào biểu đồ, số lượng tập trung ở nhóm tuổi 25–54, cho thấy đây là biểu đồ về lực lượng lao động theo độ tuổi.\n\nTừ vựng:\n年代別（ねんだいべつ）: Theo từng nhóm tuổi\n調査（ちょうさ）結果（けっか）: Kết quả khảo sát\nグラフ: Biểu đồ\n労働力（ろうどうりょく）人口（じんこう）: Dân số trong độ tuổi lao động\n災害（さいがい）や事故（じこ）で死亡（しぼう）: Tử vong do tai nạn và sự cố\n在日外国人（ざいにちがいこくじん）: Người nước ngoài sống tại Nhật\n特定技能実習生（とくていぎのうじっしゅうせい）: Thực tập sinh kỹ năng đặc định",
       "tip": "💡 Mẹo nhớ: Biểu đồ theo 年代別（nhóm tuổi）với số liệu lớn nhất ở độ tuổi làm việc (25-54) → đây là 労働力人口（lực lượng lao động）. Thấy biểu đồ phân tích THEO TUỔI → chọn 労働力人口.",
-      "img": "assets/tokutei/IMG_3386.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3386.jpeg"
     },
     {
       "id": 119,
@@ -2050,7 +2050,7 @@ window.TOKUTEI_SETS["t5"] = {
       "vi": "Trong lực lượng dân số lao động Nhật Bản năm 2022 phân theo độ tuổi, độ tuổi nào có số lượng đông nhất?",
       "explain": "Dựa vào biểu đồ, nhóm tuổi 45～54歳(さい) có thanh ngang dài nhất với con số 1671 (vạn người), đây là nhóm chiếm tỷ trọng lớn nhất trong lực lượng lao động.\n\nTừ vựng:\n年代（ねんだい）別（べつ）: Theo từng nhóm tuổi\n労働力（ろうどうりょく）人口（じんこう）: Dân số trong độ tuổi lao động\n最（もっと）も: Nhất / Nhiều nhất\n多（おお）い: Nhiều\n歳（さい）: Tuổi\n65歳以上（いじょう）: Từ 65 tuổi trở lên\n15～24歳: 15 đến 24 tuổi\n45～54歳: 45 đến 54 tuổi\n35～44歳: 35 đến 44 tuổi",
       "tip": "💡 Mẹo nhớ: Nhìn biểu đồ tìm thanh DÀI NHẤT → 45～54歳 có số 1671 vạn người là lớn nhất. Đây là nhóm lao động chủ lực của Nhật Bản năm 2022.",
-      "img": "assets/tokutei/IMG_3386.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3386.jpeg"
     },
     {
       "id": 146,
@@ -2170,7 +2170,7 @@ window.TOKUTEI_SETS["t6"] = {
       "vi": "Người đọc bản vẽ này là 施主（せしゅ）– chủ công trình.",
       "explain": "施主（せしゅ）là người sở hữu hoặc đặt hàng công trình xây dựng. Họ xem bản vẽ để xác nhận nội dung thiết kế trước khi thi công, trong khi 施工管理者 hay 技能者 là người thực hiện hoặc giám sát thi công.\n\nTừ vựng:\n施主（せしゅ）: Chủ công trình / Người đặt hàng xây dựng\n施工（せこう）管理者（かんりしゃ）: Người quản lý thi công\n現場（げんば）: Công trường / Hiện trường\n技能者（ぎのうしゃ）: Người có kỹ năng / Thợ lành nghề\n発注者（はっちゅうしゃ）: Người đặt hàng / Chủ đầu tư",
       "tip": "💡 Mẹo nhớ: 施主（せしゅ）= chủ nhà / người ĐẶT HÀNG xây dựng → xem bản vẽ để DUYỆT thiết kế. 技能者（thợ）= xem bản vẽ thi công (施工図), không phải bản vẽ dành cho chủ nhà.",
-      "img": "assets/tokutei/118.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/118.jpeg"
     },
     {
       "id": 154,
@@ -3018,7 +3018,7 @@ window.TOKUTEI_SETS["t7"] = {
       "vi": "Biểu đồ này thể hiện kết quả khảo sát theo từng nhóm tuổi về dân số lao động (労働力人口).",
       "explain": "Đáp án đúng: 労働力（ろうどうりょく）人口（じんこう）— Dựa vào biểu đồ, số lượng tập trung ở nhóm tuổi 25–54, đây là biểu đồ về lực lượng lao động theo độ tuổi.\n\nTừ vựng:\n年代別（ねんだいべつ）: Theo từng nhóm tuổi\n調査（ちょうさ）結果（けっか）: Kết quả khảo sát\nグラフ: Biểu đồ\n労働力（ろうどうりょく）人口（じんこう）: Dân số trong độ tuổi lao động\n災害（さいがい）や事故（じこ）で死亡（しぼう）: Tử vong do tai nạn\n在日外国人（ざいにちがいこくじん）: Người nước ngoài sống tại Nhật\n特定技能実習生（とくていぎのうじっしゅうせい）: Thực tập sinh kỹ năng đặc định",
       "tip": "💡 Mẹo nhớ: Biểu đồ theo 年代別（nhóm tuổi）với số liệu lớn nhất ở nhóm 25-54 → đây là 労働力人口（lực lượng lao động）.",
-      "img": "assets/tokutei/IMG_3386.jpeg"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/IMG_3386.jpeg"
     },
     {
       "id": "7-34",

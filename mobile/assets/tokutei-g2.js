@@ -71,7 +71,7 @@ window.TOKUTEI_SETS["g2_1"] = {
       "vi": "Trong ảnh, phần màu xanh là gì?",
       "explain": "Phần màu xanh trong ảnh là ランナー — thanh ray thép nằm ngang được gắn ở phía sàn và trần của hệ khung vách ngăn. Các thanh đứng スタッド được cắm vào rãnh của runner này để đứng thẳng và cố định vị trí. 野縁受け và 野縁 là các thanh thuộc hệ khung trần, còn クリップ là phụ kiện kẹp nối — không phải thanh ray ở vị trí trong ảnh.\n\nTừ vựng:\nランナー: Thanh ray ngang\n野縁（のぶち）: Thanh đỡ trần\n野縁受け（のぶちうけ）: Thanh đỡ phụ của trần\nクリップ: Kẹp nối, phụ kiện kẹp\n部材（ぶざい）: Cấu kiện, vật liệu",
       "tip": "💡 Nhớ: Runner = chạy dọc sàn/trần → giữ Stud thẳng đứng.",
-      "img": "assets/tokutei/2849.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/2849.png"
     },
     {
       "q": "問6　コンクリートの表面(ひょうめん)から鉄筋(てっきん)までの距離(きょり)は何(なん)というか。【153】",
@@ -202,7 +202,7 @@ window.TOKUTEI_SETS["g2_1"] = {
       "vi": "Đây là loại vật liệu nào trong công trình xây dựng?",
       "explain": "Cấu kiện trong ảnh là フォームタイ (thanh giằng cốp pha). Nó được lắp xuyên qua hai tấm cốp pha đối diện và siết chặt, giữ cho khoảng cách giữa hai mặt cốp pha không bị phình ra khi đổ bê tông. Pコン là nón nhựa gắn ở đầu thanh セパレーター, 丸セパレーター là thanh phân cách tròn — đều là các phụ kiện khác trong hệ cốp pha.\n\nTừ vựng:\n部材（ぶざい）: Cấu kiện\nフォームタイ: Thanh giằng cốp pha (form tie)\n単管パイプ（たんかんパイプ）: Ống thép đơn\nセパレーター: Thanh phân cách (separator)\n型枠（かたわく）: Cốp pha, ván khuôn",
       "tip": "💡 Nhớ: フォーム＝Cốp pha, タイ＝Buộc → Thanh buộc cốp pha = フォームタイ.",
-      "img": "assets/tokutei/2021.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/2021.png"
     },
     {
       "q": "問16.梁底(はりそこ)型枠(かたわく)の単管(たんかん)パイプを受(うけ)て、パイプサポートを立(た)てる際(さい)に使用(しよう)する木材(もくざい)は何(なん)というか【112】",
@@ -242,7 +242,7 @@ window.TOKUTEI_SETS["g2_1"] = {
       "vi": "Khi lắp đặt ván khuôn, dụng cụ nào dưới đây được sử dụng?",
       "explain": "Dụng cụ trong ảnh là 手のこ (cưa tay). Khi lắp đặt cốp pha, thợ dùng cưa tay để cắt gỗ, ván ép theo đúng kích thước, đặc biệt ở các vị trí hẹp hoặc cần cắt tỉ mỉ. スパナ là cờ lê dùng để vặn bu lông, シノ là thanh nạy nhỏ thường dùng khi tháo cốp pha — không phải dụng cụ cắt trong ảnh.\n\nTừ vựng:\n型枠（かたわく）: Cốp pha\n設置（せっち）: Lắp đặt\n道具（どうぐ）: Dụng cụ\n手のこ: Cưa tay\nスパナ: Cờ lê\nシノ: Thanh nạy, đòn bẩy nhỏ",
       "tip": "💡 Nhớ: 手＝tay → 手のこ＝cưa tay → dùng khi lắp ván khuôn.",
-      "img": "assets/tokutei/4729.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/4729.png"
     },
     {
       "q": "問19　布（ぬの）や紙（かみ）などの柔( や わ )らかいものに穴 (あな) をあける道具 (どうぐ) は何 (な に) か。【124】",
@@ -307,7 +307,7 @@ window.TOKUTEI_SETS["g2_1"] = {
       "vi": "Dụng cụ nào dùng để xử lý mối nối của sàn nhựa vinyl?",
       "explain": "Dụng cụ đúng là 溶接機 (máy hàn nhiệt dùng cho sàn vinyl). Khi thi công sàn nhựa dạng tấm hoặc cuộn, các mối nối được xử lý bằng máy hàn nhiệt: khí nóng làm chảy dây hàn vinyl chuyên dụng, lấp kín khe nối giúp sàn liền mạch, chống thấm và chống bong mép. カッター chỉ dùng để cắt tấm, コンパス là dụng cụ vẽ vòng tròn — không xử lý được mối nối.\n\nTừ vựng:\nつなぎ目（つなぎめ）: Mối nối\n処理（しょり）: Xử lý\n工具（こうぐ）: Dụng cụ\n溶接機（ようせつき）: Máy hàn (nhiệt)\n床シート（ゆかシート）: Tấm trải sàn\nカッター: Dao cắt",
       "tip": "💡 Nhớ: 溶接（ようせつ） = hàn, 機 き = máy → 溶接機 = máy hàn nhiệt cho sàn nhựa.",
-      "img": "assets/tokutei/75317.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/75317.png"
     },
     {
       "q": "問24.首(くび)の部分(ぶぶん)が枝(えだ)と平(ひら)たい面(めん)の根元(ねもと)についてる。細(こま)かい部分(ぶぶん)の作業(さぎょう)に適(てき)しています。そのこては、何(なん)か。【117】",
@@ -432,7 +432,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Giàn giáo trong bức ảnh này là loại nào?",
       "explain": "Đó là **くさび緊結式(きんけつしき)足場(あしば) (Giàn giáo kiểu nêm)**. Đặc điểm nhận dạng là các cột chống có các túi để đóng nêm vào, và thanh giằng được kết nối bằng cách đóng nêm (くさび) chặt vào cột. Loại này rất phổ biến trong các công trình sửa chữa nhà ở hoặc tòa nhà thấp tầng.",
       "tip": "💡 Nhớ: Nhìn thấy các chốt nêm đóng vào cột hoặc sàn lưới kim loại đặc trưng như hình → **くさび緊結式(きんけつしき)**.",
-      "img": "assets/tokutei/0611.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0611.png"
     },
     {
       "q": "問33. これは何(なん)と言(い)うか。【110】",
@@ -446,7 +446,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Đây được gọi là gì?",
       "explain": "Đây là một đầu **バーナー (Burner)** chuyên dụng. Nó được thiết kế để tạo nhiều ngọn lửa cùng lúc, thường dùng để nung nóng ống thép hoặc các vật liệu kim loại có hình dạng cong một cách đồng đều.",
       "tip": "💡 Nhớ: Dụng cụ tạo ra lửa/nhiệt để nung nóng → **バーナー (Burner)**.",
-      "img": "assets/tokutei/1753.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/1753.png"
     },
     {
       "q": "問34.ヘルメットと顔(かお)全体(ぜんたい)を確保(かくほ)するシールドが一体(いったい)になっているヘルメットは何(なに)と言(い)うか。【110】",
@@ -486,7 +486,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Tên của dụng cụ trong hình là gì?",
       "explain": "Đây là **げんのう（玄能）**, loại búa cán gỗ đầu thép nhỏ, được dùng để đóng đinh, chỉnh khớp, hoặc công việc lắp ván khuôn trong xây dựng.",
       "tip": "💡 Nhớ: Khi thấy búa nhỏ, đầu thép hai mặt, cán gỗ → đó là 玄能（げんのう）.",
-      "img": "assets/tokutei/36.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/36.png"
     },
     {
       "q": "問37　このドーナツの部品（ぶひん）は何（なに）に使（つか）うか。【107} ",
@@ -500,7 +500,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Bộ phận hình tròn (**ドーナツ**) này dùng để làm gì?",
       "explain": "Bộ phận **Donut (ドーナツ)** này là một loại **Spacer (Chặn kê)**, được sử dụng để giữ khoảng cách giữa **cốt thép (鉄筋)** và **ván khuôn (型枠)**, nhằm mục đích **確保（かくほ）する (Đảm bảo)** **かぶり厚（あつ）さ (Chiều dày lớp bê tông bảo vệ)** cho các cấu kiện thẳng đứng hoặc mặt bên, như **柱（はしら）(Cột), 梁（はり）(Dầm), và 壁筋（かべすじ）(Thép tường)**.",
       "tip": "💡 Mẹo nhớ: **ドーナツ** (Dạng hình tròn) dùng để bảo vệ lớp bê tông cho cấu kiện **thẳng đứng/mặt đứng** (Cột, Dầm, Tường).",
-      "img": "assets/tokutei/0000.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0000.png"
     },
     {
       "q": "問38　どんな工事（こうじ）か。【175】",
@@ -514,7 +514,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Đây là loại công trình gì?",
       "explain": "Công nhân đang thi công **アスファルトシート防水工法（ぼうすいこうほう）**, tức là chống thấm bằng màng nhựa đường dán nóng. Phương pháp này được dùng để chống thấm mái và sàn bê tông.",
       "tip": "💡 Nhớ: Thấy cuộn màng đen trải trên mái → đó là chống thấm bằng màng nhựa đường (アスファルトシート防水)（ぼうすい）.",
-      "img": "assets/tokutei/1111.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/1111.png"
     },
     {
       "q": "問39　建設業(けんせつぎょう)における「三大(さんだい)災害(さいがい)」は何(なん)か。【179】",
@@ -554,7 +554,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Bộ phận trong hình là gì?",
       "explain": "Đây là **外観（がいかん）測定用（そくていよう）器具（きぐ） (Gaikan Sokuteiyō Kigu - Dụng cụ đo kiểm tra ngoại quan)**. Dụng cụ này dùng để đo đạc và kiểm tra kích thước, khoảng cách và sự chính xác của việc lắp đặt cốt thép.",
       "tip": "💡 Mẹo nhớ: Hình dạng giống thước đo dùng để kiểm tra chi tiết cốt thép → **外観測定用器具**.",
-      "img": "assets/tokutei/0001.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0001.png"
     },
     {
       "q": "問42　これはどんな金具（かなぐ）か。【142} ",
@@ -568,7 +568,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Đây là loại **phụ kiện kim loại (金具)** nào?",
       "explain": "Đây là **シャックル（Shakkuru - Shackle)**. Đây là một loại phụ kiện kim loại hình chữ U có chốt vặn ngang, chuyên dùng để nối dây cáp, xích hoặc các vật nặng khác nhau trong công tác cẩu và nâng hạ.",
       "tip": "💡 Mẹo nhớ: Hình chữ U + chốt vặn → **シャックル** (Shackle).",
-      "img": "assets/tokutei/0002.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0002.png"
     },
     {
       "q": "問43　この道具（どうぐ）は何（なに）というか。【135】",
@@ -582,7 +582,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Dụng cụ trong hình gọi là gì?",
       "explain": "Đây là **くい切り（くいきり）**, một loại kìm chuyên dùng để **cắt đầu đinh hoặc dây kim loại nhỏ**, thường được sử dụng trong thi công lắp đặt thép, ván khuôn, hoặc làm sạch đầu thép sau khi buộc.",
       "tip": "💡 Mẹo nhớ: くい切り = 'cắt đầu đinh' → phần miệng phẳng, cắt sát bề mặt.",
-      "img": "assets/tokutei/0004.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0004.png"
     },
     {
       "q": "問44　酸素（さんそ）とアセチレンガスを同時（どうじ）に 開閉（かいへい）できるようにした器具（きぐ）は何（なに）か。",
@@ -609,7 +609,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Đây là thiết bị sử dụng **kính viễn vọng nhỏ (小型の望遠鏡)** làm điểm nhìn tham chiếu để **đo (測定)** **góc (角度)** theo hướng **ngang (水平方向)** và hướng **thẳng đứng (上下方向)**. Chọn thiết bị đúng.",
       "explain": "Thiết bị dùng để **đo góc ngang và góc đứng** bằng kính viễn vọng (không đo khoảng cách bằng laser) chính là **トランシット (Toranshitto - Máy kinh vĩ/Theodolite)**. Trong xây dựng, máy này được dùng để định vị các điểm và xác định phương hướng. **トータルステーション (Total Station)** là phiên bản hiện đại hơn, có thể đo cả khoảng cách.",
       "tip": "💡 Nhớ: Đo **角度** (Góc) **上(じょう)下(げ)** (Đứng) và **水平(すいへい)** (Ngang) → **トランシット** .",
-      "img": "assets/tokutei/45.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/45.png"
     },
     {
       "q": "問47　二本（にほん）の金属棒（きんぞくぼう）を蝶番（ちょうつがい）でつないだ形（かたち）をして、熱（ねっ）した鉄（てつ）などをつかむための鉄製（てっせい）の工具（こうぐ）は何（なに）か。",
@@ -688,7 +688,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Tên của **biểu tượng (マーク)** này là gì?",
       "explain": "Đây là **緑(みどり)十字(じゅうじ) (Midori Jūji - Thập tự xanh)**. Đây là biểu tượng phổ biến nhất tại Nhật Bản để biểu thị **an toàn (安全)** và **vệ sinh (衛生)**. Nó thường được sử dụng trên cờ, mũ bảo hộ, và các biển báo an toàn.",
       "tip": "💡 Nhớ: Hình dấu thập màu **xanh lá (緑)** → **緑(みどり)十字(じゅうじ)**.",
-      "img": "assets/tokutei/0031.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0031.png"
     },
     {
       "q": "問53　土間配筋（どまはいきん）の順（じゅん）を正（ただ）しいものを選（えら）べ。【155} ",
@@ -741,7 +741,7 @@ window.TOKUTEI_SETS["g2_2"] = {
       "vi": "Xẻng nào có thể dùng để **chọc (つく)** xuống mặt đất và **đào (ほる)** một cái hố **sâu (ふかい)**?",
       "explain": "Dụng cụ chuyên dụng để đào các hố **sâu (深(ふか)い)** và **hẹp (細(ほそ)い)**, thường dùng để chôn cọc hoặc lắp đặt đường ống, là **ダブルスコップ (Daburu Sukoppu - Xẻng đôi hay còn gọi là Xẻng đào hố)** . Nó hoạt động bằng cách chọc xuống đất và sau đó kẹp đất lại để đưa lên.",
       "tip": "💡 Nhớ: **深(ふか)い穴(あな)を掘(ほ)る** (Đào hố sâu) → **ダブルスコップ** (Xẻng đôi).",
-      "img": "assets/tokutei/056.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/056.png"
     },
     {
       "q": "問57　急（きゅう）に驚（おどろ）いたり慌（あわ）てることで、とっさに不安全（ふあんぜん）行動（こうどう）や不適切（ふてきせつ）な指示（しじ）行動（こうどう）をとることが起（お）こりやすくなるヒューマンエラーは何（なに）か。【74】",
@@ -801,7 +801,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Đây là loại công trình nào?",
       "explain": "Bức ảnh chụp máy bơm bê tông đang đổ bê tông vào khuôn. Công việc đổ bê tông tươi vào khuôn (formwork) được gọi là **打設(だせつ)工事(こうじ) (Công việc đổ/đặt bê tông)**.",
       "tip": "💡 Nhớ: Nhìn thấy ống bơm bê tông → **打設(だせつ)工事(こうじ)**.",
-      "img": "assets/tokutei/61.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/61.png"
     },
     {
       "q": "問62. 柱(はしら)が垂直(すいちょく)を保(たも)ち、軸組(じくぐ)みの変形(へんけい)を防(ふせ)ぐために、斜(なな)めに材料(ざいりょう)を取(と)り付(つ)けるのは何(なん)というか。【163】",
@@ -828,7 +828,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Đây là loại công trình nào?",
       "explain": "Bức ảnh mô tả công nhân đang cố định một góc tường bằng băng keo góc (corner tape). Công việc này được gọi là **コーナーテープによる出隅(でずみ)の処理(しょり) (Xử lý góc ngoài bằng băng keo góc)**, nhằm gia cố góc trước khi trát vữa **パテ (putty)**.",
       "tip": "💡 Nhớ: Dán băng keo vào góc lồi (**出隅(でずみ)**) → **コーナーテープ (Corner Tape)**.",
-      "img": "assets/tokutei/63.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/63.png"
     },
     {
       "q": "問65. 三大(さんだい)災害(さいがい)の中(なか)でも特(とく)に多(おお)いのは高所(こうしょ)での作業(さぎょう)中(ちゅう)に起(お)こる労働(ろうどう)災害(さいがい)は何(なに)というか【179】",
@@ -868,7 +868,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Bộ phận màu xanh (**青(あお)い部分(ぶぶん)**) này được gọi là gì?",
       "explain": "Bộ phận màu xanh là van điều khiển luồng khí **Oxy** trên mỏ hàn/cắt. Trong các bài kiểm tra an toàn, loại van tiết kiệm và điều chỉnh khí này thường được gọi là **エコバルブ (Eco Valve)**.",
       "tip": "💡 Nhớ: Trên mỏ hàn, van điều khiển khí thường là **バルブ (Valve)**. **青(あお)い(aoi)** (Màu xanh) thường chỉ khí **Oxy**.",
-      "img": "assets/tokutei/67.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/67.png"
     },
     {
       "q": "問68.高層(こうそう)ビルなどの建築(けんちく)で使(つか)われるクレーンは以下(レか)の種類(しゅるい)から選(えら)べ。【100】",
@@ -908,7 +908,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Đây là cái gì?",
       "explain": "Đây là **金(かな)のこ (Cưa kim loại/Hacksaw)**. Đây là loại cưa cầm tay được thiết kế để cắt các vật liệu cứng như kim loại (**金(かな)**) hoặc nhựa cứng.",
       "tip": "💡 Nhớ: Cưa có khung chữ C lớn và lưỡi mỏng dùng để cắt kim loại → **金(かな)のこ**.",
-      "img": "assets/tokutei/70.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/70.png"
     },
     {
       "q": "問71. 内蔵(ないぞう)されているハンマーで、打撃力(だげきりょく)を加(くわ)えながらネジを締(し)めることができる電動(でんどう)ドライバーは何(なに)と言(い)うか。【128】",
@@ -1000,7 +1000,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Tên của dụng cụ trong ảnh là gì?",
       "explain": "Dụng cụ trong ảnh là loại cờ lê có đầu mở (**オープンエンド**), được gọi là **スパナ (Spanner/Cờ lê)**. Cờ lê có đầu kín (khóa vòng) được gọi là **めがねレンチ (Megane renchi)**.",
       "tip": "💡 Nhớ: Cờ lê đầu mở → **スパナ**.",
-      "img": "assets/tokutei/77.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/77.png"
     },
     {
       "q": "問78. はしごについて、適切(てきせつ)なものを選(えら)べ。",
@@ -1053,7 +1053,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Bộ phận màu xanh (**青(あお)い部分(ぶぶん)**) là gì?",
       "explain": "Bộ phận màu xanh được khoanh tròn là **フォームタイ (Form Tie)** . Nó là bộ phận dùng để siết chặt ván khuôn (**型枠(かたわく)**) với thanh **セパレーター** bên trong để chống lại áp lực bê tông (**側圧(そくあつ)**).",
       "tip": "💡 Nhớ: Bộ phận kẹp bên ngoài ván khuôn, dùng để siết → **フォームタイ**.",
-      "img": "assets/tokutei/81.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/81.png"
     },
     {
       "q": "問82. とび工事(こうじ)における不適切(ふてきせつ)なものを選(えら)べ。",
@@ -1093,7 +1093,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Dụng cụ này được gọi là gì?",
       "explain": "Dụng cụ trong ảnh là **きり (Mũi dùi/Awl)** . Nó được sử dụng để tạo lỗ nhỏ hoặc đánh dấu vị trí trước khi đóng đinh hoặc vặn vít.",
       "tip": "💡 Nhớ: Dụng cụ có đầu kim nhọn, dùng để dùi lỗ → **きり**.",
-      "img": "assets/tokutei/84.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/84.png"
     },
     {
       "q": "問85. 以下(いか)の写真(しゃしん)のこては首(くび)の部分(ぶぶん)が枝(えだ)と平(ひら)たい面(めん)の根元(ねもと)について、細(こま)かい部分(ぶぶん)の作業(さぎょう)に適(てき)しています。何(なん)というこてか。【117】",
@@ -1107,7 +1107,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Cái bay (**こて**) trong ảnh có phần cổ (**首(くび)**) phẳng so với gốc tay cầm (**根元(ねもと)**), phù hợp cho các công việc **chi tiết (**細(こま)かい部分(ぶぶん)の作業(さぎょう)**). Đó là loại bay gì?",
       "explain": "Đó là **柳刃(やなぎば)ごて (Bay lưỡi liễu)**. Bay này có lưỡi dài và hẹp, giống như lưỡi dao liễu, thường được sử dụng cho các công việc trát vữa thạch cao hoặc sơn trát ở các khu vực hẹp hoặc cần sự tinh tế, rất thích hợp cho công việc **chi tiết (**細(こま)かい部分(ぶぶん)の作業(さぎょう)**).",
       "tip": "💡 Nhớ: Bay có lưỡi hẹp, dùng cho **細(こま)かい部分(ぶぶん) (Phần chi tiết)** → **柳刃(やなぎば)ごて**.",
-      "img": "assets/tokutei/85.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/85.png"
     },
     {
       "q": "問86. コンクリートは、圧縮(あっしゅく)する力(ちから)には強(つよ)いですが、(......) 力には弱(よわ)いという性質(せいしつ)があります【153】",
@@ -1134,7 +1134,7 @@ window.TOKUTEI_SETS["g2_3"] = {
       "vi": "Chọn câu **không thích hợp (**不適切(ふてきせつ)**) về dụng cụ sau [Cưa đĩa/Cưa tròn].",
       "explain": "Phát biểu **không thích hợp** là Lựa chọn 2. **Tuyệt đối không được tháo rời nắp an toàn (**安全(あんぜん)カバーを外(はず)す**) trước khi sử dụng**. Nắp an toàn là bộ phận bắt buộc để bảo vệ người dùng khỏi lưỡi cưa đang quay.",
       "tip": "💡 Nhớ: **安全(あんぜん)カバー (Nắp an toàn)** → **Không bao giờ được tháo ra**.",
-      "img": "assets/tokutei/87.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/87.png"
     },
     {
       "q": "問88. 解体(かいたい)工事(こうじ)を行(おこな)う前(まえ)に何(なに)をしなければならないか。【177】",
@@ -1194,7 +1194,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Dụng cụ 工具(こうぐ) trong ảnh này là gì?",
       "explain": "Dụng cụ trong ảnh là **スランプ試験(しけん)工具(こうぐ) (Dụng cụ thí nghiệm độ sụt bê tông/Slump test tool)** . Thí nghiệm này dùng để đo độ sụt của bê tông tươi (**生(なま)コンクリート**) nhằm kiểm tra tính công tác (độ dẻo/lưu động) của nó.",
       "tip": "💡 Nhớ: Dụng cụ đo độ sụt của bê tông tươi → **スランプ試験(しけん)工具(こうぐ)**.",
-      "img": "assets/tokutei/91.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/91.png"
     },
     {
       "q": "問92. 高所(こうしょ)からの人体(じんたい)や資材(しざい)の落下(らっか)を回避(かいひ)するためのネットは何か。【140} ",
@@ -1247,7 +1247,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Bộ phận **màu đỏ (**赤(あか)い部分(ぶぶん)**) được gọi là gì?",
       "explain": "Bộ phận màu đỏ là **トンボ端太(ばた) (Mảnh gỗ/Thanh chặn tạm thời)** . Trong ngữ cảnh này, đây là mảnh gỗ được sử dụng để cố định các cạnh hoặc đầu của ván khuôn (**型枠**) để đảm bảo sự ổn định và hình dạng.",
       "tip": "💡 Nhớ: Khối gỗ ở góc để cố định **型枠** → **トンボ端太(ばた)**.",
-      "img": "assets/tokutei/97.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/97.png"
     },
     {
       "q": "問98. 圧接(あっせつ)部(ぶ)に超音波(ちょうおんぱ)をあてて、内部(ないぶ)の欠陥(けっかん)を検出(けんしゅつ)する検査(けんさ)装置(そうち)は何(なに)か。",
@@ -1300,7 +1300,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Dụng cụ trong ảnh dùng để vặn/tháo **chốt ván khuôn** (**フォームタイ回し**). Dụng cụ này **không phải** là 'ván khuôn có thể dễ dàng điều chỉnh độ cao', mà là dụng cụ để làm việc với ván khuôn (**型枠**).",
       "explain": "Mặc dù câu hỏi miêu tả về ván khuôn có thể điều chỉnh độ cao, nhưng hình ảnh hiển thị một chiếc **cờ lê chuyên dụng**. Tên đúng của dụng cụ này trong xây dựng là **フォームタイ回(まわ)し (Cờ lê vặn chốt ván khuôn/Form Tie Wrench)** . Dụng cụ này dùng để siết chặt hoặc nới lỏng **Form Tie** (dây/thanh căng ngang) giữ cố định hai mặt ván khuôn.",
       "tip": "💡 Nhớ: Dụng cụ giống cờ lê/mỏ lết trong lắp đặt ván khuôn → **フォームタイ回(まわ)し**.",
-      "img": "assets/tokutei/0021.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0021.png"
     },
     {
       "q": "問102. 写真(しゃしん)の道具(どうぐ)の名前(なまえ)はどれか。",
@@ -1314,7 +1314,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Tên của dụng cụ (**道具**) trong ảnh là gì?",
       "explain": "Dụng cụ này là **中塗(なかぬ)りごて (Bay/Bàn xoa trát lớp giữa/Intermediate Coat Trowel)** . Mặc dù bay trát lớp giữa thường có hình chữ nhật rộng, bay này là một dạng **bay lá liễu (柳刃ごて)**, nhưng trong một số bài thi, nó được xếp vào loại **bay trát lớp giữa** để phân biệt với các loại bay chuyên dụng khác. Bay này dùng để trát vữa trong các khu vực hẹp hoặc để tạo hình chi tiết tinh xảo.",
       "tip": "💡 Nhớ: Bay có lưỡi **dài, nhọn** (thường là lá liễu) → Đáp án của bài thi này là **中塗(なかぬ)りごて**.",
-      "img": "assets/tokutei/102.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/102.png"
     },
     {
       "q": "問103. 床筋(ゆかきん)のかぶり厚(あつ)さを確保(かくほ)するために、床筋(ゆかきん)の下(した)に置(お)くサイコロ状(じょう)のモルタルブロックは何(なに)というか",
@@ -1354,7 +1354,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Trong hệ thống khung thép (**鋼製下地**), **thanh cột (**柱**) được lắp đặt thẳng đứng (**垂直**) cho tường ngăn (**間仕切り壁**) và được lồng vào các thanh dẫn hướng trên và dưới (**上下のランナー**) được gọi là gì?",
       "explain": "Đó là **スタッド (Stud)** , tức là thanh đứng hay thanh cột trong hệ thống khung thép nhẹ (LGS) cho tường ngăn. Thanh đứng này được lắp cố định vào thanh dẫn hướng nằm ngang (**ランナー**).",
       "tip": "💡 Nhớ: Thanh **垂直** (thẳng đứng) của **間仕切り壁** (tường ngăn) được lồng vào **ランナー** (thanh ngang) → **スタッド**.",
-      "img": "assets/tokutei/105.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/105.png"
     },
     {
       "q": "問106. 1つの作業(さぎょう)に集中(しゅう-ちゅう)すると、周(まわ)りに対(たい)する注意力(ちゅう-い-りょく)が低下(てい-か)して、事故(じ-こ)につながるヒューマンエラーは、何(なに)か。",
@@ -1381,7 +1381,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Phụ kiện kim loại (**金具**) nào được gắn vào **thanh treo (**吊(つ)りボルト**) và dùng để **treo/giữ thanh chính (**野縁受(のぶちうけ) - runner) của trần nhà?",
       "explain": "Phụ kiện đó là **ハンガー (Hanger)** . Đây là bộ phận kết nối chính, chịu lực, dùng để nối thanh treo (**吊りボルト**) với thanh chính của khung trần (**野縁受け**).",
       "tip": "💡 Nhớ: Bộ phận **金具** (kim loại) dùng để **treo/giữ** thanh trần → **ハンガー**.",
-      "img": "assets/tokutei/107.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/107.png"
     },
     {
       "q": "問108. この写真(しゃしん)は何(なん)の工具(こうぐ)か。【124】",
@@ -1395,7 +1395,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Dụng cụ trong ảnh này là gì?",
       "explain": "Đây là **千枚(せんまい)通(どお)し (Senmaidooshi)**, một loại dùi nhọn thường dùng để dùi lỗ trên giấy, vải hoặc đánh dấu trên gỗ/kim loại mỏng.",
       "tip": "💡 Nhớ: Cây kim nhọn có cán gỗ đơn giản dùng để đâm xuyên qua nhiều tờ giấy → **千枚(せんまい)通(どお)し**.",
-      "img": "assets/tokutei/108.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/108.png"
     },
     {
       "q": "問109. ワイヤロープやチェーンとつり荷(に)をつなぐための玉掛(たまかけ)用(よう)金具(かなぐ)はなんというか。【142} ",
@@ -1513,7 +1513,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Đây là loại **công việc (さぎょう)** gì?",
       "explain": "Đây là **ケガキ作業(さぎょう) (Kegaki Sagyou - Công việc vạch dấu/Đánh dấu)** . Đây là công đoạn sử dụng dụng cụ sắc nhọn để vẽ các đường cắt, đường gấp hoặc các điểm tham chiếu lên bề mặt vật liệu (thường là kim loại) trước khi tiến hành gia công.",
       "tip": "💡 Nhớ: Dùng dụng cụ sắc nhọn **vạch (かく)** đường lên kim loại → **ケガキ作業(さぎょう)**.",
-      "img": "assets/tokutei/117.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/117.png"
     },
     {
       "q": "問119. これは何(なに)か。【177} ",
@@ -1527,7 +1527,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Đây là gì?",
       "explain": "Đây là **防音(ぼうおん) シート (Bōon Shīto - Tấm chắn/Cách âm)** . Đây là loại bạt dày, nặng, được sử dụng để bao phủ giàn giáo và công trường xây dựng nhằm **ngăn chặn (ぼうし)** và giảm thiểu tối đa **tiếng ồn (おん)** phát ra từ công trường, đặc biệt quan trọng ở khu vực đô thị.",
       "tip": "💡 Nhớ: Tấm bạt dày, **bao phủ (おお) toàn bộ** giàn giáo → **防音(ぼうおん) シート** (Tấm cách âm).",
-      "img": "assets/tokutei/119.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/119.png"
     },
     {
       "q": "問120. 解体(かいたい)工事(こうじ)にない作業(さぎょう)はどれか。【177】",
@@ -1618,7 +1618,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "Tên của **dụng cụ (どうぐ)** này là gì?",
       "explain": "Dụng cụ trong hình là một thiết bị đo lường nhiệt độ, độ ẩm và bức xạ nhiệt môi trường, được gọi là **WBGT計測(けいそく)器(き) (WBGT Keisokuki - Thiết bị đo WBGT)** . WBGT (Wet-Bulb Globe Temperature) là chỉ số quan trọng dùng để đánh giá nguy cơ **say nắng (ねっちゅうしょう)** tại công trường.",
       "tip": "💡 Nhớ: Thiết bị đo lường nhiệt độ/nguy cơ say nắng (**ねっちゅうしょう**) → **WBGT計測(けいそく)器(き)**.",
-      "img": "assets/tokutei/126.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/126.png"
     },
     {
       "q": "問127. 熱中症(ねっちゅうしょう)対策(たいさく)として、適切(てきせつ)なものを一(ひと)つ選(えら)べ。【190】",
@@ -1645,7 +1645,7 @@ window.TOKUTEI_SETS["g2_4"] = {
       "vi": "**Biểu tượng (マーク)** này ám chỉ **ý nghĩa (いみ)** gì?",
       "explain": "Biểu tượng này (**安全(あんぜん) + 十(クロス) 衛生(えいせい)**) đại diện cho **安全(あんぜん)や衛生(えいせい)のシンボル (Anzen ya Eisei no Shinboru - Biểu tượng của An toàn và Vệ sinh)** . Dấu thập màu xanh lá cây thường biểu thị Y tế (**衛生(えいせい)**), kết hợp với chữ An toàn (**安全(あんぜん)**) tạo thành biểu tượng chung cho sức khỏe và an toàn lao động.",
       "tip": "💡 Nhớ: Dấu thập màu xanh lá cây + chữ **安全(あんぜん)** → **安全(あんぜん)や衛生(えいせい)のシンボル** (Biểu tượng An toàn/Vệ sinh).",
-      "img": "assets/tokutei/0031.png"
+      "img": "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/tokutei/0031.png"
     },
     {
       "q": "問129. 屋根(やね)工事(こうじ)について、適切(てきせつ)なものを一(ひと)つ選(えら)べ。",
