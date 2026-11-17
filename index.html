@@ -1408,7 +1408,7 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .sv-card-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
 .sv-card-dur{position:absolute; right:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:5px;}
 .sv-card-lv{position:absolute; left:5px; top:5px; background:var(--red); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
-.sv-card-lock{position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
+.sv-card-trial{position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
 .sv-card-title{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.7em; font-size:13.5px; font-weight:700; line-height:1.35; margin:8px 10px 2px;}
 .sv-card-chan{display:block; font-size:12px; color:var(--muted); margin:0 10px 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .sv-card-stats{display:block; font-size:12px; color:var(--muted); margin:0 10px;}
@@ -5677,6 +5677,9 @@ function svuBuildData(lesson){
       (noVi ? " · chưa có bản dịch tiếng Việt." : " · kèm dịch máy tiếng Việt.")
   };
 }
+/* Gioi han tao video (user quyet 17/11/2026): chua Premium chi co toi da 1 video
+   tu tao DANG CO — dem danh sach hien tai, xoa video cu thi tao lai duoc. */
+var SV_MINE_LIMIT_BODY = "Gói miễn phí tạo được 1 video shadowing từ link YouTube — bạn đã có video tự tạo rồi. Xóa video đã tạo rồi tạo video mới, hoặc nâng cấp Premium để tạo không giới hạn.";
 function svuCreate(){
   if(svuBusy) return;
   var input = svuInput || document.getElementById("svuInput");
@@ -5687,6 +5690,16 @@ function svuCreate(){
   if(parsed.error){ svuShowMsg(parsed.error, true); input.focus(); return; }
   /* Link trung bai da co san trong danh sach thi mo luon bai do */
   if(svuData()[parsed.id]){ svuShowMsg("", false); svuOpenVideo(parsed.id); return; }
+  /* Link trung video da tao (phien moi, bai chua nap vao SVU_DATA): mo luon
+     bai do thay vi chan. Sau do moi ap gioi han tao video (xem SV_MINE_LIMIT_BODY). */
+  var mineNow = (typeof svMineLoad === "function") ? svMineLoad() : [];
+  if(mineNow.filter(function(x){ return x.id === parsed.id; }).length){
+    svuShowMsg("", false); svuOpenVideo(parsed.id); return;
+  }
+  if(!skIsPremium() && mineNow.length >= 1){
+    if(typeof skLockedPrompt === "function") skLockedPrompt("Video tự tạo thứ 2", SV_MINE_LIMIT_BODY);
+    return;
+  }
   var fn = svuGetFn();
   if(!fn){ svuShowMsg(SVU_NOT_READY, true); return; }
   svuBusy = true;
@@ -5921,6 +5934,13 @@ function sv2Ruby(fj){
   return out;
 }
 var sv2Player = null, sv2Ready = false, sv2Timer = null, sv2LastT = 0;
+/* Xem thu 30s (user quyet 17/11/2026): bai co san khong thuoc 5 video mien
+   phi thi user chua Premium chi xem thu 30 giay dau — sv2Tick dung video +
+   hien bang Premium khi toi moc. sv2Preview dat o svuActivate, reset moi
+   lan mo bai (mo lai duoc 30s moi); sv2PreviewDone de bang chi hien 1 lan. */
+var SV_PREVIEW_SECS = 30;
+var sv2Preview = false, sv2PreviewDone = false;
+var SV_PREVIEW_BODY = "Bạn vừa xem thử 30 giây đầu của video này. Gói miễn phí mở 1 video Shadowing đầu tiên mỗi mục (5 video) xem full — nâng cấp để xem toàn bộ video trên cả web và app điện thoại.";
 var sv2SegStart = -1, sv2SegEnd = -1, sv2CurSub = -1, sv2Tab = "subs";
 var sv2Rates = [1, 0.75, 0.5], sv2RateIdx = 0, sv2Loop = false;
 function sv2PlayBtn(playing){
@@ -6013,6 +6033,17 @@ function sv2Tick(){
     }
   }
   document.getElementById("sv2TimeCur").textContent = svFmt(t);
+  /* Xem thu 30s: toi moc thi dung video; lan dau hien bang Premium, cac lan
+     sau (bam phat lai) chi dung, khong hien bang nua. Kiem tra Premium truc
+     tiep moi tick de len Premium giua bai thi mo khoa ngay. */
+  if(sv2Preview && !skIsPremium() && t >= SV_PREVIEW_SECS){
+    if(sv2Player.pauseVideo) sv2Player.pauseVideo();
+    if(!sv2PreviewDone){
+      sv2PreviewDone = true;
+      if(typeof skLockedPrompt === "function") skLockedPrompt("Video này", SV_PREVIEW_BODY);
+    }
+    return;
+  }
   /* Đang phát theo đoạn câu: tới cuối đoạn thì dừng (hoặc lặp lại nếu tab
      Shadowing đang bật lặp) */
   if(sv2SegEnd > 0 && t >= sv2SegEnd - 0.03){
@@ -6983,8 +7014,8 @@ function sv2SpeakJP(word){
   }catch(_){}
 }
 
-/* ----- Khoa video khi W1 chua ap (du phong) -----
-   Thu tu uu tien: svCardLocked()/svFreeIds() cua W1 neu co; neu chua co thi
+/* ----- Xem thu video khi W1 chua ap (du phong) -----
+   Thu tu uu tien: svCardTrial()/svFreeIds() cua W1 neu co; neu chua co thi
    tinh lai theo dung luat mobile (1 video dau tien cua MOI the loai:
    the loai theo SV_CATS, moi the loai lay video dau tien cua chuoi xuat
    hien dau tien theo thu tu mang SV_VIDEOS). Neu W1 da ap 1 phan
@@ -7022,7 +7053,7 @@ function sv2FreeIdsFallback(){
   sv2FreeIdsCache = ids;
   return sv2FreeIdsCache;
 }
-function sv2IsLockedFallback(id){
+function sv2IsTrialFallback(id){
   if(typeof skIsPremium === "function" && skIsPremium()) return false;
   var curated = false, videos = window.SV_VIDEOS || [];
   for(var i = 0; i < videos.length; i++){ if(videos[i].id === id){ curated = true; break; } }
@@ -7273,6 +7304,7 @@ function sv2Teardown(){
   }
   sv2KaraRaf = 0;
   sv2SegEnd = -1; sv2ExpIdx = -1;
+  sv2Preview = false; sv2PreviewDone = false;
 }
 /* Roi trang bai hoc bang doi hash -> don ngay. Khong sua route() (rang buoc
    slice): listener hashchange rieng nay la cach it xam lan nhat. Dieu kien
@@ -7323,6 +7355,10 @@ function svuActivate(d){
   sv2SegStart = -1; sv2SegEnd = -1; sv2ExpIdx = -1; sv2KaraKey = ""; sv2Segs = [];
   sv2ShIdx = 0; sv2DictIdx = 0; sv2FillIdx = 0; sv2Urls = {}; sv2Scores = {};
   sv2RateIdx = 0; sv2Loop = false; sv2Tab = "subs";
+  /* Xem thu 30s: bai co san khong thuoc 5 video mien phi; bai user tao
+     khong bi gioi han. Dat lai moi lan mo bai. */
+  sv2Preview = (typeof svCardTrial === "function") ? svCardTrial(d.id) : sv2IsTrialFallback(d.id);
+  sv2PreviewDone = false;
   document.title = (d.headSub || "Video shadowing") + " | SoraKanji";
   document.body.classList.remove("plain");
   $app.innerHTML = sv2LessonHTML(d);
@@ -7342,9 +7378,9 @@ function svuActivate(d){
 }
 /* ===== W2-SV2-PLAYER END ===== */
 /* W2: viet lai — trang bai hoc shadowing day du (trinh phat sv2 port tu mobile).
-   (a) Bai curated (co trong window.SVU_DATA sau ensureSvLessons): kiem tra khoa
-       truoc (svCardLocked cua W1, du phong sv2IsLockedFallback), khoa thi hien
-       hop Premium cua web (skLockedPrompt) + trang thong bao, khong mo bai.
+   (a) Bai curated (co trong window.SVU_DATA sau ensureSvLessons): mo luon, ke
+       ca bai xem thu — gioi han 30s (user chua Premium) do sv2Tick ap khi phat
+       (sv2Preview dat trong svuActivate), khong chan o day nua.
    (b) Video user tao (co trong svMineLoad): goi svuOpenMine(vid) cua W3
        (typeof-guard); neu W3 chua ap thi hien thong bao "dang tai bai hoc…"
        + huong dan mo app mobile, KHONG crash.
@@ -7360,17 +7396,6 @@ function renderSvVideoPage(vid){
     if((location.hash || "") !== hash) return;
     var data = (window.SVU_DATA || {})[vid];
     if(data){
-      var locked = (typeof svCardLocked === "function") ? svCardLocked(vid) : sv2IsLockedFallback(vid);
-      if(locked){
-        if(typeof skLockedPrompt === "function") skLockedPrompt("Video này");
-        document.title = "Video Premium | SoraKanji";
-        $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / Video shadowing</div>' +
-          '<h1>Video này thuộc gói Premium</h1>' +
-          '<p>Gói miễn phí mở 1 video shadowing đầu tiên mỗi mục (5 video) — nâng cấp để mở toàn bộ video trên cả web và app điện thoại.</p></div>' +
-          '<div style="padding:6px 0 34px"><a class="btn" href="#/nangcap">Xem gói Premium</a> ' +
-          '<a class="btn ghost" href="#/nghe" style="margin-left:8px">Về Luyện nghe</a></div>';
-        return;
-      }
       svuActivate(data);
       return;
     }
@@ -7468,13 +7493,13 @@ function renderListenLevel(lv){
 }
 /* ================= SHADOWING VIDEO — CATALOG (W1, port tu mobile) =================
    Port tu mobile beta2.0 (commit 64300ed): SV_CATS/SV_CAT_LABEL, svGroupByCat,
-   svFreeIds, svIsCurated, svCardLocked, svPlays*, svMineAdd, svMineToCard,
+   svFreeIds, svIsCurated, svCardTrial, svPlays*, svMineAdd, svMineToCard,
    svCardHTML, svMoreHTML, svRowHTML, svBindCards, svOpenCard, svRenderRows,
    svRenderMine, svOpenAllList, svOpenAllSeries, svSetCat, svSetTopTab,
    svCatalogSectionHTML, svInitCatalog + nap du lieu luoi ensureSvLessons().
    KHAC MOBILE (xem SPEC-W1.md):
-   - Khoa Premium dung skIsPremium() cua web (Firestore, khong cache
-     localStorage); bam the khoa -> skLockedPrompt(), khong mo bang rieng.
+   - Gioi han xem thu dung skIsPremium() cua web (Firestore, khong cache
+     localStorage); the xem thu bam vao van mo, toi 30s thi dung + skLockedPrompt().
    - The dung esc() cua web; thumb mine dung mqdefault (khong hqdefault).
    - svOpenCard chi doi hash '#/nghe/video/<id>' — player do W2.
    - Trang "xem tat ca" ve vao $app (dang luoi .svm-grid), nut quay lai #/nghe.
@@ -7547,9 +7572,11 @@ function svIsCurated(id){
   for(var i = 0; i < list.length; i++){ if(list[i].id === id) return true; }
   return false;
 }
-/* The video co khoa: nam trong danh sach Shadowing co san, chua co Premium,
-   va khong thuoc 5 video mien phi (1 bai dau tien moi muc). Dung skIsPremium() cua web. */
-function svCardLocked(id){
+/* The video xem thu: nam trong danh sach Shadowing co san, chua co Premium,
+   va khong thuoc 5 video mien phi (1 bai dau tien moi muc). Bam vao van mo
+   bai, chi xem thu 30 giay dau (sv2Tick ap gioi han khi phat). Dung
+   skIsPremium() cua web. */
+function svCardTrial(id){
   return svIsCurated(id) && !skIsPremium() && svFreeIds().indexOf(id) < 0;
 }
 
@@ -7577,16 +7604,16 @@ function svMineToCard(v){
     alt: "Ảnh xem trước video: " + (v.title || v.id)};
 }
 
-/* 1 the video — ham thuan (nhan plays/locked lam tham so) de test duoc bang node.
+/* 1 the video — ham thuan (nhan plays/trial lam tham so) de test duoc bang node.
    Markup tai dung CSS .svm-* san co cua web + class sv-card-* de W3 style them. */
-function svCardHTML(v, plays, locked){
+function svCardHTML(v, plays, trial){
   var stats = (plays > 0 ? plays + " lượt xem · " : "") + ((v.lines != null) ? v.lines + " câu" : "");
-  return '<button type="button" class="card svm-card sv-card' + (locked ? ' pw-locked' : '') + '" style="text-align:left" data-vid="' + esc(v.id) + '" aria-label="Mở video shadowing: ' + esc(v.name) + '">' +
+  return '<button type="button" class="card svm-card sv-card' + (trial ? ' pw-trial' : '') + '" style="text-align:left" data-vid="' + esc(v.id) + '" aria-label="Mở video shadowing: ' + esc(v.name) + '">' +
     '<span class="svm-thumb sv-card-thumb">' +
       '<img src="' + esc(v.thumb) + '" alt="' + esc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
       (v.level ? '<span class="sv-card-lv">' + esc(v.level) + '</span>' : '') +
       (v.dur ? '<span class="svm-dur sv-card-dur">' + esc(v.dur) + '</span>' : '') +
-      (locked ? '<span class="sv-card-lock">🔒 Premium</span>' : '') +
+      (trial ? '<span class="sv-card-trial">▶ Xem thử 30s</span>' : '') +
     '</span>' +
     '<b class="sv-card-title">' + esc(v.name) + '</b>' +
     '<span class="sv-card-chan">' + esc(v.channel) + '</span>' +
@@ -7604,7 +7631,7 @@ function svMoreHTML(allKey, total){
    "Xem them". Desktop dang luoi (.svm-grid san co); CSS do W3. */
 function svRowHTML(series, videos, allKey){
   var shown = videos.slice(0, SV_ROW_MAX);
-  var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardLocked(v.id)); }).join("");
+  var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardTrial(v.id)); }).join("");
   if(videos.length > SV_ROW_MAX) cards += svMoreHTML(allKey, videos.length);
   return '<div class="sv-row"><div class="sv-rowhead"><h4>' + esc(series) + '</h4></div>' +
     '<div class="svm-grid sv-row-grid">' + cards + '</div></div>';
@@ -7620,11 +7647,10 @@ function svBindCards(root){
     });
   });
 }
-/* Mo the: the khoa thi hien hop Premium cua web (skLockedPrompt); the mo thi
-   chi doi hash — player o #/nghe/video/:id do W2 lam. */
+/* Mo the: doi hash — player o #/nghe/video/:id do W2 lam. The xem thu van mo,
+   gioi han 30s ap trong player (sv2Tick). */
 function svOpenCard(id){
   if(!id) return;
-  if(svCardLocked(id)){ skLockedPrompt("Video shadowing này"); return; }
   svPlaysBump(id);
   goHash("#/nghe/video/" + encodeURIComponent(id));
 }
@@ -7659,7 +7685,7 @@ function svOpenAllList(title, videos){
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / ' + esc(title) + '</div>' +
     '<h1>' + esc(title) + '</h1><p>' + list.length + ' video</p></div>' +
     '<div style="padding:6px 0 10px"><a class="btn ghost" href="#/nghe">← Quay lại Luyện nghe</a></div>' +
-    '<div class="svm-grid">' + list.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardLocked(v.id)); }).join("") + '</div>';
+    '<div class="svm-grid">' + list.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardTrial(v.id)); }).join("") + '</div>';
   $app.innerHTML = h;
   svBindCards($app);
   window.scrollTo(0, 0);
@@ -7682,7 +7708,7 @@ function svCatalogSectionHTML(){
   }).join("");
   var ready = svTopTab === "ready";
   return '<h2 class="secttl" style="margin-top:8px">Shadowing bằng video</h2>' +
-    '<p class="hint" style="margin:0 0 12px">Luyện nghe — nhại theo video có phụ đề song ngữ. Gói miễn phí mở 1 video đầu tiên mỗi mục (5 video), Premium mở toàn bộ video.</p>' +
+    '<p class="hint" style="margin:0 0 12px">Luyện nghe — nhại theo video có phụ đề song ngữ. Gói miễn phí xem full 1 video đầu tiên mỗi mục (5 video), các video còn lại xem thử 30 giây — Premium mở toàn bộ video.</p>' +
     '<div class="seg sv-toptabs" id="svTopTabs" role="tablist">' +
       '<button type="button" id="svTopReady" role="tab" aria-selected="' + (ready ? 'true' : 'false') + '" class="' + (ready ? 'on' : '') + '">Video có sẵn</button>' +
       '<button type="button" id="svTopMine" role="tab" aria-selected="' + (!ready ? 'true' : 'false') + '" class="' + (!ready ? 'on' : '') + '">Video tôi tạo</button>' +
@@ -9387,16 +9413,18 @@ function renderLockedPage(lv, label, targetHash){
   });
 }
 /* Hộp thoại khóa cho cú bấm trong trang (tab cấp kanji…) — không rời trang. */
-function skLockedPrompt(label){
+function skLockedPrompt(label, body){
   /* Chưa đăng nhập: hiện bảng đăng nhập trước (user yêu cầu 2026-11-15);
      đăng nhập xong sẽ tải lại Premium — tài khoản Premium thì trang tự
-     vẽ lại không còn khóa, chưa Premium thì bấm lại để xem gói. */
+     vẽ lại không còn khóa, chưa Premium thì bấm lại để xem gói.
+     body tuy chon: caller truyen body rieng (vd: het 30s xem thu, het luot
+     tao video) thi dung body do thay cho body mac dinh chung. */
   if(!webCurrentUser()){
     openAuthModalContinue(function(){ skLoadPremium(true); });
     return;
   }
   showModal("Nội dung Premium",
-    label + " thuộc gói Premium. Gói miễn phí mở toàn bộ nội dung N5 ở mọi mục — nâng cấp để mở N4–N1 trên cả web và app điện thoại.",
+    body || (label + " thuộc gói Premium. Gói miễn phí mở toàn bộ nội dung N5 ở mọi mục — nâng cấp để mở N4–N1 trên cả web và app điện thoại."),
     "Xem gói Premium", "Để sau", function(){ goHash("#/nangcap"); });
 }
 /* ----- Đăng nhập rồi tiếp tục (mua gói / mở nội dung khóa) ----- */
@@ -9477,9 +9505,10 @@ function freeStatusHTML(){
     "<li>1.205 từ vựng N5 kèm hình minh họa + 75 từ số đếm</li>" +
     "<li>84 mẫu ngữ pháp N5 theo đúng 25 bài Minna no Nihongo</li>" +
     "<li>Đề thi JLPT N5 Test 1–9, phần viết và phần nghe, chấm /180</li>" +
-    "<li>24 hội thoại luyện nghe N5 và bài đọc hiểu N5</li></ul></div>" +
+    "<li>24 hội thoại luyện nghe N5 và bài đọc hiểu N5</li>" +
+    "<li>Video Shadowing: 1 video đầu tiên mỗi mục xem full (5 video), các video còn lại xem thử 30 giây; tự tạo 1 video từ link YouTube</li></ul></div>" +
     '<div class="card" style="margin:16px 0"><h3 style="margin-top:0">Premium mở thêm N4–N1</h3>' +
-    "<p style=\"margin:0\">Nâng cấp để mở toàn bộ N4–N1 ở mọi mục — kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu — trên cả web và app điện thoại, đồng bộ theo tài khoản. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24h.</p></div>";
+    "<p style=\"margin:0\">Nâng cấp để mở toàn bộ N4–N1 ở mọi mục — kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu — xem full mọi video Shadowing và tạo video từ link không giới hạn, trên cả web và app điện thoại, đồng bộ theo tài khoản. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24h.</p></div>";
 }
 function renderTrondoiPage(){
   renderNangcapPage();
@@ -9960,7 +9989,7 @@ function renderTermsPage(){
     "</ul>" +
     "<h2>3. Gói miễn phí và gói trả phí</h2>" +
     "<ul>" +
-    "<li><b>Miễn phí:</b> toàn bộ nội dung cấp độ N5 ở mọi mục, cùng 1 video song ngữ mỗi mục (5 video).</li>" +
+    "<li><b>Miễn phí:</b> toàn bộ nội dung cấp độ N5 ở mọi mục, cùng 1 video song ngữ đầu tiên mỗi mục xem full (5 video) và xem thử 30 giây các video còn lại.</li>" +
     "<li><b>Gói Năm:</b> mở toàn bộ nội dung N4–N1 trong 12 tháng kể từ ngày kích hoạt.</li>" +
     "<li><b>Gói Trọn đời:</b> mở toàn bộ nội dung N4–N1 không giới hạn thời gian.</li>" +
     "</ul>" +
@@ -10437,7 +10466,8 @@ document.addEventListener("click", function(e){
 var SORA_ROUTES = {
   exam: "#/thi", listen: "#/nghe", read: "#/doc", vocab: "#/tuvung", grammar: "#/nguphap",
   kanji: "#/kanji", rank: "#/xephang", chat: "#/congdong", settings: "#/caidat",
-  path: "#/canhan", home: "#/", search: "#/", draw: "#/", shadow: "#/nghe", flash: "#/tuvung"
+  path: "#/canhan", home: "#/", search: "#/", draw: "#/", shadow: "#/nghe", flash: "#/tuvung",
+  nangcap: "#/nangcap"
 };
 var SORA_TOPICS = [
   { id:"exam", label:"Luyện thi JLPT ở đâu, làm đề thế nào?",
@@ -10523,7 +10553,11 @@ var SORA_TOPICS = [
   { id:"start", label:"Mới học thì bắt đầu từ đâu?",
     keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
     answer:"Chào bạn! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: tab “Lộ trình cá nhân” → chọn “Chưa khai” (hoặc cấp bạn đã đạt) để app xếp chặng cấp bậc và lộ trình 30 ngày của cấp đang học cho bạn: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết.\n2. Chọn cấp mục tiêu ở thẻ “Đếm ngược JLPT” trên trang chủ — thẻ sẽ gợi ý hôm nay nên học bao nhiêu kanji / từ vựng / ngữ pháp của cấp đó.\n3. Học theo thứ tự: Kanji ở trang chủ → Từ vựng (Sora Tango) → Ngữ pháp (Sora Bunpo) → Luyện nghe & Đọc hiểu → vào phòng thi Sora JLPT khi gần tới kỳ thi.",
-    actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Về trang chủ", action:"home"}] }
+    actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Về trang chủ", action:"home"}] },
+  { id:"premium", label:"Gói miễn phí mở những gì, Premium khác gì?",
+    keywords:["mien phi","goi free","premium","nang cap","mua goi","gia goi","tra phi","499","999"],
+    answer:"Gói miễn phí mở toàn bộ nội dung N5 ở mọi mục (kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu). Riêng video Shadowing: 1 video đầu tiên mỗi mục xem full (5 video), các video còn lại xem thử 30 giây; tự tạo được 1 video từ link YouTube.\n\nPremium (Gói Năm 499.000đ, Gói Trọn đời 999.000đ — giảm giá đến 06/12/2026) mở toàn bộ N4–N1, xem full mọi video Shadowing và tạo video từ link không giới hạn, trên cả web và app điện thoại. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24 giờ.",
+    actions:[{label:"Xem gói Premium", action:"nangcap"}] }
 ];
 var SORA_FALLBACK = {
   answer:"Câu này nằm ngoài phần hướng dẫn dùng trang mà mình trả lời được.\n\nNói rõ để bạn khỏi kỳ vọng nhầm: Sora là trợ lý chạy ngay trong máy với kho câu hỏi soạn sẵn về cách dùng SoraKanji — chưa phải AI trực tuyến, nên mình chưa dịch bài, chưa giải bài tập tiếng Nhật và chưa chấm bài được.\n\nBạn thử hỏi theo tính năng, ví dụ: “luyện nghe ở đâu”, “thi JLPT làm thế nào”, “Xu là gì”, “cài app ra màn hình chính” — hoặc bấm một chủ đề gợi ý bên dưới nhé.",
