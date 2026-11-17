@@ -849,9 +849,7 @@
   .lv.pw-locked{color:var(--ink-2);}
   .ls-lvtile.pw-locked{color:var(--ink-2);}
   .ls-lvtile .pw-lock{display:block; font-size:11px; margin:2px 0 0;}
-  .sv-card-lock{position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
-  .sv-card.pw-locked .sv-card-thumb img{filter:saturate(.55);}
-  .sv-all-entry.pw-locked .sv-all-thumb img{filter:saturate(.55);}
+  .sv-card-tag{position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
   .pw-plans{display:flex; flex-direction:column; gap:10px; margin:0 0 12px;}
   .pw-plan{border:1.5px solid var(--line); border-radius:14px; padding:12px 14px; background:var(--bg);}
   .pw-plan.hot{border-color:var(--red); background:var(--red-soft);}
@@ -3702,6 +3700,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="assistant-chip" type="button" data-assistant-topic="fun">Đấu trường, xếp hạng, Xu</button>
         <button class="assistant-chip" type="button" data-assistant-topic="install">Cài app &amp; học offline</button>
         <button class="assistant-chip" type="button" data-assistant-topic="search">Tìm kiếm &amp; tra cứu</button>
+        <button class="assistant-chip" type="button" data-assistant-topic="premium">Gói miễn phí &amp; Premium</button>
         <button class="assistant-chips-close" id="assistantChipsClose" type="button" aria-label="Ẩn gợi ý câu hỏi">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
@@ -3803,17 +3802,17 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     <div class="sheet" id="premiumSheet" aria-hidden="true" role="dialog" aria-label="Nâng cấp Premium">
       <div class="grab"></div>
       <h3>🔒 Nâng cấp Premium</h3>
-      <p class="snote">Nội dung N4–N1, ôn thi Tokutei xây dựng và các video Shadowing còn lại thuộc gói Premium. Gói miễn phí gồm toàn bộ N5 ở mọi mục và 1 video Shadowing đầu tiên mỗi mục.</p>
+      <p class="snote">Nội dung N4–N1, ôn thi Tokutei xây dựng và các video Shadowing còn lại thuộc gói Premium. Gói miễn phí gồm toàn bộ N5 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo; các video Shadowing còn lại chỉ xem thử 30 giây.</p>
       <div class="pw-plans">
         <div class="pw-plan">
           <b>Gói Năm</b>
           <span class="pw-price">499.000đ</span><span class="pw-old">799.000đ</span>
-          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng trong 12 tháng.</p>
+          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng trong 12 tháng, xem trọn vẹn mọi video Shadowing.</p>
         </div>
         <div class="pw-plan hot">
           <b>Gói Trọn đời · Phổ biến nhất</b>
           <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
-          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng vĩnh viễn, không gia hạn.</p>
+          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng vĩnh viễn, không gia hạn, xem trọn vẹn mọi video Shadowing.</p>
         </div>
       </div>
       <p class="snote">Giá giảm đến 06/12/2026 — sau thời gian này gói về giá gốc.</p>
@@ -5353,8 +5352,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* ================= PAYWALL: Premium (gói trả phí) =================
      Gói miễn phí: toàn bộ N5 ở mọi mục + 1 video Shadowing đầu tiên mỗi mục
      (5 video: bài đầu tiên của mỗi tab Podcast / Anime / Đời thường / JLPT /
-     Karaoke — xem svFreeIds()).
-     Nội dung N4–N1 và các video Shadowing còn lại cần Premium.
+     Karaoke — xem svFreeIds()) + 1 video tự tạo (tab "Video tôi tạo").
+     Các video Shadowing còn lại: chưa Premium chỉ xem thử 30 giây (tới 30s
+     thì dừng video + mở bảng nâng cấp; xem sv2Tick + SV_PREVIEW_SECS),
+     mở lại được xem thử 30s từ đầu. Nội dung N4–N1 cần Premium.
      Trạng thái Premium đọc từ Firestore kanji_progress/{uid}.premium =
      {plan, since, until}: gói "year" có until = ngày kích hoạt + 12 tháng,
      gói "lifetime" có until = null. Premium còn hiệu lực khi until == null
@@ -5369,6 +5370,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      (mở Chrome, đăng nhập tại sorakanji.com, mua bằng VND). */
   var SK_PREMIUM_KEY = "sk_premium";
   var SV_FREE_PER_CAT = 1; /* 1 video Shadowing miễn phí đầu tiên của mỗi thể loại (5 tab = 5 video) */
+  var SV_PREVIEW_SECS = 30; /* Xem thử: video Shadowing không free, chưa Premium chỉ phát tới 30 giây */
   function premiumCacheLoad(){
     try{ var p = JSON.parse(window.localStorage.getItem(SK_PREMIUM_KEY) || "null"); return (p && typeof p === "object") ? p : null; }
     catch(_){ return null; }
@@ -5445,16 +5447,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     for(var i = 0; i < SV_VIDEOS.length; i++){ if(SV_VIDEOS[i].id === id) return true; }
     return false;
   }
-  /* Thẻ video có khóa: nằm trong danh sách Shadowing có sẵn, chưa có
-     Premium, và không thuộc 5 video miễn phí (1 bài đầu tiên mỗi mục). */
-  function svCardLocked(id){
+  /* Video chỉ xem thử 30 giây: nằm trong danh sách Shadowing có sẵn, chưa
+     có Premium, và không thuộc 5 video miễn phí (1 bài đầu tiên mỗi mục).
+     Thẻ vẫn mở được bình thường; giới hạn 30s do sv2Tick cưỡng chế khi phát
+     (xem SV_PREVIEW_SECS). Video user tự tạo (không nằm trong SV_VIDEOS)
+     không thuộc diện này nên luôn xem trọn vẹn. */
+  function svPreviewOnly(id){
     return svIsCurated(id) && !isPremium() && svFreeIds().indexOf(id) < 0;
-  }
-  function premiumGateVideo(id){
-    /* Video user tự tạo (không nằm trong SV_VIDEOS) không thuộc danh
-       sách Shadowing có sẵn nên không khóa ở đây. */
-    if(!svCardLocked(id)) return true;
-    return showPremiumPrompt();
   }
   /* Gate cho ôn thi Tokutei xây dựng: toàn bộ nội dung cần Premium. */
   function premiumGateTokutei(){
@@ -10154,14 +10153,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return out;
   }
   /* 1 thẻ video — hàm thuần (nhận plays/locked làm tham số) để test được bằng node. */
-  function svCardHTML(v, plays, locked){
+  function svCardHTML(v, plays, preview){
     var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
-    return '<button class="sv-card' + (locked ? ' pw-locked' : '') + '" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
+    return '<button class="sv-card" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
       '<span class="sv-card-thumb">' +
         '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
         (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
         '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
-        (locked ? '<span class="sv-card-lock">🔒 Premium</span>' : '') +
+        (preview ? '<span class="sv-card-tag">▶ Xem thử 30s</span>' : '') +
       '</span>' +
       '<span class="sv-card-title">' + svEsc(v.name) + '</span>' +
       '<span class="sv-card-chan">' + svEsc(v.channel) + '</span>' +
@@ -10182,7 +10181,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function svRowHTML(series, videos, allKey){
     var shown = videos.slice(0, SV_ROW_MAX);
-    var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardLocked(v.id)); }).join("");
+    var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svPreviewOnly(v.id)); }).join("");
     if(videos.length > SV_ROW_MAX) cards += svMoreHTML(allKey, videos.length);
     return '<div class="sv-row"><div class="sv-rowhead"><h4>' + svEsc(series) + '</h4></div>' +
       '<div class="sv-hscroll">' + cards + '</div></div>';
@@ -10200,7 +10199,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
   }
   function svOpenCard(id){
-    if(!premiumGateVideo(id)) return;
+    /* KHÔNG gate ở đây nữa: video không free vẫn mở được, giới hạn 30s do
+       sv2Tick cưỡng chế khi phát (xem svPreviewOnly + SV_PREVIEW_SECS). */
     /* MIRROR 2026-11-16: bo nhanh SV1 — bai mau SV1 da bo, mo bai qua SVU_DATA. */
     if(typeof SVU_DATA !== "undefined" && SVU_DATA[id]){ svuActivate(SVU_DATA[id]); return; }
     /* Bài user tạo ở phiên trước: chưa có trong SVU_DATA, tải lại từ cache server. */
@@ -10244,14 +10244,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svBindCards(box);
   }
   /* Trang "xem tất cả video của 1 chuỗi": danh sách dọc đầy đủ. */
-  function svAllEntryHTML(v, plays, locked){
+  function svAllEntryHTML(v, plays, preview){
     var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
-    return '<button class="sv-all-entry' + (locked ? ' pw-locked' : '') + '" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
+    return '<button class="sv-all-entry" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
       '<span class="sv-all-thumb">' +
         '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
         (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
         '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
-        (locked ? '<span class="sv-card-lock">🔒 Premium</span>' : '') +
+        (preview ? '<span class="sv-card-tag">▶ Xem thử 30s</span>' : '') +
       '</span>' +
       '<span class="sv-all-meta">' +
         '<span class="sv-all-title">' + svEsc(v.name) + '</span>' +
@@ -10263,7 +10263,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function svOpenAllList(title, videos){
     document.getElementById("svAllTitle").textContent = title;
     var box = document.getElementById("svAllList");
-    box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id), svCardLocked(v.id)); }).join("");
+    box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id), svPreviewOnly(v.id)); }).join("");
     box.querySelectorAll(".sv-all-entry").forEach(function(entry){
       entry.addEventListener("click", function(){ svOpenCard(entry.getAttribute("data-vid")); });
     });
@@ -10847,6 +10847,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   var sv2Overlay = document.getElementById("sv2Overlay");
   var sv2Player = null, sv2Ready = false, sv2Timer = null, sv2LastT = 0;
+  var sv2Preview = false, sv2PreviewDone = false; /* Xem thử 30s: sv2Preview = bài hiện tại chỉ xem thử (chưa Premium + không free); sv2PreviewDone = đã chạm 30s lần này (tua về <30s thì reset để xem thử lại) */
   var sv2SegStart = -1, sv2SegEnd = -1, sv2CurSub = -1, sv2Tab = "subs";
   var sv2Rates = [1, 0.75, 0.5], sv2RateIdx = 0, sv2Loop = false;
   function sv2PlayBtn(playing){
@@ -10928,6 +10929,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!sv2Player || !sv2Ready || !sv2Player.getCurrentTime) return;
     var t = sv2Player.getCurrentTime();
     sv2LastT = t;
+    /* Xem thử 30s (chưa Premium + video không free): tới 30s thì dừng video
+       và mở bảng nâng cấp — mỗi lần chạm 30s mở bảng 1 lần; đóng bảng rồi
+       bấm phát lại thì tick sau dừng tiếp (không mở bảng lại); tua về trước
+       30s thì được xem thử lại tới 30s. Đặt trước logic đoạn câu để giới hạn
+       xem thử luôn thắng (kể cả khi đoạn câu/lặp kéo qua 30s). */
+    if(sv2Preview){
+      if(t >= SV_PREVIEW_SECS){
+        if(sv2Player.pauseVideo) sv2Player.pauseVideo();
+        if(!sv2PreviewDone){ sv2PreviewDone = true; showPremiumPrompt(); }
+      } else if(sv2PreviewDone){
+        sv2PreviewDone = false;
+      }
+    }
     var dur = sv2Player.getDuration ? sv2Player.getDuration() : 0;
     var seek = document.getElementById("sv2Seek");
     if(dur > 0){
@@ -11845,10 +11859,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      (region asia-northeast1, project donghung-3208d) → nạp lesson JSON trả về
      vào ĐÚNG cấu trúc SV2_* mà player bài 2 đang dùng rồi mở bằng chính
      sv2OpenLesson() — không có player riêng cho bài tự tạo.
-     TODO (chỉ ghi chú, CHƯA khoá): theo quyết định 2026-11-05 tính năng này
-     thuộc paid-tier (N3+ / tính năng trả phí); đợt launch free hiện tại mở hết
-     cho mọi người. Khi ra premium, gắn gate đăng nhập/premium tại svuCreate()
-     dưới đây (và ở backend callable) rồi mới cho gọi function. */
+     Gate tạo bài (quyết định 2026-11-17): user chưa Premium chỉ tạo tối đa
+     1 video đang có — đã có 1 video trong "Video tôi tạo" thì bấm tạo thêm
+     sẽ hiện bảng Premium (gate trong svuCreate() dưới đây, đếm danh sách
+     đang có; hiện chưa có nút xóa video nên thực tế là tạo 1 lần — nếu sau
+     này thêm nút xóa thì xóa xong được tạo lại). Premium tạo không giới hạn.
+     Gate chỉ ở client (svuCreate); backend chưa đổi trong đợt này. */
   var SVU_FB_CONFIG = {
     apiKey: "AIzaSyALblbqW_VrZh2r7sPJ8Q6XT2fGbk0dsFg",
     authDomain: "donghung-3208d.firebaseapp.com",
@@ -11888,6 +11904,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function svuActivate(d){
     svPlaysBump(d.id);
     SV2_ID = d.id; SV2_DUR = d.dur; SV2_SUBS = d.subs; SV2_WIN = d.win;
+    sv2Preview = svPreviewOnly(d.id); sv2PreviewDone = false; /* Xem thử 30s: tính lại mỗi lần mở bài (mở lại được 30s mới) */
     SV2_PRACTICE = d.practice; SV2_FILL = d.fill;
     sv2StopRecIfAny();
     if(sv2SR){ scAbort(sv2SR); sv2SR = null; }
@@ -12054,6 +12071,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     /* Link trùng bài đã có sẵn trong danh sách thì mở luôn bài đó */
     /* MIRROR 2026-11-16: bo nhanh SV1 — link cu SV1 (neu dan) se tao bai moi qua backend. */
     if(SVU_DATA[parsed.id]){ svuShowMsg("", false); svuActivate(SVU_DATA[parsed.id]); return; }
+    /* Gate tạo bài: chưa Premium chỉ được tạo tối đa 1 video đang có. Dán
+       lại link của video đã tạo thì mở luôn bài đó (nhánh trên), không tính
+       là tạo mới nên không bị gate. */
+    if(!isPremium() && svMineLoad().length >= 1){ showPremiumPrompt(); return; }
     var fn = svuGetFn();
     if(!fn){ svuShowMsg(SVU_NOT_READY, true); return; }
     svuBusy = true;
@@ -20935,7 +20956,11 @@ function furiHTML(text){
     { id:"start", label:"Mới học thì bắt đầu từ đâu?",
       keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
       answer:"Chào bạn học! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: ở Home, khung “Nhiệm vụ hôm nay” → bấm “Khai trình độ” → chọn “Chưa biết” (hoặc cấp bạn đã đạt). App sẽ soạn lộ trình 30 ngày theo cấp đang học cho chặng của bạn: mỗi tuần theo nhịp Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 là Tổng ôn, ngày 30 là Thi thử tổng kết — học xong ngày nào thì đánh dấu đã xong để mở khóa ngày tiếp theo.\n2. Làm Nhiệm vụ hôm nay: 5 việc nhỏ mỗi ngày (học kanji, quiz nhanh, ôn thẻ, thi thử và 1 việc luân phiên theo ngày) — làm xong là cộng EXP và giữ streak.\n3. Bấm nút đỏ “Tiếp tục luyện tập” ở Home để học tiếp đúng bài đang dở.\n\nChưa biết chữ nào? Bắt đầu bằng “Bảng kana” ở hàng tiện ích đầu Home — thuộc Hiragana/Katakana trước rồi hãy vào Kanji.",
-      actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] }
+      actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] },
+    { id:"premium", label:"Gói miễn phí có gì? Premium là gì?",
+      keywords:["goi mien phi","mien phi","premium","goi tra phi","nang cap","mua goi","gia goi","xem thu","goi nam","goi tron doi"],
+      answer:"Gói miễn phí gồm toàn bộ nội dung N5 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N4–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 499.000đ (giá gốc 799.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 2.499.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.\n\nCách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Premium mở sau khi chuyển khoản thành công — thường trong vài phút, tối đa 24 giờ.",
+      actions:[] }
   ];
   var FALLBACK = {
     answer:"Câu này nằm ngoài phần hướng dẫn dùng app mà mình trả lời được.\n\nNói rõ để bạn khỏi kỳ vọng nhầm: ở bản xem thử này, Sora là trợ lý chạy ngay trong máy với kho câu hỏi soạn sẵn về cách dùng SoraKanji — chưa phải AI trực tuyến, nên mình chưa dịch bài, chưa giải bài tập tiếng Nhật và chưa chấm bài được.\n\nBạn thử hỏi theo tính năng, ví dụ: “luyện nghe ở đâu”, “thi JLPT làm thế nào”, “Xu là gì”, “cài app ra màn hình chính” — hoặc bấm một chủ đề gợi ý bên dưới nhé.",
