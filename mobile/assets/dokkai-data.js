@@ -1164,7 +1164,7 @@ window.DOKKAI_PASSAGES = [
     "vi": "Bố tôi đến công ty làm việc mỗi ngày."
    },
    {
-    "jp": "母は 小学校の 先生です。",
+    "jp": "母は しょうがっこうの 先生です。",
     "furi": [
      [
       "母",
@@ -1179,8 +1179,8 @@ window.DOKKAI_PASSAGES = [
       null
      ],
      [
-      "小学校",
-      "しょうがっこう"
+      "しょうがっこう",
+      null
      ],
      [
       "の",
@@ -1206,7 +1206,7 @@ window.DOKKAI_PASSAGES = [
     "vi": "Mẹ tôi là giáo viên ở trường tiểu học."
    },
    {
-    "jp": "あには 大学生です。",
+    "jp": "あには だいがくせいです。",
     "furi": [
      [
       "あに",
@@ -1221,8 +1221,8 @@ window.DOKKAI_PASSAGES = [
       null
      ],
      [
-      "大学生",
-      "だいがくせい"
+      "だいがくせい",
+      null
      ],
      [
       "です",
@@ -1298,7 +1298,7 @@ window.DOKKAI_PASSAGES = [
     "vi": "Anh trai tôi đi tàu điện đến trường đại học mỗi ngày."
    },
    {
-    "jp": "いもうとは 小学生です。",
+    "jp": "いもうとは しょうがくせいです。",
     "furi": [
      [
       "いもうと",
@@ -1313,8 +1313,8 @@ window.DOKKAI_PASSAGES = [
       null
      ],
      [
-      "小学生",
-      "しょうがくせい"
+      "しょうがくせい",
+      null
      ],
      [
       "です",
@@ -1390,13 +1390,13 @@ window.DOKKAI_PASSAGES = [
     "vi": "Mẹ (của mình)"
    },
    {
-    "w": "大学生",
+    "w": "だいがくせい",
     "r": "だいがくせい",
     "hv": "ĐẠI HỌC SINH",
     "vi": "Sinh viên đại học"
    },
    {
-    "w": "小学生",
+    "w": "しょうがくせい",
     "r": "しょうがくせい",
     "hv": "TIỂU HỌC SINH",
     "vi": "Học sinh tiểu học"
@@ -1413,7 +1413,7 @@ window.DOKKAI_PASSAGES = [
     "p": "N は N です",
     "lv": "N5",
     "vi": "… là … (khẳng định)",
-    "ex": "母は 小学校の 先生です。",
+    "ex": "母は しょうがっこうの 先生です。",
     "exVi": "Mẹ tôi là giáo viên ở trường tiểu học."
    },
    {
