@@ -7,7 +7,8 @@
  * ghi ví khi không có delta + SYNC_GROUP_KEYS hợp cả 2 bản (5 key mới:
  * sk_grammar_learned, sk_sync_uid, sk_sync_wu, sk_sync_words,
  * sk_sync_saved_keys) + A14: sửa lỗi migration/push không lưu meta
- * (xem UNIFY-REPORT.md).
+ * (xem UNIFY-REPORT.md) + tombstone xóa video tự tạo (doc videos:
+ * {mine, removed}, API markVideoRemoved — sao chép pattern savedWords).
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -316,15 +317,29 @@
     return out;
   }
 
+  /* videos: union theo id, LWW từng entry theo createdAt (như cũ),
+   * + tombstone removed (ms): entry có removed[id] > createdAt thì bị
+   * loại — sao chép pattern mergeSavedWords để xóa đồng bộ được. */
   function mergeVideos(local, server) {
     var byId = {};
     (local && local.mine || []).concat((server && server.mine) || []).forEach(function (e) {
       if (!e || !e.id) return;
       if (!byId[e.id] || num(e.createdAt, 0) >= num(byId[e.id].createdAt, 0)) byId[e.id] = e;
     });
-    var mine = Object.keys(byId).map(function (id) { return byId[id]; });
+    var removed = {};
+    var k;
+    for (k in (local && local.removed || {})) removed[k] = local.removed[k];
+    for (k in (server && server.removed || {})) {
+      if (!removed[k] || server.removed[k] > removed[k]) removed[k] = server.removed[k];
+    }
+    var mine = [];
+    Object.keys(byId).forEach(function (id) {
+      var e = byId[id];
+      if (removed[id] && removed[id] > num(e.createdAt, 0)) return; // đã xóa sau lần tạo cuối
+      mine.push(e);
+    });
     mine.sort(function (a, b) { return num(b.createdAt, 0) - num(a.createdAt, 0); });
-    return { mine: mine };
+    return { mine: mine, removed: removed };
   }
 
   function mergeSettings(local, server) {
@@ -612,7 +627,8 @@
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
-   *   videos:   {mine:[{id,title,dur,lines,createdAt}]}
+   *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
+   *             removed:{id:ms} giữ trong meta module, xem syncVideos)
    *   settings: {sound, remind, recog, sora}
    *   avatar:   {choice, custom}
    *   savedWords: {words:[entry chuẩn], removed:{}} — mobile adapter tự
@@ -663,7 +679,11 @@
       return so;
     }
     if (docId.indexOf(VOCAB_PREFIX) === 0) return convert.vocabToSync(localRaw || {}, meta);
-    return clone(localRaw); // wallet/examBest/videos/avatar/savedWords: giữ nguyên
+    if (docId === "videos") {
+      var v = localRaw || {};
+      return { mine: clone(v.mine || []), removed: clone(meta.removed || {}) };
+    }
+    return clone(localRaw); // wallet/examBest/avatar/savedWords: giữ nguyên
   }
 
   /* Dịch sync -> local. Trả về {local, meta} (meta mới để lưu lại). */
@@ -710,7 +730,12 @@
     if (docId.indexOf(VOCAB_PREFIX) === 0) {
       return { local: convert.vocabFromSync(syncData || {}), meta: clone(syncData || {}) };
     }
-    return { local: clone(syncData), meta: meta }; // examBest/videos/avatar/savedWords
+    if (docId === "videos") {
+      var vs = syncData || {};
+      return { local: { mine: clone(vs.mine || []) },
+               meta: { removed: clone(vs.removed || {}) } };
+    }
+    return { local: clone(syncData), meta: meta }; // examBest/avatar/savedWords
   }
 
   /* ---------------- tầng Firestore ---------------- */
@@ -1024,6 +1049,57 @@
     });
   }
 
+  /* ---------------- videos (tombstone trong meta, như savedWords) ----------------
+   * Khác savedWords ở 1 điểm: adapter web trả null khi danh sách rỗng
+   * (mobile luôn trả {mine:[]}). Khi local null mà meta còn tombstone thì
+   * vẫn phải đẩy tombstone lên (không được rẽ nhánh pull rồi hồi sinh). */
+  function syncVideos(uid) {
+    var localRaw = cfg.adapter.readLocal("videos");
+    if (localRaw === undefined) return Promise.resolve("skip");
+    var meta = metaGet("videos") || {};
+    var removed = clone(meta.removed || {});
+    return readServerDoc(uid, "videos").then(function (env) {
+      var serverData = env ? env.data : null;
+      var serverAt = env ? num(env.updatedAt, 0) : 0;
+      var localSync = null;
+      if (localRaw != null) {
+        localSync = { mine: clone(localRaw.mine || []), removed: removed };
+      } else if (Object.keys(removed).length) {
+        localSync = { mine: [], removed: removed }; // web: rỗng nhưng còn tombstone
+      }
+      if (!serverData && localSync == null) return "empty";
+      if (!serverData) {
+        return writeServerDoc(uid, "videos", localSync).then(function () {
+          markSeen("videos", now()); return "pushed";
+        });
+      }
+      if (localSync == null) {
+        // Máy mới, chưa có video + không có tombstone: kéo server về.
+        // Vẫn đi qua mergeVideos để tombstone phía server (nếu có) được áp dụng.
+        var pulled = mergeVideos({ mine: [], removed: {} }, serverData);
+        cfg.adapter.writeLocal("videos", { mine: pulled.mine });
+        metaSet("videos", { removed: clone(pulled.removed || {}) });
+        markSeen("videos", serverAt);
+        if (cfg.adapter.onMerged) cfg.adapter.onMerged("videos");
+        return "pulled";
+      }
+      var merged = mergeVideos(localSync, serverData);
+      var serverChanged = !same(merged, serverData);
+      var localChanged = !same(merged, localSync);
+      var p = Promise.resolve();
+      if (serverChanged) p = p.then(function () { return writeServerDoc(uid, "videos", merged); });
+      return p.then(function () {
+        if (serverChanged) markSeen("videos", now()); else markSeen("videos", serverAt);
+        metaSet("videos", { removed: clone(merged.removed || {}) });
+        if (localChanged) {
+          cfg.adapter.writeLocal("videos", { mine: merged.mine });
+          if (cfg.adapter.onMerged) cfg.adapter.onMerged("videos");
+        }
+        return (serverChanged || localChanged) ? "merged" : "same";
+      });
+    });
+  }
+
   /* ---------------- đồng bộ đầy đủ + migration ---------------- */
 
   function allDocIds(uid) {
@@ -1052,6 +1128,7 @@
     ids.forEach(function (id) {
       if (id === "wallet" || id === "missions") return;
       if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
+      else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
       else { chain = chain.then(function () { return syncOne(uid, id); }); }
     });
     chain = chain.then(function () { return pullWallet(uid); });
@@ -1121,6 +1198,7 @@
         allIds.forEach(function (id) {
           if (id === "wallet" || id === "missions") return;
           if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
+          else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
           else { chain = chain.then(function () { return syncOne(uid, id); }); }
         });
         return chain.then(function () { return pullWallet(uid); });
@@ -1178,6 +1256,7 @@
     }
     if (docId === "missions") return syncMissions(uid);
     if (docId === "savedWords") return syncSavedWords(uid);
+    if (docId === "videos") return syncVideos(uid);
     return syncOne(uid, docId);
   }
 
@@ -1225,6 +1304,16 @@
     meta.removed[savedWordKey(word, reading)] = now();
     metaSet("savedWords", meta);
     schedulePush("savedWords");
+  }
+
+  /* App gọi khi user xóa 1 video tự tạo (kẻo union hồi sinh nó ở lần gộp sau). */
+  function markVideoRemoved(id) {
+    if (!id) return;
+    var meta = metaGet("videos") || {};
+    meta.removed = meta.removed || {};
+    meta.removed[id] = now();
+    metaSet("videos", meta);
+    schedulePush("videos");
   }
 
   /* App gọi khi hoàn thành 1 nhiệm vụ (ghi sổ nhận thưởng để chống nhận 2 lần). */
@@ -1280,6 +1369,7 @@
     startListener: startListener,
     stopListener: stopListener,
     unsaveWord: unsaveWord,
+    markVideoRemoved: markVideoRemoved,
     grantMission: grantMission,
     clearLocalForLogout: clearLocalForLogout,
     getDeviceId: getDeviceId,
