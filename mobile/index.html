@@ -850,6 +850,9 @@
   .ls-lvtile.pw-locked{color:var(--ink-2);}
   .ls-lvtile .pw-lock{display:block; font-size:11px; margin:2px 0 0;}
   .sv-card-tag{position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
+  /* Nut xoa video tu tao (chi the "Video cua toi"): tron 28px, goc tren-phai thumb. */
+  .sv-del{position:absolute; right:5px; top:5px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.72); color:#fff; font-size:14px; line-height:1; border-radius:50%; cursor:pointer; z-index:2;}
+  .sv-del:active{background:var(--red);}
   .pw-plans{display:flex; flex-direction:column; gap:10px; margin:0 0 12px;}
   .pw-plan{border:1.5px solid var(--line); border-radius:14px; padding:12px 14px; background:var(--bg);}
   .pw-plan.hot{border-color:var(--red); background:var(--red-soft);}
@@ -10140,6 +10143,25 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function svMineLoad(){ try{ var m = JSON.parse(window.localStorage.getItem("sk_sv_mine") || "[]"); return Array.isArray(m) ? m : []; }catch(_){ return []; } }
   function svMineSave(list){ try{ window.localStorage.setItem("sk_sv_mine", JSON.stringify(list)); }catch(_){} skSyncPush("videos"); }
   function svMineAdd(entry){ var m = svMineLoad().filter(function(x){ return x.id !== entry.id; }); m.unshift(entry); svMineSave(m); }
+  /* Xoa video tu tao: xac nhan truoc (video ton cong tao qua backend), chi xoa
+     khoi danh sach cua user (sk_sv_mine) — cache bai hoc o backend van con nen
+     dan lai link cu van mo lai bai. svMineSave da goi skSyncPush("videos").
+     Ghi tombstone truoc khi luu de dong bo truyen xoa sang may khac
+     (mergeVideos loai entry co removed[id] > createdAt). */
+  function svMineDelete(id){
+    var mine = svMineLoad(), v = null, i;
+    for(i = 0; i < mine.length; i++){ if(mine[i].id === id){ v = mine[i]; break; } }
+    if(!v) return;
+    if(!confirm('Xóa video "' + v.title + '" khỏi Video của tôi?\nBài học đã tạo vẫn còn trên máy chủ — dán lại link này sẽ mở lại bài.')) return;
+    if (window.SKSync && SKSync.markVideoRemoved) SKSync.markVideoRemoved(id);
+    svMineSave(mine.filter(function(x){ return x.id !== id; }));
+    svRenderMine();
+    /* Dang o trang Xem them "Video toi tao" thi ve lai danh sach do. */
+    var allOv = document.getElementById("svAllOverlay");
+    if(allOv && allOv.classList.contains("open") && document.getElementById("svAllTitle").textContent === "Video tôi tạo"){
+      svOpenAllList("Video tôi tạo", svMineLoad().map(svMineToCard), true);
+    }
+  }
   /* Nhóm video theo thể loại rồi theo chuỗi, giữ đúng thứ tự mảng gốc.
      Thể loại lạ (gõ sai cat) thì bỏ qua để không hiện nhầm chỗ. */
   function svGroupByCat(videos){
@@ -10154,7 +10176,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return out;
   }
   /* 1 thẻ video — hàm thuần (nhận plays/locked làm tham số) để test được bằng node. */
-  function svCardHTML(v, plays, preview){
+  function svCardHTML(v, plays, preview, mine){
     var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
     return '<button class="sv-card" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
       '<span class="sv-card-thumb">' +
@@ -10162,6 +10184,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
         '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
         (preview ? '<span class="sv-card-tag">▶ Xem thử 30s</span>' : '') +
+        (mine ? '<span class="sv-del" role="button" tabindex="0" data-del="' + svEsc(v.id) + '" aria-label="Xóa video: ' + svEsc(v.name) + '">🗑</span>' : '') +
       '</span>' +
       '<span class="sv-card-title">' + svEsc(v.name) + '</span>' +
       '<span class="sv-card-chan">' + svEsc(v.channel) + '</span>' +
@@ -10187,6 +10210,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return '<div class="sv-row"><div class="sv-rowhead"><h4>' + svEsc(series) + '</h4></div>' +
       '<div class="sv-hscroll">' + cards + '</div></div>';
   }
+  /* Bind nut xoa (chi co tren the video tu tao). stopPropagation de bam nut
+     xoa khong mo bai; Enter/Space tren span cung goi xoa (ban phim). */
+  function svBindDel(root){
+    if(!root) return;
+    root.querySelectorAll(".sv-del").forEach(function(btn){
+      btn.addEventListener("click", function(e){ e.preventDefault(); e.stopPropagation(); svMineDelete(btn.getAttribute("data-del")); });
+      btn.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); e.stopPropagation(); svMineDelete(btn.getAttribute("data-del")); } });
+    });
+  }
   function svBindCards(root){
     if(!root) return;
     root.querySelectorAll(".sv-card:not(.sv-more)").forEach(function(card){
@@ -10198,6 +10230,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         svOpenAllSeries(more.getAttribute("data-all-cat"), parseInt(more.getAttribute("data-all-idx"), 10));
       });
     });
+    svBindDel(root);
   }
   function svOpenCard(id){
     /* KHÔNG gate ở đây nữa: video không free vẫn mở được, giới hạn 30s do
@@ -10238,14 +10271,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     var shown = mine.slice(0, SV_ROW_MAX);
     var cards = shown.map(function(v){
-      return svCardHTML(svMineToCard(v), svPlaysGet(v.id));
+      return svCardHTML(svMineToCard(v), svPlaysGet(v.id), false, true);
     }).join("");
     if(mine.length > SV_ROW_MAX) cards += svMoreHTML("mine", mine.length);
     box.innerHTML = '<div class="sv-row"><div class="sv-hscroll">' + cards + '</div></div>';
     svBindCards(box);
   }
   /* Trang "xem tất cả video của 1 chuỗi": danh sách dọc đầy đủ. */
-  function svAllEntryHTML(v, plays, preview){
+  function svAllEntryHTML(v, plays, preview, mine){
     var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
     return '<button class="sv-all-entry" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
       '<span class="sv-all-thumb">' +
@@ -10253,6 +10286,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
         '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
         (preview ? '<span class="sv-card-tag">▶ Xem thử 30s</span>' : '') +
+        (mine ? '<span class="sv-del" role="button" tabindex="0" data-del="' + svEsc(v.id) + '" aria-label="Xóa video: ' + svEsc(v.name) + '">🗑</span>' : '') +
       '</span>' +
       '<span class="sv-all-meta">' +
         '<span class="sv-all-title">' + svEsc(v.name) + '</span>' +
@@ -10261,13 +10295,18 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       '</span>' +
     '</button>';
   }
-  function svOpenAllList(title, videos){
+  function svOpenAllList(title, videos, isMine){
     document.getElementById("svAllTitle").textContent = title;
     var box = document.getElementById("svAllList");
-    box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id), svPreviewOnly(v.id)); }).join("");
+    if(!videos.length){
+      box.innerHTML = '<p class="sv-empty">Chưa có video nào.</p>';
+    } else {
+      box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id), svPreviewOnly(v.id), !!isMine); }).join("");
+    }
     box.querySelectorAll(".sv-all-entry").forEach(function(entry){
       entry.addEventListener("click", function(){ svOpenCard(entry.getAttribute("data-vid")); });
     });
+    svBindDel(box);
     hideOv(listenOverlay);
     showOv(document.getElementById("svAllOverlay"));
   }
@@ -10278,7 +10317,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svOpenAllList(row.series, row.videos);
   }
   function svOpenAllMine(){
-    svOpenAllList("Video tôi tạo", svMineLoad().map(svMineToCard));
+    svOpenAllList("Video tôi tạo", svMineLoad().map(svMineToCard), true);
   }
   function svSetTopTab(tab){
     svTopTab = tab;
@@ -18934,7 +18973,8 @@ function furiHTML(text){
  * ghi ví khi không có delta + SYNC_GROUP_KEYS hợp cả 2 bản (5 key mới:
  * sk_grammar_learned, sk_sync_uid, sk_sync_wu, sk_sync_words,
  * sk_sync_saved_keys) + A14: sửa lỗi migration/push không lưu meta
- * (xem UNIFY-REPORT.md).
+ * (xem UNIFY-REPORT.md) + tombstone xóa video tự tạo (doc videos:
+ * {mine, removed}, API markVideoRemoved — sao chép pattern savedWords).
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -19243,15 +19283,29 @@ function furiHTML(text){
     return out;
   }
 
+  /* videos: union theo id, LWW từng entry theo createdAt (như cũ),
+   * + tombstone removed (ms): entry có removed[id] > createdAt thì bị
+   * loại — sao chép pattern mergeSavedWords để xóa đồng bộ được. */
   function mergeVideos(local, server) {
     var byId = {};
     (local && local.mine || []).concat((server && server.mine) || []).forEach(function (e) {
       if (!e || !e.id) return;
       if (!byId[e.id] || num(e.createdAt, 0) >= num(byId[e.id].createdAt, 0)) byId[e.id] = e;
     });
-    var mine = Object.keys(byId).map(function (id) { return byId[id]; });
+    var removed = {};
+    var k;
+    for (k in (local && local.removed || {})) removed[k] = local.removed[k];
+    for (k in (server && server.removed || {})) {
+      if (!removed[k] || server.removed[k] > removed[k]) removed[k] = server.removed[k];
+    }
+    var mine = [];
+    Object.keys(byId).forEach(function (id) {
+      var e = byId[id];
+      if (removed[id] && removed[id] > num(e.createdAt, 0)) return; // đã xóa sau lần tạo cuối
+      mine.push(e);
+    });
     mine.sort(function (a, b) { return num(b.createdAt, 0) - num(a.createdAt, 0); });
-    return { mine: mine };
+    return { mine: mine, removed: removed };
   }
 
   function mergeSettings(local, server) {
@@ -19539,7 +19593,8 @@ function furiHTML(text){
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
-   *   videos:   {mine:[{id,title,dur,lines,createdAt}]}
+   *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
+   *             removed:{id:ms} giữ trong meta module, xem syncVideos)
    *   settings: {sound, remind, recog, sora}
    *   avatar:   {choice, custom}
    *   savedWords: {words:[entry chuẩn], removed:{}} — mobile adapter tự
@@ -19590,7 +19645,11 @@ function furiHTML(text){
       return so;
     }
     if (docId.indexOf(VOCAB_PREFIX) === 0) return convert.vocabToSync(localRaw || {}, meta);
-    return clone(localRaw); // wallet/examBest/videos/avatar/savedWords: giữ nguyên
+    if (docId === "videos") {
+      var v = localRaw || {};
+      return { mine: clone(v.mine || []), removed: clone(meta.removed || {}) };
+    }
+    return clone(localRaw); // wallet/examBest/avatar/savedWords: giữ nguyên
   }
 
   /* Dịch sync -> local. Trả về {local, meta} (meta mới để lưu lại). */
@@ -19637,7 +19696,12 @@ function furiHTML(text){
     if (docId.indexOf(VOCAB_PREFIX) === 0) {
       return { local: convert.vocabFromSync(syncData || {}), meta: clone(syncData || {}) };
     }
-    return { local: clone(syncData), meta: meta }; // examBest/videos/avatar/savedWords
+    if (docId === "videos") {
+      var vs = syncData || {};
+      return { local: { mine: clone(vs.mine || []) },
+               meta: { removed: clone(vs.removed || {}) } };
+    }
+    return { local: clone(syncData), meta: meta }; // examBest/avatar/savedWords
   }
 
   /* ---------------- tầng Firestore ---------------- */
@@ -19951,6 +20015,57 @@ function furiHTML(text){
     });
   }
 
+  /* ---------------- videos (tombstone trong meta, như savedWords) ----------------
+   * Khác savedWords ở 1 điểm: adapter web trả null khi danh sách rỗng
+   * (mobile luôn trả {mine:[]}). Khi local null mà meta còn tombstone thì
+   * vẫn phải đẩy tombstone lên (không được rẽ nhánh pull rồi hồi sinh). */
+  function syncVideos(uid) {
+    var localRaw = cfg.adapter.readLocal("videos");
+    if (localRaw === undefined) return Promise.resolve("skip");
+    var meta = metaGet("videos") || {};
+    var removed = clone(meta.removed || {});
+    return readServerDoc(uid, "videos").then(function (env) {
+      var serverData = env ? env.data : null;
+      var serverAt = env ? num(env.updatedAt, 0) : 0;
+      var localSync = null;
+      if (localRaw != null) {
+        localSync = { mine: clone(localRaw.mine || []), removed: removed };
+      } else if (Object.keys(removed).length) {
+        localSync = { mine: [], removed: removed }; // web: rỗng nhưng còn tombstone
+      }
+      if (!serverData && localSync == null) return "empty";
+      if (!serverData) {
+        return writeServerDoc(uid, "videos", localSync).then(function () {
+          markSeen("videos", now()); return "pushed";
+        });
+      }
+      if (localSync == null) {
+        // Máy mới, chưa có video + không có tombstone: kéo server về.
+        // Vẫn đi qua mergeVideos để tombstone phía server (nếu có) được áp dụng.
+        var pulled = mergeVideos({ mine: [], removed: {} }, serverData);
+        cfg.adapter.writeLocal("videos", { mine: pulled.mine });
+        metaSet("videos", { removed: clone(pulled.removed || {}) });
+        markSeen("videos", serverAt);
+        if (cfg.adapter.onMerged) cfg.adapter.onMerged("videos");
+        return "pulled";
+      }
+      var merged = mergeVideos(localSync, serverData);
+      var serverChanged = !same(merged, serverData);
+      var localChanged = !same(merged, localSync);
+      var p = Promise.resolve();
+      if (serverChanged) p = p.then(function () { return writeServerDoc(uid, "videos", merged); });
+      return p.then(function () {
+        if (serverChanged) markSeen("videos", now()); else markSeen("videos", serverAt);
+        metaSet("videos", { removed: clone(merged.removed || {}) });
+        if (localChanged) {
+          cfg.adapter.writeLocal("videos", { mine: merged.mine });
+          if (cfg.adapter.onMerged) cfg.adapter.onMerged("videos");
+        }
+        return (serverChanged || localChanged) ? "merged" : "same";
+      });
+    });
+  }
+
   /* ---------------- đồng bộ đầy đủ + migration ---------------- */
 
   function allDocIds(uid) {
@@ -19979,6 +20094,7 @@ function furiHTML(text){
     ids.forEach(function (id) {
       if (id === "wallet" || id === "missions") return;
       if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
+      else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
       else { chain = chain.then(function () { return syncOne(uid, id); }); }
     });
     chain = chain.then(function () { return pullWallet(uid); });
@@ -20048,6 +20164,7 @@ function furiHTML(text){
         allIds.forEach(function (id) {
           if (id === "wallet" || id === "missions") return;
           if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
+          else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
           else { chain = chain.then(function () { return syncOne(uid, id); }); }
         });
         return chain.then(function () { return pullWallet(uid); });
@@ -20105,6 +20222,7 @@ function furiHTML(text){
     }
     if (docId === "missions") return syncMissions(uid);
     if (docId === "savedWords") return syncSavedWords(uid);
+    if (docId === "videos") return syncVideos(uid);
     return syncOne(uid, docId);
   }
 
@@ -20152,6 +20270,16 @@ function furiHTML(text){
     meta.removed[savedWordKey(word, reading)] = now();
     metaSet("savedWords", meta);
     schedulePush("savedWords");
+  }
+
+  /* App gọi khi user xóa 1 video tự tạo (kẻo union hồi sinh nó ở lần gộp sau). */
+  function markVideoRemoved(id) {
+    if (!id) return;
+    var meta = metaGet("videos") || {};
+    meta.removed = meta.removed || {};
+    meta.removed[id] = now();
+    metaSet("videos", meta);
+    schedulePush("videos");
   }
 
   /* App gọi khi hoàn thành 1 nhiệm vụ (ghi sổ nhận thưởng để chống nhận 2 lần). */
@@ -20207,6 +20335,7 @@ function furiHTML(text){
     startListener: startListener,
     stopListener: stopListener,
     unsaveWord: unsaveWord,
+    markVideoRemoved: markVideoRemoved,
     grantMission: grantMission,
     clearLocalForLogout: clearLocalForLogout,
     getDeviceId: getDeviceId,
