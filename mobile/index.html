@@ -1563,8 +1563,9 @@
   .sv2-panel.on{display:block;}
   /* position:relative như khung #svLines của bài 1: offsetTop của từng dòng
      được đo TRONG khung cuộn này, nhờ vậy JS tự cuộn mới đưa đúng câu đang
-     đọc vào giữa khung (thiếu nó, offsetTop bị đo theo tổ tiên xa ở ngoài
-     trang → khung cuộn tuột đi đâu, không thấy câu đang đọc) */
+     đọc về dòng neo (dòng 2 tính từ đỉnh khung) (thiếu nó, offsetTop bị đo
+     theo tổ tiên xa ở ngoài trang → khung cuộn tuột đi đâu, không thấy
+     câu đang đọc) */
   .sv2-subs{
     position:relative;
     flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
@@ -10969,7 +10970,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
        đó. Câu đang nói lấy theo khung SV2_WIN (mỗi câu một khoảng riêng, kể
        cả câu trùng mốc giây) nên không câu nào bị bỏ qua. Khung cuộn có
        position:relative nên offsetTop đo trong khung — câu đang đọc luôn
-       được đưa vào giữa khung, đúng như bài 1 */
+       được neo ở DÒNG THỨ 2 tính từ đỉnh khung (còn 1 dòng phía trên,
+       các dòng sắp tới hiện phía dưới), theo yêu cầu user 17/11 */
     var idx = -1;
     SV2_WIN.forEach(function(w, i){ if(t >= w.start && t < w.end) idx = i; });
     /* Giữ câu cuối sáng tới hết video CHỈ khi khung của nó chạy tới cuối video
@@ -10987,8 +10989,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var act = rows[idx], frame = document.getElementById("sv2Subs");
       if(act && frame && document.getElementById("sv2PanelSubs").classList.contains("on")){
         var rd = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var tg = act.offsetTop - frame.clientHeight / 2 + act.offsetHeight / 2;
+        /* Neo cau dang phat o DONG THU 2: target = offsetTop cua dong ngay
+           truoc no (= offsetTop cau dang phat tru chieu cao dong truoc +
+           khoang cach 2px giua 2 dong — moi cau cao khac nhau do furigana
+           + dich nen khong dung chieu cao co dinh). Cau dau (idx 0) khong
+           co dong truoc -> target 0 (nam dong 1); gan cuoi bai kep o max
+           scroll. */
+        var tg = idx > 0 ? rows[idx - 1].offsetTop : 0;
+        var mx = frame.scrollHeight - frame.clientHeight;
+        if(mx < 0) mx = 0;
         if(tg < 0) tg = 0;
+        if(tg > mx) tg = mx;
         if(typeof frame.scrollTo === "function") frame.scrollTo({top: tg, behavior: rd ? "auto" : "smooth"});
         else frame.scrollTop = tg;
       }
