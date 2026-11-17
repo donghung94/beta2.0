@@ -3228,7 +3228,7 @@
             </button>
             <button class="mission" id="missionQuiz">
               <span class="m-ic u-amber"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4.6 13.4h6.2L9.6 22l8.6-11.6h-6.4Z"/></svg></span>
-              <span class="m-main"><b>Luyện kiếm — Quiz nhanh</b><span>Trả lời đúng 10 câu · Đã đúng 0/10</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
+              <span class="m-main"><b>Huấn luyện — Quiz nhanh</b><span>Trả lời đúng 10 câu · Đã đúng 0/10</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
               <span class="m-reward"><b>+30</b><span>EXP</span></span>
               <span class="m-state doing">Đang làm</span>
             </button>
@@ -3240,7 +3240,7 @@
             </button>
             <button class="mission" id="missionExam">
               <span class="m-ic u-sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></span>
-              <span class="m-main"><b>Xuống núi thí luyện — Thi thử</b><span>Làm 1 đề Test JLPT đầy đủ</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
+              <span class="m-main"><b>Diễn tập — Thi thử</b><span>Làm 1 đề Test JLPT đầy đủ</span><span class="m-bar"><i style="transform:scaleX(0)"></i></span></span>
               <span class="m-reward"><b>+60</b><span>EXP</span></span>
               <span class="m-state">Chưa làm</span>
             </button>
@@ -17118,15 +17118,15 @@ function furiHTML(text){
      (quizProg), ôn xong bộ flashcard, nộp 1 đề Test, và hoạt động khớp nhiệm vụ luân phiên.
      missionsState.days ghi các ngày có ít nhất 1 nhiệm vụ hoàn thành -> streak tính từ đó. */
   var ROT_DEFS = {
-    listen:  { title:"Thính âm — Luyện nghe", sub:"Nghe và trả lời 1 hội thoại ở mục Luyện nghe", reward:30, cls:"u-sky",
+    listen:  { title:"Trinh sát — Luyện nghe", sub:"Nghe và trả lời 1 hội thoại ở mục Luyện nghe", reward:30, cls:"u-sky",
                svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.6"/><rect x="17" y="14" width="4" height="6" rx="1.6"/></svg>' },
-    read:    { title:"Đọc văn — Đọc hiểu", sub:"Đọc và trả lời hết câu hỏi của 1 bài đọc", reward:30, cls:"u-green",
+    read:    { title:"Giải mã — Đọc hiểu", sub:"Đọc và trả lời hết câu hỏi của 1 bài đọc", reward:30, cls:"u-green",
                svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-4.5-2-8-2v14c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2V4c-3.5 0-6 .5-8 2z"/><path d="M12 6v14"/></svg>' },
-    vocab:   { title:"Tàng từ — Từ vựng", sub:"Học hết bộ flashcard của 1 bài từ vựng", reward:30, cls:"u-amber",
+    vocab:   { title:"Trang bị — Từ vựng", sub:"Học hết bộ flashcard của 1 bài từ vựng", reward:30, cls:"u-amber",
                svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>' },
-    grammar: { title:"Ngộ pháp — Ngữ pháp", sub:"Mở 1 mẫu ngữ pháp và bấm “Đã học”", reward:30, cls:"u-red",
+    grammar: { title:"Chiến thuật — Ngữ pháp", sub:"Mở 1 mẫu ngữ pháp và bấm “Đã học”", reward:30, cls:"u-red",
                svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14M5 9h14M5 14h9M5 19h6"/></svg>' },
-    shadow:  { title:"Truy âm — Shadowing", sub:"Ghi âm nhắc lại 1 câu mẫu shadowing", reward:30, cls:"u-sky",
+    shadow:  { title:"Liên lạc — Shadowing", sub:"Ghi âm nhắc lại 1 câu mẫu shadowing", reward:30, cls:"u-sky",
                svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>' }
   };
   var ROT_ORDER = ["listen", "read", "vocab", "grammar", "shadow"];
