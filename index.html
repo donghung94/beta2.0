@@ -2355,6 +2355,14 @@ var EX_G1_LABELS = ["謙譲語","尊敬語","受身形","使役形","使役受�
 /* ================= SoraKanji Web — ứng dụng ================= */
 "use strict";
 var $app = document.getElementById("app");
+/* Guard chong render race (Loi 2 — web): moi lan ve lai toan bo trang
+   ($app) deu mo mot "phien render" moi bang skBeginRender; callback async
+   (.then/.catch) chi duoc ghi $app.innerHTML khi token no cam van la
+   phien hien tai (skRenderAlive tra ve dung). Nguoi hoc chuyen trang trong luc du lieu
+   dang tai thi callback cu tu huy, khong ghi de trang moi. */
+var _skRenderSeq = 0;
+function skBeginRender(){ return ++_skRenderSeq; }
+function skRenderAlive(tok){ return tok === _skRenderSeq; }
 var LEVELS = ["N5","N4","N3","N2","N1"];
 var LV_LOWER = {N5:"n5", N4:"n4", N3:"n3", N2:"n2", N1:"n1"};
 
@@ -2463,6 +2471,7 @@ function kanjiCell(e){
 var homeState = {lv: "N5", shown: 110, target: "N5", kcInit: false};
 
 function renderHome(){
+  var rTok = skBeginRender();
   /* Trạng thái cấp cũ còn sót (vd: vừa đăng xuất khi đang xem N4) thì về N5. */
   if(skLevelLocked(homeState.lv)){ homeState.lv = "N5"; homeState.shown = 110; }
   document.title = "SoraKanji — Bầu trời Kanji cho người Việt";
@@ -2892,6 +2901,7 @@ function runStrokeAnim(){
 function webCurrentUser(){ return window.SK_USER || null; }
 
 function renderKanjiDetail(ch){
+  var rTok = skBeginRender();
   var e = (window.KANJI_DB || {})[ch];
   if(!e){
     $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Kanji</div>' +
@@ -3096,6 +3106,7 @@ function chipsHTML(arr){
 /* ================= TRANG KANJI (lưới theo cấp) ================= */
 var kanjiPageState = {lv: "N5", shown: 120};
 function renderKanjiPage(lv){
+  var rTok = skBeginRender();
   document.body.classList.remove("plain");
   if(lv && LEVELS.indexOf(lv) >= 0){ kanjiPageState.lv = lv; kanjiPageState.shown = 120; }
   /* Trạng thái cấp cũ còn sót (vd: vừa đăng xuất khi đang xem N4) thì về N5. */
@@ -3209,9 +3220,11 @@ function introWords(){
 }
 
 function renderVocabHome(){
+  var rTok = skBeginRender();
   document.title = "Từ vựng Minna no Nihongo | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải từ vựng…");
   Promise.all([ensureVocab(), ensureVocabFor("N1")]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Từ vựng</div>' +
       "<h1>Từ vựng theo Minna no Nihongo</h1>" +
       "<p>10.605 từ của 5 cấp N5–N1 kèm hình minh họa vẽ theo nghĩa của từng từ: N5–N2 xếp đúng thứ tự bài trong giáo trình Minna no Nihongo, N1 chia 24 nhóm ôn luyện. Riêng mục chuyên ngành có 1.056 từ của 14 ngành Tokutei.</p></div>" +
@@ -3226,7 +3239,7 @@ function renderVocabHome(){
     h += '<a class="lesson-card" href="#/tuvung/cn"><b>Chuyên ngành Tokutei</b>' +
       "<span>14 ngành nghề · 1.056 từ</span></a></div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu từ vựng. Kiểm tra kết nối rồi tải lại trang.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu từ vựng. Kiểm tra kết nối rồi tải lại trang.</div>'; });
 }
 
 /* Tiến độ học từ vựng: trạng thái Đã biết/Chưa biết của mỗi bài lưu ở
@@ -3275,9 +3288,11 @@ function vocabLessonDone(lv, L){
 }
 
 function renderVocabLevel(lv){
+  var rTok = skBeginRender();
   document.title = "Từ vựng " + lv + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải từ vựng " + lv + "…");
   ensureVocabFor(lv).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var lessons = vocabLessons(lv);
     var unit = lv === "N1" ? "nhóm" : "bài";
     var doneMap = {}, doneCount = 0;
@@ -3304,7 +3319,7 @@ function renderVocabLevel(lv){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu từ vựng.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu từ vựng.</div>'; });
 }
 
 var deck = null; /* phiên học từ vựng: flashcard lớn bên trái + tab bài bên phải + danh sách từ bên dưới */
@@ -3702,8 +3717,10 @@ function syncRow(i){
   old.replaceWith(nw);
 }
 function renderVocabLesson(lv, lessonKey){
+  var rTok = skBeginRender();
   $app.innerHTML = loadingHTML("Đang tải bài học…");
   ensureVocabFor(lv).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var lessons = vocabLessons(lv);
     var words, title, sub, activeKey = String(lessonKey);
     if(lessonKey === "num" && lv === "N5"){
@@ -3734,13 +3751,15 @@ function renderVocabLesson(lv, lessonKey){
       lv: lessonKey === "num" ? "N5" : lv,
       progKey: vocabProgKey(lv, lessonKey)
     });
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu từ vựng.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu từ vựng.</div>'; });
 }
 
 function renderSpecHome(){
+  var rTok = skBeginRender();
   document.title = "Từ vựng chuyên ngành Tokutei | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải từ vựng chuyên ngành…");
   ensureSpec().then(function(){
+    if(!skRenderAlive(rTok)) return;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/tuvung">Từ vựng</a> / Chuyên ngành</div>' +
       "<h1>Từ vựng chuyên ngành Tokutei</h1>" +
       "<p>1.056 từ của 14 ngành kỹ năng đặc định, biên soạn từ giáo trình và tài liệu chính thức của từng ngành.</p></div>" +
@@ -3752,14 +3771,16 @@ function renderSpecHome(){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu chuyên ngành.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu chuyên ngành.</div>'; });
 }
 function renderSpecField(key){
+  var rTok = skBeginRender();
   var f = SPEC_FIELDS.filter(function(x){ return x.key === key; })[0];
   if(!f){ renderSpecHome(); return; }
   document.title = "Từ vựng " + f.name + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải từ vựng…");
   ensureSpec().then(function(){
+    if(!skRenderAlive(rTok)) return;
     var words = (window.VOCAB_SPEC[key] || []).map(function(w){ return normWord(w, null); });
     var tabs = SPEC_FIELDS.map(function(x){
       return ltabHTML("#/tuvung/cn/" + x.key, x.name, (window.VOCAB_SPEC[x.key] || []).length + " từ", x.key === key);
@@ -3773,7 +3794,7 @@ function renderSpecField(key){
       progKey: "sk_vocab_prog_cn_" + key,
       headExtra: '<div class="lv-pills"><a class="lv-pill" href="#/tuvung">JLPT N5–N1</a><a class="lv-pill on" href="#/tuvung/cn">Chuyên ngành</a></div>'
     });
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu chuyên ngành.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu chuyên ngành.</div>'; });
 }
 
 /* ================= FURIGANA (cùng cơ chế với bản mobile) =================
@@ -4046,9 +4067,11 @@ function grUnitLearnedW(lv, u){
   return n;
 }
 function renderGrammarHome(){
+  var rTok = skBeginRender();
   document.title = "Ngữ pháp JLPT N5–N1 | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải ngữ pháp…");
   ensureGrammar().then(function(){
+    if(!skRenderAlive(rTok)) return;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Ngữ pháp</div>' +
       "<h1>Ngữ pháp JLPT</h1>" +
       "<p>374 mẫu ngữ pháp biên soạn theo Minna no Nihongo (N5, N4) và Shin Kanzen Master / Sou Matome (N3–N1): cấu trúc, giải nghĩa, ví dụ có bản dịch và lưu ý. Mở đầu bằng ba mục tra cứu riêng: Trợ từ, Cách chia thể và Trọng âm.</p></div>" +
@@ -4064,12 +4087,14 @@ function renderGrammarHome(){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
 }
 function renderGrammarLevel(lv){
+  var rTok = skBeginRender();
   document.title = "Ngữ pháp " + lv + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải ngữ pháp " + lv + "…");
   Promise.all([ensureGrammar(), ensureVocab(), ensureSpec(), ensureGrammarExtra()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var arr = window.GRAMMAR_DATA[lv] || [];
     var units = grUnitsW(lv);
     var isMinna = (lv === "N5" || lv === "N4");
@@ -4097,11 +4122,13 @@ function renderGrammarLevel(lv){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
 }
 function renderGrammarLesson(lv, segKind, key){
+  var rTok = skBeginRender();
   $app.innerHTML = loadingHTML("Đang tải ngữ pháp " + lv + "…");
   Promise.all([ensureGrammar(), ensureVocab(), ensureSpec(), ensureGrammarExtra()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var arr = window.GRAMMAR_DATA[lv] || [];
     var units = grUnitsW(lv);
     var unit = null;
@@ -4132,7 +4159,7 @@ function renderGrammarLesson(lv, segKind, key){
       }).join("") + "</div>";
     }
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
 }
 var grLearnedW = (function(){ /* "N5|12" -> 1: mẫu đã bấm Đã học — lưu local + đồng bộ */
   try{ var o = JSON.parse(localStorage.getItem("sk_grammar_learned") || "null"); return (o && typeof o === "object") ? o : {}; }catch(e){ return {}; }
@@ -4231,9 +4258,11 @@ function grRenderQuizW(){
   });
 }
 function renderGrammarDetail(lv, idx){
+  var rTok = skBeginRender();
   idx = parseInt(idx, 10);
   $app.innerHTML = loadingHTML("Đang tải mẫu ngữ pháp…");
   Promise.all([ensureGrammar(), ensureVocab(), ensureSpec(), ensureGrammarExtra()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var arr = window.GRAMMAR_DATA[lv] || [];
     var g = arr[idx];
     if(!g){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy mẫu ngữ pháp này.</div>'; return; }
@@ -4295,7 +4324,7 @@ function renderGrammarDetail(lv, idx){
       b.addEventListener("click", function(){ grStartQuizW(parseInt(b.getAttribute("data-grq"), 10)); });
     });
     grStartQuizW(0);
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu ngữ pháp.</div>'; });
 }
 
 /* ================= TRỢ TỪ (15 bài + bài tập tổng hợp) ================= */
@@ -4376,15 +4405,17 @@ function ptBindBlocks(){
 
 /* Trang Trợ từ: mặc định chọn Bài 1, nội dung bài hiện ở cột phải */
 function renderJoshi(){
+  var rTok = skBeginRender();
   document.title = "Trợ từ tiếng Nhật | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải bài trợ từ…");
   Promise.all([ensureGrammarExtra(), ensureVocab(), ensureSpec()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var ls = window.PT_LESSONS[0];
     $app.innerHTML = ptShellHTML("", 1, ptLessonMainHTML(ls, 1));
     ptBindBlocks();
     ptRestartW = function(){ ptStartQuiz(ls.quiz); };
     ptRestartW();
-  }).catch(ptLoadFail);
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; ptLoadFail(); });
 }
 
 /* Tô cam trợ từ đích trong câu ví dụ — khớp có biên: ưu tiên vị trí mà ký tự ngay
@@ -4414,23 +4445,27 @@ function ptHL(text, p){
 
 /* Trang chi tiết một bài: tab dọc bên trái + nội dung bài ở cột phải (bài tập trên đầu, rồi tới các khối cách dùng) */
 function renderJoshiLesson(n){
+  var rTok = skBeginRender();
   document.title = "Trợ từ — Bài " + n + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải bài trợ từ…");
   Promise.all([ensureGrammarExtra(), ensureVocab(), ensureSpec()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var ls = window.PT_LESSONS[n - 1];
     if(!ls){ renderJoshi(); return; }
     $app.innerHTML = ptShellHTML(" / Bài " + n, n, ptLessonMainHTML(ls, n));
     ptBindBlocks();
     ptRestartW = function(){ ptStartQuiz(ls.quiz); };
     ptRestartW();
-  }).catch(ptLoadFail);
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; ptLoadFail(); });
 }
 
 /* Trang bài tập tổng hợp: tab dọc bên trái + thẻ bài tập ở cột phải, 15 câu trộn từ cả 15 bài */
 function renderJoshiMix(){
+  var rTok = skBeginRender();
   document.title = "Trợ từ — Bài tập tổng hợp | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải bài tập trợ từ…");
   Promise.all([ensureGrammarExtra(), ensureVocab(), ensureSpec()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var main = '<h2 class="pt-lt">Bài tập tổng hợp</h2>' +
       '<p class="hint" style="margin:0 0 10px">15 câu trộn từ cả 15 bài (ngân hàng ' + ptTotalQuiz() + " câu điền trợ từ) — chọn trợ từ đúng vào chỗ trống rồi bấm Kiểm tra.</p>" +
       '<div class="ptq"><div id="ptQuizBox"></div></div>' +
@@ -4442,7 +4477,7 @@ function renderJoshiMix(){
       ptStartQuiz(grShuffleW(all.slice()).slice(0, 15));
     };
     ptRestartW();
-  }).catch(ptLoadFail);
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; ptLoadFail(); });
 }
 
 function ptStartQuiz(quiz){
@@ -4568,9 +4603,11 @@ function conjGroupsHTMLW(groups, withEx){
   }).join("");
 }
 function renderConj(){
+  var rTok = skBeginRender();
   document.title = "Cách chia thể động từ tiếng Nhật | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải bảng chia thể…");
   Promise.all([ensureGrammarExtra(), ensureVocab(), ensureSpec()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nguphap">Ngữ pháp</a> / Cách chia thể</div>' +
       "<h1>Cách chia thể</h1>" +
       "<p>Bảng tra cứu 14 thể của động từ — quy tắc chuẩn theo Minna no Nihongo. Bấm vào một thể trong lưới, nội dung thể hiện ngay bên dưới: bài tập tự chia thể, thẻ Ba nhóm động từ, cách chia và ví dụ.</p></div>" +
@@ -4589,7 +4626,7 @@ function renderConj(){
       drawCjBody(true);
     });
     drawCjBody(false);
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu chia thể.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu chia thể.</div>'; });
 }
 function drawCjBody(scroll){
   var box = document.getElementById("cjBody");
@@ -5137,6 +5174,7 @@ function ensureExamData(lv){
 
 /* --- Trang phòng thi --- */
 function renderExamHome(){
+  var rTok = skBeginRender();
   document.title = "Luyện thi JLPT — Đề viết & nghe Test 1–9 | SoraKanji";
   $app.innerHTML =
     '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Luyện thi JLPT</div>' +
@@ -5167,6 +5205,7 @@ function renderExamHome(){
   });
 }
 function renderExamLevel(lv){
+  var rTok = skBeginRender();
   document.title = "Đề thi JLPT " + lv + " — Test 1–9 | SoraKanji";
   var t = EXAM_TOTALS[lv];
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/thi">Luyện thi JLPT</a> / ' + lv + "</div>" +
@@ -5186,11 +5225,13 @@ function renderExamLevel(lv){
   $app.innerHTML = h;
 }
 function renderExamIntro(lv, testNo){
+  var rTok = skBeginRender();
   var isOff = (lv === "N3" && testNo === 0);
   var tname = isOff ? "Đề chuẩn" : "Test " + testNo;
   document.title = "JLPT " + lv + " — " + tname + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang chuẩn bị đề thi…");
   (isOff ? ensureOfficialN3() : ensureExamData(lv)).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var w = buildWritten(lv, testNo), l = buildListening(lv, testNo);
     var t = EXAM_TOTALS[lv];
     var mins = (window.EXAM_MOBILE_MINUTES || {})[lv] || t[2];
@@ -5219,6 +5260,7 @@ function renderExamIntro(lv, testNo){
       location.hash = "#/thi/" + lv + "/" + testNo + "/lam";
     });
   }).catch(function(){
+    if(!skRenderAlive(rTok)) return;
     $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu đề thi. Kiểm tra kết nối rồi thử lại.</div>';
   });
 }
@@ -5246,6 +5288,7 @@ function fmtClock(s){
   return (m < 10 ? "0" : "") + m + ":" + (ss < 10 ? "0" : "") + ss;
 }
 function renderExamPlayer(){
+  var rTok = skBeginRender();
   if(!EX){ location.hash = "#/thi"; return; }
   document.title = "Đang làm bài — JLPT " + EX.lv + " " + EX.label + " | SoraKanji";
   var h = '<div style="padding-top:22px"></div><div class="ex-top">' +
@@ -5419,6 +5462,7 @@ function submitExam(auto){
   window.scrollTo(0, 0);
 }
 function renderExamResult(){
+  var rTok = skBeginRender();
   var r = EX.result, t = EXAM_TOTALS[EX.lv];
   var passTotal = r.est >= t[3];
   var passParts = (r.wT === 0 || r.wC / r.wT >= 0.317) && (r.lT === 0 || r.lC / r.lT >= 0.317);
@@ -7395,14 +7439,14 @@ function svuActivate(d){
        + huong dan mo app mobile, KHONG crash.
    (c) Khong tim thay: giu thong bao "khong con trong danh sach" nhu ban cu. */
 function renderSvVideoPage(vid){
+  var rTok = skBeginRender();
   sv2Teardown();
   document.title = "Video shadowing | SoraKanji";
   document.body.classList.remove("plain");
   $app.innerHTML = loadingHTML("Đang tải bài học…");
-  var hash = "#/nghe/video/" + vid;
   function proceed(){
     /* Nguoi hoc da chuyen trang khac trong luc cho du lieu -> khong ve nua. */
-    if((location.hash || "") !== hash) return;
+    if(!skRenderAlive(rTok)) return;
     var data = (window.SVU_DATA || {})[vid];
     if(data){
       svuActivate(data);
@@ -7454,10 +7498,12 @@ function renderSvVideoPage(vid){
   proceed();
 }
 function renderListenHome(){
+  var rTok = skBeginRender();
   document.title = "Luyện nghe tiếng Nhật N5–N1 | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải danh sách hội thoại…");
   var jobs = [ensureExamSpec()].concat(LEVELS.map(function(lv){ return ensureListen(lv); }));
   Promise.all(jobs).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Luyện nghe</div>' +
       "<h1>Luyện nghe</h1>" +
       "<p>149 hội thoại luyện nghe theo đúng 4 dạng câu hỏi của JLPT, có file audio, câu hỏi kiểm tra, lời thoại tiếng Nhật kèm bản dịch tiếng Việt.</p></div>" +
@@ -7470,12 +7516,13 @@ function renderListenHome(){
     h += "</div>" + svCatalogSectionHTML(); /* GLUE (dieu phoi vien tich hop) */ /* "Video toi tao" da nam trong tab, khong goi rieng nua */
     $app.innerHTML = h;
     svInitCatalog();
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
 }
 /* Trang Shadowing rieng (#/shadowing): chi danh muc video shadowing, khong
    kem 5 the hoi thoai JLPT nhu trang Luyen nghe. Tai dung khung danh muc
    svCatalogSectionHTML() + svInitCatalog() (nap luoi sv-lessons.js). */
 function renderShadowingPage(){
+  var rTok = skBeginRender();
   document.title = "Shadowing bằng video | SoraKanji";
   $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Shadowing</div>' +
     "<h1>Shadowing</h1>" +
@@ -7484,9 +7531,11 @@ function renderShadowingPage(){
   svInitCatalog();
 }
 function renderListenLevel(lv){
+  var rTok = skBeginRender();
   document.title = "Luyện nghe " + lv + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải hội thoại…");
   Promise.all([ensureExamSpec(), ensureListen(lv)]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var items = window["LISTEN_" + lv] || [];
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / ' + lv + "</div>" +
       "<h1>Luyện nghe " + lv + '</h1><p>' + items.length + " hội thoại — chọn một hội thoại để nghe và trả lời câu hỏi.</p></div>" +
@@ -7498,7 +7547,7 @@ function renderListenLevel(lv){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
 }
 /* ================= SHADOWING VIDEO — CATALOG (W1, port tu mobile) =================
    Port tu mobile beta2.0 (commit 64300ed): SV_CATS/SV_CAT_LABEL, svGroupByCat,
@@ -7767,9 +7816,12 @@ function svCatalogSectionHTML(){
     '</div>';
 }
 function svLoadAndRenderRows(){
+  var rTok = _skRenderSeq; /* chup phien render hien tai (ham phu — khong mo phien moi) */
   ensureSvLessons().then(function(){
+    if(!skRenderAlive(rTok)) return;
     if(document.getElementById("svCatPanels")) svRenderRows();
   }).catch(function(){
+    if(!skRenderAlive(rTok)) return;
     var p = document.getElementById("svCat-" + svCat);
     if(p) p.innerHTML = '<p class="empty-note" style="margin:0 0 20px">Không tải được danh sách video. Kiểm tra mạng rồi mở lại mục này.</p>';
   });
@@ -7828,9 +7880,11 @@ function speakRate(text, rate){
   }catch(e){}
 }
 function renderListenItem(lv, idx){
+  var rTok = skBeginRender();
   idx = parseInt(idx, 10);
   $app.innerHTML = loadingHTML("Đang tải hội thoại…");
   Promise.all([ensureExamSpec(), ensureListen(lv), ensureVocab(), ensureSpec(), ensureGrammarExtra()]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var items = window["LISTEN_" + lv] || [];
     var it = items[idx];
     if(!it){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy hội thoại này.</div>'; return; }
@@ -7960,7 +8014,7 @@ function renderListenItem(lv, idx){
         });
       });
     });
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu luyện nghe.</div>'; });
 }
 
 /* ================= ĐỌC HIỂU AI =================
@@ -7974,9 +8028,11 @@ function ensureDokkai(){ return window.DOKKAI_PASSAGES ? Promise.resolve() : loa
 function dkById(id){ return (window.DOKKAI_PASSAGES || []).filter(function(p){ return p.id === id; })[0] || null; }
 function dkByLevel(lv){ return (window.DOKKAI_PASSAGES || []).filter(function(p){ return p.level === lv; }); }
 function renderDokkaiHome(lvFilter){
+  var rTok = skBeginRender();
   document.title = "Đọc hiểu AI — Bài đọc theo cấp N5–N1 | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải bài đọc…");
   ensureDokkai().then(function(){
+    if(!skRenderAlive(rTok)) return;
     var all = window.DOKKAI_PASSAGES || [];
     var lv = (lvFilter && LEVELS.indexOf(lvFilter) >= 0) ? lvFilter : "";
     var list = lv ? all.filter(function(p){ return p.level === lv; }) : all;
@@ -8002,7 +8058,7 @@ function renderDokkaiHome(lvFilter){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu đọc hiểu.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu đọc hiểu.</div>'; });
 }
 /* ----- Trình phát Đọc hiểu AI: file MP3 thật (karaoke theo timings) ----- */
 /* MP3 là chính; khi bài không có audio hoặc tải lỗi thì rơi về giọng đọc
@@ -8456,8 +8512,10 @@ function dkGrammarHTML(){
   return h;
 }
 function renderDokkaiItem(id){
+  var rTok = skBeginRender();
   $app.innerHTML = loadingHTML("Đang tải bài đọc…");
   ensureDokkai().then(function(){
+    if(!skRenderAlive(rTok)) return;
     var p = dkById(id);
     if(!p){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy bài đọc này.</div>'; return; }
     document.title = p.title + " — Đọc hiểu AI " + p.level + " | SoraKanji";
@@ -8562,7 +8620,7 @@ function renderDokkaiItem(id){
         if(gi >= 0) a.setAttribute("href", "#/nguphap/" + a.getAttribute("data-dklv") + "/" + gi);
       });
     }).catch(function(){});
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
 }
 
 /* ================= ĐỌC HIỂU ================= */
@@ -8587,6 +8645,7 @@ function ensureReading(lv, kind){
   return window[vn] ? Promise.resolve(window[vn]) : loadJS(readFile(lv, kind)).then(function(){ return window[vn]; });
 }
 function renderReadHome(){
+  var rTok = skBeginRender();
   document.title = "Đọc hiểu tiếng Nhật N5–N1 | SoraKanji";
   $app.innerHTML =
     '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Đọc hiểu</div>' +
@@ -8601,9 +8660,11 @@ function renderReadHome(){
     }).join("") + "</div>";
 }
 function renderReadList(lv, kind){
+  var rTok = skBeginRender();
   document.title = "Đọc hiểu " + lv + " — " + READ_KIND_LABEL[kind] + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang tải bài đọc…");
   ensureReading(lv, kind).then(function(items){
+    if(!skRenderAlive(rTok)) return;
     items = items || [];
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/doc">Đọc hiểu</a> / ' + lv + "</div>" +
       "<h1>Đọc hiểu " + lv + '</h1></div>' +
@@ -8619,13 +8680,15 @@ function renderReadList(lv, kind){
     });
     h += "</div>";
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
 }
 var readPicks = {};
 function renderReadItem(lv, kind, idx){
+  var rTok = skBeginRender();
   idx = parseInt(idx, 10);
   $app.innerHTML = loadingHTML("Đang tải bài đọc…");
   ensureReading(lv, kind).then(function(items){
+    if(!skRenderAlive(rTok)) return;
     var it = (items || [])[idx];
     if(!it){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy bài đọc này.</div>'; return; }
     document.title = (it.title || "Bài đọc") + " — Đọc hiểu " + lv + " | SoraKanji";
@@ -8684,7 +8747,7 @@ function renderReadItem(lv, kind, idx){
       var first = document.querySelector(".qresult.show");
       if(first) first.scrollIntoView({behavior: "smooth", block: "center"});
     });
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
 }
 
 /* ================= XẾP HẠNG ================= */
@@ -8829,6 +8892,7 @@ function renderRankBoard(){
   }
 }
 function renderRankPage(){
+  var rTok = skBeginRender();
   document.title = "Xếp hạng & cấp bậc | SoraKanji";
   document.body.classList.remove("plain");
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Xếp hạng</div>' +
@@ -8945,6 +9009,7 @@ function buildPlan30(lv){
   return days;
 }
 function renderPersonalPage(){
+  var rTok = skBeginRender();
   document.title = "Cá nhân hoá — lộ trình học | SoraKanji";
   document.body.classList.remove("plain");
   var cur = REALMS_PATH[declaredLvW];
@@ -9107,15 +9172,18 @@ function closePlanDay(){
   if(m) m.hidden = true;
 }
 function loadPlan30(lv){
+  var rTok = _skRenderSeq; /* chup phien render hien tai (ham phu — khong mo phien moi) */
   var wrap = document.getElementById("plan30Wrap");
   if(!wrap) return;
   wrap.innerHTML = loadingHTML("Đang dựng lộ trình 30 ngày " + lv + "…");
   Promise.all([ensureVocab(), ensureVocabFor(lv), ensureGrammar(), ensureListen(lv)]).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var w2 = document.getElementById("plan30Wrap");
     if(!w2) return;
     w2.innerHTML = plan30HTML(lv);
     bindPlan30(lv);
   }).catch(function(){
+    if(!skRenderAlive(rTok)) return;
     var w2 = document.getElementById("plan30Wrap");
     if(w2) w2.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu để dựng lộ trình. Kiểm tra kết nối rồi tải lại trang.</div>';
   });
@@ -9165,10 +9233,12 @@ function accRowHTML(w){
     '<span class="am">' + esc(w.meaning) + "</span>" + spkBtn(w.word, "Nghe đọc " + w.word) + "</div>";
 }
 function renderTrongAmPage(){
+  var rTok = skBeginRender();
   document.title = "Trọng âm (pitch accent) tiếng Nhật | SoraKanji";
   document.body.classList.remove("plain");
   $app.innerHTML = loadingHTML("Đang tải dữ liệu trọng âm…");
   ensureAccent().then(function(){
+    if(!skRenderAlive(rTok)) return;
     var words = window.ACCENT_WORDS || [];
     var pairs = {};
     words.forEach(function(w){ if(w.pair){ (pairs[w.pair] = pairs[w.pair] || []).push(w); } });
@@ -9198,11 +9268,12 @@ function renderTrongAmPage(){
     });
     h += '<p class="hint" style="margin-top:16px">' + words.length + ' từ mẫu có đánh dấu trọng âm chuẩn Tokyo. Bấm nút loa ở cuối mỗi hàng để nghe giọng đọc của từ.</p></div>';
     $app.innerHTML = h;
-  }).catch(function(){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu trọng âm.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu trọng âm.</div>'; });
 }
 
 /* ================= QUY TẮC CHUYỂN ÂM ================= */
 function renderChuyenAmPage(){
+  var rTok = skBeginRender();
   document.title = "Quy tắc chuyển âm | SoraKanji";
   document.body.classList.remove("plain");
   function row(word, rest){
@@ -9426,6 +9497,7 @@ function skGateForHash(hash){
   return null;
 }
 function renderLockedPage(lv, label, targetHash){
+  var rTok = skBeginRender();
   document.title = label + " — Premium | SoraKanji";
   document.body.classList.remove("plain");
   skLockedTarget = targetHash || "#/";
@@ -9556,6 +9628,7 @@ function freeStatusHTML(){
     "<p style=\"margin:0\">Nâng cấp để mở toàn bộ N4–N1 ở mọi mục — kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu — xem full mọi video Shadowing và tạo video từ link không giới hạn, trên cả web và app điện thoại, đồng bộ theo tài khoản. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24h.</p></div>";
 }
 function renderTrondoiPage(){
+  var rTok = skBeginRender();
   renderNangcapPage();
 }
 var skCheckoutErr = "";
@@ -9564,6 +9637,7 @@ var skCheckoutErr = "";
    chung cho trang gói (skStartCheckout) và trang Thanh toán (renderCheckoutView). */
 var SK_NO_EMAIL_MSG = "Tài khoản của bạn chưa có email nên chưa mua được gói. Bạn đăng xuất rồi đăng nhập lại bằng Google, bấm \"Tiếp tục\" ở màn đồng ý để bổ sung email, rồi quay lại mua nhé.";
 function renderNangcapPage(){
+  var rTok = skBeginRender();
   document.title = "Nâng cấp Premium | SoraKanji";
   document.body.classList.remove("plain");
   skLoadPremium(false); /* chưa biết trạng thái thì đi lấy; xong sẽ vẽ lại nếu đã Premium */
@@ -9577,6 +9651,7 @@ function renderNangcapPage(){
   renderPackagesView();
 }
 function renderPremiumStatusView(notice){
+  var rTok = skBeginRender();
   document.title = "Premium | SoraKanji";
   var untilTxt = SK_PREMIUM.until == null ? "Trọn đời — không hết hạn" :
     "đến ngày " + new Date(SK_PREMIUM.until).toLocaleDateString("vi-VN");
@@ -9681,6 +9756,7 @@ function upgradeCompareHTML(){
   return h;
 }
 function renderPackagesView(){
+  var rTok = skBeginRender();
   var sale = skSaleActive();
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Nâng cấp</div>' +
     "<h1>Nâng cấp Premium</h1>" +
@@ -9774,6 +9850,7 @@ function skRenderChatBox(orderCode){
   }).catch(function(){});
 }
 function renderCheckoutView(o){
+  var rTok = skBeginRender();
   var p = SK_PACKAGES[o.pkg] || SK_PACKAGES.year;
   document.title = "Thanh toán — " + p.label + " | SoraKanji";
   var ckUser = skAuthUser() || {};
@@ -9865,6 +9942,7 @@ function renderCheckoutView(o){
 
 /* ================= CỘNG ĐỒNG ================= */
 function renderCongdongPage(){
+  var rTok = skBeginRender();
   document.title = "Cộng đồng học viên | SoraKanji";
   document.body.classList.remove("plain");
   $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Cộng đồng</div>' +
@@ -9976,6 +10054,7 @@ function skDeleteAccountDo(){
 }
 
 function renderSettingsPage(){
+  var rTok = skBeginRender();
   document.title = "Cài đặt | SoraKanji";
   document.body.classList.remove("plain");
   var standalone = false;
@@ -10118,6 +10197,7 @@ function renderSettingsPage(){
    paywall, không cần đăng nhập (link tới từ modal đăng nhập + Cài đặt).
    Mục hoàn tiền (Điều khoản §5) đã được user duyệt 17/11/2026 — văn bản chính thức. */
 function renderTermsPage(){
+  var rTok = skBeginRender();
   document.title = "Điều khoản sử dụng | SoraKanji";
   document.body.classList.remove("plain");
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Điều khoản sử dụng</div>' +
@@ -10173,6 +10253,7 @@ function renderTermsPage(){
 }
 
 function renderPrivacyPage(){
+  var rTok = skBeginRender();
   document.title = "Chính sách quyền riêng tư | SoraKanji";
   document.body.classList.remove("plain");
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Chính sách quyền riêng tư</div>' +
@@ -10401,12 +10482,14 @@ function skAdminRenderShell(){
   });
 }
 function skAdminLoad(){
+  var rTok = _skRenderSeq; /* chup phien render hien tai (ham phu — khong mo phien moi) */
   var db = skDb();
   if(!db) return Promise.reject(new Error("not-ready"));
   return Promise.all([
     db.collection("kanji_progress").get(),
     db.collection("sk_orders").orderBy("createdAt", "desc").limit(100).get()
   ]).then(function(res){
+    if(!skRenderAlive(rTok)) return;
     var progDocs = [];
     res[0].forEach(function(snap){ progDocs.push({uid: snap.id, premium: (snap.data() || {}).premium}); });
     var orderDocs = [];
@@ -10439,6 +10522,7 @@ function skAdminLoad(){
   });
 }
 function renderAdminDashboard(){
+  var rTok = skBeginRender();
   document.title = "Bảng điều khiển | SoraKanji";
   document.body.classList.remove("plain");
   if(!webIsAdmin()){ location.replace("#/"); return; }
@@ -10446,6 +10530,7 @@ function renderAdminDashboard(){
     "<h1>Bảng điều khiển</h1><p>Thống kê học viên và doanh thu, đơn hàng và cấp Premium tay — chỉ tài khoản quản trị thấy trang này.</p></div>" +
     '<div id="admBody" style="max-width:960px;padding-bottom:36px"><p class="adm-note">Đang tải dữ liệu…</p></div>';
   skAdminLoad().catch(function(err){
+    if(!skRenderAlive(rTok)) return;
     var body = document.getElementById("admBody");
     if(!body) return;
     var code = (err && err.code) || "";
@@ -10827,6 +10912,7 @@ function countSavedWords(){
   return collectSavedEntries().reduce(function(sum, e){ return sum + e.idxs.length; }, 0);
 }
 function renderSavedPage(){
+  var rTok = skBeginRender();
   document.title = "Mục đã lưu | SoraKanji";
   document.body.classList.remove("plain");
   var head = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Mục đã lưu</div>' +
@@ -10848,6 +10934,7 @@ function renderSavedPage(){
   if(needSpec) jobs.push(ensureSpec());
   if(needDk) jobs.push(ensureDokkai());
   Promise.all(jobs).then(function(){
+    if(!skRenderAlive(rTok)) return;
     var total = 0, rows = "";
     entries.forEach(function(e){
       var words = null, label = "", href = "", isDk = false, isSync = false;
@@ -10940,7 +11027,7 @@ function renderSavedPage(){
         renderSavedPage();
       });
     });
-  }).catch(function(){ $app.innerHTML = head + '<div class="empty-note" style="margin:22px 0">Không tải được dữ liệu từ vựng đã lưu.</div>'; });
+  }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = head + '<div class="empty-note" style="margin:22px 0">Không tải được dữ liệu từ vựng đã lưu.</div>'; });
 }
 
 /* ----- Chuông thông báo: chỉ tính từ dữ liệu thật đang có trên máy này -----
