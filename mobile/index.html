@@ -836,13 +836,15 @@
     /* Bảng/scrim bám viewport trên mobile (xem ghi chú ở .sheet). */
     .sheet,.scrim{position:fixed;}
   }
-  /* ---------- Cong chan khi Firebase SDK chua tai duoc (Loi 3) ----------
+  /* ---------- Cong loi khi Firebase SDK chua tai duoc (Loi 3) ----------
      Phu kin khung #phone (.phone la position:relative + overflow:hidden nen
      absolute inset:0 phu het app ca o ban xem thu desktop lan PWA toan man
      hinh). z-index:90 — cao nhat file (tren panel Sora 72, nut Sora 70,
      .sheet dang nhap 51, tabbar 60): cong che moi thu va chan moi thao tac
-     xuong noi dung ben duoi. Khong co nut dong — cong chi mo khi trang thai
-     dang nhap da xac dinh (applyAuthUser / openLogin goi skAuthGateHide). */
+     xuong noi dung ben duoi. Tu 18/11 cong KHONG hien khi mo app (dang
+     nhap tuy chon) — chi hien theo yeu cau khi bam muc khoa ma SDK chua
+     tai duoc, o trang thai loi + nut "Thu lai" / "De sau" (xem
+     showPremiumPrompt / skAuthGateShow). */
   .skauthgate{position:absolute; inset:0; z-index:90; background:var(--bg);
     display:flex; align-items:center; justify-content:center; padding:24px;}
   .skauthgate[hidden]{display:none;} /* .skauthgate dat display:flex nen can rule nay de [hidden] an duoc */
@@ -853,6 +855,10 @@
   .skauthgate-msg{font-size:13px; color:var(--ink-2); margin:0 0 16px; line-height:1.55;}
   .skauthgate-card .sheetbtn{width:100%; justify-content:center;}
   #skAuthGateRetry[hidden]{display:none;} /* .sheetbtn dat display:flex nen can rule nay */
+  #skAuthGateDismiss[hidden]{display:none;} /* .ghostbtn dat display:flex nen can rule nay */
+  .skauthgate-card .ghostbtn{width:100%; justify-content:center; margin-top:8px;}
+  /* Nut dong (X) cua bang dang nhap (dang nhap tuy chon 18/11): goc phai tren cua sheet. */
+  .sheet-x{position:absolute; top:10px; right:12px; width:36px; height:36px; border:none; background:transparent; font-size:24px; line-height:1; color:var(--ink-2); cursor:pointer; z-index:2;}
   .skagate-spin{width:28px; height:28px; margin:0 auto 14px; border-radius:50%;
     border:3px solid var(--line); border-top-color:var(--red);
     animation:skagateSpin .8s linear infinite;}
@@ -3707,7 +3713,7 @@
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
         </div>
-        <div class="menu">
+        <div class="menu" id="setDeleteAccountRow">
           <button class="mrow danger" id="setDeleteAccountBtn" type="button" aria-label="Xóa tài khoản — xóa vĩnh viễn tài khoản, tiến độ học, gói Premium và dữ liệu đã lưu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>
             Xóa tài khoản
@@ -3844,6 +3850,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     <!-- đăng nhập Firebase Auth thật (Google + link email, không mật khẩu) -->
     <div class="sheet" id="loginSheet" aria-hidden="true">
       <div class="grab"></div>
+      <button class="sheet-x" id="loginCloseX" type="button" aria-label="Đóng">×</button>
       <img class="login-mascot" src="assets/chibi.png" alt="">
       <h3 id="loginTitle">Đăng nhập</h3>
       <p class="snote">Đăng nhập để đồng bộ tiến trình học của bạn.</p>
@@ -3870,8 +3877,9 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
-    <!-- Cổng chặn khi Firebase SDK chưa tải được (Lỗi 3): không cho dùng app
-         khi chưa xác định được trạng thái đăng nhập — xem SPEC.md §2. -->
+    <!-- Cổng lỗi khi Firebase SDK chưa tải được (Lỗi 3, đổi 18/11): KHÔNG
+         chặn khi mở app nữa — chỉ hiện khi bấm mục khóa mà SDK chưa tải
+         được, kèm nút "Thử lại" + "Để sau" để về app duyệt free. -->
     <div id="skAuthGate" class="skauthgate" hidden aria-hidden="true" role="alert">
       <div class="skauthgate-card">
         <div class="skagate-spin" id="skAuthGateSpin"></div>
@@ -3879,6 +3887,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <h3 id="skAuthGateTitle">Đang kết nối…</h3>
         <p class="skauthgate-msg" id="skAuthGateMsg">Đang kết nối máy chủ đăng nhập, bạn đợi giây lát nhé.</p>
         <button class="sheetbtn" id="skAuthGateRetry" type="button" hidden>Thử lại</button>
+        <button class="ghostbtn" id="skAuthGateDismiss" type="button" hidden>Để sau</button>
       </div>
     </div>
 
@@ -5529,8 +5538,35 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function isPremium(){ return premiumIsActive(premiumCacheLoad()); }
   function premiumLevelOpen(lv){ return lv === "N5" || isPremium(); }
+  /* Cổng chờ đăng nhập (đăng nhập tùy chọn, 18/11): user bấm mục khóa khi
+     chưa đăng nhập thì mở bảng đăng nhập TRƯỚC thay vì bảng Premium; đăng
+     nhập xong, applyAuthUser đánh giá lại cổng (chưa Premium → hiện bảng
+     Premium — xem skResumePendingGate). Chỉ là cờ — không lưu mục nào:
+     sau đăng nhập, user Premium bấm lại mục vừa bấm để mở. */
+  var skPendingGate = false;
+  function skResumePendingGate(){
+    if(!skPendingGate) return;
+    skPendingGate = false;
+    var done = false;
+    function finish(){
+      if(done) return;
+      done = true;
+      if(!isPremium()) showPremiumPrompt();
+    }
+    setTimeout(finish, 3000); /* dự phòng: đọc Premium treo thì vẫn đánh giá lại sau 3s */
+    try{ premiumRefresh(finish); }catch(_){ finish(); }
+  }
   /* Mở bảng nâng cấp Premium; trả về false để handler dừng lại. */
   function showPremiumPrompt(){
+    if(!signedInUid){
+      /* Chưa đăng nhập: mở bảng đăng nhập trước (đăng nhập xong đánh giá
+         lại cổng — xem skPendingGate). SDK chưa tải được thì hiện trạng
+         thái lỗi + Thử lại thay vì bảng đăng nhập. */
+      skPendingGate = true;
+      if(!skAuth()){ skAuthGateShow(false); return false; }
+      openLogin();
+      return false;
+    }
     var sh = document.getElementById("premiumSheet");
     var sc = document.getElementById("premiumScrim");
     if(!sh) return false;
@@ -5647,12 +5683,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(typeof v.seconds === "number") return v.seconds * 1000;
     return null;
   }
-  function premiumRefresh(){
+  function premiumRefresh(done){
+    function skPremDone(){ if(typeof done === "function"){ try{ done(); }catch(_){} } }
     try{
       var app = premiumFbApp();
-      if(!app || !firebase.auth || !firebase.firestore) return;
+      if(!app || !firebase.auth || !firebase.firestore){ skPremDone(); return; }
       var user = firebase.auth().currentUser;
-      if(!user) return; /* chưa đăng nhập Firebase: giữ cache, mặc định gói miễn phí */
+      if(!user){ skPremDone(); return; } /* chưa đăng nhập Firebase: giữ cache, mặc định gói miễn phí */
       firebase.firestore().collection("kanji_progress").doc(user.uid).get().then(function(snap){
         var data = (snap && snap.exists) ? snap.data() : null;
         var prem = data && data.premium ? data.premium : null;
@@ -5662,8 +5699,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           premiumCacheSave(null);
         }
         premiumApplyLocks();
-      }).catch(function(){ /* offline/lỗi đọc: giữ cache cũ */ });
-    }catch(_){}
+        skPremDone();
+      }).catch(function(){ skPremDone(); /* offline/lỗi đọc: giữ cache cũ */ });
+    }catch(_){ skPremDone(); }
   }
   var premiumSawUser = false;
   function premiumInitAuth(){
@@ -18588,6 +18626,14 @@ function furiHTML(text){
     if(cell) cell.hidden = !isAdminAccount;
     var row = document.getElementById("meAdminRow");
     if(row) row.hidden = !isAdminAccount;
+    /* Đăng nhập tùy chọn (18/11): hàng Xóa tài khoản + công tắc Đồng bộ
+       tiến độ chỉ hiện khi đã đăng nhập (khách chưa đăng nhập không có
+       tài khoản để xóa hay tiến độ để đồng bộ). Ẩn nút không đổi trạng
+       thái cài đặt settings.sync — đăng nhập lại thì hiện đúng như cũ. */
+    var delRow = document.getElementById("setDeleteAccountRow");
+    if(delRow) delRow.hidden = !signedInUid;
+    var syncRow = document.querySelector('[data-key="sync"]');
+    if(syncRow) syncRow.hidden = !signedInUid;
     renderAccount();
   }
   function setSignedInEmail(email){
@@ -18700,9 +18746,9 @@ function furiHTML(text){
     if(fw) fw.classList.toggle("login-hide", hide);
   }
   function openLogin(){
-    /* Bảng đăng nhập chỉ mở khi đã xác định là chưa đăng nhập (listener
-       bắn null hoặc timeout an toàn 4s trong initMobileAuth) → mở cổng
-       chặn SDK (nếu đang hiện). Lũy đẳng — gọi thừa vô hại. */
+    /* Bảng đăng nhập mở theo yêu cầu (user bấm mục khóa / nút đăng nhập,
+       hoặc app mở từ link email) → ẩn cổng lỗi SDK (nếu đang hiện).
+       Lũy đẳng — gọi thừa vô hại. */
     skAuthGateHide();
     var formWrap = document.getElementById("loginFormWrap");
     var acctWrap = document.getElementById("loginAcctWrap");
@@ -18862,7 +18908,7 @@ function furiHTML(text){
   /* ---------- Xóa tài khoản (Apple bắt buộc, Guideline 5.1.1) ----------
      Mục "Xóa tài khoản" ở tab Cài đặt. Xác nhận → xóa doc Firestore
      kanji_progress/{uid} kèm subcollection sync → xóa Firebase Auth user
-     → dọn sạch localStorage của app → app về bảng đăng nhập bắt buộc.
+     → dọn sạch localStorage của app → app về chế độ khách (đăng nhập tùy chọn 18/11).
      Đơn hàng sk_orders KHÔNG động vào (hồ sơ giao dịch; rules cũng cấm
      client xóa đơn). Thứ tự bắt buộc: Firestore TRƯỚC, deleteUser SAU —
      sau deleteUser token hết hiệu lực nên không xóa Firestore được nữa.
@@ -18995,6 +19041,9 @@ function furiHTML(text){
       /* Phiên đã về (kể cả vừa quay lại từ Google): đóng bảng đăng nhập —
          nếu bảng từng bật lên ở lần bắn null trước đó thì tắt ngay. */
       closeLogin();
+      /* Đăng nhập xong: nếu trước đó user bấm mục khóa khi chưa đăng nhập
+         thì đánh giá lại cổng (chưa Premium → hiện bảng Premium). */
+      skResumePendingGate();
     }else{
       /* Ghi nhận có phiên trước khi xóa — chỉ khi thật sự chuyển từ "đã
          đăng nhập" sang "chưa đăng nhập" mới xóa dữ liệu local + tải lại
@@ -19004,11 +19053,13 @@ function furiHTML(text){
       signedInUid = "";
       signedInName = "";
       setSignedInEmail("");
-      /* Bắt buộc đăng nhập (user yêu cầu 2026-11-15): chưa có phiên thì mở
-         bảng đăng nhập ngay — lúc mở app (lần đầu listener bắn) lẫn lúc
-         vừa đăng xuất. Bảng này không đóng được khi chưa đăng nhập (đã
-         bỏ nút Đóng + chặn bấm nền mờ). */
-      openLogin();
+      /* Đăng nhập tùy chọn (đổi 18/11 — bỏ bắt buộc đăng nhập 15/11):
+         chưa có phiên thì để app mở ở chế độ khách, KHÔNG mở bảng đăng
+         nhập. Chỉ mở bảng trong 2 trường hợp: app mở từ link đăng nhập
+         email ở trình duyệt khác (skPendingEmailLink — hỏi lại email),
+         hoặc đang có cổng chờ mà SDK vừa tải được (skPendingGate —
+         user bấm mục khóa rồi bấm Thử lại ở cổng lỗi). */
+      if(skPendingEmailLink || (skPendingGate && skAuth())) openLogin();
       avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
       renderAvatarPhoto();
       /* Dọn cache Premium + khóa lại ngay (listener của paywall cũng làm
@@ -19030,15 +19081,14 @@ function furiHTML(text){
     /* Ghi 1 lượt truy cập cho phiên này (bỏ qua khi là Admin — xem skLogVisit). */
     skLogVisit();
   }
-  /* ---------- Cổng chặn khi Firebase SDK chưa tải được (Lỗi 3) ----------
-     Đăng nhập bắt buộc chỉ có hiệu lực khi Firebase SDK tải được: bản cũ
-     initMobileAuth() return sớm khi skAuth() null nên app mở toang không
-     cần đăng nhập (PWA mất mạng, mạng chặn gstatic, trình chặn quảng cáo).
-     Sửa: SDK chưa có thì dựng cổng chặn phủ kín app — không cho dùng gì
-     cho tới khi xác định được trạng thái đăng nhập. Cổng có 2 trạng thái:
-     "loading" (đang thử tải lại SDK) và "error" (tải không được + nút
-     Thử lại). Chỉ mở cổng khi applyAuthUser/openLogin chạy, tức đã xác
-     định được trạng thái đăng nhập. */
+  /* ---------- Cổng lỗi khi Firebase SDK chưa tải được (Lỗi 3) ----------
+     Đổi 18/11 (đăng nhập tùy chọn): SDK chưa có thì KHÔNG dựng cổng chặn
+     khi mở app nữa — app vẫn mở để duyệt free ở chế độ khách. Cổng chỉ
+     hiện theo yêu cầu khi user bấm mục khóa mà SDK chưa tải được (xem
+     showPremiumPrompt): 2 trạng thái "loading" (đang thử tải lại SDK)
+     và "error" (tải không được + nút "Thử lại" / "Để sau" để về app).
+     Thử lại thành công thì initMobileAuth() chạy lại; cổng chờ
+     (skPendingGate) được nối tiếp ở applyAuthUser(null). */
   var SK_FB_SDK_URLS = [
     "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js",
     "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js",
@@ -19049,6 +19099,7 @@ function furiHTML(text){
   var skGateTitleEl = document.getElementById("skAuthGateTitle");
   var skGateMsgEl = document.getElementById("skAuthGateMsg");
   var skGateRetryBtn = document.getElementById("skAuthGateRetry");
+  var skGateDismissBtn = document.getElementById("skAuthGateDismiss");
   var skGateSpinEl = document.getElementById("skAuthGateSpin");
   var skSdkLoading = false; /* đang tải lại SDK — chống bấm Thử lại chồng nhau */
   var skGateShown = false;
@@ -19059,6 +19110,7 @@ function furiHTML(text){
     skGateEl.setAttribute("aria-hidden", "false");
     if(skGateSpinEl) skGateSpinEl.hidden = !loading;
     if(skGateRetryBtn) skGateRetryBtn.hidden = !!loading;
+    if(skGateDismissBtn) skGateDismissBtn.hidden = !!loading;
     if(loading){
       if(skGateTitleEl) skGateTitleEl.textContent = "Đang kết nối…";
       if(skGateMsgEl) skGateMsgEl.textContent = "Đang kết nối máy chủ đăng nhập, bạn đợi giây lát nhé.";
@@ -19094,6 +19146,9 @@ function furiHTML(text){
     if(skSdkLoading) return;
     skAuthGateShow(true);
     skLoadFbSdk(function(ok){
+      /* Tải được SDK: initMobileAuth() chạy lại; listener bắn null thì
+         applyAuthUser nối tiếp cổng chờ (mở bảng đăng nhập — xem
+         skPendingGate). Tải không được: cổng ở trạng thái lỗi. */
       if(ok && skAuth()){ initMobileAuth(); }
       else skAuthGateShow(false);
     });
@@ -19101,15 +19156,13 @@ function furiHTML(text){
   function initMobileAuth(){
     var auth = skAuth();
     if(!auth){
-      /* SDK chưa tải được: dựng cổng chặn + thử tải lại 1 lần ngay (lỗi
-         thoáng qua thì tự khỏi, không bắt user bấm Thử lại). Tải lại
-         không được thì cổng ở trạng thái lỗi + nút Thử lại. Không return
-         im lặng như bản cũ — app không được mở khi chưa xác định được
-         trạng thái đăng nhập. */
-      skAuthGateShow(true);
+      /* SDK chưa tải được: thử tải lại 1 lần ngay, KHÔNG dựng cổng chặn —
+         đăng nhập là tùy chọn (18/11) nên app vẫn mở để duyệt free ở chế
+         độ khách; chỉ khi bấm mục khóa mới hiện trạng thái lỗi + Thử lại
+         (xem showPremiumPrompt). Tải lại không được thì để app chạy ở
+         chế độ khách, không chặn. */
       skLoadFbSdk(function(ok){
         if(ok && skAuth()){ initMobileAuth(); }
-        else skAuthGateShow(false);
       });
       return;
     }
@@ -19152,14 +19205,12 @@ function furiHTML(text){
     }catch(e){ startAuthListener(); }
     /* An toàn khi listener bắn chậm/không bắn (lỗi 2026-11-15): sau 4s,
        nếu Firebase đã có user mà app chưa ghi phiên thì ghi trực tiếp từ
-       currentUser; nếu không có user mà bảng chưa mở thì mở bảng (bắt
-       buộc đăng nhập). applyAuthUser/openLogin đều lũy đẳng nên gọi thừa
-       vô hại. */
+       currentUser. Không tự mở bảng đăng nhập khi chưa có phiên (đăng
+       nhập tùy chọn 18/11 — bỏ nhánh openLogin bắt buộc cũ). */
     setTimeout(function(){
       try{
         var u = auth.currentUser;
         if(u && !signedInUid) applyAuthUser(u);
-        else if(!u && !signedInUid && loginSheet && !loginSheet.classList.contains("open")) openLogin();
       }catch(_){}
     }, 4000);
     /* Có phiên sẵn (mở lại app): onAuthStateChanged tự bắn ngay, không cần
@@ -19167,6 +19218,7 @@ function furiHTML(text){
   }
   initMobileAuth();
   if(skGateRetryBtn) skGateRetryBtn.addEventListener("click", skAuthGateRetry);
+  if(skGateDismissBtn) skGateDismissBtn.addEventListener("click", skAuthGateHide);
   /* Mạng vừa trở lại (PWA mất mạng rồi có mạng): tự thử tải lại SDK để
      mở cổng mà không bắt user bấm Thử lại. */
   window.addEventListener("online", function(){
@@ -19178,8 +19230,12 @@ function furiHTML(text){
   document.getElementById("loginEmailLink").addEventListener("click", doEmailLink);
   if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doEmailLink(); } });
   document.getElementById("loginCancel2").addEventListener("click", closeLogin);
+  /* Nút X đóng bảng đăng nhập (đăng nhập tùy chọn 18/11): user tự đóng
+     bảng = từ bỏ cổng đang chờ (xóa skPendingGate) rồi đóng như thường. */
+  var loginCloseXBtn = document.getElementById("loginCloseX");
+  if(loginCloseXBtn) loginCloseXBtn.addEventListener("click", function(){ skPendingGate = false; closeLogin(); });
   document.getElementById("loginLogout").addEventListener("click", doLogout);
-  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open") && signedInUid) closeLogin(); });
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")){ skPendingGate = false; closeLogin(); } });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
      Nguồn ảnh, theo thứ tự người dùng chọn (lưu localStorage "sk_avatar_choice"):
