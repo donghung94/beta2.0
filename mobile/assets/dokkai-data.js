@@ -2953,7 +2953,7 @@ window.DOKKAI_PASSAGES = [
     "options": [
      "にじが",
      "ほしが",
-     "月が",
+     "つきが",
      "鳥が"
     ],
     "answer": 0,

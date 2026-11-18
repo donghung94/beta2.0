@@ -550,6 +550,7 @@ window.VOCAB_SPEC = {
   {
    "word": "釘",
    "reading": "くぎ",
+   "hanViet": "ĐINH",
    "meaning": "đinh"
   },
   {
@@ -1798,6 +1799,7 @@ window.VOCAB_SPEC = {
   {
    "word": "畑",
    "reading": "はたけ",
+   "hanViet": "ĐIỀN",
    "meaning": "ruộng khô, vườn rau"
   },
   {
@@ -2203,7 +2205,7 @@ window.VOCAB_SPEC = {
   {
    "word": "食中毒",
    "reading": "しょくちゅうどく",
-   "hanViet": "THỰC TRUNG ĐỘC",
+   "hanViet": "THỰC TRÚNG ĐỘC",
    "meaning": "ngộ độc thực phẩm"
   },
   {
@@ -2726,7 +2728,7 @@ window.VOCAB_SPEC = {
   {
    "word": "救命胴衣",
    "reading": "きゅうめいどうい",
-   "hanViet": "CỨU MỆNH Y",
+   "hanViet": "CỨU MỆNH ĐỒNG Y",
    "meaning": "áo phao cứu sinh"
   },
   {
@@ -2756,21 +2758,25 @@ window.VOCAB_SPEC = {
   {
    "word": "鮪",
    "reading": "まぐろ",
+   "hanViet": "VĨ",
    "meaning": "cá ngừ"
   },
   {
    "word": "鰹",
    "reading": "かつお",
+   "hanViet": "KIÊN",
    "meaning": "cá ngừ vằn (cá bào)"
   },
   {
    "word": "鯖",
    "reading": "さば",
+   "hanViet": "THANH",
    "meaning": "cá thu (cá saba)"
   },
   {
    "word": "鰯",
    "reading": "いわし",
+   "hanViet": "NHƯỢC",
    "meaning": "cá mòi"
   },
   {
@@ -2786,11 +2792,13 @@ window.VOCAB_SPEC = {
   {
    "word": "鯛",
    "reading": "たい",
+   "hanViet": "ĐIÊU",
    "meaning": "cá tráp (cá điêu)"
   },
   {
    "word": "鮭",
    "reading": "さけ",
+   "hanViet": "KHUÊ",
    "meaning": "cá hồi"
   },
   {
@@ -2802,11 +2810,13 @@ window.VOCAB_SPEC = {
   {
    "word": "鱈",
    "reading": "たら",
+   "hanViet": "TUYẾT",
    "meaning": "cá tuyết"
   },
   {
    "word": "鰈",
    "reading": "かれい",
+   "hanViet": "ĐIỆP",
    "meaning": "cá bơn"
   },
   {
@@ -2818,6 +2828,7 @@ window.VOCAB_SPEC = {
   {
    "word": "鰻",
    "reading": "うなぎ",
+   "hanViet": "MÂN",
    "meaning": "lươn (cá chình)"
   },
   {
@@ -2829,6 +2840,7 @@ window.VOCAB_SPEC = {
   {
    "word": "蛸",
    "reading": "たこ",
+   "hanViet": "SAO",
    "meaning": "bạch tuộc"
   },
   {
@@ -3380,7 +3392,7 @@ window.VOCAB_SPEC = {
   {
    "word": "整理整頓",
    "reading": "せいりせいとん",
-   "hanViet": "CHỈNH LÍ ĐỐN",
+   "hanViet": "CHỈNH LÝ CHỈNH ĐỐN",
    "meaning": "sắp xếp, dọn dẹp gọn gàng nơi làm việc"
   },
   {
@@ -3945,7 +3957,7 @@ window.VOCAB_SPEC = {
   {
    "word": "食中毒",
    "reading": "しょくちゅうどく",
-   "hanViet": "THỰC TRUNG ĐỘC",
+   "hanViet": "THỰC TRÚNG ĐỘC",
    "meaning": "ngộ độc thực phẩm"
   },
   {
@@ -4327,6 +4339,7 @@ window.VOCAB_SPEC = {
   {
    "word": "錆",
    "reading": "さび",
+   "hanViet": "THƯƠNG",
    "meaning": "gỉ sét"
   },
   {
@@ -4414,7 +4427,7 @@ window.VOCAB_SPEC = {
   {
    "word": "整理整頓",
    "reading": "せいりせいとん",
-   "hanViet": "CHỈNH LÍ ĐỐN",
+   "hanViet": "CHỈNH LÝ CHỈNH ĐỐN",
    "meaning": "sắp xếp gọn gàng"
   }
  ],
@@ -5318,7 +5331,7 @@ window.VOCAB_SPEC = {
   },
   {
    "word": "元口",
-   "reading": "もとぐち",
+   "reading": "もとくち",
    "hanViet": "NGUYÊN KHẨU",
    "meaning": "đầu gốc (đầu to của khúc gỗ)"
   },
@@ -5543,6 +5556,7 @@ window.VOCAB_SPEC = {
   {
    "word": "檜",
    "reading": "ひのき",
+   "hanViet": "CỐI",
    "meaning": "cây bách Nhật (hinoki)"
   },
   {
@@ -5572,11 +5586,13 @@ window.VOCAB_SPEC = {
   {
    "word": "欅",
    "reading": "けやき",
+   "hanViet": "CỦ",
    "meaning": "cây du Nhật (keyaki)"
   },
   {
    "word": "楢",
    "reading": "なら",
+   "hanViet": "DO",
    "meaning": "sồi Nhật (nara)"
   },
   {
@@ -5812,7 +5828,7 @@ window.VOCAB_SPEC = {
   },
   {
    "word": "大角",
-   "reading": "だいかく",
+   "reading": "おおかく",
    "hanViet": "ĐẠI GIÁC",
    "meaning": "gỗ vuông lớn (từ 18 inch trở lên, gỗ nhập)"
   },
