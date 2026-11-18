@@ -133,6 +133,14 @@
   /* An het thanh noi: truot xuong het chieu cao thanh (100%) + margin duoi 6px
      + safe-area + 8px du phong = 62px, du cho thanh 48px + margin 6px. */
   .tabbar.tab-hidden{transform:translateY(calc(100% + 14px + env(safe-area-inset-bottom)));}
+  /* An thanh tab khi bang dang nhap mo (loi 5): thanh tab (z-60) nam tren bang
+     dang nhap (.sheet z-51) nen che link Dieu khoan/Chinh sach o day bang khi
+     noi dung bang tran (320x568). Dung class rieng .login-hide (khong dung
+     .tab-hidden cua logic cuon) de dong bang chi go dung class nay, khong lam
+     mat trang thai an/hien theo cuon truoc do; transform giong .tab-hidden de
+     truot xuong nhu nhau, + pointer-events:none de chac chan khong chan bam
+     ngay ca trong 0,28s dang truot. */
+  .tabbar.login-hide{transform:translateY(calc(100% + 14px + env(safe-area-inset-bottom))); pointer-events:none;}
   @media (prefers-reduced-motion: reduce){ .tabbar{transition:none;} }
   .tabbtn{
     appearance:none; border:none; background:none; cursor:pointer;
@@ -2669,6 +2677,13 @@
     width:39px; height:39px; touch-action:none; -webkit-user-select:none; user-select:none;
   }
   .assistant-fabwrap.hide, .assistant-fabwrap.dismissed{display:none;}
+  /* An nut Sora khi bang dang nhap mo (loi 5): nut (z-70) nam tren bang dang
+     nhap (.sheet z-51) nen che dau phai link Dieu khoan/Chinh sach o day bang
+     (390x844: che 32x11px cuoi link Dieu khoan; 375: che cuoi dong 1;
+     320: che cuoi link Chinh sach). Dung class rieng .login-hide (khong dung
+     .hide cua khung chat hay .dismissed cua cai dat) de dong bang chi go dung
+     class nay, khong lam mat trang thai an/hien truoc do. */
+  .assistant-fabwrap.login-hide{display:none;}
   .assistant-fabwrap.snapping{transition:transform .26s cubic-bezier(.32,.72,.28,1);}
   .assistant-fab{
     position:relative; width:100%; height:100%; border-radius:50%; padding:0; cursor:pointer;
@@ -18383,6 +18398,16 @@ function furiHTML(text){
     }
     if(loginEmailInput) loginEmailInput.disabled = busy;
   }
+  /* An/hien nut Sora + thanh tab theo bang dang nhap (loi 5). Goi o cuoi
+     openLogin()/closeLogin() — 2 ham nay la cua duy nhat mo/dong bang (chi 2
+     cho classList "open" tren loginSheet trong ca file) nen khong lech trang
+     thai; classList.toggle luy dang nen goi thua cung khong sao. */
+  function skLoginChromeHide(hide){
+    var tb = document.getElementById("tabbar");
+    if(tb) tb.classList.toggle("login-hide", hide);
+    var fw = document.getElementById("assistantFabWrap");
+    if(fw) fw.classList.toggle("login-hide", hide);
+  }
   function openLogin(){
     /* Bảng đăng nhập chỉ mở khi đã xác định là chưa đăng nhập (listener
        bắn null hoặc timeout an toàn 4s trong initMobileAuth) → mở cổng
@@ -18416,12 +18441,14 @@ function furiHTML(text){
     loginSheet.classList.add("open");
     loginSheet.setAttribute("aria-hidden", "false");
     if(loginScrim) loginScrim.classList.add("open");
+    skLoginChromeHide(true); /* an nut Sora + thanh tab de link Dieu khoan/Chinh sach bam duoc (loi 5) */
   }
   function closeLogin(){
     loginSheet.classList.remove("open");
     loginSheet.setAttribute("aria-hidden", "true");
     var ans = document.getElementById("answerSheet");
     if(loginScrim && !(ans && ans.classList.contains("open"))) loginScrim.classList.remove("open");
+    skLoginChromeHide(false); /* hien lai nut Sora + thanh tab (loi 5) — chi go .login-hide, giu nguyen trang thai an/hien khac (.hide/.dismissed/.tab-hidden) */
   }
   function doGoogleLogin(){
     var auth = skAuth();
