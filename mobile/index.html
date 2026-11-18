@@ -2375,6 +2375,17 @@
   .fr-gold{box-shadow:0 0 0 2px var(--card), 0 0 0 4px #C9A24B, 0 0 0 6.5px #8A6A1F, 0 0 0 8.5px #E9CE7A;}
   .fr-jade{box-shadow:0 0 0 2px var(--card), 0 0 0 5px #0E7C7B, 0 0 0 7px #CDE9E4;}
 
+  /* ---------- Hiệu lực vật phẩm Cửa hàng (Lỗi 6): danh hiệu + hiệu ứng tên ---------- */
+  /* Danh hiệu 「Chiến Tâm」: huy hiệu nhỏ cạnh tên người dùng ở mọi nơi. */
+  .sk-title{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:999px; background:var(--teal-soft); color:var(--teal); font-size:11px; font-weight:800; line-height:1.5; vertical-align:1px; white-space:nowrap;}
+  /* Hiệu ứng tên Chuông Gió: tên màu trời + chuông 鈴 đung đưa nhẹ (chỉ transform, không layout). */
+  .sk-wind{color:var(--sky);}
+  .sk-windbell{display:inline-block; margin-right:4px; color:var(--sky); animation:skWindSway 2.4s ease-in-out infinite;}
+  @keyframes skWindSway{0%,100%{transform:rotate(-7deg);}50%{transform:rotate(7deg);}}
+  @media (prefers-reduced-motion: reduce){ .sk-windbell{animation:none;} }
+  /* Túi đồ: dòng "Đã sở hữu ✓" cho vật phẩm không đeo được. */
+  .sk-bag-owned{flex:0 0 auto; font-size:13px; font-weight:700; color:var(--good); white-space:nowrap;}
+
   /* ---------- Đấu trường ---------- */
   .opprow{
     display:flex; align-items:center; gap:12px; background:var(--card);
@@ -3355,7 +3366,7 @@
               <span class="avbadge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
             </div>
             <div>
-              <h2>Học viên SoraKanji</h2>
+              <h2 id="meName">Học viên SoraKanji</h2>
               <p id="meCourse">Đang học N4 · Mục tiêu thi 12/2026</p>
               <span class="realmchip" id="meRealmChip" style="margin-top:7px;"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 3</span>
             </div>
@@ -3480,7 +3491,7 @@
           <div id="rankPodium" class="rankpodium" aria-live="polite"></div>
           <div id="rankRows410" class="rankrows"></div>
           <div class="card rankme-card" style="margin-top:0; padding-top:6px; padding-bottom:6px;">
-            <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b>Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 EXP</span></div>
+            <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b id="rankMyName">Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 EXP</span></div>
           </div>
         </div>
 
@@ -4601,7 +4612,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
       <div class="detailbody" id="duelPlay" hidden>
         <div class="duelvs">
-          <div class="dv-side"><b>Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì</b><span class="dv-score" id="dvMyScore">0</span></div>
+          <div class="dv-side"><b id="dvMyName">Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì</b><span class="dv-score" id="dvMyScore">0</span></div>
           <div class="dv-mid">Câu <span id="dvQNum">1</span>/10<span class="stk" id="dvStreak"></span></div>
           <div class="dv-side"><b id="dvOppName">Đối thủ</b><span class="dv-score" style="color:var(--ink-3);">Ẩn điểm</span></div>
         </div>
@@ -4618,7 +4629,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <span class="passpill" id="drPill">THẮNG</span>
         <h2 id="drTitle" style="margin-top:14px;">Thắng trận rồi!</h2>
         <div class="vscmp">
-          <div class="vsc-row"><span>Bạn</span><div class="bar"><i id="drMyBar"></i></div><b id="drMyScore">0</b></div>
+          <div class="vsc-row"><span id="drMyName">Bạn</span><div class="bar"><i id="drMyBar"></i></div><b id="drMyScore">0</b></div>
           <div class="vsc-row"><span id="drOppName">Đối thủ</span><div class="bar"><i id="drOppBar"></i></div><b id="drOppScore">0</b></div>
         </div>
         <p id="drNote"></p>
@@ -4700,11 +4711,14 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <span class="w-main"><b>Danh hiệu 「Chiến Tâm」</b><span>Danh hiệu hiếm hiện cạnh tên ở mọi nơi. Xu không mua được.</span></span>
             <button class="buybtn" data-buy data-kind="cong" data-price="200" data-name="Danh hiệu Chiến Tâm"><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>200 điểm</button>
           </div>
-          <div class="walletrow">
-            <span class="w-ic jp" style="background:var(--teal-soft); color:var(--teal);">籍</span>
-            <span class="w-main"><b>Tài liệu · Bộ đề cộng đồng</b><span>Mở bộ đề luyện riêng của cộng đồng — chỉ học viên có đóng góp mới vào được.</span></span>
-            <button class="buybtn" data-buy data-kind="cong" data-price="350" data-name="Tài liệu · Bộ đề cộng đồng"><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>350 điểm</button>
-          </div>
+          <!-- Món "Tài liệu · Bộ đề cộng đồng" (350 điểm) TẠM GỠ 2026-11-18 (Lỗi 6):
+               không có nội dung bộ đề cộng đồng nào trong app — món này chỉ trừ
+               điểm mà không mở được gì. Đưa lại shop khi đã có nội dung thật;
+               KHÔNG tự bịa đề thi. -->
+        </div>
+        <h2 class="secttl">Túi đồ của bạn</h2>
+        <div class="card shopcard" id="shopBagCard">
+          <div id="shopBag"></div>
         </div>
         <h2 class="secttl">Quyên góp cộng đồng</h2>
         <div class="card" style="margin-top:0;">
@@ -17371,7 +17385,8 @@ function furiHTML(text){
       window.localStorage.setItem("sk_progress", JSON.stringify({
         state: state, appliedLv: appliedLv,
         missions: missionsState,
-        kanjiDone: KANJI.map(function(k){ return k.done ? 1 : 0; })
+        kanjiDone: KANJI.map(function(k){ return k.done ? 1 : 0; }),
+        shop: { owned: Object.keys(shopOwned), frame: shopFrame }
       }));
     }catch(_){}
     /* 1 lần ghi sk_progress chạm 4 doc đồng bộ (ví + nhiệm vụ + kanji +
@@ -17384,6 +17399,11 @@ function furiHTML(text){
 
   /* ---------- Kinh tế app: EXP · Xu · Điểm đóng góp ---------- */
   var state = { tuvi:1240, linh:320, cong:145, duelLeft:3, wins:3, losses:1 };
+  /* Cửa hàng (Lỗi 1): vật phẩm đã mua + khung đang đeo — lưu vào sk_progress
+     (trường shop) cùng ví, khôi phục ở loadProgress. Khóa món = data-frame
+     (khung) hoặc data-name (vật phẩm khác). */
+  var shopOwned = {}; /* khóa món -> true */
+  var shopFrame = null; /* khung đang đeo: "fr-leaf"... hoặc null */
   /* Đọc lại dữ liệu đã lưu trên máy (EXP, ví, nhiệm vụ, lộ trình, kanji đã thuộc) */
   (function loadProgress(){
     try{
@@ -17404,6 +17424,18 @@ function furiHTML(text){
         if(d.missions.days && typeof d.missions.days === "object") missionsState.days = d.missions.days;
       }
       if(d.kanjiDone) KANJI.forEach(function(kk, i){ if(d.kanjiDone[i] != null) kk.done = !!d.kanjiDone[i]; });
+      /* Cửa hàng (Lỗi 1): khôi phục vật phẩm đã mua + khung đang đeo. Chỉ giữ
+         khóa còn bán trong shop (món đã gỡ khỏi shop tự rơi ra) và khung phải
+         là món đã mua. Hiệu lực hiển thị áp ở renderShopEffects() cuối mục
+         Cửa hàng (sau khi FRAME_CLASSES đã gán). */
+      if(d.shop && typeof d.shop === "object"){
+        var validShopKeys = {};
+        document.querySelectorAll("[data-buy]").forEach(function(b){ validShopKeys[shopKeyOf(b)] = true; });
+        if(Array.isArray(d.shop.owned)) d.shop.owned.forEach(function(k){
+          if(typeof k === "string" && validShopKeys[k]) shopOwned[k] = true;
+        });
+        if(typeof d.shop.frame === "string" && validShopKeys[d.shop.frame] && shopOwned[d.shop.frame]) shopFrame = d.shop.frame;
+      }
       renderPathHome(); /* thẻ lộ trình ở Home theo đúng cấp đã lưu */
       renderPathMap(); /* sơ đồ lộ trình 30 ngày theo đúng cấp đã lưu */
       dueGrid.innerHTML = "";
@@ -17625,19 +17657,103 @@ function furiHTML(text){
 
   /* ---------- Cửa hàng ---------- */
   var shopOverlay = document.getElementById("shopOverlay");
-  function openShop(){ showOv(shopOverlay); renderWallet(); }
+  function openShop(){ showOv(shopOverlay); renderShopEffects(); renderWallet(); }
   function shopMsg(t){ setTxt("shopMsg", t); }
   var FRAME_CLASSES = ["fr-fire","fr-leaf","fr-wave","fr-sakura","fr-gold","fr-jade"];
+  /* Khóa món dùng làm khóa lưu trữ (Lỗi 1): khung lấy data-frame, còn lại lấy data-name. */
+  function shopKeyOf(btn){ return btn.dataset.frame || btn.dataset.name; }
+  /* Khóa của 2 món có hiệu lực hiển thị (Lỗi 6) — khớp đúng data-name trong HTML shop. */
+  var SHOP_WIND = "Hiệu ứng tên Chuông Gió";
+  var SHOP_TITLE = "Danh hiệu Chiến Tâm";
   function applyFrame(f){
     document.querySelectorAll(".avatar").forEach(function(a){
       FRAME_CLASSES.forEach(function(c){ a.classList.remove(c); });
       a.classList.add(f);
     });
   }
+  function shopTitleBadge(){
+    var s = document.createElement("span");
+    s.className = "sk-title"; s.textContent = "「Chiến Tâm」";
+    return s;
+  }
+  /* Áp toàn bộ hiệu lực shop lên giao diện — lũy đẳng, gọi lại bao nhiêu lần cũng được:
+     nút món đã mua, khung đang đeo, danh hiệu cạnh tên, hiệu ứng tên chat, túi đồ. */
+  function renderShopEffects(){
+    document.querySelectorAll("[data-buy]").forEach(function(btn){
+      if(shopOwned[shopKeyOf(btn)]){
+        btn.classList.add("owned");
+        btn.disabled = true;
+        btn.textContent = "Đã sở hữu ✓";
+      }
+    });
+    if(shopFrame) applyFrame(shopFrame);
+    if(shopOwned[SHOP_TITLE]){
+      ["meName", "rankMyName", "dvMyName", "drMyName"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el && !el.querySelector(".sk-title")) el.appendChild(shopTitleBadge());
+      });
+    }
+    document.querySelectorAll("#chatList .chatmsg.mine .c-bub > b").forEach(function(who){
+      if(shopOwned[SHOP_WIND]){
+        who.classList.add("sk-wind");
+        if(!who.querySelector(".sk-windbell")){
+          var bell = document.createElement("span");
+          bell.className = "sk-windbell"; bell.setAttribute("aria-hidden", "true"); bell.textContent = "鈴";
+          who.insertBefore(bell, who.firstChild);
+        }
+      }
+      if(shopOwned[SHOP_TITLE] && !who.querySelector(".sk-title")) who.appendChild(shopTitleBadge());
+    });
+    renderShopBag();
+  }
+  /* Túi đồ: liệt kê vật phẩm đã mua theo đúng thứ tự trong shop; khung đã mua
+     có nút Đeo để đổi khung đang đeo (mua khung mới tự đeo khung đó). */
+  function renderShopBag(){
+    var bag = document.getElementById("shopBag");
+    if(!bag) return;
+    var rows = "";
+    document.querySelectorAll("[data-buy]").forEach(function(btn){
+      var key = shopKeyOf(btn);
+      if(!shopOwned[key]) return;
+      var name = btn.dataset.name;
+      if(btn.dataset.frame){
+        var worn = (shopFrame === btn.dataset.frame);
+        rows += '<div class="walletrow"><span class="frameprev jp ' + btn.dataset.frame + '">空</span>'
+          + '<span class="w-main"><b>' + name + '</b><span>Khung avatar' + (worn ? ' — đang đeo.' : ' — bấm Đeo để đeo khung này.') + '</span></span>'
+          + (worn ? '<span class="sk-bag-owned">Đang đeo ✓</span>'
+              : '<button class="buybtn" type="button" data-equip="' + btn.dataset.frame + '" data-equip-name="' + name + '">Đeo</button>')
+          + '</div>';
+      } else {
+        rows += '<div class="walletrow"><span class="w-main"><b>' + name + '</b><span>'
+          + (key === SHOP_WIND ? "Hiệu ứng tên trong phòng chat — đang bật."
+            : key === SHOP_TITLE ? "Danh hiệu hiện cạnh tên bạn ở mọi nơi."
+            : "Vật phẩm sưu tầm trong túi đồ của bạn.")
+          + '</span></span><span class="sk-bag-owned">Đã sở hữu ✓</span></div>';
+      }
+    });
+    bag.innerHTML = rows || '<p class="snote" style="margin:8px 2px;">Chưa có vật phẩm nào — mua ở trên để sưu tầm vào túi đồ.</p>';
+  }
+  document.getElementById("shopBag").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-equip]") : null;
+    if(!b) return;
+    var f = b.dataset.equip;
+    if(!shopOwned[f]) return;
+    shopFrame = f;
+    applyFrame(f);
+    shopMsg("Đã đeo «" + (b.dataset.equipName || f) + "» lên avatar.");
+    renderShopEffects();
+    renderWallet();
+  });
   document.querySelectorAll("[data-buy]").forEach(function(btn){
     btn.addEventListener("click", function(){
       var kind = btn.dataset.kind, price = parseInt(btn.dataset.price, 10);
       var bal = kind === "linh" ? state.linh : state.cong;
+      /* Chống mua trùng: nút đã sở hữu vốn bị vô hiệu hóa, nhưng chặn thêm ở
+         đây để không bao giờ trừ tiền 2 lần cho 1 món. */
+      if(btn.dataset.effect !== "duelLeft" && shopOwned[shopKeyOf(btn)]){
+        shopMsg("Bạn đã sở hữu «" + btn.dataset.name + "» rồi — xem trong Túi đồ của bạn ở dưới.");
+        return;
+      }
       if(bal < price){
         shopMsg("Chưa đủ " + (kind === "linh" ? "Xu" : "điểm đóng góp") + " — còn thiếu " + fmtN(price - bal) + (kind === "linh" ? " Xu" : " điểm") + " nữa mới mua được «" + btn.dataset.name + "».");
         return;
@@ -17647,19 +17763,25 @@ function furiHTML(text){
         state.duelLeft++;
         shopMsg("Đã thêm 1 lượt Đấu trường hôm nay. Xu còn " + fmtN(state.linh) + ".");
       } else {
-        btn.classList.add("owned");
-        btn.disabled = true;
-        btn.textContent = "Đã sở hữu ✓";
+        shopOwned[shopKeyOf(btn)] = true;
         if(btn.dataset.frame){
+          shopFrame = btn.dataset.frame;
           applyFrame(btn.dataset.frame);
           shopMsg("Đã đeo «" + btn.dataset.name + "» lên avatar — xem ở tab Cá nhân và Xếp hạng.");
+        } else if(btn.dataset.name === SHOP_WIND){
+          shopMsg("Đã kích hoạt hiệu ứng tên Chuông Gió — tên bạn trong phòng chat đã có chuông gió.");
+        } else if(btn.dataset.name === SHOP_TITLE){
+          shopMsg("Đã nhận danh hiệu 「Chiến Tâm」 — danh hiệu hiện cạnh tên bạn ở mọi nơi.");
         } else {
           shopMsg("Đã nhận «" + btn.dataset.name + "» vào túi đồ của bạn.");
         }
+        renderShopEffects();
       }
       renderWallet();
     });
   });
+  /* Khôi phục hiệu lực shop sau khi loadProgress đã đọc sk_progress (Lỗi 1). */
+  renderShopEffects();
   document.getElementById("exchangeBtn").addEventListener("click", function(){
     if(state.linh < 100){ shopMsg("Chưa đủ Xu để quyên — còn thiếu " + fmtN(100 - state.linh) + " Xu."); return; }
     state.linh -= 100; state.cong += 10;
@@ -18863,7 +18985,11 @@ function furiHTML(text){
     var bub = document.createElement("span");
     bub.className = "c-bub";
     var who = document.createElement("b");
-    who.innerHTML = 'Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì';
+    /* Hiệu lực shop (Lỗi 6): chuông gió + danh hiệu gắn vào tên tin nhắn mới. */
+    if(shopOwned[SHOP_WIND]) who.classList.add("sk-wind");
+    who.innerHTML = (shopOwned[SHOP_WIND] ? '<span class="sk-windbell" aria-hidden="true">鈴</span>' : '')
+      + 'Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì'
+      + (shopOwned[SHOP_TITLE] ? '<span class="sk-title">「Chiến Tâm」</span>' : '');
     var p = document.createElement("p");
     p.textContent = t;
     bub.appendChild(who); bub.appendChild(p);
