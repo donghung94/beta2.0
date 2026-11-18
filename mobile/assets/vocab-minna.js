@@ -1,5 +1,5 @@
 /* Tu vung theo bai Minna no Nihongo that —
-   N5: So cap 1, Bai 1-25 (1.205 tu); N4: So cap 2, Bai 26-50 (1.347 tu);
+   N5: So cap 1, Bai 1-25 (1.209 tu); N4: So cap 2, Bai 26-50 (1.346 tu);
    N3: Chukyu 1, Bai 1-12 (881 tu); N2: Chukyu 2, Bai 13-24 (2.284 tu).
    Moi muc: {word, reading, meaning, hanViet, lesson} — nhom bai theo truong lesson.
    N2: Bai 13, 15, 16, 17, 18, 19, 20, 24 lay tu VNJPCLUB 2026-10-29;
