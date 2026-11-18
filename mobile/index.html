@@ -953,6 +953,10 @@
   .ex-noexp .rvexp, .ex-noexp .rvvoc, .ex-noexp .rvevi{display:none;}
   .ex-report-btn{display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:transparent; color:var(--ink-2); font-size:12.5px; font-weight:700; cursor:pointer;}
   .ex-report-btn:active{background:var(--bg);}
+  /* Nut Giai thich trong luc lam bai + bo dem ky tu o bao loi (19/11) */
+  .ex-explain-btn{display:inline-flex; align-items:center; gap:6px; margin-top:12px; margin-left:8px; padding:7px 12px; border:1px solid var(--red); border-radius:999px; background:transparent; color:var(--red); font-size:12.5px; font-weight:700; cursor:pointer;}
+  .ex-explain-btn:active{background:var(--bg);}
+  .ex-rep-count{font-size:12px; color:var(--ink-3); text-align:right; margin:6px 2px 0; min-height:16px;}
   .ex-rep-q{background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:14px;}
   .ex-rep-q .ex-pass{max-height:180px; overflow-y:auto; border:none; padding:0; margin:0 0 10px; background:transparent;}
   .ex-rep-q .ex-qtext{margin:0 0 6px;}
@@ -3874,10 +3878,26 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="detailbody">
         <div class="ex-rep-q" id="exRepQ"></div>
         <label class="ex-rep-label" for="exRepMsg">Mô tả lỗi bạn thấy</label>
-        <textarea class="ex-rep-ta" id="exRepMsg" rows="4" placeholder="Ví dụ: đáp án đúng phải là… / câu hỏi bị thiếu phần…"></textarea>
+        <textarea class="ex-rep-ta" id="exRepMsg" rows="4" maxlength="2000" placeholder="Ví dụ: đáp án đúng phải là… / câu hỏi bị thiếu phần…"></textarea>
+        <p class="ex-rep-count" id="exRepCount">Còn 2000 ký tự</p>
         <p class="ex-rep-msg" id="exRepErr" role="alert"></p>
         <button class="cta" id="exRepSend" type="button">Gửi báo cáo</button>
-        <p class="ex-rep-note">Báo cáo được gửi ẩn danh nếu bạn chưa đăng nhập. Mỗi thiết bị gửi tối đa 5 báo cáo/giờ và 20 báo cáo/ngày.</p>
+        <p class="ex-rep-note">Báo cáo được gửi ẩn danh nếu bạn chưa đăng nhập. Mỗi thiết bị gửi tối đa 5 báo cáo/giờ và 20 báo cáo/ngày. Tin nhắn tối đa 2.000 ký tự.</p>
+      </div>
+    </div>
+
+    <!-- Giai thich cau hoi trong luc lam bai (19/11): overlay tai dung pattern khung bao loi -->
+    <div class="overlay" id="exExplainOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="exExpClose" aria-label="Đóng khung giải thích">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Giải thích</h2><span id="exExpSub">Câu hỏi đề thi</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="ex-rep-q" id="exExpQ"></div>
+        <div id="exExpBody"></div>
+        <p class="ex-rep-note">Hẹn giờ vẫn chạy trong lúc xem giải thích. Đóng khung để làm tiếp câu này.</p>
       </div>
     </div>
 
@@ -7866,6 +7886,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       html += exOptsHtml(q, cur);
     }
     html += '<button type="button" class="ex-report-btn" data-exrep="' + cur + '" aria-label="Báo lỗi câu ' + (cur + 1) + '">🚩 Báo lỗi</button>';
+    if(q.exp || q.voc) html += '<button type="button" class="ex-explain-btn" data-exexp="' + cur + '" aria-label="Giải thích câu ' + (cur + 1) + '">💡 Giải thích</button>';
     html += '</div>';
     examBody.innerHTML = html;
     examBody.scrollTop = 0;
@@ -8398,6 +8419,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(box) box.innerHTML = exRepQHtml(q);
     var ta = document.getElementById("exRepMsg");
     if(ta) ta.value = "";
+    exRepUpdateCount();
     exRepErr("");
     var btn = document.getElementById("exRepSend");
     if(btn) btn.disabled = false;
@@ -8494,6 +8516,67 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var i = parseInt(b.getAttribute("data-exrep"), 10);
     if(!isNaN(i)) exRepOpen(i);
   });
+
+  /* ---------- Giải thích câu hỏi trong lúc làm bài (19/11) ----------
+     Nút "💡 Giải thích" cạnh nút "🚩 Báo lỗi" ở mỗi câu đang làm, CHỈ hiện
+     khi câu có giải thích (q.exp || q.voc — đúng điều kiện hiện khối ở màn
+     xem lại). Bấm mở overlay tái dùng pattern khung báo lỗi (showOv/hideOv,
+     .overlay + .detailhead/.detailbody, nội dung câu qua exRepQHtml).
+     Overlay là DOM thuần: không đổi EXS.state nên hẹn giờ vẫn chạy, không
+     gọi renderQ() nên đáp án đã chọn còn nguyên. Độc lập với nút bật/tắt
+     "Giải thích" ở màn xem lại (settings.explain không điều khiển nút này). */
+  var exExpOverlay = document.getElementById("exExplainOverlay");
+  var exExpCur = -1; /* index toàn cục của câu đang xem giải thích */
+  function exExpHas(q){ return !!(q && (q.exp || q.voc)); }
+  function exExpOpen(i){
+    if(!EXS || !EXS.qs[i]) return;
+    var q = EXS.qs[i];
+    if(!exExpHas(q)) return;
+    exExpCur = i;
+    var sub = document.getElementById("exExpSub");
+    if(sub) sub.textContent = "Câu " + (i + 1) + " · " + exExamLabel() + " · " + q.kind;
+    var box = document.getElementById("exExpQ");
+    if(box) box.innerHTML = exRepQHtml(q);
+    var body = document.getElementById("exExpBody");
+    if(body){
+      var h = "";
+      if(q.exp) h += '<p class="rvline rvexp">Giải thích: ' + esc(q.exp) + '</p>';
+      if(q.evi) h += '<p class="rvline rvevi">Căn cứ trong bài: <span class="jp">' + esc(q.evi) + '</span></p>';
+      if(q.voc) h += '<p class="rvline rvvoc">Từ vựng: ' + esc(q.voc) + '</p>';
+      body.innerHTML = h;
+    }
+    showOv(exExpOverlay);
+  }
+  function exExpClose(){
+    hideOv(exExpOverlay);
+    exExpCur = -1;
+    /* Xóa nội dung cũ: overlay đóng chỉ translateY(100%) chứ không display:none
+       nên .rvexp cũ còn trong DOM vẫn bị tính là "hiện" (offsetParent !== null). */
+    var box = document.getElementById("exExpQ");
+    if(box) box.innerHTML = "";
+    var body = document.getElementById("exExpBody");
+    if(body) body.innerHTML = "";
+  }
+  document.getElementById("exExpClose").addEventListener("click", exExpClose);
+  examBody.addEventListener("click", function(ev){
+    var b = ev.target && ev.target.closest ? ev.target.closest(".ex-explain-btn") : null;
+    if(!b) return;
+    var i = parseInt(b.getAttribute("data-exexp"), 10);
+    if(!isNaN(i)) exExpOpen(i);
+  });
+
+  /* Bộ đếm ký tự còn lại cho ô báo lỗi (maxlength=2000, khớp rules isValidReport). */
+  function exRepUpdateCount(){
+    var ta = document.getElementById("exRepMsg");
+    var el = document.getElementById("exRepCount");
+    if(!ta || !el) return;
+    var left = 2000 - ta.value.length;
+    el.textContent = "Còn " + (left < 0 ? 0 : left) + " ký tự";
+  }
+  (function(){
+    var ta = document.getElementById("exRepMsg");
+    if(ta) ta.addEventListener("input", exRepUpdateCount);
+  })();
 
   document.getElementById("ctaContinue").addEventListener("click", function(){
     openKanjiLesson();
