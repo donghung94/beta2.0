@@ -5158,7 +5158,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
       <div class="detailbody">
         <h3 class="wvsec">Ngữ pháp JLPT</h3>
-        <p class="wvinfo">374 mẫu ngữ pháp N5–N1 — N5 / N4 xếp theo đúng thứ tự bài Minna no Nihongo (Sơ cấp 1 · Bài 1–25, Sơ cấp 2 · Bài 26–50); N3 / N2 chưa xác minh được bài Minna cụ thể nên xếp theo 6 nhóm chủ đề; N1 không có sách Mina nên cũng xếp theo nhóm chủ đề. Bấm vào một cấp để mở trang danh sách bài của cấp đó, rồi chọn bài để xem mẫu.</p>
+        <p class="wvinfo">375 mẫu ngữ pháp N5–N1 — N5 / N4 xếp theo đúng thứ tự bài Minna no Nihongo (Sơ cấp 1 · Bài 1–25, Sơ cấp 2 · Bài 26–50); N3 / N2 chưa xác minh được bài Minna cụ thể nên xếp theo 6 nhóm chủ đề; N1 không có sách Mina nên cũng xếp theo nhóm chủ đề. Bấm vào một cấp để mở trang danh sách bài của cấp đó, rồi chọn bài để xem mẫu.</p>
         <div id="grLevels"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
@@ -15066,7 +15066,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Giống hệt luồng Từ vựng: bấm Ngữ pháp mở trang chọn cấp N5–N1; bấm một cấp mở
      trang riêng hiện danh sách bài; bấm bài mở trang danh sách mẫu của bài; bấm mẫu
      mở trang chi tiết mẫu.
-     Dữ liệu thật 374 mẫu ở assets/grammar-data.js (window.GRAMMAR_DATA), nạp lười
+     Dữ liệu thật 375 mẫu ở assets/grammar-data.js (window.GRAMMAR_DATA), nạp lười
      như kanji-data.js — nội dung từng mẫu (p/s/m/ex/n) giữ nguyên, chỉ sắp xếp lại
      theo bài học Minna no Nihongo (bản đồ phân bài GR_MINNA bên dưới, đối chiếu
      theo đúng chuỗi p của từng mẫu): N5 84 mẫu theo Sơ cấp 1 (danh sách đủ
@@ -15385,7 +15385,7 @@ function furiHTML(text){
       {n:43, pats:["〜そうです (vẻ bề ngoài)", "V-て きます (đi rồi quay lại)", "V-て きました (thay đổi đang tới)"]},
       {n:44, pats:["〜すぎます", "V-ます + やすい / にくい", "A-く / A-に + します"]},
       {n:45, pats:["〜場合は", "〜のに"]},
-      {n:46, pats:["V + ところです (3 giai đoạn)", "〜た ばかりです / 〜て ばかり", "〜はずです"]},
+      {n:46, pats:["V + ところです (3 giai đoạn)", "〜た ばかりです", "〜て ばかり", "〜はずです"]},
       {n:47, pats:["〜そうです (truyền văn)", "〜ようです", "N + らしいです"]},
       {n:48, pats:["Động từ tôn kính đặc biệt (尊敬語)", "お + V-ます + に なります", "お + V-ます + ください"]},
       {n:49, pats:["Động từ khiêm nhường đặc biệt (謙譲語)", "お + V-ます + します", "ご + N + いたします / お聞かせください"]},
@@ -16165,7 +16165,7 @@ function furiHTML(text){
     var list = document.getElementById("grLessonsList");
     if(!grData){
       document.getElementById("grLessonsSub").textContent = "Danh sách bài";
-      info.textContent = "Đang tải dữ liệu 374 mẫu ngữ pháp…";
+      info.textContent = "Đang tải dữ liệu 375 mẫu ngữ pháp…";
       list.innerHTML = '<div class="wload">Đang tải danh sách bài…</div>';
       return;
     }
