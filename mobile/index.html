@@ -3200,7 +3200,7 @@
             <div class="brandmini"><span class="brandmark jp">空</span> SoraKanji <small>· Bầu trời Kanji</small></div>
             <h1>Chào buổi tối, bạn học</h1>
             <p id="heroSub">Hôm nay luyện tập tiếp N4 nhé</p>
-            <span class="realmchip" id="heroRealmChip"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 3</span>
+            <span class="realmchip" id="heroRealmChip"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 2</span>
           </div>
           <img class="herologo" src="assets/logo.png" alt="Logo SoraKanji — chữ 空漢 màu xanh dương nằm dọc bên trái, bé chibi áo đen đeo kiếm đứng bên phải chỉ tay vào chữ" width="96" height="96" />
         </div>
@@ -3283,9 +3283,9 @@
             <button id="remindClose" aria-label="Tắt nhắc hôm nay">×</button>
           </div>
           <div class="realmprog">
-            <div class="rp-top">Binh nhì · Bậc 3 <span>Mốc tiếp theo: Binh nhất · 2.000 EXP</span></div>
-            <div class="bar"><i style="width:62%"></i></div>
-            <p>Còn <b>760 EXP</b> nữa là thăng cấp lên <b>Binh nhất</b>. Hoàn thành đủ <b id="rpCount">5</b> nhiệm vụ hôm nay được <b id="rpSum">+195</b> EXP.</p>
+            <div class="rp-top"><b id="homeRankName">Binh nhì · Bậc 2</b> <span id="homeRankNext">Mốc tiếp theo: Binh nhất · 2.000 EXP</span></div>
+            <div class="bar"><i id="homeRankBar" style="width:62%"></i></div>
+            <p><span id="homeRankNoteLead">Còn <b>760 EXP</b> nữa là thăng cấp lên <b>Binh nhất</b>.</span> Hoàn thành đủ <b id="rpCount">5</b> nhiệm vụ hôm nay được <b id="rpSum">+195</b> EXP.</p>
           </div>
           <div class="mission-list">
             <button class="mission" id="missionKanji">
@@ -3424,7 +3424,7 @@
             <div>
               <h2 id="meName">Học viên SoraKanji</h2>
               <p id="meCourse">Đang học N4 · Mục tiêu thi 12/2026</p>
-              <span class="realmchip" id="meRealmChip" style="margin-top:7px;"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 3</span>
+              <span class="realmchip" id="meRealmChip" style="margin-top:7px;"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 2</span>
             </div>
           </div>
           <div class="stats">
@@ -3433,8 +3433,8 @@
             <div class="stat"><b id="meKanjiDone">8</b><span>KANJI ĐÃ THUỘC</span></div>
           </div>
           <div class="realmprog" style="margin-top:12px;">
-            <div class="rp-top">Thăng cấp Binh nhất <span>1.240 / 2.000 EXP</span></div>
-            <div class="bar"><i style="width:62%"></i></div>
+            <div class="rp-top"><b id="meRankNext">Thăng cấp Binh nhất</b> <span id="meRankProg">1.240 / 2.000 EXP</span></div>
+            <div class="bar"><i id="meRankBar" style="width:62%"></i></div>
             <p>Hoàn thành nhiệm vụ hôm nay mỗi ngày để giữ tốc độ luyện tập.</p>
           </div>
           <div class="acctbar">
@@ -3547,7 +3547,7 @@
           <div id="rankPodium" class="rankpodium" aria-live="polite"></div>
           <div id="rankRows410" class="rankrows"></div>
           <div class="card rankme-card" style="margin-top:0; padding-top:6px; padding-bottom:6px;">
-            <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b id="rankMyName">Bạn</b><span><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 3 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 EXP</span></div>
+            <div class="leadrow"><span class="l-rank">18</span><span class="l-av" id="rankMyAv" style="background:var(--amber-soft); color:var(--amber);">B</span><span class="l-main"><b id="rankMyName">Bạn</b><span id="rankMyRealm"><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 2 · N4</span></span><span class="l-tv" id="rankTuvi2">1.240 EXP</span></div>
           </div>
         </div>
 
@@ -3555,14 +3555,14 @@
           <div class="prof">
             <div class="avatar" style="background:#E3A008;">B</div>
             <div>
-              <h2><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 3</h2>
+              <h2 id="rankMyTitle"><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì · Bậc 2</h2>
               <p>Cấp độ hiện tại của bạn · Hạng 18 tuần này</p>
             </div>
           </div>
           <div class="realmprog" style="margin-top:12px;">
-            <div class="rp-top"><span style="font-size:13px; color:var(--ink); font-weight:700;">EXP <b id="rankTuvi">1.240</b></span> <span>Binh nhất cần 2.000</span></div>
-            <div class="bar"><i style="width:62%"></i></div>
-            <p>Còn 760 EXP nữa là thăng cấp Binh nhất.</p>
+            <div class="rp-top"><span style="font-size:13px; color:var(--ink); font-weight:700;">EXP <b id="rankTuvi">1.240</b></span> <span id="rankNextLbl">Binh nhất cần 2.000</span></div>
+            <div class="bar"><i id="rankProgBar" style="width:62%"></i></div>
+            <p id="rankProgNote">Còn 760 EXP nữa là thăng cấp Binh nhất.</p>
           </div>
         </div>
 
@@ -3609,7 +3609,7 @@
         <p class="tabsub">Nơi các bạn học cùng luyện tập hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.</p>
         <div class="chatlist" id="chatList">
           <div id="botChatBox"></div>
-          <div class="chatmsg mine"><span class="c-av">B</span><span class="c-bub"><b>Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì</b><p>Cảm ơn cả nhà, để mình ghi vào flashcard ôn luôn.</p></span></div>
+          <div class="chatmsg mine"><span class="c-av">B</span><span class="c-bub"><b>Bạn · <span id="chatMyRealm"><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì</span></b><p>Cảm ơn cả nhà, để mình ghi vào flashcard ôn luôn.</p></span></div>
         </div>
         <div class="chatbar">
           <input id="chatInput" type="text" maxlength="500" placeholder="Nhắn cho các bạn học…" aria-label="Nhắn tin phòng chat" />
@@ -4683,7 +4683,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
       <div class="detailbody" id="duelPlay" hidden>
         <div class="duelvs">
-          <div class="dv-side"><b id="dvMyName">Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì</b><span class="dv-score" id="dvMyScore">0</span></div>
+          <div class="dv-side"><b id="dvMyName">Bạn · <span id="dvMyRealm"><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì</span></b><span class="dv-score" id="dvMyScore">0</span></div>
           <div class="dv-mid">Câu <span id="dvQNum">1</span>/10<span class="stk" id="dvStreak"></span></div>
           <div class="dv-side"><b id="dvOppName">Đối thủ</b><span class="dv-score" style="color:var(--ink-3);">Ẩn điểm</span></div>
         </div>
@@ -17082,6 +17082,95 @@ function furiHTML(text){
   var LV_NAMES = ["Chưa biết", "N5", "N4", "N3", "N2", "N1"];
   var pathLv = 1;       /* cấp đang chọn trong trang Khai trình độ */
   var appliedLv = 1;    /* cấp đang thật sự áp dụng: hồ sơ mẫu đã khai N5 → chặng Binh nhì, đang học N4 */
+  /* ---------- Cấp bậc theo EXP (USER QUYẾT 2026-11-18) ----------
+     Cấp bậc HIỂN THỊ tính từ TỔNG EXP (state.tuvi), KHÔNG theo cấp đã khai.
+     appliedLv chỉ còn quyết định lộ trình/khóa học (planCourseLv, chặng lộ
+     trình, mục tiêu JLPT mặc định) — không quyết định cấp bậc nữa.
+     Ngưỡng EXP: Tân binh 0 · Binh nhì 1.000 · Binh nhất 2.000 · Hạ sĩ 4.000 ·
+     Trung sĩ 7.000 · Thượng sĩ 12.000 · Thiếu úy 20.000 · Trung úy 32.000 ·
+     Thượng úy 50.000 · Tướng 80.000. Bậc = chỉ số cấp (Tân binh #1 … Tướng #10). */
+  var RANK_EXP = [0, 1000, 2000, 4000, 7000, 12000, 20000, 32000, 50000, 80000];
+  function rankFromExp(exp){
+    var e = (typeof exp === "number" && !isNaN(exp)) ? Math.max(0, Math.floor(exp)) : 0;
+    var idx = 0;
+    for(var i = 0; i < RANK_EXP.length; i++) if(e >= RANK_EXP[i]) idx = i;
+    var nextAt = (idx + 1 < RANK_EXP.length) ? RANK_EXP[idx + 1] : null;
+    return {
+      idx: idx, name: REALMS[idx].n, bac: idx + 1,
+      curAt: RANK_EXP[idx], next: nextAt == null ? null : REALMS[idx + 1].n,
+      nextAt: nextAt, need: nextAt == null ? 0 : nextAt - e,
+      pct: nextAt == null ? 100 : Math.min(100, Math.round(e / nextAt * 100))
+    };
+  }
+  function rankBadgeHtml(idx){
+    return '<svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + idx + '"></use></svg>' + REALMS[idx].n;
+  }
+  /* Vẽ lại MỌI chỗ hiển thị cấp bậc của người dùng theo EXP hiện tại
+     (state.tuvi): chip cấp ở Home + Cá nhân, 3 khối tiến độ thăng cấp
+     (Home, Cá nhân, Xếp hạng), hàng "Bạn" + tiêu đề hồ sơ ở Xếp hạng,
+     thang cấp độ (đánh dấu Hiện tại/Đã đạt), huy hiệu tên trong chat và
+     Đấu trường. Gọi từ renderWallet() nên mọi lần EXP đổi đều cập nhật.
+     Không chạm lộ trình (chặng/khóa học vẫn theo appliedLv) và không
+     chạm dữ liệu bot (cấp của bạn học khác giữ nguyên). */
+  function renderRank(){
+    /* state (ví) khai ở phía sau trong file; renderPathHome() có 1 lần gọi
+       sớm ở top-level (L17425) trước khi state khởi tạo — lần đó bỏ qua
+       (HTML tĩnh đã đúng với mặc định), lần render ở init (sau loadProgress)
+       sẽ vẽ đúng. */
+    if(typeof state === "undefined" || !state) return;
+    var ri = rankFromExp(state.tuvi);
+    var expTxt = fmtN(state.tuvi);
+    /* Chip cấp: Home + Cá nhân — "TÊN CẤP · BẬC n" (Bậc = chỉ số cấp). */
+    var chipHTML = '<i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + ri.idx + '"></use></svg> ' + ri.name.toUpperCase() + ' · BẬC ' + ri.bac;
+    var hero = document.getElementById("heroRealmChip");
+    if(hero) hero.innerHTML = chipHTML;
+    var meChip = document.getElementById("meRealmChip");
+    if(meChip) meChip.innerHTML = chipHTML;
+    /* Khối thăng cấp ở Home (Nhiệm vụ hôm nay). */
+    setTxt("homeRankName", ri.name + " · Bậc " + ri.bac);
+    setTxt("homeRankNext", ri.next ? ("Mốc tiếp theo: " + ri.next + " · " + fmtN(ri.nextAt) + " EXP") : "Đã đạt cấp cao nhất");
+    var hb = document.getElementById("homeRankBar");
+    if(hb){ hb.style.width = ri.pct + "%"; hb.style.transform = ""; }
+    var hl = document.getElementById("homeRankNoteLead");
+    if(hl) hl.innerHTML = ri.next
+      ? ('Còn <b>' + fmtN(ri.need) + ' EXP</b> nữa là thăng cấp lên <b>' + ri.next + '</b>.')
+      : 'Đã đạt <b>cấp Tướng</b> — cấp cao nhất SoraKanji.';
+    /* Khối thăng cấp ở Cá nhân. */
+    setTxt("meRankNext", ri.next ? ("Thăng cấp " + ri.next) : "Đã đạt cấp Tướng");
+    setTxt("meRankProg", ri.next ? (expTxt + " / " + fmtN(ri.nextAt) + " EXP") : (expTxt + " EXP"));
+    var mb = document.getElementById("meRankBar");
+    if(mb){ mb.style.width = ri.pct + "%"; mb.style.transform = ""; }
+    /* Hàng "Bạn" + tiêu đề hồ sơ + khối thăng cấp ở Xếp hạng. */
+    var rm = document.getElementById("rankMyRealm");
+    if(rm) rm.innerHTML = rankBadgeHtml(ri.idx) + " · Bậc " + ri.bac + " · " + planCourseLv();
+    var rt = document.getElementById("rankMyTitle");
+    if(rt) rt.innerHTML = rankBadgeHtml(ri.idx) + " · Bậc " + ri.bac;
+    setTxt("rankNextLbl", ri.next ? (ri.next + " cần " + fmtN(ri.nextAt)) : "Đã đạt cấp cao nhất");
+    var rb = document.getElementById("rankProgBar");
+    if(rb){ rb.style.width = ri.pct + "%"; rb.style.transform = ""; }
+    setTxt("rankProgNote", ri.next
+      ? ("Còn " + fmtN(ri.need) + " EXP nữa là thăng cấp " + ri.next + ".")
+      : "Đã đạt cấp Tướng — cấp cao nhất SoraKanji.");
+    /* Thang cấp độ: đánh dấu cấp hiện tại + các cấp đã đạt. */
+    var lad = document.getElementById("realmLadder");
+    if(lad){
+      var h = "";
+      for(var i = REALMS.length - 1; i >= 0; i--){
+        var cls = i === ri.idx ? "cur" : (i < ri.idx ? "got" : "");
+        var st = i === ri.idx ? "Hiện tại" : (i < ri.idx ? "Đã đạt" : "Chưa mở");
+        var sub = fmtN(RANK_EXP[i]) + " EXP"
+          + (i === 9 ? " · Cấp cao nhất SoraKanji · thông thạo toàn diện" : (i === 0 ? " · Cấp khởi đầu" : ""))
+          + (i === ri.idx ? " · Đang luyện tập tại đây" : "");
+        h += '<div class="realmrow ' + cls + '"><span class="r-ic jp">' + REALMS[i].kanji + '</span><span class="r-main"><b>' + rankBadgeHtml(i) + '</b><span>' + sub + '</span></span><span class="r-state">' + st + '</span></div>';
+      }
+      lad.innerHTML = h;
+    }
+    /* Huy hiệu tên: tin nhắn mẫu trong Phòng chat + Đấu trường. */
+    var cm = document.getElementById("chatMyRealm");
+    if(cm) cm.innerHTML = rankBadgeHtml(ri.idx);
+    var dm = document.getElementById("dvMyRealm");
+    if(dm) dm.innerHTML = rankBadgeHtml(ri.idx);
+  }
   /* Lộ trình nay dùng tiến độ 30 ngày lưu riêng theo cấp ở sk_plan_done_<cấp>.
      Bản lưu sk_progress cũ có thể còn trường pathStepDone của sơ đồ cũ — code
      nạp tiến độ bỏ qua trường lạ nên không lỗi, không cần đọc lại trường đó. */
@@ -17346,7 +17435,6 @@ function furiHTML(text){
   }
   function renderPathHome(){
     var r = REALMS[appliedLv];
-    var next = REALMS[appliedLv + 1];
     document.getElementById("pathStageLine").textContent =
       "Đã khai " + LV_NAMES[appliedLv] + " · Đang ở chặng " + r.n + " — " + r.courseLbl;
     var plv = planCourseLv();
@@ -17361,9 +17449,8 @@ function furiHTML(text){
     document.getElementById("pathNote").innerHTML = pdone >= 30
       ? "Bạn đã đi hết 30 ngày của khóa <b>" + plv + "</b> — tiếp tục ôn luyện mỗi ngày để giữ phong độ trước kỳ thi."
       : "Lộ trình 30 ngày của khóa <b>" + plv + "</b>: mỗi tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử. Hôm nay là <b>Ngày " + (pdone + 1) + "</b> — bấm vào để xem nhiệm vụ.";
-    var chipHTML = '<i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk' + appliedLv + '"></use></svg> ' + r.n.toUpperCase();
-    document.getElementById("heroRealmChip").innerHTML = chipHTML;
-    document.getElementById("meRealmChip").innerHTML = chipHTML;
+    /* Chip cấp bậc theo EXP (không theo cấp đã khai) — renderRank() vẽ. */
+    renderRank();
     document.getElementById("heroSub").textContent = r.course.indexOf("N") === 0
       ? "Hôm nay luyện tập tiếp " + r.course + " nhé"
       : (appliedLv >= 9 ? "Hôm nay luyện tập giữ vững đỉnh phong nhé" : "Hôm nay luyện tập nâng cao sau N1 nhé");
@@ -17701,6 +17788,7 @@ function furiHTML(text){
     setTxt("officeNote", "Bạn đang có " + fmtN(state.cong) + " điểm đóng góp" + (of.next ? " — còn " + fmtN(of.need) + " điểm nữa là lên " + of.next + "." : " — đã ở chức vụ cao nhất."));
     var ob = document.getElementById("officeBar");
     if(ob) setBar(ob, Math.min(100, Math.round(state.cong / (of.nextAt || 1) * 100)));
+    renderRank(); /* cấp bậc hiển thị theo EXP — cập nhật mỗi lần ví đổi */
     document.querySelectorAll("[data-buy]").forEach(function(btn){
       if(btn.classList.contains("owned")) return;
       btn.disabled = false; /* nút luôn bấm được — thiếu tiền thì bấm vào sẽ báo rõ còn thiếu bao nhiêu */
@@ -19607,7 +19695,7 @@ function furiHTML(text){
     /* Hiệu lực shop (Lỗi 6): chuông gió + danh hiệu gắn vào tên tin nhắn mới. */
     if(shopOwned[SHOP_WIND]) who.classList.add("sk-wind");
     who.innerHTML = (shopOwned[SHOP_WIND] ? '<span class="sk-windbell" aria-hidden="true">鈴</span>' : '')
-      + 'Bạn · <svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg>Binh nhì'
+      + 'Bạn · ' + rankBadgeHtml(rankFromExp(state.tuvi).idx)
       + (shopOwned[SHOP_TITLE] ? '<span class="sk-title">「Chiến Tâm」</span>' : '');
     var p = document.createElement("p");
     p.textContent = t;
