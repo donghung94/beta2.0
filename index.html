@@ -2309,6 +2309,18 @@ var EX_G1_LABELS = ["謙譲語","尊敬語","受身形","使役形","使役受�
     return toks;
   }
   function exSplitStar(jp){
+    // W1 18/11/2026 (đợt sửa đề thi): loại ví dụ ngữ pháp 2 câu nối bằng 、
+    // khỏi pool star — ví dụ "あそこは病院です、新しいです。" tách ra thành 2
+    // mệnh đề độc lập, ghép lại thành câu star không có đáp án duy nhất.
+    // Quy tắc: bỏ dấu 。 cuối rồi kiểm tra — nếu còn 。 ở giữa, hoặc có dấu 、
+    // ngay sau dạng kết thúc câu (です/ます/でした/ました/ません/ませんでした/
+    // ですか/ますか/ませんか/だろう/でしょう/ください/ましょう) thì loại.
+    // KHÔNG loại dạng liệt kê/kết nối hợp lệ (る、/た、/い、/て、 v.v.).
+    // Kiểm chứng 18/11: loại đúng 13 câu star lỗi trong 9 đề N5, 0 câu star
+    // đúng bị loại; N4 không bị ảnh hưởng (0 câu loại thêm).
+    var body = String(jp).replace(/。$/, "");
+    if(body.indexOf("。") !== -1) return null;
+    if(/(です|でした|ます|ました|ません|ませんでした|ですか|ますか|ませんか|だろう|でしょう|ください|ましょう)、/.test(body)) return null;
     var toks = exTokenize(jp);
     if(!toks || toks.length < 6) return null;
     var i = Math.max(1, Math.floor((toks.length - 4) / 2));
