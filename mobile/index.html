@@ -946,6 +946,31 @@
   .rvline b{color:var(--ink);}
   .rvexp{background:var(--bg); border-radius:10px; padding:9px 12px;}
 
+  /* Nut bat/tat Giai thich o dau man xem lai + nut Bao loi tung cau (18/11) */
+  .explain-toggle{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px 16px; margin-bottom:14px; cursor:pointer;}
+  .explain-toggle b{font-size:14.5px;}
+  .explain-toggle .ex-sub{display:block; font-size:12.5px; color:var(--ink-2); font-weight:600; margin-top:2px;}
+  .ex-noexp .rvexp, .ex-noexp .rvvoc, .ex-noexp .rvevi{display:none;}
+  .ex-report-btn{display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:transparent; color:var(--ink-2); font-size:12.5px; font-weight:700; cursor:pointer;}
+  .ex-report-btn:active{background:var(--bg);}
+  .ex-rep-q{background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:14px;}
+  .ex-rep-q .ex-pass{max-height:180px; overflow-y:auto; border:none; padding:0; margin:0 0 10px; background:transparent;}
+  .ex-rep-q .ex-qtext{margin:0 0 6px;}
+  .ex-rep-opts{margin:10px 0 0; padding-left:22px; font-size:14px; line-height:1.6; color:var(--ink-2);}
+  .ex-rep-opts li{margin-bottom:4px;}
+  .ex-rep-label{display:block; font-size:13.5px; font-weight:800; margin:0 0 8px;}
+  .ex-rep-ta{width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--ink); font:inherit; font-size:14.5px; line-height:1.55; padding:12px 14px; resize:vertical; min-height:96px;}
+  .ex-rep-msg{font-size:13px; font-weight:700; min-height:20px; margin:10px 2px 0; line-height:1.5; color:var(--red);}
+  .ex-rep-msg.ok{color:var(--good);}
+  .ex-rep-note{font-size:12.5px; color:var(--ink-3); line-height:1.55; margin:12px 2px 0;}
+  .adm-rep{border-bottom:1px solid var(--line); padding:12px 2px;}
+  .adm-rep:last-child{border-bottom:none;}
+  .adm-rep-top{display:flex; justify-content:space-between; gap:10px; align-items:baseline; font-size:13.5px; font-weight:800;}
+  .adm-rep-top span:last-child{font-weight:600; color:var(--ink-3); font-size:12px; white-space:nowrap;}
+  .adm-rep-q{font-size:13.5px; line-height:1.6; color:var(--ink-2); margin:6px 0 0;}
+  .adm-rep-msg{font-size:14px; line-height:1.6; margin:8px 0 0; background:var(--bg); border-radius:10px; padding:9px 12px;}
+  .adm-rep-meta{font-size:12px; color:var(--ink-3); line-height:1.55; margin:6px 0 0;}
+
   /* kanji detail */
   .detailhead{flex:0 0 auto; display:flex; align-items:center; gap:10px; padding:14px 16px 6px;}
   .iconbtn{
@@ -3838,6 +3863,24 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
+    <!-- Bao loi cau hoi de thi (18/11): overlay kieu chat, mo tren phong thi -->
+    <div class="overlay" id="exReportOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="exRepClose" aria-label="Đóng khung báo lỗi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Báo lỗi câu hỏi</h2><span id="exRepSub">Câu hỏi đề thi</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="ex-rep-q" id="exRepQ"></div>
+        <label class="ex-rep-label" for="exRepMsg">Mô tả lỗi bạn thấy</label>
+        <textarea class="ex-rep-ta" id="exRepMsg" rows="4" placeholder="Ví dụ: đáp án đúng phải là… / câu hỏi bị thiếu phần…"></textarea>
+        <p class="ex-rep-msg" id="exRepErr" role="alert"></p>
+        <button class="cta" id="exRepSend" type="button">Gửi báo cáo</button>
+        <p class="ex-rep-note">Báo cáo được gửi ẩn danh nếu bạn chưa đăng nhập. Mỗi thiết bị gửi tối đa 5 báo cáo/giờ và 20 báo cáo/ngày.</p>
+      </div>
+    </div>
+
     <!-- answer sheet -->
     <div class="scrim" id="sheetScrim"></div>
     <div class="sheet" id="answerSheet" aria-hidden="true">
@@ -4918,6 +4961,9 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <h2 class="secttl">Thư góp ý</h2>
         <div class="card shopcard" id="admInbox" style="margin-top:0;"></div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Góp ý do học viên gửi từ khung góp ý trong màn flashcard (theo từng từ) và mục “Bình luận góp ý sửa lỗi” ở cuối trang danh sách từ — lưu trên máy này kèm từ/bài liên quan và thời gian gửi, mới nhất xếp trên cùng.</p>
+        <h2 class="secttl">Báo lỗi câu hỏi</h2>
+        <div class="card shopcard" id="admReports" style="margin-top:0;"></div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Báo lỗi do học viên gửi từ nút “Báo lỗi” ở mỗi câu hỏi đề thi (trong lúc làm bài và màn xem lại) — mới nhất xếp trên cùng, tối đa 50 báo cáo.</p>
         </div>
       </div>
     </div>
@@ -6143,7 +6189,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         usedAns["A:" + it.r] = 1;
         var q = base("vocab", "漢字読み", "yomi");
         q.qText = it.s; q.uline = it.t; q.opts = o.opts; q.ans = o.ans;
-        q.fullSent = it.s; q.correctText = it.r;
+        q.fullSent = it.s; q.correctText = it.r; q.exp = it.exp || null; q.voc = it.voc || null;
         qs.push(q); made++;
       }
       return made;
@@ -6161,7 +6207,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         usedAns["A:" + it.k] = 1;
         var q = base("vocab", "表記", "hyoki");
         q.qText = it.s; q.uline = it.h; q.opts = o.opts; q.ans = o.ans;
-        q.fullSent = it.s.replace(it.h, it.k); q.correctText = it.k;
+        q.fullSent = it.s.replace(it.h, it.k); q.correctText = it.k; q.exp = it.exp || null; q.voc = it.voc || null;
         qs.push(q); made++;
       }
       return made;
@@ -6181,7 +6227,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         q.real = !isSub;
         if(isSub) q.subNote = "Dạng luyện thay thế — 言葉の構成";
         q.qText = it.s; q.opts = o.opts; q.ans = o.ans;
-        q.fullSent = it.s.replace("（　）", it.a); q.correctText = it.a;
+        q.fullSent = it.s.replace("（　）", it.a); q.correctText = it.a; q.exp = it.exp || null; q.voc = it.voc || null;
         qs.push(q); made++;
       }
       return made;
@@ -6200,7 +6246,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         usedAns["A:" + it.a] = 1;
         var q = base("vocab", "言い換え類義", "syn");
         q.qText = it.s; q.uline = it.t; q.opts = o.opts; q.ans = o.ans;
-        q.fullSent = it.s; q.correctText = it.a;
+        q.fullSent = it.s; q.correctText = it.a; q.exp = it.exp || null; q.voc = it.voc || null;
         qs.push(q); made++;
       }
       return made;
@@ -6224,7 +6270,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         q.uline = it.t;
         q.opts = idx.map(function(x){ return it.s[x]; });
         q.ans = idx.indexOf(it.a);
-        q.correctText = it.s[it.a];
+        q.correctText = it.s[it.a]; q.exp = it.exp || null; q.voc = it.voc || null;
         qs.push(q); made++;
       }
       return made;
@@ -6249,7 +6295,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         q0.qText = dit.d[0] + "\n" + dit.d[1];
         q0.opts = oD.opts; q0.ans = oD.ans;
         q0.fullSent = dit.d[0] + " " + dit.d[1].replace("（　）", dit.a);
-        q0.correctText = dit.a;
+        q0.correctText = dit.a; q0.exp = dit.exp || null; q0.voc = dit.voc || null;
         qs.push(q0); dlgMade++;
       }
       var made = dlgMade;
@@ -6318,7 +6364,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           q.pass = passTxt;
           q.qText = "（　" + (n + 1) + "　）に入れるのに最もよいものを選びなさい。";
           q.opts = o.opts; q.ans = o.ans;
-          q.correctText = bl2.a;
+          q.correctText = bl2.a; q.exp = bl2.exp || it.exp || null; q.voc = bl2.voc || it.voc || null;
           qs.push(q);
         }
         return 5;
@@ -6346,7 +6392,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var q = base("reading", kindName, kindKey);
       q.pass = passTxt;
       q.qText = rq.q; q.opts = opts; q.ans = idx.indexOf(rq.a);
-      q.exp = rq.e; q.correctText = opts[q.ans];
+      q.exp = rq.exp || rq.e || null; q.voc = rq.voc || null; q.evi = rq.evi || null; q.correctText = opts[q.ans];
       qs.push(q);
     }
     function buildRead(need, key){
@@ -6593,13 +6639,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       });
       return made;
     }
-    function pushReadFixed(passTxt, kindName, kindKey, rq){
+    function pushReadFixed(passTxt, kindName, kindKey, rq, pit){
       var idx = exShuffle([0, 1, 2, 3]);
       var opts = idx.map(function(x){ return rq.o[x]; });
       var q = base("reading", kindName, kindKey);
       q.pass = passTxt;
       q.qText = rq.q; q.opts = opts; q.ans = idx.indexOf(rq.a);
-      q.exp = rq.exp || rq.e || null; q.voc = rq.voc || null;
+      q.exp = rq.exp || rq.e || (pit && pit.exp) || null; q.voc = rq.voc || (pit && pit.voc) || null; q.evi = rq.evi || (pit && pit.evi) || null;
       q.correctText = opts[q.ans];
       qs.push(q);
     }
@@ -6612,7 +6658,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           var passTxt = "文章1\n" + it.p1 + "\n文章2\n" + it.p2;
           it.qs.forEach(function(rq){
             if(made >= need || !rq || typeof rq.q !== "string" || !Array.isArray(rq.o) || rq.o.length !== 4 || typeof rq.a !== "number") return;
-            pushReadFixed(passTxt, kindName, key, rq); made++;
+            pushReadFixed(passTxt, kindName, key, rq, it); made++;
           });
         });
       } else if(key === "readS"){
@@ -6625,7 +6671,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           if(!it || typeof it.p !== "string" || !Array.isArray(it.qs)) return;
           it.qs.forEach(function(rq){
             if(made >= need || !rq || typeof rq.q !== "string" || !Array.isArray(rq.o) || rq.o.length !== 4 || typeof rq.a !== "number") return;
-            pushReadFixed(it.p, kindName, key, rq); made++;
+            pushReadFixed(it.p, kindName, key, rq, it); made++;
           });
         });
       }
@@ -7819,6 +7865,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       html += exQTextHtml(q);
       html += exOptsHtml(q, cur);
     }
+    html += '<button type="button" class="ex-report-btn" data-exrep="' + cur + '" aria-label="Báo lỗi câu ' + (cur + 1) + '">🚩 Báo lỗi</button>';
     html += '</div>';
     examBody.innerHTML = html;
     examBody.scrollTop = 0;
@@ -8235,7 +8282,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     examBody.hidden = false;
     document.querySelector(".examfoot").style.display = "none";
     document.getElementById("examPart").textContent = "Xem lại đáp án · " + exExamLabel();
-    var html = "";
+    var html = '<div class="explain-toggle" id="exExplainToggle" role="switch" aria-checked="' + (settings.explain ? "true" : "false") + '">' +
+      '<div><b>Giải thích</b><span class="ex-sub">Hiện giải thích, từ vựng và căn cứ trong bài ở mỗi câu</span></div>' +
+      '<span class="switch' + (settings.explain ? " on" : "") + '"></span>' +
+      '</div>';
     EXS.qs.forEach(function(q, i){
       var a = EXS.answers[i];
       var ok = exIsCorrect(q, a);
@@ -8251,16 +8301,200 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         '<p class="rvline">Đáp án đúng: <b>' + esc(exCorrectAnswerText(q)) + '</b></p>' +
         (q.fullSent && !q.star ? '<p class="rvline jp">Câu đầy đủ: ' + esc(exStrip(q.fullSent)) + '</p>' : "") +
         (q.exp ? '<p class="rvline rvexp">Giải thích: ' + esc(q.exp) + '</p>' : "") +
-        (q.evi ? '<p class="rvline">Căn cứ trong bài: <span class="jp">' + esc(q.evi) + '</span></p>' : "") +
-        (q.voc ? '<p class="rvline">Từ vựng: ' + esc(q.voc) + '</p>' : "") +
+        (q.evi ? '<p class="rvline rvevi">Căn cứ trong bài: <span class="jp">' + esc(q.evi) + '</span></p>' : "") +
+        (q.voc ? '<p class="rvline rvvoc">Từ vựng: ' + esc(q.voc) + '</p>' : "") +
         exDlgReviewHtml(q) +
+        '<button type="button" class="ex-report-btn" data-exrep="' + i + '" aria-label="Báo lỗi câu ' + (i + 1) + '">🚩 Báo lỗi</button>' +
         '</div>';
     });
     html += '<button class="cta" id="exReviewBack" style="margin-top:6px;">Về danh sách đề</button>';
     examBody.innerHTML = html;
+    examBody.classList.toggle("ex-noexp", !settings.explain);
     examBody.scrollTop = 0;
     document.getElementById("exReviewBack").addEventListener("click", closeExam);
+    var exTg = document.getElementById("exExplainToggle");
+    if(exTg) exTg.addEventListener("click", function(){
+      settings.explain = !settings.explain;
+      saveSettings();
+      examBody.classList.toggle("ex-noexp", !settings.explain);
+      var sw = exTg.querySelector(".switch");
+      if(sw) sw.classList.toggle("on", !!settings.explain);
+      exTg.setAttribute("aria-checked", settings.explain ? "true" : "false");
+    });
   }
+  /* ---------- Báo lỗi câu hỏi đề thi (18/11) ----------
+     Nút "🚩 Báo lỗi" ở mỗi câu (lúc làm bài + màn xem lại) mở overlay này.
+     Overlay là DOM thuần trên phòng thi: không đổi EXS.state nên timer vẫn
+     chạy, không gọi renderQ() nên đáp án đã chọn còn nguyên. Ghi Firestore
+     collection sk_reports (public create-only theo rules; ẩn danh được).
+     Chống spam theo thiết bị: 5/giờ + 20/ngày (localStorage). */
+  var exRepOverlay = document.getElementById("exReportOverlay");
+  var exRepCur = -1; /* index toàn cục của câu đang báo */
+  var exRepSending = false;
+  var EX_REP_LOG_KEY = "sk_reports_log";
+  var EX_REP_HOUR_MAX = 5, EX_REP_DAY_MAX = 20;
+  function exRepDb(){
+    try{
+      var app = premiumFbApp();
+      return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
+    }catch(_){ return null; }
+  }
+  function exRepDeviceId(){
+    try{
+      if(typeof SKSync !== "undefined" && SKSync.getDeviceId) return SKSync.getDeviceId();
+    }catch(_){}
+    try{
+      var id = window.localStorage.getItem("sk_device_id");
+      if(!id){
+        id = "dev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+        window.localStorage.setItem("sk_device_id", id);
+      }
+      return id;
+    }catch(_){ return "dev-unknown"; }
+  }
+  function exRepPlainQ(q){
+    if(q.star) return exStrip(q.fullSent);
+    if(q.qHtml) return "用法 — chọn câu dùng đúng từ: " + (q.uline || "");
+    return exStrip(q.qText);
+  }
+  function exRepOpts(q){
+    if(q.star) return q.star.chunks.slice();
+    if(!q.opts) return [];
+    return q.opts.map(function(_, j){ return exOptLabel(q, j); });
+  }
+  function exRepPassage(q){
+    if(q.pass) return q.pass;
+    if(q.passHtml) return String(q.passHtml).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || null;
+    return null;
+  }
+  function exRepChosenText(q, i){
+    var a = EXS.answers[i];
+    if(a == null || a === -1 || (Array.isArray(a) && !a.length)) return null;
+    return exUserAnswerText(q, a);
+  }
+  function exRepQHtml(q){
+    var h = exPassHtml(q);
+    if(q.star){
+      h += '<p class="ex-qtext jp">' + esc(exStrip(q.fullSent)) + '</p>' +
+        '<p class="qsub">Các mảnh (theo đúng thứ tự):</p><p class="jp">' + q.star.chunks.map(function(c){ return esc(c); }).join(" · ") + '</p>';
+    } else if(q.part === 3){
+      h += '<p class="ex-qtext jp">' + exBlank(esc(exStrip(q.qText))) + '</p>';
+    } else {
+      h += exQTextHtml(q);
+    }
+    var opts = exRepOpts(q);
+    if(opts.length){
+      h += '<ol class="ex-rep-opts">' + opts.map(function(o){ return '<li>' + esc(o) + '</li>'; }).join("") + '</ol>';
+    }
+    return h;
+  }
+  function exRepOpen(i){
+    if(!EXS || !EXS.qs[i]) return;
+    var q = EXS.qs[i];
+    exRepCur = i;
+    var sub = document.getElementById("exRepSub");
+    if(sub) sub.textContent = "Câu " + (i + 1) + " · " + exExamLabel() + " · " + q.kind;
+    var box = document.getElementById("exRepQ");
+    if(box) box.innerHTML = exRepQHtml(q);
+    var ta = document.getElementById("exRepMsg");
+    if(ta) ta.value = "";
+    exRepErr("");
+    var btn = document.getElementById("exRepSend");
+    if(btn) btn.disabled = false;
+    showOv(exRepOverlay);
+  }
+  function exRepClose(){
+    hideOv(exRepOverlay);
+    exRepCur = -1;
+  }
+  function exRepErr(t, ok){
+    var el = document.getElementById("exRepErr");
+    if(!el) return;
+    el.textContent = t || "";
+    el.classList.toggle("ok", !!ok);
+  }
+  function exRepLogLoad(){
+    try{
+      var a = JSON.parse(window.localStorage.getItem(EX_REP_LOG_KEY) || "[]");
+      return Array.isArray(a) ? a.filter(function(x){ return typeof x === "number"; }) : [];
+    }catch(_){ return []; }
+  }
+  function exRepLogSave(a){
+    try{ window.localStorage.setItem(EX_REP_LOG_KEY, JSON.stringify(a)); }catch(_){}
+  }
+  function exRepCheckLimit(){
+    var now = Date.now(), log = exRepLogLoad();
+    log = log.filter(function(t){ return now - t < 24 * 3600 * 1000; });
+    exRepLogSave(log);
+    var hour = log.filter(function(t){ return now - t < 3600 * 1000; }).length;
+    if(hour >= EX_REP_HOUR_MAX) return "Bạn đã gửi đủ 5 báo cáo trong 1 giờ qua — thử lại sau nhé.";
+    if(log.length >= EX_REP_DAY_MAX) return "Bạn đã gửi đủ 20 báo cáo trong hôm nay — thử lại vào ngày mai nhé.";
+    return "";
+  }
+  function exRepSend(){
+    if(exRepSending) return;
+    if(!EXS || exRepCur < 0 || !EXS.qs[exRepCur]){
+      exRepErr("Phiên thi đã kết thúc — mở lại đề để báo lỗi câu này.");
+      return;
+    }
+    var ta = document.getElementById("exRepMsg");
+    var msg = ta ? ta.value.trim() : "";
+    if(!msg){
+      exRepErr("Vui lòng nhập nội dung báo cáo.");
+      if(ta) ta.focus();
+      return;
+    }
+    var lim = exRepCheckLimit();
+    if(lim){ exRepErr(lim); return; }
+    var db = exRepDb();
+    if(!db){
+      exRepErr("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại.");
+      return;
+    }
+    var q = EXS.qs[exRepCur];
+    var doc = {
+      level: EXS.lv,
+      test: String(EXS.test),
+      part: q.part === 3 ? "listening" : "written",
+      kind: q.kindKey || q.kind,
+      qIndex: exRepCur,
+      question: exRepPlainQ(q),
+      options: exRepOpts(q),
+      passage: exRepPassage(q),
+      chosen: exRepChosenText(q, exRepCur),
+      correct: exCorrectAnswerText(q),
+      message: msg,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      uid: (typeof signedInUid === "string" && signedInUid) ? signedInUid : null,
+      email: (typeof signedInEmail === "string" && signedInEmail) ? signedInEmail : null,
+      deviceId: exRepDeviceId()
+    };
+    exRepSending = true;
+    var btn = document.getElementById("exRepSend");
+    if(btn) btn.disabled = true;
+    exRepErr("");
+    db.collection("sk_reports").add(doc).then(function(){
+      exRepSending = false;
+      var log = exRepLogLoad();
+      log.push(Date.now());
+      exRepLogSave(log);
+      exRepErr("Đã gửi báo cáo, cảm ơn bạn!", true);
+      setTimeout(exRepClose, 1200);
+    }).catch(function(){
+      exRepSending = false;
+      if(btn) btn.disabled = false;
+      exRepErr("Không gửi được báo cáo — kiểm tra mạng rồi thử lại.");
+    });
+  }
+  document.getElementById("exRepClose").addEventListener("click", exRepClose);
+  document.getElementById("exRepSend").addEventListener("click", exRepSend);
+  examBody.addEventListener("click", function(ev){
+    var b = ev.target && ev.target.closest ? ev.target.closest(".ex-report-btn") : null;
+    if(!b) return;
+    var i = parseInt(b.getAttribute("data-exrep"), 10);
+    if(!isNaN(i)) exRepOpen(i);
+  });
+
   document.getElementById("ctaContinue").addEventListener("click", function(){
     openKanjiLesson();
   });
@@ -8269,7 +8503,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var settings = {
     sound: true, remind: true,
     dark: !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches),
-    recog: true, sync: true, sora: true
+    recog: true, sync: true, sora: true, explain: true
   };
   try{
     var savedSet = JSON.parse(window.localStorage.getItem("sk_settings") || "null");
@@ -18373,6 +18607,7 @@ function furiHTML(text){
        gãy các mục còn lại (mỗi mục tự catch + tự vẽ lại phần của mình). */
     admLoadTotalUsers(db);
     admLoadVisits(db);
+    admLoadReports(db);
     Promise.all([
       db.collection("kanji_progress").limit(1000).get(),
       db.collection("sk_orders").orderBy("createdAt", "desc").limit(100).get()
@@ -18407,6 +18642,72 @@ function furiHTML(text){
         : "Không tải được dữ liệu — kiểm tra mạng rồi mở lại trang nhé.";
       admMsg(admLoadErr);
       renderAdmin();
+    });
+  }
+  var admReports = []; /* báo lỗi câu hỏi từ sk_reports, mới nhất trước */
+  var admReportsLoaded = false;
+  var admReportsErr = "";
+  function admLoadReports(db){
+    admReportsLoaded = false;
+    admReportsErr = "";
+    renderAdminReports();
+    db.collection("sk_reports").orderBy("createdAt", "desc").limit(50).get().then(function(snap){
+      admReports = [];
+      snap.forEach(function(doc){
+        var d = doc.data() || {};
+        admReports.push({
+          level: d.level || "", test: d.test, part: d.part || "",
+          kind: d.kind || "", qIndex: d.qIndex,
+          question: d.question || "", options: Array.isArray(d.options) ? d.options : [],
+          passage: d.passage || null, chosen: d.chosen || null, correct: d.correct || "",
+          message: d.message || "", createdAtMs: premiumTsToMs(d.createdAt),
+          uid: d.uid || "", email: d.email || "", deviceId: d.deviceId || ""
+        });
+      });
+      admReportsLoaded = true;
+      renderAdminReports();
+    }).catch(function(err){
+      admReportsErr = (err && err.code === "permission-denied")
+        ? "Tài khoản này chưa được cấp quyền đọc báo lỗi (kiểm tra rules Firestore)."
+        : "Không tải được báo lỗi — kiểm tra mạng rồi mở lại trang nhé.";
+      renderAdminReports();
+    });
+  }
+  function admRepPart(p){ return p === "listening" ? "Nghe" : "Viết"; }
+  function renderAdminReports(){
+    var box = document.getElementById("admReports");
+    if(!box) return;
+    box.innerHTML = "";
+    if(!admReportsLoaded && !admReportsErr){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải báo lỗi…</p>';
+      return;
+    }
+    if(admReportsErr){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admReportsErr) + '</p>';
+      return;
+    }
+    if(!admReports.length){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Chưa có báo lỗi nào. Học viên bấm nút “Báo lỗi” ở câu hỏi đề thi thì báo cáo sẽ hiện tại đây.</p>';
+      return;
+    }
+    admReports.forEach(function(r){
+      var when = "";
+      try{ when = r.createdAtMs ? new Date(r.createdAtMs).toLocaleString("vi-VN") : ""; }catch(_){}
+      var d = document.createElement("div");
+      d.className = "adm-rep";
+      var opts = r.options.length
+        ? '<ol class="ex-rep-opts">' + r.options.map(function(o){ return '<li>' + esc(o) + '</li>'; }).join("") + '</ol>'
+        : "";
+      var who = (r.email ? esc(r.email) : (r.uid ? "UID " + esc(admShortUid(r.uid)) : "Ẩn danh")) +
+        (r.deviceId ? " · " + esc(r.deviceId) : "");
+      d.innerHTML = '<div class="adm-rep-top"><span>' + esc(r.level) + ' · Test ' + esc(String(r.test)) + ' · ' + esc(admRepPart(r.part)) + ' · Câu ' + (typeof r.qIndex === "number" ? (r.qIndex + 1) : "?") + (r.kind ? ' · ' + esc(r.kind) : '') + '</span><span>' + esc(when) + '</span></div>' +
+        (r.question ? '<p class="adm-rep-q jp">' + esc(r.question) + '</p>' : "") +
+        opts +
+        '<p class="adm-rep-q">Bạn chọn: <b>' + esc(r.chosen || "Chưa trả lời") + '</b> · Đáp án đúng: <b>' + esc(r.correct) + '</b></p>' +
+        (r.passage ? '<p class="adm-rep-q">Đoạn văn: ' + esc(String(r.passage).slice(0, 300)) + (String(r.passage).length > 300 ? "…" : "") + '</p>' : "") +
+        '<p class="adm-rep-msg">' + esc(r.message) + '</p>' +
+        '<p class="adm-rep-meta">' + who + '</p>';
+      box.appendChild(d);
     });
   }
   function renderAdminStats(){
@@ -18689,11 +18990,13 @@ function furiHTML(text){
     if(admLoading){
       list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải danh sách học viên…</p>';
       renderAdminInbox();
+      renderAdminReports();
       return;
     }
     if(admLoadErr){
       list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admLoadErr) + '</p>';
       renderAdminInbox();
+      renderAdminReports();
       return;
     }
     var shown = 0;
@@ -18734,6 +19037,7 @@ function furiHTML(text){
       });
     });
     renderAdminInbox();
+    renderAdminReports();
   }
   function admGrantPremium(){
     var inp = document.getElementById("admGrantUid");
@@ -20359,7 +20663,7 @@ function furiHTML(text){
   function mergeSettings(local, server) {
     local = local || {}; server = server || {};
     var out = {}, fieldAt = {}, f;
-    ["sound", "remind", "recog", "sora"].forEach(function (f) {
+    ["sound", "remind", "recog", "sora", "explain"].forEach(function (f) {
       var la = num(local.fieldAt && local.fieldAt[f], 0);
       var sa = num(server.fieldAt && server.fieldAt[f], 0);
       if (sa > la) { out[f] = server[f]; fieldAt[f] = sa; }
@@ -20685,7 +20989,7 @@ function furiHTML(text){
     if (docId === "settings") {
       var s = localRaw || {};
       var so = { fieldAt: {} };
-      ["sound", "remind", "recog", "sora"].forEach(function (f) {
+      ["sound", "remind", "recog", "sora", "explain"].forEach(function (f) {
         so[f] = s[f];
         so.fieldAt[f] = (s[f] !== (meta.values && meta.values[f])) ? t
           : (meta.fieldAt && meta.fieldAt[f]) || 0;
@@ -20736,8 +21040,8 @@ function furiHTML(text){
     if (docId === "settings") {
       var s = syncData || {};
       return {
-        local: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora },
-        meta: { values: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora },
+        local: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora, explain: s.explain },
+        meta: { values: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora, explain: s.explain },
                 fieldAt: clone(s.fieldAt || {}) }
       };
     }
@@ -21693,8 +21997,8 @@ function furiHTML(text){
       if (docId === "settings") {
         var s = lsGetJSON("sk_settings", null);
         if (!s) return null;
-        // Chỉ 4 trường đồng bộ; dark + sync ở lại local (theo thiết kế §9).
-        return { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora };
+        // Chỉ 5 trường đồng bộ; dark + sync ở lại local (theo thiết kế §9).
+        return { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora, explain: s.explain };
       }
       if (docId === "avatar") {
         var choice = lsGet("sk_avatar_choice");
@@ -21792,7 +22096,7 @@ function furiHTML(text){
         }
         if (docId === "settings") {
           if (payload) {
-            ["sound", "remind", "recog", "sora"].forEach(function (f) {
+            ["sound", "remind", "recog", "sora", "explain"].forEach(function (f) {
               if (typeof payload[f] === "boolean") settings[f] = payload[f];
             });
           }
