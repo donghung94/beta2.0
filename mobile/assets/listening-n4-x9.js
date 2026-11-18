@@ -1550,13 +1550,13 @@ window.LISTEN_N4_SETS = {
    "t": 4,
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
-    "はい、重いです。",
+    "はい、かるいです。",
     "いいえ、かるいです。",
     "いいえ、重いです。"
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Túi nhẹ thì đáp 'không, nhẹ'; 'vâng, nặng' là khẳng định túi nặng, sai với thực tế túi nhẹ; 'không, nặng' thì mâu thuẫn nhau.",
+   "exp": "Chỉ 'không, nhẹ' mới đúng; 'vâng, nhẹ' vừa đồng ý nặng vừa nói nhẹ, mâu thuẫn; 'không, nặng' vừa phủ định vừa khẳng định nặng, cũng mâu thuẫn.",
    "dlg": [
     {
      "sp": "男",
@@ -2253,12 +2253,12 @@ window.LISTEN_N4_SETS = {
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
     "はい、晴れるそうです。",
-    "はい、雨だそうです。",
-    "はい、ゆきだそうです。"
+    "はい、昨日は晴れました。",
+    "はい、今日は雨です。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Dự báo mai nắng thì đáp 'vâng, nghe nói mai nắng'; 'nghe nói mưa' và 'nghe nói tuyết' đều trái với dự báo nắng.",
+   "exp": "Câu hỏi về thời tiết ngày mai nên chỉ đáp án nói về ngày mai mới đúng; 'hôm qua trời nắng' nói về hôm qua, 'hôm nay trời mưa' nói về hôm nay, đều không trả lời câu hỏi về ngày mai.",
    "dlg": [
     {
      "sp": "男",
@@ -2272,13 +2272,13 @@ window.LISTEN_N4_SETS = {
    "t": 4,
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
-    "はい、とてもからいです。",
+    "いいえ、とてもからいです。",
     "いいえ、あまりからくないです。",
-    "いいえ、とてもあまいです。"
+    "はい、あまりからくないです。"
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Món ăn không cay lắm thì đáp 'không, không cay lắm'; 'vâng, rất cay' khẳng định món cay, sai với thực tế; 'không, rất ngọt' nói về vị ngọt, không trả lời được câu hỏi món có cay không.",
+   "exp": "Chỉ 'không, không cay lắm' mới đúng; 'không, rất cay' và 'vâng, không cay lắm' đều vừa phủ định vừa khẳng định, tự mâu thuẫn.",
    "dlg": [
     {
      "sp": "女",
@@ -2312,13 +2312,13 @@ window.LISTEN_N4_SETS = {
    "t": 4,
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
-    "1人います。",
+    "2つあります。",
     "2人います。",
-    "3人います。"
+    "1人いますが、3人います。"
    ],
    "imgs": null,
    "ans": 1,
-   "exp": "Có 2 anh chị em thì đáp 'có 2 người'; 'có 1 người' và 'có 3 người' đều không đúng số anh chị em.",
+   "exp": "Chỉ 'có 2 người' mới trả lời đúng câu hỏi có mấy anh chị em; 'có 2 cái' dùng sai lượng từ và động từ (đếm người phải dùng 人 và います); 'có 1 người nhưng có 3 người' tự mâu thuẫn.",
    "dlg": [
     {
      "sp": "女",
@@ -2334,11 +2334,11 @@ window.LISTEN_N4_SETS = {
    "opts": [
     "去年来ました。",
     "来年来ます。",
-    "先月来ました。"
+    "明日、来ました。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Đã đến Nhật năm ngoái thì đáp 'đã đến năm ngoái'; 'sẽ đến năm sau' là chuyện tương lai, chưa xảy ra; 'đã đến tháng trước' sai thời điểm đến.",
+   "exp": "Câu hỏi chuyện đã đến Nhật trong quá khứ nên chỉ 'đã đến năm ngoái' mới đúng; 'sẽ đến năm sau' là chuyện tương lai; 'ngày mai đã đến' thì ngày mai chưa tới mà đã đến, mâu thuẫn.",
    "dlg": [
     {
      "sp": "男",
@@ -2353,12 +2353,12 @@ window.LISTEN_N4_SETS = {
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
     "はい、泳げます。",
-    "いいえ、泳げません。",
+    "いいえ、泳げます。",
     "はい、走れます。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Biết bơi thì đáp 'vâng, bơi được'; 'không, không bơi được' trái với thực tế biết bơi; 'vâng, chạy được' nói về chạy, không trả lời được câu hỏi có bơi được không.",
+   "exp": "Chỉ 'vâng, bơi được' mới đúng; 'không, bơi được' vừa phủ định vừa khẳng định, mâu thuẫn; 'vâng, chạy được' nói về chạy, không trả lời câu hỏi có bơi được không.",
    "dlg": [
     {
      "sp": "女",
@@ -2373,12 +2373,12 @@ window.LISTEN_N4_SETS = {
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
     "とてもよかったです。",
-    "あまりよくなかったです。",
-    "とても長かったです。"
+    "映画は見ませんでしたが、とてもよかったです。",
+    "見たい映画は、とてもよかったです。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Thấy phim rất hay thì đáp 'rất hay'; 'không hay lắm' trái với cảm nhận; 'rất dài' nói về độ dài phim, không phải cảm nhận hay hay dở.",
+   "exp": "Câu hỏi cảm nhận về bộ phim đã xem nên chỉ 'rất hay' mới đúng; 'không xem nhưng rất hay' và 'phim muốn xem thì rất hay' đều tự mâu thuẫn (chưa xem thì không thể nhận xét hay).",
    "dlg": [
     {
      "sp": "男",
@@ -2393,12 +2393,12 @@ window.LISTEN_N4_SETS = {
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
     "はい、駅の前にあります。",
-    "いいえ、ありません。",
+    "いいえ、駅の前にあります。",
     "はい、山の上にあります。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Có cửa hàng tiện lợi trước ga thì đáp 'vâng, có trước ga'; 'không, không có' trái với thực tế; 'vâng, có trên núi' sai vị trí cửa hàng.",
+   "exp": "Chỉ 'vâng, có trước ga' mới đúng; 'không, có trước ga' vừa phủ định vừa khẳng định, mâu thuẫn; 'vâng, có trên núi' thì trên núi không phải gần ga.",
    "dlg": [
     {
      "sp": "女",
@@ -3115,12 +3115,12 @@ window.LISTEN_N4_SETS = {
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
     "はい、サッカーを見ました。",
-    "はい、テニスを見ました。",
-    "いいえ、見ませんでした。"
+    "いいえ、サッカーを見ました。",
+    "はい、見ませんでした。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Hôm qua xem bóng đá trên ti vi thì đáp 'vâng, đã xem bóng đá'; 'vâng, đã xem tennis' sai môn thể thao; 'không, không xem' trái với việc đã xem ti vi.",
+   "exp": "Chỉ 'vâng, đã xem bóng đá' mới đúng; 'không, đã xem bóng đá' và 'vâng, không xem' đều vừa phủ định vừa khẳng định, tự mâu thuẫn.",
    "dlg": [
     {
      "sp": "女",
@@ -3135,12 +3135,12 @@ window.LISTEN_N4_SETS = {
    "q": "いちばん いい 答えを えらんで ください。",
    "opts": [
     "買い物をしました。",
-    "べんきょうをしました。",
-    "仕事をしました。"
+    "べんきょうをします。",
+    "明日、仕事をします。"
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Chủ nhật đi mua sắm thì đáp 'đã đi mua sắm'; 'đã học bài' và 'đã làm việc' đều không phải việc đã làm vào chủ nhật.",
+   "exp": "Câu hỏi việc đã làm vào chủ nhật nên chỉ 'đã đi mua sắm' mới đúng; 'sẽ học bài' là chuyện chưa làm; 'ngày mai sẽ làm việc' nói về ngày mai và chuyện chưa làm, đều không trả lời câu hỏi.",
    "dlg": [
     {
      "sp": "男",
