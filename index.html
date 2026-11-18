@@ -19,7 +19,7 @@
 }catch(e){}})();
 </script>
 <title>SoraKanji — Bầu trời Kanji cho người Việt</title>
-<meta name="description" content="SoraKanji — học Kanji, từ vựng, ngữ pháp và luyện thi JLPT N5–N1 cho người Việt: 2.138 kanji có chiết tự và thứ tự nét, từ vựng Minna no Nihongo kèm hình minh họa, 374 mẫu ngữ pháp, đề thi viết và nghe Test 1–9.">
+<meta name="description" content="SoraKanji — học Kanji, từ vựng, ngữ pháp và luyện thi JLPT N5–N1 cho người Việt: 2.138 kanji có chiết tự và thứ tự nét, từ vựng Minna no Nihongo kèm hình minh họa, 375 mẫu ngữ pháp, đề thi viết và nghe Test 1–9.">
 <link rel="icon" href="mobile/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2512,7 +2512,7 @@ function renderHome(){
   h += '<div class="stat-row">' +
     statMini("#ffe9d6", "var(--red-dark)", "漢", "2.138", "Kanji") +
     statMini("#e3f1fd", "var(--blue-dark)", "語", "10.605", "Từ vựng") +
-    statMini("#e6f7ec", "var(--green)", "文", "374", "Ngữ pháp") +
+    statMini("#e6f7ec", "var(--green)", "文", "375", "Ngữ pháp") +
     statMini("#fdeef3", "#c2437e", "読", "200", "Bài đọc") +
     "</div>";
   h += "</div><div>"; /* ===== CỘT PHẢI ===== */
@@ -2541,7 +2541,7 @@ function renderHome(){
   /* Thẻ giới thiệu */
   h += '<section class="blk"><div class="sec-head"><div><h2>Các mục học</h2></div></div><div class="feat-grid">' +
     featCard("#/thi", "試", "Sora JLPT", "Phòng thi đủ 5 cấp × Test 1–9: phần viết (N5 67 · N4 70 · N3 74 · N2 75 · N1 71 câu) + phần nghe, bấm giờ, chấm /180, xem lại từng câu có giải thích.", "Vào phòng thi") +
-    featCard("#/nguphap", "文", "Sora Bunpo", "374 mẫu ngữ pháp JLPT kèm cấu trúc, giải nghĩa, ví dụ có dịch và lưu ý dễ nhầm.", "Học ngữ pháp") +
+    featCard("#/nguphap", "文", "Sora Bunpo", "375 mẫu ngữ pháp JLPT kèm cấu trúc, giải nghĩa, ví dụ có dịch và lưu ý dễ nhầm.", "Học ngữ pháp") +
     featCard("#/tuvung", "語", "Sora Tango", "Từ vựng Minna no Nihongo N5–N2 kèm hình minh họa và flashcard, cộng 1.056 từ chuyên ngành Tokutei.", "Học từ vựng") +
     featCard("#/trongam", "♪", "Trọng âm", "47 từ mẫu trọng âm chuẩn Tokyo có vẽ đường cao độ từng âm tiết, kèm các cặp từ đồng âm khác nhau ở trọng âm như 橋・箸・端.", "Học trọng âm") +
     featCard("#/nghe", "聞", "Luyện nghe", "149 hội thoại có file nghe, transcript Nhật – Việt và câu hỏi kiểm tra theo từng cấp.", "Luyện nghe ngay") +
@@ -4005,7 +4005,7 @@ var GR_MINNA_W = {
     {n:43, pats:["〜そうです (vẻ bề ngoài)","V-て きます (đi rồi quay lại)","V-て きました (thay đổi đang tới)"]},
     {n:44, pats:["〜すぎます","V-ます + やすい / にくい","A-く / A-に + します"]},
     {n:45, pats:["〜場合は","〜のに"]},
-    {n:46, pats:["V + ところです (3 giai đoạn)","〜た ばかりです / 〜て ばかり","〜はずです"]},
+    {n:46, pats:["V + ところです (3 giai đoạn)","〜た ばかりです","〜て ばかり","〜はずです"]},
     {n:47, pats:["〜そうです (truyền văn)","〜ようです","N + らしいです"]},
     {n:48, pats:["Động từ tôn kính đặc biệt (尊敬語)","お + V-ます + に なります","お + V-ます + ください"]},
     {n:49, pats:["Động từ khiêm nhường đặc biệt (謙譲語)","お + V-ます + します","ご + N + いたします / お聞かせください"]},
@@ -4078,7 +4078,7 @@ function renderGrammarHome(){
     if(!skRenderAlive(rTok)) return;
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Ngữ pháp</div>' +
       "<h1>Ngữ pháp JLPT</h1>" +
-      "<p>374 mẫu ngữ pháp biên soạn theo Minna no Nihongo (N5, N4) và Shin Kanzen Master / Sou Matome (N3–N1): cấu trúc, giải nghĩa, ví dụ có bản dịch và lưu ý. Mở đầu bằng ba mục tra cứu riêng: Trợ từ, Cách chia thể và Trọng âm.</p></div>" +
+      "<p>375 mẫu ngữ pháp biên soạn theo Minna no Nihongo (N5, N4) và Shin Kanzen Master / Sou Matome (N3–N1): cấu trúc, giải nghĩa, ví dụ có bản dịch và lưu ý. Mở đầu bằng ba mục tra cứu riêng: Trợ từ, Cách chia thể và Trọng âm.</p></div>" +
       '<div class="lesson-grid" style="padding:18px 0 34px">';
     h += '<a class="lesson-card" href="#/nguphap/trotu"><b>Trợ từ</b><span>15 bài theo nhóm trợ từ + bài tập tổng hợp — giải thích cách dùng, mẫu câu và bài tập điền trợ từ</span></a>';
     h += '<a class="lesson-card" href="#/nguphap/chia-the"><b>Cách chia thể</b><span>14 thể của động từ — quy tắc chia Nhóm I · II · III, bài tập tự chia thể và ví dụ</span></a>';
