@@ -565,6 +565,11 @@ audio.ex-audio{width:100%; margin:4px 0 6px}
 .qreport{display:inline-flex; align-items:center; gap:6px; margin-top:12px; border:1px solid var(--line-strong); background:var(--card2); color:var(--muted); border-radius:99px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer}
 .qreport:hover{border-color:var(--red); color:var(--red)}
 .qresult + .qreport{margin-top:10px}
+.qexplain{display:inline-flex; align-items:center; gap:6px; margin-top:12px; margin-left:8px; border:1px solid var(--line-strong); background:var(--card2); color:var(--muted); border-radius:99px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer}
+.qexplain:hover{border-color:var(--ok); color:var(--ok)}
+.skexp-exp{margin-top:10px; line-height:1.7; font-size:14.5px}
+.skexp-voc{margin-top:8px; color:var(--muted); font-size:13.5px; line-height:1.6}
+.skrep-count{text-align:right; color:var(--muted); font-size:12.5px; margin:6px 0 0}
 .skrep-bg{position:fixed; inset:0; z-index:200; background:rgba(20,18,16,.55); display:flex; align-items:flex-end; justify-content:center; padding:16px}
 @media (min-width:640px){ .skrep-bg{align-items:center} }
 .skrep-box{width:100%; max-width:620px; max-height:88vh; overflow-y:auto; background:var(--card); border-radius:16px; box-shadow:var(--shadow); padding:18px 20px 20px}
@@ -5441,6 +5446,7 @@ function qcardHTML(q, i, num){
   }
   if(EX.submitted) h += qresultHTML(q, i);
   h += '<button type="button" class="qreport" data-report-qi="' + i + '" aria-label="Báo lỗi câu ' + num + '">🚩 Báo lỗi</button>';
+  if(!EX.submitted && (q.exp || q.voc)) h += '<button type="button" class="qexplain" data-explain-qi="' + i + '" aria-label="Giải thích câu ' + num + '">💡 Giải thích</button>';
   h += "</div>";
   return h;
 }
@@ -5695,7 +5701,8 @@ function skReportOpen(qi){
     /* Đáp án đúng CHỈ hiện sau khi đã nộp bài — lúc đang làm bài mà hiện là lộ đáp án. */
     (EX.submitted ? '<div class="skrep-pick">Đáp án đúng: <b>' + esc(q.correctText) + "</b></div>" : "") +
     "</div>" +
-    '<textarea class="skrep-msg" id="skrepMsg" placeholder="Mô tả lỗi bạn thấy ở câu này (ví dụ: đáp án sai, câu hỏi thiếu từ, audio không khớp…)"></textarea>' +
+    '<textarea class="skrep-msg" id="skrepMsg" maxlength="2000" placeholder="Mô tả lỗi bạn thấy ở câu này (ví dụ: đáp án sai, câu hỏi thiếu từ, audio không khớp…)"></textarea>' +
+    '<p class="skrep-count" id="skrepCount">Còn 2000 ký tự</p>' +
     '<p class="skrep-err" id="skrepErr"></p>' +
     '<div class="skrep-actions"><button type="button" class="btn ghost sm" id="skrepCancel">Hủy</button>' +
     '<button type="button" class="btn sm" id="skrepSend">Gửi báo cáo</button></div>' +
@@ -5707,6 +5714,8 @@ function skReportOpen(qi){
   document.getElementById("skrepSend").addEventListener("click", skReportSend);
   var ta = document.getElementById("skrepMsg");
   if(ta) ta.focus();
+  var cnt = document.getElementById("skrepCount");
+  if(ta && cnt) ta.addEventListener("input", function(){ cnt.textContent = "Còn " + (2000 - ta.value.length) + " ký tự"; });
 }
 function skReportClose(){
   var el = document.getElementById("skReportRoot");
@@ -5799,6 +5808,57 @@ document.addEventListener("click", function(e){
   e.preventDefault();
   var qi = parseInt(b.getAttribute("data-report-qi"), 10);
   if(!isNaN(qi)) skReportOpen(qi);
+});
+/* --- Nút "💡 Giải thích" trong lúc làm bài (19/11/2026) ---
+   Chỉ hiện khi câu CÓ giải thích (q.exp || q.voc — đúng điều kiện hiện khối
+   .qexp ở màn xem lại) và chỉ trong lúc làm bài (!EX.submitted); màn xem lại
+   đã hiện giải thích inline nên không cần nút.
+   Bấm nút mở overlay tái dùng khung .skrep-* của Báo lỗi (DOM fixed, không
+   đổi route, không chạm EX/exTimer — hẹn giờ vẫn chạy). Overlay hiện câu hỏi
+   + giải thích exp + từ vựng voc (đúng nội dung ở màn xem lại), KHÔNG hiện
+   dòng "Đáp án đúng:" riêng. Nút bật/tắt Giải thích tổng ở màn xem lại KHÔNG
+   điều khiển nút này — 2 cơ chế độc lập. */
+function skExplainOpen(qi){
+  if(!EX || !EX.qs[qi]) return;
+  var q = EX.qs[qi];
+  if(!q.exp && !q.voc) return;
+  skReportClose(); /* tránh 2 overlay cùng lúc */
+  skExplainClose();
+  var qText = skReportQText(q);
+  var passage = skReportPassage(q);
+  var box = document.createElement("div");
+  box.id = "skExplainRoot";
+  box.innerHTML =
+    '<div class="skrep-bg" id="skexpBg"><div class="skrep-box" role="dialog" aria-modal="true" aria-label="Giải thích câu hỏi">' +
+    '<div class="skrep-head"><b>💡 Giải thích câu hỏi</b><button type="button" class="skrep-x" id="skexpClose" aria-label="Đóng">✕</button></div>' +
+    '<p class="skrep-meta">JLPT ' + esc(EX.lv) + " · " + esc(EX.label) + " · " + (q.part === "written" ? "Phần viết" : "Phần nghe") +
+    " · " + esc(q.kind) + " · Câu " + (qi + 1) + "</p>" +
+    '<div class="skrep-q">' +
+    (passage ? '<div class="skrep-pass jp">' + esc(passage) + "</div>" : "") +
+    '<div class="jp" style="white-space:pre-line">' + esc(qText) + "</div>" +
+    (q.exp ? '<div class="skexp-exp"><b>Giải thích:</b> ' + esc(q.exp) + "</div>" : "") +
+    (q.voc ? '<div class="skexp-voc">Từ vựng: ' + esc(q.voc) + "</div>" : "") +
+    "</div>" +
+    '<div class="skrep-actions"><button type="button" class="btn ghost sm" id="skexpDone">Đóng</button></div>' +
+    "</div></div>";
+  document.body.appendChild(box);
+  document.getElementById("skexpClose").addEventListener("click", skExplainClose);
+  document.getElementById("skexpDone").addEventListener("click", skExplainClose);
+  document.getElementById("skexpBg").addEventListener("click", function(e){ if(e.target === this) skExplainClose(); });
+}
+function skExplainClose(){
+  var el = document.getElementById("skExplainRoot");
+  if(el) el.remove();
+}
+/* Ủy quyền click cho nút Giải thích (chỉ tồn tại lúc làm bài, trong #exBody):
+   dùng data-explain-qi riêng nên không chạm handler chọn đáp án của
+   bindExamCards (chỉ bắt [data-qi]) và không chạm nút Báo lỗi. */
+document.addEventListener("click", function(e){
+  var b = e.target.closest ? e.target.closest("[data-explain-qi]") : null;
+  if(!b) return;
+  e.preventDefault();
+  var qi = parseInt(b.getAttribute("data-explain-qi"), 10);
+  if(!isNaN(qi)) skExplainOpen(qi);
 });
 /* --- Admin web: danh sách báo lỗi câu hỏi (sk_reports, mới nhất trước). --- */
 function skAdminReportRowHtml(r){
