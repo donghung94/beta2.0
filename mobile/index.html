@@ -828,6 +828,28 @@
     /* Bảng/scrim bám viewport trên mobile (xem ghi chú ở .sheet). */
     .sheet,.scrim{position:fixed;}
   }
+  /* ---------- Cong chan khi Firebase SDK chua tai duoc (Loi 3) ----------
+     Phu kin khung #phone (.phone la position:relative + overflow:hidden nen
+     absolute inset:0 phu het app ca o ban xem thu desktop lan PWA toan man
+     hinh). z-index:90 — cao nhat file (tren panel Sora 72, nut Sora 70,
+     .sheet dang nhap 51, tabbar 60): cong che moi thu va chan moi thao tac
+     xuong noi dung ben duoi. Khong co nut dong — cong chi mo khi trang thai
+     dang nhap da xac dinh (applyAuthUser / openLogin goi skAuthGateHide). */
+  .skauthgate{position:absolute; inset:0; z-index:90; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; padding:24px;}
+  .skauthgate[hidden]{display:none;} /* .skauthgate dat display:flex nen can rule nay de [hidden] an duoc */
+  .skauthgate-card{width:100%; max-width:320px; text-align:center;
+    background:var(--card); border:1px solid var(--line); border-radius:22px;
+    padding:24px 20px; box-shadow:var(--shadow);}
+  .skauthgate-card h3{margin:0 0 6px; font-size:17px; font-weight:800;}
+  .skauthgate-msg{font-size:13px; color:var(--ink-2); margin:0 0 16px; line-height:1.55;}
+  .skauthgate-card .sheetbtn{width:100%; justify-content:center;}
+  #skAuthGateRetry[hidden]{display:none;} /* .sheetbtn dat display:flex nen can rule nay */
+  .skagate-spin{width:28px; height:28px; margin:0 auto 14px; border-radius:50%;
+    border:3px solid var(--line); border-top-color:var(--red);
+    animation:skagateSpin .8s linear infinite;}
+  @keyframes skagateSpin{to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion: reduce){ .skagate-spin{animation:none;} }
   .grab{width:44px; height:5px; border-radius:99px; background:var(--line); margin:2px auto 14px;}
   .sheet h3{margin:0 0 4px; font-size:16.5px; font-weight:800;}
   .sheet .snote{font-size:13px; color:var(--ink-2); margin:0 0 14px;}
@@ -3817,6 +3839,18 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <button class="ghostbtn" id="loginCancel2" type="button" style="flex:1; justify-content:center; min-height:52px;">Đóng</button>
           <button class="sheetbtn" id="loginLogout" type="button" style="flex:1;">Đăng xuất</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Cổng chặn khi Firebase SDK chưa tải được (Lỗi 3): không cho dùng app
+         khi chưa xác định được trạng thái đăng nhập — xem SPEC.md §2. -->
+    <div id="skAuthGate" class="skauthgate" hidden aria-hidden="true" role="alert">
+      <div class="skauthgate-card">
+        <div class="skagate-spin" id="skAuthGateSpin"></div>
+        <img class="login-mascot" src="assets/chibi.png" alt="">
+        <h3 id="skAuthGateTitle">Đang kết nối…</h3>
+        <p class="skauthgate-msg" id="skAuthGateMsg">Đang kết nối máy chủ đăng nhập, bạn đợi giây lát nhé.</p>
+        <button class="sheetbtn" id="skAuthGateRetry" type="button" hidden>Thử lại</button>
       </div>
     </div>
 
@@ -18350,6 +18384,10 @@ function furiHTML(text){
     if(loginEmailInput) loginEmailInput.disabled = busy;
   }
   function openLogin(){
+    /* Bảng đăng nhập chỉ mở khi đã xác định là chưa đăng nhập (listener
+       bắn null hoặc timeout an toàn 4s trong initMobileAuth) → mở cổng
+       chặn SDK (nếu đang hiện). Lũy đẳng — gọi thừa vô hại. */
+    skAuthGateHide();
     var formWrap = document.getElementById("loginFormWrap");
     var acctWrap = document.getElementById("loginAcctWrap");
     if(signedInUid){
@@ -18593,6 +18631,9 @@ function furiHTML(text){
      thị, quyền Admin, window.SK_USER (cùng dạng với bản web), ảnh Google,
      và dọn cache Premium khi đăng xuất. */
   function applyAuthUser(user){
+    /* Trạng thái đăng nhập đã xác định (listener bắn, cả 2 nhánh) → mở cổng
+       chặn SDK (nếu đang hiện). Lũy đẳng — gọi thừa vô hại. */
+    skAuthGateHide();
     if(user){
       window.SK_USER = {
         uid: user.uid,
@@ -18645,9 +18686,89 @@ function furiHTML(text){
       }
     }
   }
+  /* ---------- Cổng chặn khi Firebase SDK chưa tải được (Lỗi 3) ----------
+     Đăng nhập bắt buộc chỉ có hiệu lực khi Firebase SDK tải được: bản cũ
+     initMobileAuth() return sớm khi skAuth() null nên app mở toang không
+     cần đăng nhập (PWA mất mạng, mạng chặn gstatic, trình chặn quảng cáo).
+     Sửa: SDK chưa có thì dựng cổng chặn phủ kín app — không cho dùng gì
+     cho tới khi xác định được trạng thái đăng nhập. Cổng có 2 trạng thái:
+     "loading" (đang thử tải lại SDK) và "error" (tải không được + nút
+     Thử lại). Chỉ mở cổng khi applyAuthUser/openLogin chạy, tức đã xác
+     định được trạng thái đăng nhập. */
+  var SK_FB_SDK_URLS = [
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js",
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js",
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js",
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"
+  ];
+  var skGateEl = document.getElementById("skAuthGate");
+  var skGateTitleEl = document.getElementById("skAuthGateTitle");
+  var skGateMsgEl = document.getElementById("skAuthGateMsg");
+  var skGateRetryBtn = document.getElementById("skAuthGateRetry");
+  var skGateSpinEl = document.getElementById("skAuthGateSpin");
+  var skSdkLoading = false; /* đang tải lại SDK — chống bấm Thử lại chồng nhau */
+  var skGateShown = false;
+  function skAuthGateShow(loading){
+    if(!skGateEl) return;
+    skGateShown = true;
+    skGateEl.hidden = false;
+    skGateEl.setAttribute("aria-hidden", "false");
+    if(skGateSpinEl) skGateSpinEl.hidden = !loading;
+    if(skGateRetryBtn) skGateRetryBtn.hidden = !!loading;
+    if(loading){
+      if(skGateTitleEl) skGateTitleEl.textContent = "Đang kết nối…";
+      if(skGateMsgEl) skGateMsgEl.textContent = "Đang kết nối máy chủ đăng nhập, bạn đợi giây lát nhé.";
+    }else{
+      if(skGateTitleEl) skGateTitleEl.textContent = "Chưa kết nối được";
+      if(skGateMsgEl) skGateMsgEl.textContent = "Không tải được máy chủ đăng nhập — kiểm tra kết nối mạng rồi bấm Thử lại nhé.";
+    }
+  }
+  function skAuthGateHide(){
+    if(!skGateEl || !skGateShown) return;
+    skGateShown = false;
+    skGateEl.hidden = true;
+    skGateEl.setAttribute("aria-hidden", "true");
+  }
+  /* Tải lại 4 script Firebase theo đúng thứ tự thẻ tĩnh (app → functions →
+     auth → firestore). Nạp tuần tự bằng onload/onerror: script sau chỉ nạp
+     khi script trước đã chạy xong (compat auth/firestore phụ thuộc app). */
+  function skLoadFbSdk(done){
+    if(skSdkLoading) return;
+    skSdkLoading = true;
+    var i = 0;
+    function next(){
+      if(i >= SK_FB_SDK_URLS.length){ skSdkLoading = false; done(true); return; }
+      var s = document.createElement("script");
+      s.src = SK_FB_SDK_URLS[i++];
+      s.onload = function(){ next(); };
+      s.onerror = function(){ skSdkLoading = false; done(false); };
+      document.head.appendChild(s);
+    }
+    next();
+  }
+  function skAuthGateRetry(){
+    if(skSdkLoading) return;
+    skAuthGateShow(true);
+    skLoadFbSdk(function(ok){
+      if(ok && skAuth()){ initMobileAuth(); }
+      else skAuthGateShow(false);
+    });
+  }
   function initMobileAuth(){
     var auth = skAuth();
-    if(!auth) return;
+    if(!auth){
+      /* SDK chưa tải được: dựng cổng chặn + thử tải lại 1 lần ngay (lỗi
+         thoáng qua thì tự khỏi, không bắt user bấm Thử lại). Tải lại
+         không được thì cổng ở trạng thái lỗi + nút Thử lại. Không return
+         im lặng như bản cũ — app không được mở khi chưa xác định được
+         trạng thái đăng nhập. */
+      skAuthGateShow(true);
+      skLoadFbSdk(function(ok){
+        if(ok && skAuth()){ initMobileAuth(); }
+        else skAuthGateShow(false);
+      });
+      return;
+    }
     /* Đăng nhập bằng link email (nếu app mở lên từ link trong hộp thư):
        hoàn tất ngay nếu cùng trình duyệt, hoặc để lại trạng thái chờ để
        bảng đăng nhập hỏi lại email — chạy trước listener để lần bắn đầu
@@ -18701,6 +18822,12 @@ function furiHTML(text){
        gọi thêm — Premium đọc ở listener của paywall. */
   }
   initMobileAuth();
+  if(skGateRetryBtn) skGateRetryBtn.addEventListener("click", skAuthGateRetry);
+  /* Mạng vừa trở lại (PWA mất mạng rồi có mạng): tự thử tải lại SDK để
+     mở cổng mà không bắt user bấm Thử lại. */
+  window.addEventListener("online", function(){
+    if(skGateShown && !skSdkLoading) skAuthGateRetry();
+  });
   document.getElementById("acctLoginBtn").addEventListener("click", openLogin);
   document.getElementById("acctLogoutBtn").addEventListener("click", doLogout);
   document.getElementById("loginGoogle").addEventListener("click", doGoogleLogin);
