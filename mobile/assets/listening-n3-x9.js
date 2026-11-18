@@ -5123,7 +5123,7 @@ window.LISTEN_N3_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Bài nói cho biết máy ảnh mua cách đây 2 năm, ngày nghỉ thường lên núi và buổi tối chụp ảnh sao. Máy ảnh mua năm ngoái, ngày nghỉ ra biển và đăng ảnh lên sách đều sai.",
+   "exp": "Bài nói cho biết máy ảnh mua cách đây 2 năm, ngày nghỉ thường lên núi và buổi tối chụp ảnh sao. Buổi tối chụp ảnh hoa, ngày nghỉ ra biển và đăng ảnh lên sách đều sai.",
    "dlg": [
     {
      "sp": "男",
@@ -5909,7 +5909,7 @@ window.LISTEN_N3_SETS = {
    ],
    "imgs": null,
    "ans": 0,
-   "exp": "Bài nói cho biết bảo tàng mỹ thuật ở cạnh công viên, đóng cửa thứ hai và không được chụp ảnh. Mở cửa thứ hai, phí vào cửa người lớn 500 yên, được chụp ảnh và thứ bảy mở đến 5 giờ chiều đều sai.",
+   "exp": "Bài nói cho biết bảo tàng mỹ thuật ở cạnh công viên, đóng cửa thứ hai và không được chụp ảnh. Thứ bảy mở đến 5 giờ chiều, phí vào cửa người lớn 500 yên và được chụp ảnh đều sai.",
    "dlg": [
     {
      "sp": "男",

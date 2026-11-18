@@ -41,12 +41,12 @@ window.WRITTEN_N3_SET1 = {
     "voc": "旅行（りょこう）：du lịch； 夏休み（なつやすみ）：kì nghỉ hè； 家族（かぞく）：gia đình"
   },
   {
-    "s": "会議は 3時に はじまります。",
+    "s": "会議は 10時に 終わります。",
     "t": "会議",
     "r": "かいぎ",
     "w": ["かいき", "かいご", "かいげ"],
     "exp": "会議 đọc là かいぎ（会 かい、議 ぎ）。かいき đọc 議 thành き、かいご đọc 議 thành ご、かいげ đọc 議 thành げ nên đều sai。",
-    "voc": "会議（かいぎ）：cuộc họp； 始まる（はじまる）：bắt đầu"
+    "voc": "会議（かいぎ）：cuộc họp； 終わる（おわる）：kết thúc"
   },
   {
     "s": "電話を かけました。",
@@ -639,14 +639,14 @@ window.WRITTEN_N3_SET2 = {
   {s:"この 仕事は 大変 です。", t:"大変", a:"つらい", w:["かんたん","らく","やさしい"], exp:"大変な仕事 = つらい仕事 (công việc vất vả, cực nhọc). かんたん (đơn giản), らく (nhàn), やさしい (dễ dàng) đều ngược nghĩa.", voc:"大変（たいへん）：vất vả, cực nhọc； 仕事（しごと）：công việc"},
   {s:"すぐに 電話して ください。", t:"すぐに", a:"すぐ", w:["ゆっくり","あとで","まえに"], exp:"すぐに = すぐ (ngay lập tức). ゆっくり (chậm rãi) ngược nghĩa, あとで (sau) khác nghĩa, まえに (trước) khác nghĩa.", voc:"すぐ：ngay lập tức； 電話する（でんわする）：gọi điện"},
   {s:"この 本は すこし むずかしい です。", t:"すこし", a:"ちょっと", w:["とても","ぜんぜん","かなり"], exp:"すこし = ちょっと (một chút). とても (rất) và かなり (khá) đều chỉ mức độ lớn, ぜんぜん (hoàn toàn không) chỉ phủ định, đều khác nghĩa.", voc:"少し（すこし）：một chút； 難しい（むずかしい）：khó"},
-  {s:"この 問題は かんたんです。", t:"かんたん", a:"やさしい", w:["むずかしい","おおきい","ながい"], exp:"かんたん = やさしい (dễ, đơn giản). むずかしい (khó) ngược nghĩa, おおきい (to) và ながい (dài) khác nghĩa.", voc:"かんたん：đơn giản, dễ； やさしい：dễ dàng, dễ； 問題（もんだい）：vấn đề, bài tập"}
+  {s:"この 本は かんたんな 日本語で 書いて あります。", t:"かんたん", a:"やさしい", w:["むずかしい","おおきい","ながい"], exp:"かんたん = やさしい (dễ, đơn giản). むずかしい (khó) ngược nghĩa, おおきい (to) và ながい (dài) khác nghĩa.", voc:"かんたん：đơn giản, dễ； やさしい：dễ dàng, dễ； 本（ほん）：sách； 日本語（にほんご）：tiếng Nhật"}
  ],
  yoho: [
-  {t:"おもい", s:["おもい 時間が かかりました。","おもい 雨が 降りました。","おもい 荷物を 運びました。","おもい 夢を 見ました。"], a:2, exp:"重い (nặng) dùng cho đồ vật có trọng lượng, như 重い荷物 (hành lý nặng) nên câu 3 đúng. 時間 (thời gian), 雨 (mưa), 夢 (giấc mơ) đều không có trọng lượng nên không thể dùng 重い.", voc:"重い（おもい）：nặng； 荷物（にもつ）：hành lý； 運ぶ（はこぶ）：mang, vận chuyển； 雨（あめ）：mưa； 夢（ゆめ）：giấc mơ"},
+  {t:"おもい", s:["おもい 時間が かかりました。","おもい 雨が 降りました。","おもい 荷物を 運びました。","おもい 夢を 見ました。"], a:2, exp:"重い (nặng) dùng cho đồ vật có trọng lượng, như 重い荷物 (hành lý nặng) nên câu 1 đúng. 時間 (thời gian), 雨 (mưa), 夢 (giấc mơ) đều không có trọng lượng nên không thể dùng 重い.", voc:"重い（おもい）：nặng； 荷物（にもつ）：hành lý； 運ぶ（はこぶ）：mang, vận chuyển； 雨（あめ）：mưa； 夢（ゆめ）：giấc mơ"},
   {t:"あかるい", s:["あかるい 本を 読みました。","あかるい 部屋で 勉強します。","あかるい 味の 料理を 食べました。","あかるい 時間に 起きました。"], a:1, exp:"明るい (sáng) dùng cho phòng sáng: 明るい部屋. 明るい本, 明るい味, 明るい時間 đều không dùng 明るい.", voc:"明るい（あかるい）：sáng； 部屋（へや）：phòng； 勉強する（べんきょうする）：học"},
   {t:"かんたん", s:["かんたんな 色の 車を 買いました。","かんたんな 時間に 起きました。","かんたんな 問題が あります。","かんたんな 味の 料理を 食べました。"], a:2, exp:"かんたん (đơn giản) dùng cho vấn đề, bài tập: かんたんな問題. Màu sắc, thời gian, vị món ăn không dùng かんたん để mô tả.", voc:"かんたん：đơn giản, dễ； 問題（もんだい）：vấn đề, bài tập"},
   {t:"じょうぶ", s:["じょうぶな 体を つくりたい です。","じょうぶな 本を 読みました。","じょうぶな 時間が かかりました。","じょうぶな 味の 料理を 食べました。"], a:0, exp:"じょうぶ (chắc khỏe, bền) dùng cho cơ thể, đồ vật bền: じょうぶな体. Sách, thời gian, vị món ăn không dùng じょうぶ.", voc:"じょうぶ：chắc khỏe, bền； 体（からだ）：cơ thể"},
-  {t:"ひろい", s:["ひろい 味の 料理を 食べました。","ひろい 本を 読みました。","ひろい 時間に 起きました。","ひろい 部屋に 住んで います。"], a:3, exp:"ひろい (rộng) dùng cho phòng, không gian: ひろい部屋. Vị món ăn, sách, thời gian không dùng ひろい.", voc:"広い（ひろい）：rộng； 部屋（へや）：phòng"}
+  {t:"ひろい", s:["ひろい 味の 料理を 食べました。","ひろい 本を 読みました。","ひろい 時間に 起きました。","ひろい 公園で 子どもたちが 遊んで います。"], a:3, exp:"ひろい (rộng) dùng cho nơi chốn có không gian rộng như ひろい公園 (công viên rộng). Vị món ăn, sách, thời gian không dùng ひろい.", voc:"広い（ひろい）：rộng； 公園（こうえん）：công viên； 子ども：trẻ con； 遊ぶ（あそぶ）：chơi"}
  ],
  g1dlg: [
   {d:["日本へ 行くと、かならず 何を 買いますか。","日本への 旅行の（　）、お茶を 買います。"], a:"たびに", w:["せいで","おかげで","ものだから"], exp:"日本への旅行のたびに、お茶を買います — たびに (mỗi khi). せいで (tại vì) dùng cho kết quả xấu, おかげで (nhờ) dùng cho nguyên nhân tốt, ものだから (vì) không đi sau の.", voc:"たびに：mỗi khi； 旅行（りょこう）：du lịch； お茶（おちゃ）：trà"},
@@ -813,7 +813,7 @@ window.WRITTEN_N3_SET3 = {
 window.WRITTEN_N3_SET4 = {
 yomi: [
 {s:"未来の ことを 話しました。", t:"未来", r:"みらい", w:["みら","みらいん","みりい"], exp:"未来 đọc là みらい (未 み, 来 らい). みら thiếu một âm, みらいん thừa âm ん, みりい đọc 来 là りい là sai.", voc:"未来（みらい）：tương lai；話す（はなす）：nói"},
-{s:"わたしは まいにち 学校 へ 行きます。", t:"学校", r:"がっこう", w:["がくこう","かっこう","こうがく"], exp:"学校 đọc là がっこう (学 がく, 校 こう). がくこう đọc 校 là こう là sai, かっこう đọc 学 là かく là sai, こうがく đảo ngược thứ tự.", voc:"学校（がっこう）：trường học；毎日（まいにち）：hàng ngày；行く（いく）：đi"},
+{s:"学校の 近くに 公園が あります。", t:"学校", r:"がっこう", w:["がくこう","かっこう","こうがく"], exp:"学校 đọc là がっこう (学 がく, 校 こう). がくこう đọc 校 là こう là sai, かっこう đọc 学 là かく là sai, こうがく đảo ngược thứ tự.", voc:"学校（がっこう）：trường học； 近く（ちかく）：gần； 公園（こうえん）：công viên"},
 {s:"先生 は とても やさしい です。", t:"先生", r:"せんせい", w:["せんじょう","せんせ","せんせえ"], exp:"先生 đọc là せんせい (先 せん, 生 せい). せんじょう đọc 生 là じょう là sai, せんせ thiếu âm, せんせえ thừa âm.", voc:"先生（せんせい）：thầy cô；やさしい：hiền lành, dịu dàng"},
 {s:"来週、電車で 京都へ 行きます。", t:"電車", r:"でんしゃ", w:["てんしゃ","でんじゃ","てんじゃ"], exp:"電車 đọc là でんしゃ (電 でん, 車 しゃ). てんしゃ đọc 電 là てん là sai, でんじゃ đọc 車 là じゃ là sai, てんじゃ sai cả hai chữ.", voc:"電車（でんしゃ）：tàu điện；来週（らいしゅう）：tuần sau；京都（きょうと）：Kyoto"},
 {s:"夏休みに 家族と 旅行に 行きたいです。", t:"旅行", r:"りょこう", w:["りょくおう","りょうこう","りょっこう"], exp:"旅行 đọc là りょこう (旅 りょ, 行 こう). りょくおう thừa âm, りょうこう đọc 旅 là りょう là sai, りょっこう thừa っ.", voc:"夏休み（なつやすみ）：kỳ nghỉ hè；家族（かぞく）：gia đình；旅行（りょこう）：du lịch"},
@@ -853,8 +853,8 @@ yoho: [
 {t:"あたたかい", s:["あたたかい 本を 読みました。","あたたかい 家で 勉強します。","あたたかい 味の 料理を 食べました。","あたたかい 時間に 起きました。"], a:1, exp:"あたたかい (ấm áp) dùng cho thứ có nhiệt độ ấm, như 「あたたかい いえ」— ngôi nhà ấm áp. 「あたたかい ほん」「あたたかい あじ」「あたたかい じかん」không phải cách dùng tự nhiên.", voc:"暖かい（あたたかい）：ấm áp；家（いえ）：nhà；勉強する（べんきょうする）：học"},
 {t:"よわい", s:["よわい 本を 読みました。","よわい 写真を 見ました。","よわい 力で おしました。","よわい 時間が かかりました。"], a:2, exp:"よわい (yếu) dùng cho sức lực yếu, như 「よわい ちからで おしました」— ấn bằng lực yếu. 「よわい ほん」「よわい しゃしん」「よわい じかん」không phải cách dùng tự nhiên.", voc:"弱い（よわい）：yếu；力（ちから）：sức lực；押す（おす）：ấn, đẩy"},
 {t:"きびしい", s:["きびしい 天気が いいです。","きびしい 先生に おこられました。","きびしい 本を 読みました。","きびしい 時間が かかりました。"], a:1, exp:"きびしい (nghiêm khắc) dùng cho người hay quy tắc nghiêm khắc, như 「きびしい せんせいに おこられました」— bị thầy nghiêm khắc mắng. 「きびしい てんき」「きびしい ほん」「きびしい じかん」không phải cách dùng tự nhiên.", voc:"厳しい（きびしい）：nghiêm khắc, khắc nghiệt；先生（せんせい）：thầy cô；怒る（おこる）：mắng, giận"},
-{t:"あかるい", s:["あかるいにおいがしました。","あかるい 味の 料理を 食べました。","あかるい 力で おしました。","あかるい 部屋で 勉強します。"], a:3, exp:"あかるい (sáng) dùng cho phòng hay ánh sáng, như 「あかるい へやで べんきょうします」— học trong phòng sáng. 「あかるい におい」「あかるい あじ」「あかるい ちから」không phải cách dùng tự nhiên — mùi, vị và sức lực không thể 'sáng'.", voc:"明るい（あかるい）：sáng；におい：mùi；部屋（へや）：phòng；勉強する（べんきょうする）：học"},
-{t:"つよい", s:["つよい 風が ふいています。","つよい 本を 読みました。","つよい 写真を 見ました。","つよい 時間が かかりました。"], a:0, exp:"つよい (mạnh) dùng cho sức lực hay gió mạnh, như 「つよい かぜが ふいています」— gió đang thổi mạnh. 「つよい ほん」「つよい しゃしん」「つよい じかん」không phải cách dùng tự nhiên.", voc:"強い（つよい）：mạnh；風（かぜ）：gió；吹く（ふく）：thổi"}
+{t:"あかるい", s:["あかるいにおいがしました。","あかるい 味の 料理を 食べました。","あかるい 力で おしました。","あかるい 月が 出て います。"], a:3, exp:"あかるい (sáng) dùng cho vật phát sáng hay nơi có ánh sáng, như 「あかるい月が出ています」— trăng đang sáng. 「あかるい におい」「あかるい あじ」「あかるい ちから」không phải cách dùng tự nhiên — mùi, vị và sức lực không thể 'sáng'.", voc:"明るい（あかるい）：sáng； 月（つき）：mặt trăng； 出る（でる）：xuất hiện； におい：mùi"},
+{t:"つよい", s:["彼は 体が つよいです。","つよい 本を 読みました。","つよい 写真を 見ました。","つよい 時間が かかりました。"], a:0, exp:"つよい (mạnh) dùng cho sức lực hay sức khỏe, như 「体がつよい」— cơ thể khỏe mạnh. 「つよい ほん」「つよい しゃしん」「つよい じかん」không phải cách dùng tự nhiên.", voc:"強い（つよい）：mạnh； 体（からだ）：cơ thể"}
 ],
 g1dlg: [
 {d:["この しりょう、もう コピーしましたか。","はい、さっき 3部 コピーして（　）よ。"], a:"おきました", w:["おきます","おいています","おく ことです"], exp:"「さっき3部コピーしておきました」nghĩa là đã photocopy xong để chuẩn bị trước — dạng V-ておく. おきます・おいています không tạo thành dạng ～ておく. おくことです nghĩa là 'việc đặt/để' nên không hợp ở đây.", voc:"資料（しりょう）：tài liệu；コピーする：photocopy；3部（さんぶ）：3 bản"},
@@ -937,7 +937,7 @@ window.WRITTEN_N3_SET5 = {
   {s:"日本語の（　）を 毎日 します。", a:"れんしゅう", w:["きかい","りゆう","ほうほう"], exp:"れんしゅう をする nghĩa là luyện tập; 日本語のれんしゅうをする là cách nói tự nhiên. きかい là cơ hội, りゆう là lý do, ほうほう là phương pháp — không hợp với 日本語の～をする。", voc:"れんしゅう：luyện tập； 日本語（にほんご）：tiếng Nhật； 毎日（まいにち）：mỗi ngày"}
  ],
  syn: [
-  {s:"この かばんは ちょうど いい です。", t:"ちょうど", a:"ぴったり", w:["だいたい","ほとんど","すこし"], exp:"ちょうど nghĩa là vừa khít, đúng; ぴったり cũng nghĩa là vừa vặn, gần nghĩa nhất. だいたい là đại khái, ほとんど là hầu hết, すこし là một chút — đều khác nghĩa。", voc:"ちょうど：vừa đúng, vừa khít； かばん：cái cặp, túi xách"},
+  {s:"彼は きっと 来ます。", t:"きっと", a:"必ず", w:["たぶん","たまに","さっき"], exp:"きっと (chắc chắn) gần nghĩa nhất với 必ず (nhất định, chắc chắn). たぶん (có lẽ) chỉ phỏng đoán, たまに (thỉnh thoảng) chỉ tần suất, さっき (vừa rồi) chỉ quá khứ nên đều khác nghĩa。", voc:"きっと：chắc chắn； 必ず（かならず）：nhất định； 来る（くる）：đến"},
   {s:"この 国は 自然が ゆたか です。", t:"ゆたか", a:"ほうふ", w:["まずしい","すくない","せまい"], exp:"ゆたか nghĩa là phong phú; ほうふ cũng nghĩa là phong phú, dồi dào, gần nghĩa nhất. まずしい là nghèo, すくない là ít, せまい là hẹp — đều trái hoặc khác nghĩa。", voc:"ゆたか：phong phú； 自然（しぜん）：thiên nhiên； 国（くに）：đất nước"},
   {s:"この 問題は とても 難しいです。", t:"とても", a:"すごく", w:["すこし","ちょっと","だいたい"], exp:"とても nghĩa là rất; すごく cũng nghĩa là rất, gần nghĩa nhất. すこし là một chút, ちょっと là một chút, だいたい là đại khái — đều khác nghĩa。", voc:"とても：rất； 問題（もんだい）：vấn đề, bài tập； 難しい（むずかしい）：khó"},
   {s:"公園で ゆっくり 休みました。", t:"ゆっくり", a:"のんびり", w:["はやく","すぐに","いそいで"], exp:"ゆっくり nghĩa là thong thả, chậm rãi; のんびり cũng nghĩa là thong thả, thư thả, gần nghĩa nhất. はやく là nhanh, すぐに là ngay lập tức, いそいで là vội vàng — đều trái nghĩa。", voc:"ゆっくり：thong thả, chậm rãi； 公園（こうえん）：công viên； 休む（やすむ）：nghỉ ngơi"},
@@ -1005,7 +1005,7 @@ window.WRITTEN_N3_SET6 = {
   { s: "父は まいにち 会社 へ 行きます。", t: "会社", r: "かいしゃ", w: ["かいじゃ", "がいしゃ", "かいしゃく"], exp: "Công ty đọc là かいしゃ (会 đọc là かい, 社 đọc là しゃ). かいじゃ đọc 社 thành じゃ, がいしゃ đọc 会 thành がい, かいしゃく thừa âm く nên đều sai.", voc: "会社（かいしゃ）：công ty；父（ちち）：bố；毎日（まいにち）：mỗi ngày；行く（いく）：đi" },
   { s: "きょうは 電話で 友だちと 話します。", t: "電話", r: "でんわ", w: ["てんわ", "でんわあ", "でんば"], exp: "Điện thoại đọc là でんわ (電 đọc là でん, 話 đọc là わ). てんわ đọc sai chữ 電, でんわあ thừa âm あ, でんば đọc sai chữ 話 nên đều sai.", voc: "電話（でんわ）：điện thoại；今日（きょう）：hôm nay；友だち（ともだち）：bạn bè；話す（はなす）：nói chuyện" },
   { s: "夏休みに 家族と 旅行します。", t: "旅行", r: "りょこう", w: ["りょこ", "りょこうう", "りょうこう"], exp: "Du lịch đọc là りょこう (旅 đọc là りょ, 行 đọc là こう). りょこ thiếu âm đọc của 行, りょこうう thừa âm う, りょうこう đọc sai chữ 旅 nên đều sai.", voc: "旅行（りょこう）：du lịch；夏休み（なつやすみ）：kì nghỉ hè；家族（かぞく）：gia đình" },
-  { s: "毎日 日本語を 勉強します。", t: "勉強", r: "べんきょう", w: ["べんきょ", "べんきょうう", "べんぎょう"], exp: "Học tập đọc là べんきょう (勉 đọc là べん, 強 đọc là きょう). べんきょ thiếu âm đọc của 強, べんきょうう thừa âm う, べんぎょう đọc sai chữ 強 nên đều sai.", voc: "勉強（べんきょう）：học tập；毎日（まいにち）：mỗi ngày；日本語（にほんご）：tiếng Nhật" },
+  { s: "日本語の 勉強は 楽しいです。", t: "勉強", r: "べんきょう", w: ["べんきょ", "べんきょうう", "べんぎょう"], exp: "Học tập đọc là べんきょう (勉 đọc là べん, 強 đọc là きょう). べんきょ thiếu âm đọc của 強, べんきょうう thừa âm う, べんぎょう đọc sai chữ 強 nên đều sai.", voc: "勉強（べんきょう）：học tập； 日本語（にほんご）：tiếng Nhật； 楽しい（たのしい）：vui vẻ" },
   { s: "あの 人の 仕事は とても 大変です。", t: "仕事", r: "しごと", w: ["しこと", "しごとお", "じごと"], exp: "Công việc đọc là しごと (仕 đọc là し, 事 đọc là ごと). しこと đọc 事 thành こと, しごとお thừa âm お, じごと đọc sai chữ 仕 nên đều sai.", voc: "仕事（しごと）：công việc；大変（たいへん）：vất vả" },
   { s: "祖母は とても 元気です。", t: "元気", r: "げんき", w: ["げんきい", "げんぎ", "がんき"], exp: "Khỏe mạnh đọc là げんき (元 đọc là げん, 気 đọc là き). げんきい thừa âm い, げんぎ đọc 気 thành ぎ, がんき đọc sai chữ 元 nên đều sai.", voc: "元気（げんき）：khỏe mạnh；祖母（そぼ）：bà；とても：rất" }
  ],
@@ -1013,7 +1013,7 @@ window.WRITTEN_N3_SET6 = {
   { s: "きのう えいが を 見ました。", h: "えいが", k: "映画", w: ["英画", "映花", "映賀"], exp: "えいが viết là 映画 (映 là 'phản chiếu', 画 là 'tranh'). 英画 dùng chữ 英 (trong 英語), 映花 dùng chữ 花, 映賀 dùng chữ 賀 — đều sai nghĩa nên không đúng.", voc: "映画（えいが）：phim；昨日（きのう）：hôm qua；見る（みる）：xem" },
   { s: "母は りょうり が 上手 です。", h: "りょうり", k: "料理", w: ["料里", "料利", "料離"], exp: "りょうり viết là 料理 (料 là 'nguyên liệu', 理 là 'lẽ phải'). 料里 dùng chữ 里, 料利 dùng chữ 利, 料離 dùng chữ 離 — đều không tạo thành từ りょうり nên sai.", voc: "料理（りょうり）：món ăn；母（はは）：mẹ；上手（じょうず）：giỏi" },
   { s: "わたしの せんせい は 田中さん です。", h: "せんせい", k: "先生", w: ["先牛", "千生", "先世"], exp: "せんせい viết là 先生 (先 là 'trước', 生 là 'sinh ra'). 先牛 dùng chữ 牛, 千生 dùng chữ 千, 先世 dùng chữ 世 — đều không có nghĩa 'thầy cô' nên sai.", voc: "先生（せんせい）：thầy cô；私（わたし）：tôi" },
-  { s: "きょうの てんき は いい です。", h: "てんき", k: "天気", w: ["天期", "天記", "天起"], exp: "てんき viết là 天気 (天 là 'trời', 気 là 'không khí'). 天期 dùng chữ 期, 天記 dùng chữ 記, 天起 dùng chữ 起 — đều không tạo thành từ てんき nên sai.", voc: "天気（てんき）：thời tiết；今日（きょう）：hôm nay" },
+  { s: "あしたは てんきが わるい そうです。", h: "てんき", k: "天気", w: ["天期", "天記", "天起"], exp: "てんき viết là 天気 (天 là 'trời', 気 là 'không khí'). 天期 dùng chữ 期, 天記 dùng chữ 記, 天起 dùng chữ 起 — đều không tạo thành từ てんき nên sai.", voc: "天気（てんき）：thời tiết； 明日（あした）：ngày mai； 悪い（わるい）：xấu" },
   { s: "わたしは おんがく が 好きです。", h: "おんがく", k: "音楽", w: ["音薬", "音学", "温楽"], exp: "おんがく viết là 音楽 (音 là 'âm thanh', 楽 là 'vui'). 音薬 dùng chữ 薬, 音学 dùng chữ 学, 温楽 dùng chữ 温 — đều không tạo thành từ おんがく nên sai.", voc: "音楽（おんがく）：âm nhạc；好き（すき）：thích" },
   { s: "弟は がっこう へ 行きました。", h: "がっこう", k: "学校", w: ["学交", "学効", "学高"], exp: "がっこう viết là 学校 (学 là 'học', 校 là 'trường'). 学交 dùng chữ 交, 学効 dùng chữ 効, 学高 dùng chữ 高 — đều không tạo thành từ がっこう nên sai.", voc: "学校（がっこう）：trường học；弟（おとうと）：em trai；行く（いく）：đi" }
  ],
@@ -1034,15 +1034,15 @@ window.WRITTEN_N3_SET6 = {
   { s: "かばんに きちんと 本を 入れました。", t: "きちんと", a: "ちゃんと", w: ["すこし", "てきとうに", "だいたい"], exp: "きちんと nghĩa là 'ngăn nắp, cẩn thận, đúng đắn', gần nghĩa nhất với ちゃんと. すこし là 'một chút', てきとうに là 'qua loa', だいたい là 'đại khái' — đều khác nghĩa.", voc: "きちんと：ngăn nắp, cẩn thận；入れる（いれる）：cho vào；かばん：cặp, túi" },
   { s: "きょう の パーティーは たのしい です。", t: "たのしい", a: "うれしい", w: ["かなしい", "つまらない", "さびしい"], exp: "楽しい là cảm xúc vui vẻ, gần nghĩa nhất với うれしい. かなしい, つまらない, さびしい đều là cảm xúc ngược lại với vui vẻ.", voc: "楽しい（たのしい）：vui vẻ；パーティー：bữa tiệc；今日（きょう）：hôm nay" },
   { s: "宿題が やっと 終わりました。", t: "やっと", a: "ようやく", w: ["すぐに", "もうすぐ", "ずっと"], exp: "やっと nghĩa là 'cuối cùng thì, sau một thời gian dài', gần nghĩa nhất với ようやく. すぐに là 'ngay lập tức', もうすぐ là 'sắp sửa', ずっと là 'suốt một thời gian dài' — đều khác nghĩa.", voc: "やっと：cuối cùng thì；宿題（しゅくだい）：bài tập về nhà；終わる（おわる）：kết thúc" },
-  { s: "この 靴は 足に ちょうど 合います。", t: "ちょうど", a: "ぴったり", w: ["だいたい", "すこし", "あまり"], exp: "ちょうど nghĩa là 'vừa khít, vừa đúng', gần nghĩa nhất với ぴったり. だいたい là 'đại khái', すこし là 'một chút', あまり dùng trong 'あまり〜ない' (không... lắm) — đều khác nghĩa.", voc: "ちょうど：vừa khít；靴（くつ）：giày；足（あし）：chân；合う（あう）：vừa, hợp" },
-  { s: "休みの 日は、ゆっくり 本を 読みます。", t: "ゆっくり", a: "のんびり", w: ["はやく", "いそいで", "すぐに"], exp: "ゆっくり nghĩa là 'thong thả, không vội vàng', gần nghĩa nhất với のんびり. はやく, いそいで, すぐに đều mang nghĩa 'nhanh, gấp' — ngược lại với ゆっくり.", voc: "ゆっくり：thong thả；休み（やすみ）：ngày nghỉ；読む（よむ）：đọc" }
+  { s: "すこしの お金しか ありません。", t: "すこし", a: "わずか", w: ["たくさん", "とても", "かなり"], exp: "すこし (một chút) gần nghĩa nhất với わずか (chỉ một chút). たくさん (nhiều) ngược nghĩa, とても (rất) và かなり (khá) không đứng trước danh từ như すこし nên đều sai.", voc: "すこし：một chút； わずか：chỉ một chút； お金（おかね）：tiền" },
+  { s: "もっと 野菜を 食べたいです。", t: "もっと", a: "さらに", w: ["すこし", "ちょっと", "あまり"], exp: "もっと (hơn nữa) gần nghĩa nhất với さらに (hơn nữa, thêm nữa). すこし (một chút) và ちょっと (một chút) chỉ mức độ ít, あまり không dùng với câu khẳng định nên đều sai.", voc: "もっと：hơn nữa； さらに：hơn nữa, thêm nữa； 野菜（やさい）：rau； 食べる（たべる）：ăn" }
  ],
  yoho: [
   { t: "つめたい", s: ["つめたい かばんを 買いました。", "つめたい くつを はきました。", "つめたい ジュースを 飲みました。", "つめたい かぎを なくしました。"], a: 2, exp: "冷たい dùng cho đồ uống, nước... những thứ có nhiệt độ thấp. 冷たいジュース là đúng. かばん, くつ, かぎ không nói về nhiệt độ nên không dùng 冷たい.", voc: "冷たい（つめたい）：lạnh；ジュース：nước ép；飲む（のむ）：uống；買う（かう）：mua" },
   { t: "たかい", s: ["たかい 山に 登りました。", "たかい 色の 車を 買いました。", "たかい 味の 料理を 食べました。", "たかい 時間に 起きました。"], a: 0, exp: "高い dùng cho chiều cao của núi, giá tiền... 高い山 là đúng. Màu sắc thì nói 'đậm' (こい), vị thì nói 'đậm' (こい), thời gian thì nói 'muộn' (おそい) — đều không dùng 高い.", voc: "高い（たかい）：cao；山（やま）：núi；登る（のぼる）：leo" },
   { t: "あつい", s: ["あつい 本を 読みました。", "あつい 音を 聞きました。", "あつい スープを 飲みました。", "あつい 色の 服を 着ました。"], a: 2, exp: "熱い dùng cho súp, trà... những thứ có nhiệt độ cao. 熱いスープ là đúng. 本, 音, 色 không nói về nhiệt độ nên không dùng 熱い.", voc: "熱い（あつい）：nóng；スープ：súp；飲む（のむ）：uống；読む（よむ）：đọc" },
-  { t: "ひろい", s: ["ひろい 時間が あります。", "ひろい 味の 料理を 食べました。", "ひろい 部屋に 住んで います。", "ひろい 音が 聞こえます。"], a: 2, exp: "広い dùng cho độ rộng của phòng, nơi chốn. 広い部屋 là đúng. 時間, 味, 音 không dùng với 広い.", voc: "広い（ひろい）：rộng；部屋（へや）：phòng；住む（すむ）：sống, ở" },
-  { t: "おもい", s: ["おもい 天気の 日に 出かけました。", "おもい 荷物を 運びました。", "おもい 時間に 起きました。", "おもい 火を 見ました。"], a: 1, exp: "重い dùng cho đồ vật có sức nặng, ví dụ 重い荷物 (hành lý nặng). 天気 (thời tiết), 時間 (thời gian) và 火 (lửa) đều không có sức nặng nên không dùng với 重い.", voc: "重い（おもい）：nặng；荷物（にもつ）：hành lý；運ぶ（はこぶ）：mang, vận chuyển；火（ひ）：lửa" }
+  { t: "ひろい", s: ["ひろい 時間が あります。", "ひろい 味の 料理を 食べました。", "ひろい 海が 見えます。", "ひろい 音が 聞こえます。"], a: 2, exp: "広い dùng cho độ rộng của nơi chốn, phong cảnh như 広い海 (biển rộng). 時間, 味, 音 không dùng với 広い.", voc: "広い（ひろい）：rộng； 海（うみ）：biển； 見える（みえる）：nhìn thấy" },
+  { t: "おもい", s: ["おもい 天気の 日に 出かけました。", "おもい かばんを 持って います。", "おもい 時間に 起きました。", "おもい 火を 見ました。"], a: 1, exp: "重い dùng cho đồ vật có sức nặng, ví dụ 重いかばん (cái cặp nặng). 天気 (thời tiết), 時間 (thời gian) và 火 (lửa) đều không có sức nặng nên không dùng với 重い.", voc: "重い（おもい）：nặng； かばん：cặp, túi； 持つ（もつ）：cầm, mang； 火（ひ）：lửa" }
  ],
  g1dlg: [
   { d: ["田中さんは、さいきん よく ちこくしますね。", "ええ、朝の でんしゃが こんで、ちこくし（　）んです。"], a: "がちです", w: ["そうです", "っぽいです", "らしいです"], exp: "'ちこくしがちです' nghĩa là 'hay đi muộn', chỉ việc thường xuyên xảy ra gần đây. そうです chỉ vẻ bề ngoài, っぽい là 'có vẻ như...', らしい là nghe nói lại — đều không diễn tả nghĩa 'hay...'.", voc: "遅刻（ちこく）：đi muộn；最近（さいきん）：gần đây；電車（でんしゃ）：tàu điện；混む（こむ）：đông" },
@@ -1115,7 +1115,7 @@ window.WRITTEN_N3_SET6 = {
 window.WRITTEN_N3_SET7 = {
  yomi: [
   {s:"あした の 予定を 教えて ください。", t:"予定", r:"よてい", w:["よて","よていん","よでい"], exp:"予定 đọc là よてい（予 よ・定 てい）。よて thiếu âm い, よていん thêm ん, よでい đọc 定 thành でい nên đều sai。", voc:"予定（よてい）：dự định； 明日（あした）：ngày mai； 教える（おしえる）：chỉ bảo, dạy"},
-  {s:"この ことばの 意味を 教えて ください。", t:"意味", r:"いみ", w:["いび","いみん","いいみ"], exp:"意味 đọc là いみ（意 い・味 み）。いび đọc 味 thành び, いみん thêm ん, いいみ thêm い nên đều sai。", voc:"意味（いみ）：ý nghĩa； ことば：từ； 教える（おしえる）：chỉ bảo"},
+  {s:"この 漢字の 意味は 何ですか。", t:"意味", r:"いみ", w:["いび","いみん","いいみ"], exp:"意味 đọc là いみ（意 い・味 み）。いび đọc 味 thành び, いみん thêm ん, いいみ thêm い nên đều sai。", voc:"意味（いみ）：ý nghĩa； 漢字（かんじ）：chữ Hán"},
   {s:"来週、友だちと 海へ 行きます。", t:"来週", r:"らいしゅう", w:["らいしゅ","らいしゅうん","らいじゅう"], exp:"来週 đọc là らいしゅう（来 らい・週 しゅう）。らいしゅ thiếu âm う, らいしゅうん thêm ん, らいじゅう đọc 週 thành じゅう nên đều sai。", voc:"来週（らいしゅう）：tuần sau； 友だち：bạn bè； 海（うみ）：biển； 行く（いく）：đi"},
   {s:"電車の 中で 本を 読みます。", t:"電車", r:"でんしゃ", w:["てんしゃ","でんじゃ","でんさ"], exp:"電車 đọc là でんしゃ（電 でん・車 しゃ）。てんしゃ đọc 電 thành てん, でんじゃ đọc 車 thành じゃ, でんさ đọc 車 thành さ nên đều sai。", voc:"電車（でんしゃ）：tàu điện； 中（なか）：bên trong； 本（ほん）：sách； 読む（よむ）：đọc"},
   {s:"仕事が 終わったら、家に 帰ります。", t:"仕事", r:"しごと", w:["しこと","じごと","しごとう"], exp:"仕事 đọc là しごと（仕 し・事 ごと）。しこと đọc 仕 thành し, じごと đọc 仕 thành じ, しごとう thêm âm う nên đều sai。", voc:"仕事（しごと）：công việc； 終わる（おわる）：kết thúc； 家（いえ）：nhà； 帰る（かえる）：về"},
@@ -1145,8 +1145,8 @@ window.WRITTEN_N3_SET7 = {
   {s:"毎日、日本語を （　）します。", a:"べんきょう", w:["さんぽ","うんどう","しょくじ"], exp:"日本語を（　）します — 'học tiếng Nhật mỗi ngày' nên べんきょう（học tập）là đúng。さんぽ（đi dạo）、うんどう（vận động）、しょくじ（ăn uống）đều không đi với 日本語を。", voc:"勉強（べんきょう）：học tập； 日本語（にほんご）：tiếng Nhật； 毎日（まいにち）：mỗi ngày"}
  ],
  syn: [
-  {s:"この 部屋は きれい です。", t:"きれい", a:"うつくしい", w:["きたない","くらい","せまい"], exp:"きれい（đẹp, sạch）gần nghĩa nhất với うつくしい（đẹp）。きたない（bẩn）là trái nghĩa, くらい（tối）、せまい（hẹp）không liên quan đến 'đẹp'。", voc:"きれい：đẹp, sạch； 美しい（うつくしい）：đẹp； 部屋（へや）：phòng"},
-  {s:"すばらしい けしき です。", t:"すばらしい", a:"すごい", w:["ひどい","つまらない","ふつう"], exp:"すばらしい（tuyệt vời）gần nghĩa nhất với すごい（tuyệt vời, ghê gớm）。ひどい（tệ hại）、つまらない（chán）、ふつう（bình thường）đều không mang nghĩa 'tuyệt vời'。", voc:"すばらしい：tuyệt vời； すごい：tuyệt vời, ghê gớm； 景色（けしき）：phong cảnh"},
+  {s:"すてきな けしき です。", t:"すてき", a:"うつくしい", w:["きたない","くらい","せまい"], exp:"すてき（tuyệt vời, đáng yêu）gần nghĩa nhất với うつくしい（đẹp）。きたない（bẩn）là trái nghĩa, くらい（tối）、せまい（hẹp）không liên quan đến 'đẹp'。", voc:"すてき：tuyệt vời, đáng yêu； 美しい（うつくしい）：đẹp； 景色（けしき）：phong cảnh"},
+  {s:"彼は よく 図書館へ 行きます。", t:"よく", a:"しばしば", w:["たまに","ときどき","いつも"], exp:"よく (thường xuyên) gần nghĩa nhất với しばしば (thường xuyên, hay). たまに (đôi khi) và ときどき (thỉnh thoảng) chỉ tần suất thấp hơn, いつも (luôn luôn) chỉ tần suất cao hơn nên đều khác nghĩa。", voc:"よく：thường xuyên； しばしば：thường xuyên； 図書館（としょかん）：thư viện； 行く（いく）：đi"},
   {s:"この 部屋は おおきい です。", t:"おおきい", a:"ひろい", w:["せまい","ちいさい","くらい"], exp:"おおきい（to, lớn）gần nghĩa nhất với ひろい（rộng）。せまい（hẹp）và ちいさい（nhỏ）là trái nghĩa, くらい（tối）không liên quan đến kích thước。", voc:"大きい（おおきい）：to, lớn； 広い（ひろい）：rộng； 部屋（へや）：phòng"},
   {s:"この りょうりは おいしい です。", t:"おいしい", a:"うまい", w:["まずい","からい","あまい"], exp:"おいしい（ngon）gần nghĩa nhất với うまい（ngon, cách nói thân mật）。まずい（dở）là trái nghĩa, からい（cay）và あまい（ngọt）là vị cụ thể, không phải nghĩa chung của 'ngon'。", voc:"おいしい：ngon； うまい：ngon； 料理（りょうり）：món ăn"},
   {s:"わたしは 日本語が すき です。", t:"すき", a:"だいすき", w:["きらい","にがて","ふべん"], exp:"すき（thích）gần nghĩa nhất với だいすき（rất thích）。きらい（ghét）là trái nghĩa, にがて（không giỏi, yếu）nói về năng lực chứ không phải tình cảm, ふべん（bất tiện）không liên quan。", voc:"好き（すき）：thích； 大好き（だいすき）：rất thích； 日本語（にほんご）：tiếng Nhật"}
@@ -1247,10 +1247,10 @@ syn: [
 ],
 yoho: [
 {t:"うすい", s:["うすい 山を 見ました。","うすい コーヒーを 飲みました。","うすい 時間を 過ごしました。","うすい 天気でした。"], a:1, exp:"「うすい」(loãng, nhạt) dùng khi vị hoặc màu sắc nhạt, như「うすいコーヒー」(cà phê loãng). Núi không thể loãng nên「うすい山」là sai. Thời gian và thời tiết cũng không thể loãng nên「うすい時間」「うすい天気」đều sai. Chỉ「うすいコーヒー」là cách dùng đúng.", voc:"うすい：loãng, nhạt；コーヒー：cà phê；飲む（のむ）：uống"},
-{t:"つめたい", s:["つめたい 水を 飲みました。","つめたい 太陽が 出ました。","つめたい 服を 着ました。","つめたい 本を 読みました。"], a:0, exp:"「つめたい」(lạnh) dùng cho vật có nhiệt độ thấp, như「つめたい水」(nước lạnh). Mặt trời, quần áo và sách không dùng với「つめたい」. Chỉ「つめたい水」là cách dùng đúng.", voc:"冷たい（つめたい）：lạnh；水（みず）：nước；飲む（のむ）：uống"},
-{t:"あかるい", s:["あかるい 水を 飲みました。","あかるい 味の 料理です。","あかるい 部屋で 勉強します。","あかるい 時間に 会いました。"], a:2, exp:"「あかるい」(sáng) dùng cho nơi có ánh sáng, như「あかるい部屋」(căn phòng sáng). Nước không thể sáng nên「あかるい水」là sai. Vị cũng không thể sáng nên「あかるい味」là sai. Thời gian cũng không thể sáng nên「あかるい時間」là sai. Chỉ「あかるい部屋」là cách dùng đúng.", voc:"明るい（あかるい）：sáng；部屋（へや）：phòng；水（みず）：nước；勉強する（べんきょうする）：học tập"},
+{t:"つめたい", s:["つめたい 雨が 降って います。","つめたい 太陽が 出ました。","つめたい 服を 着ました。","つめたい 本を 読みました。"], a:0, exp:"「つめたい」(lạnh) dùng cho vật có nhiệt độ thấp, như「つめたい雨」(mưa lạnh). Mặt trời, quần áo và sách không dùng với「つめたい」. Chỉ「つめたい雨」là cách dùng đúng.", voc:"冷たい（つめたい）：lạnh； 雨（あめ）：mưa； 降る（ふる）：rơi"},
+{t:"あかるい", s:["あかるい 水を 飲みました。","あかるい 味の 料理です。","あかるい 色の 服を 着て います。","あかるい 時間に 会いました。"], a:2, exp:"「あかるい」(sáng) dùng cho màu sắc tươi sáng hay nơi có ánh sáng, như「あかるい色の服」(quần áo màu sáng). Nước không thể sáng nên「あかるい水」là sai. Vị cũng không thể sáng nên「あかるい味」là sai. Thời gian cũng không thể sáng nên「あかるい時間」là sai. Chỉ「あかるい色の服」là cách dùng đúng.", voc:"明るい（あかるい）：sáng； 色（いろ）：màu sắc； 服（ふく）：quần áo； 着る（きる）：mặc； 水（みず）：nước"},
 {t:"おもい", s:["おもい 天気を 見ました。","おもい 時間を 過ごしました。","おもい 空を 見ました。","おもい 荷物を 持ちました。"], a:3, exp:"「おもい」(nặng) dùng cho vật có trọng lượng, như「おもい荷物」(hành lý nặng). Thời tiết, thời gian và bầu trời không có trọng lượng nên không dùng với「おもい」. Chỉ「おもい荷物」là cách dùng đúng.", voc:"重い（おもい）：nặng；荷物（にもつ）：hành lý；持つ（もつ）：mang, cầm"},
-{t:"ひろい", s:["ひろい 味が します。","ひろい 部屋に 住んでいます。","ひろい 時間が あります。","ひろい 気持ちに なりました。"], a:1, exp:"「ひろい」(rộng) dùng cho độ rộng của nơi chốn, như「ひろい部屋」(căn phòng rộng). Vị, thời gian và tâm trạng không có độ rộng nên không dùng với「ひろい」. Chỉ「ひろい部屋」là cách dùng đúng.", voc:"広い（ひろい）：rộng；部屋（へや）：phòng；住む（すむ）：sống, ở"}
+{t:"ひろい", s:["ひろい 味が します。","ひろい 道を 歩きました。","ひろい 時間が あります。","ひろい 気持ちに なりました。"], a:1, exp:"「ひろい」(rộng) dùng cho độ rộng của nơi chốn, như「ひろい道」(con đường rộng). Vị, thời gian và tâm trạng không có độ rộng nên không dùng với「ひろい」. Chỉ「ひろい道」là cách dùng đúng.", voc:"広い（ひろい）：rộng； 道（みち）：đường； 歩く（あるく）：đi bộ"}
 ],
 g1dlg: [
 {d:["どうして メモするんですか。","忘れない（　）、メモしておきます。"], a:"うちに", w:["せいで","おかげで","たびに"], exp:"「忘れないうちに、メモしておきます」＝ tranh thủ ghi chép trong lúc còn chưa quên。「うちに」đi sau V-ない, nghĩa là「trong lúc trạng thái còn duy trì thì…」— ở đây là trong lúc còn nhớ thì ghi lại ngay。「忘れないせいで」sai vì「せいで」chỉ nguyên nhân gây ra kết quả xấu, mà「không quên」không phải nguyên nhân khiến người ta ghi chép。「忘れないおかげで」sai vì「おかげで」chỉ nguyên nhân gây ra kết quả tốt — ghi chép không phải là kết quả do「không quên」mang lại。「忘れないたびに」sai vì「たびに」chỉ việc lặp lại mỗi lần, còn quên là việc xảy ra một lần, không lặp lại。", voc:"忘れる（わすれる）：quên；メモする：ghi chép；うちに：trong lúc còn… thì…"},
@@ -1308,12 +1308,12 @@ window.WRITTEN_N3_SET9 = {
   {s:"わたしの 会社は 東京に あります。", t:"会社", r:"かいしゃ", w:["がいしゃ","かいじゃ","かしゃ"], exp:"会社 đọc là かいしゃ（会 かい、社 しゃ）。がいしゃ đọc sai âm đầu của 会、かいじゃ đọc sai âm của 社、かしゃ thiếu âm い nên đều sai。", voc:"会社（かいしゃ）：công ty； 東京（とうきょう）：Tokyo； ある：có, ở"},
   {s:"今、時間が ありません。", t:"時間", r:"じかん", w:["じがん","しかん","じっかん"], exp:"時間 đọc là じかん（時 じ、間 かん）。じがん đọc sai âm đầu của 間、しかん đọc sai âm của 時、じっかん thêm っ thừa nên đều sai。", voc:"今（いま）：bây giờ； 時間（じかん）：thời gian"},
   {s:"あした、友だちに 電話を します。", t:"電話", r:"でんわ", w:["てんわ","でんば","てんば"], exp:"電話 đọc là でんわ（電 でん、話 わ）。てんわ đọc sai âm đầu của 電、でんば đọc sai âm của 話、てんば sai cả hai âm nên đều sai。", voc:"明日（あした）：ngày mai； 友だち（ともだち）：bạn bè； 電話（でんわ）：điện thoại"},
-  {s:"きょうの 天気は いいです。", t:"天気", r:"てんき", w:["てんぎ","てき","てんきい"], exp:"天気 đọc là てんき（天 てん、気 き）。てんぎ đọc sai âm của 気、てき thiếu âm ん、てんきい thêm い thừa nên đều sai。", voc:"今日（きょう）：hôm nay； 天気（てんき）：thời tiết； いい：tốt, đẹp"},
+  {s:"天気が 悪くなりました。", t:"天気", r:"てんき", w:["てんぎ","てき","てんきい"], exp:"天気 đọc là てんき（天 てん、気 き）。てんぎ đọc sai âm của 気、てき thiếu âm ん、てんきい thêm い thừa nên đều sai。", voc:"天気（てんき）：thời tiết； 悪くなる（わるくなる）：trở nên xấu"},
   {s:"午前 9時に 図書館へ 行きます。", t:"午前", r:"ごぜん", w:["ごせん","ごぜ","うまぜん"], exp:"午前 đọc là ごぜん（午 ご、前 ぜん）。ごせん đọc sai âm của 前、ごぜ thiếu âm ん、うまぜん đọc 午 theo âm kun うま nên đều sai。", voc:"午前（ごぜん）：buổi sáng； 9時（くじ）：9 giờ； 図書館（としょかん）：thư viện； 行く（いく）：đi"}
  ],
  hyoki: [
   {s:"わたし の かぞく は 4人 です。", h:"かぞく", k:"家族", w:["家旅","家続","家属"], exp:"かぞく viết là 家族（家 か、族 ぞく）。家旅、家続、家属 đều dùng sai chữ thứ hai：旅 là du lịch、続 là tiếp tục、属 là thuộc về, lệ thuộc — không tạo thành từ かぞく。", voc:"家族（かぞく）：gia đình； 4人（よにん）：4 người"},
-  {s:"わたしは まいにち がっこう へ 行きます。", h:"がっこう", k:"学校", w:["楽校","学行","学交"], exp:"がっこう viết là 学校（学 がく、校 こう）。楽校 dùng sai chữ đầu（楽 là vui）、学行 và 学交 dùng sai chữ thứ hai（行 là đi、交 là giao nhau), không tạo thành từ がっこう。", voc:"毎日（まいにち）：mỗi ngày； 学校（がっこう）：trường học； 行く（いく）：đi"},
+  {s:"あしたは がっこうへ 行きません。", h:"がっこう", k:"学校", w:["楽校","学行","学交"], exp:"がっこう viết là 学校（学 がく、校 こう）。楽校 dùng sai chữ đầu（楽 là vui）、学行 và 学交 dùng sai chữ thứ hai（行 là đi、交 là giao nhau), không tạo thành từ がっこう。", voc:"学校（がっこう）：trường học； 明日（あした）：ngày mai； 行く（いく）：đi"},
   {s:"でんわで 友だちと 話しました。", h:"でんわ", k:"電話", w:["電言","電語","電和"], exp:"でんわ viết là 電話（電 でん、話 わ）。電言、電語、電和 đều dùng sai chữ thứ hai：言 là nói, 語 là ngôn ngữ, 和 là hòa hợp — không tạo thành từ でんわ。", voc:"電話（でんわ）：điện thoại； 友だち（ともだち）：bạn bè； 話す（はなす）：nói chuyện"},
   {s:"がくせいは 毎日 勉強します。", h:"がくせい", k:"学生", w:["学牛","学先","学主"], exp:"がくせい viết là 学生（学 がく、生 せい）。学牛、学先、学主 đều dùng sai chữ thứ hai：牛 là con bò、先 là trước、主 là chủ, không tạo thành từ がくせい。", voc:"学生（がくせい）：học sinh； 毎日（まいにち）：mỗi ngày； 勉強（べんきょう）：học tập"},
   {s:"この しゃしんを 見て ください。", h:"しゃしん", k:"写真", w:["写直","写見","写目"], exp:"しゃしん viết là 写真（写 しゃ、真 しん）。写直、写見、写目 đều dùng sai chữ thứ hai：直 là thẳng、見 là nhìn、目 là mắt, không tạo thành từ しゃしん。", voc:"写真（しゃしん）：ảnh, bức ảnh； 見る（みる）：xem, nhìn"},
@@ -1333,18 +1333,18 @@ window.WRITTEN_N3_SET9 = {
   {s:"この 問題の （　）を 教えて ください。", a:"ほうほう", w:["りゆう","けっか","もくてき"], exp:"Muốn biết cách giải bài toán nên điền ほうほう（方法：phương pháp, cách làm）。りゆう（lý do）、けっか（kết quả）、もくてき（mục đích） đều không phải là “cách giải” một bài toán。", voc:"問題（もんだい）：bài toán, vấn đề； 方法（ほうほう）：phương pháp； 教える（おしえる）：chỉ, dạy"}
  ],
  syn: [
-  {s:"家族は わたし にとって たいせつ です。", t:"たいせつ", a:"だいじ", w:["ふよう","むだ","じゃま"], exp:"たいせつ（大切） nghĩa là “quan trọng, quý giá”, gần nghĩa nhất với だいじ（大事） cũng là “quan trọng”。ふよう（không cần）、むだ（lãng phí）、じゃま（cản trở） đều khác nghĩa hoàn toàn。", voc:"家族（かぞく）：gia đình； 大切（たいせつ）：quan trọng； 大事（だいじ）：quan trọng"},
+  {s:"今日は 大変 暑いです。", t:"大変", a:"とても", w:["すこし","ちょっと","ぜんぜん"], exp:"大変 ở đây nghĩa là “rất” nên gần nghĩa nhất với とても (rất). すこし (một chút) và ちょっと (một chút) chỉ mức độ ít, ぜんぜん (hoàn toàn không) phải đi với phủ định nên đều sai。", voc:"大変（たいへん）：rất； とても：rất； 暑い（あつい）：nóng； 今日（きょう）：hôm nay"},
   {s:"さっき 電話が ありました。", t:"さっき", a:"たったいま", w:["まいにち","ときどき","いつも"], exp:"さっき nghĩa là “vừa rồi, lúc nãy”, gần nghĩa nhất với たったいま（vừa mới đây）。まいにち（mỗi ngày）、ときどき（thỉnh thoảng）、いつも（luôn luôn） đều chỉ tần suất, không chỉ “vừa rồi”。", voc:"さっき：vừa rồi； 電話（でんわ）：điện thoại； たったいま：vừa mới đây"},
   {s:"お金が たくさん あります。", t:"たくさん", a:"おおく", w:["すこし","ちょっと","ぜんぜん"], exp:"たくさん nghĩa là “nhiều”, gần nghĩa nhất với おおく（多く：nhiều）。すこし（một ít）、ちょっと（một chút） ngược nghĩa；ぜんぜん（hoàn toàn không） dùng với phủ định, khác nghĩa hoàn toàn。", voc:"お金（おかね）：tiền； たくさん：nhiều； 多く（おおく）：nhiều"},
   {s:"たぶん 雨が 降ります。", t:"たぶん", a:"おそらく", w:["きっと","ぜったい","まさか"], exp:"たぶん nghĩa là “có lẽ, chắc là”, gần nghĩa nhất với おそらく（có lẽ, có thể）。きっと（chắc chắn） và ぜったい（tuyệt đối） đều mạnh hơn たぶん nhiều；まさか（không thể nào） mang nghĩa phủ định, ngược với たぶん。", voc:"たぶん：có lẽ； 雨（あめ）：mưa； 降る（ふる）：rơi； おそらく：có lẽ, có thể"},
-  {s:"ゆっくり 休んで ください。", t:"ゆっくり", a:"のんびり", w:["いそいで","はやく","すぐに"], exp:"ゆっくり nghĩa là “thong thả, từ từ”, gần nghĩa nhất với のんびり（thong dong, nhàn nhã）。いそいで（vội vàng）、はやく（nhanh）、すぐに（ngay lập tức） đều ngược nghĩa với “thong thả”。", voc:"ゆっくり：thong thả, từ từ； 休む（やすむ）：nghỉ ngơi； のんびり：thong dong"}
+  {s:"宿題は ほとんど 終わりました。", t:"ほとんど", a:"ほぼ", w:["まだ","ぜんぜん","ぜんぶ"], exp:"ほとんど (hầu hết, gần như) gần nghĩa nhất với ほぼ (gần như). まだ (vẫn chưa) không đi với thể khẳng định quá khứ, ぜんぜん (hoàn toàn không) phải đi với phủ định, ぜんぶ (tất cả) là hoàn toàn xong chứ không phải gần xong nên đều sai。", voc:"ほとんど：hầu hết； ほぼ：gần như； 宿題（しゅくだい）：bài tập về nhà； 終わる（おわる）：xong, kết thúc"}
  ],
  yoho: [
-  {t:"あつい", s:["あつい 本を 読みました。","あつい お茶を 飲みました。","あつい 音楽を 聞きました。","あつい 写真を 見ました。"], a:1, exp:"あつい（熱い：nóng） chỉ dùng cho thứ có nhiệt độ cao như お茶（trà nóng） nên câu 2 đúng。Bản không thể “nóng”, âm nhạc không thể “nóng”, ảnh không thể “nóng” nên các câu 1, 3, 4 đều sai。", voc:"熱い（あつい）：nóng； お茶（おちゃ）：trà； 読む（よむ）：đọc； 飲む（のむ）：uống"},
-  {t:"つかれる", s:["つかれる 本を 読みました。","つかれる 電車に 乗りました。","たくさん 歩くと、つかれる ことが あります。","つかれる 天気を 見ました。"], a:2, exp:"つかれる（疲れる：mệt） là cảm giác của con người sau khi vận động, nên “たくさん 歩くと、つかれる ことが あります：đi bộ nhiều thì có lúc mệt” là câu đúng。Sách, tàu điện, thời tiết không thể “mệt” nên các câu 1, 2, 4 đều sai。", voc:"疲れる（つかれる）：mệt mỏi； 歩く（あるく）：đi bộ； たくさん：nhiều； 電車（でんしゃ）：tàu điện"},
-  {t:"ひろい", s:["ひろい 時間が あります。","この 部屋は ひろいです。","ひろい 音が 聞こえます。","ひろい 味が します。"], a:1, exp:"ひろい（広い：rộng） dùng cho không gian như 部屋（căn phòng） nên câu 2 đúng。Thời gian không thể “rộng”, âm thanh không thể “rộng”, vị không thể “rộng” nên các câu 1, 3, 4 đều sai。", voc:"広い（ひろい）：rộng； 部屋（へや）：căn phòng； 時間（じかん）：thời gian； 音（おと）：âm thanh； 味（あじ）：vị"},
-  {t:"あかるい", s:["あかるい 雨が 降りました。","あかるい 味が します。","あかるい においが します。","この 部屋は あかるいです。"], a:3, exp:"あかるい（明るい：sáng sủa） dùng cho nơi có ánh sáng như 部屋（căn phòng） nên câu 4 đúng。Mưa không thể “sáng” nên câu 1 sai；vị và mùi không thể “sáng” nên câu 2, 3 sai。", voc:"明るい（あかるい）：sáng sủa； 部屋（へや）：căn phòng； 雨（あめ）：mưa； 味（あじ）：vị； におい：mùi"},
-  {t:"さむい", s:["きょうは さむいです。","さむい 本を 読みました。","さむい 音楽を 聞きました。","さむい 写真を 見ました。"], a:0, exp:"さむい（寒い：lạnh） dùng cho thời tiết, khí hậu nên “きょうは さむいです：hôm nay lạnh” là câu đúng。Sách, âm nhạc, ảnh không thể “lạnh” theo nghĩa thời tiết nên các câu 2, 3, 4 đều sai。", voc:"寒い（さむい）：lạnh； 今日（きょう）：hôm nay； 本（ほん）：sách； 音楽（おんがく）：âm nhạc； 写真（しゃしん）：ảnh"}
+  {t:"あつい", s:["あつい 本を 読みました。","あつい お風呂に 入りました。","あつい 音楽を 聞きました。","あつい 写真を 見ました。"], a:1, exp:"あつい（熱い：nóng） chỉ dùng cho thứ có nhiệt độ cao như お風呂（nước tắm nóng） nên câu 4 đúng。Sách không thể “nóng”, âm nhạc không thể “nóng”, ảnh không thể “nóng” nên các câu 1, 2, 3 đều sai。", voc:"熱い（あつい）：nóng； お風呂（おふろ）：bồn tắm； 入る（はいる）：vào； 読む（よむ）：đọc"},
+  {t:"つかれる", s:["つかれる 本を 読みました。","つかれる 電車に 乗りました。","たくさん 歩くと、つかれる ことが あります。","つかれる 天気を 見ました。"], a:2, exp:"つかれる（疲れる：mệt） là cảm giác của con người sau khi vận động, nên “たくさん 歩くと、つかれる ことが あります：đi bộ nhiều thì có lúc mệt” là câu đúng (câu 4)。Sách, tàu điện, thời tiết không thể “mệt” nên các câu 1, 2, 3 đều sai。", voc:"疲れる（つかれる）：mệt mỏi； 歩く（あるく）：đi bộ； たくさん：nhiều； 電車（でんしゃ）：tàu điện"},
+  {t:"ひろい", s:["ひろい 時間が あります。","この 部屋は ひろいです。","ひろい 音が 聞こえます。","ひろい 味が します。"], a:1, exp:"ひろい（広い：rộng） dùng cho không gian như 部屋（căn phòng） nên câu 4 đúng。Thời gian không thể “rộng”, âm thanh không thể “rộng”, vị không thể “rộng” nên các câu 1, 2, 3 đều sai。", voc:"広い（ひろい）：rộng； 部屋（へや）：căn phòng； 時間（じかん）：thời gian； 音（おと）：âm thanh； 味（あじ）：vị"},
+  {t:"あかるい", s:["あかるい 雨が 降りました。","あかるい 味が します。","あかるい においが します。","この 部屋は あかるいです。"], a:3, exp:"あかるい（明るい：sáng sủa） dùng cho nơi có ánh sáng như 部屋（căn phòng） nên câu 1 đúng。Mùi không thể “sáng” nên câu 2 sai；mưa không thể “sáng” nên câu 3 sai；vị không thể “sáng” nên câu 4 sai。", voc:"明るい（あかるい）：sáng sủa； 部屋（へや）：căn phòng； 雨（あめ）：mưa； 味（あじ）：vị； におい：mùi"},
+  {t:"さむい", s:["きょうは さむいです。","さむい 本を 読みました。","さむい 音楽を 聞きました。","さむい 写真を 見ました。"], a:0, exp:"さむい（寒い：lạnh） dùng cho thời tiết, khí hậu nên “きょうは さむいです：hôm nay lạnh” là câu đúng (câu 2)。Ảnh, sách, âm nhạc không thể “lạnh” theo nghĩa thời tiết nên các câu 1, 3, 4 đều sai。", voc:"寒い（さむい）：lạnh； 今日（きょう）：hôm nay； 本（ほん）：sách； 音楽（おんがく）：âm nhạc； 写真（しゃしん）：ảnh"}
  ],
  g1dlg: [
   {d:["日本語が 上手に なりましたね。","毎日 日本人の 友だち と 話した（　）、上手に なりました。"], a:"おかげで", w:["せいで","たびに","うちに"], exp:"Nhờ nói chuyện với bạn người Nhật mỗi ngày mà tiếng Nhật giỏi lên, kết quả tốt nên dùng おかげで（nhờ có）。せいで dùng cho kết quả xấu；たびに là “mỗi lần… thì…”；うちに là “trong lúc…” — đều không hợp với câu nói về nguyên nhân của kết quả tốt。", voc:"日本語（にほんご）：tiếng Nhật； 上手（じょうず）：giỏi； 友だち（ともだち）：bạn bè； 話す（はなす）：nói chuyện； おかげで：nhờ có"},

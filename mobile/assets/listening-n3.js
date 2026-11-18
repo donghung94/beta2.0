@@ -573,7 +573,7 @@ window.LISTEN_N3 = [
   "imgs": null,
   "img": "n3-4-1.png",
   "ans": 1,
-  "exp": "Muốn mượn bút của người khác thì nói \"貸していただけませんか\" mới lịch sự và đúng hướng; lựa chọn 2 là đề nghị cho mượn ngược lại, lựa chọn 3 chỉ hỏi có bút không.",
+  "exp": "Muốn mượn bút của người khác thì nói \"貸していただけませんか\" mới lịch sự và đúng hướng; lựa chọn 1 là đề nghị cho mượn ngược lại, lựa chọn 3 chỉ hỏi có bút không.",
   "dlg": [
    {
     "sp": "男",
@@ -594,7 +594,7 @@ window.LISTEN_N3 = [
   "imgs": null,
   "img": "n3-4-2.png",
   "ans": 2,
-  "exp": "Muốn xin nước ở nhà hàng thì nói \"いただけますか\"; lựa chọn 2 là đề nghị cho nước (ngược hướng), lựa chọn 3 chỉ hỏi có nước không chứ không phải xin.",
+  "exp": "Muốn xin nước ở nhà hàng thì nói \"いただけますか\"; lựa chọn 1 chỉ hỏi có nước không chứ không phải xin, lựa chọn 2 là đề nghị cho nước (ngược hướng).",
   "dlg": [
    {
     "sp": "女",
@@ -636,7 +636,7 @@ window.LISTEN_N3 = [
   "imgs": null,
   "img": "n3-4-4.png",
   "ans": 0,
-  "exp": "Muốn hỏi đường thì nói \"駅はどこですか\"; lựa chọn 2 là ra lệnh cho người khác đi, lựa chọn 3 là nói mình không biết.",
+  "exp": "Muốn hỏi đường thì nói \"駅はどこですか\"; lựa chọn 2 là nói mình không biết đường, lựa chọn 3 là ra lệnh cho người khác đi.",
   "dlg": [
    {
     "sp": "女",
@@ -657,7 +657,7 @@ window.LISTEN_N3 = [
   "imgs": null,
   "img": "n3-4-5.png",
   "ans": 2,
-  "exp": "Muốn rủ đồng nghiệp ăn trưa cùng thì nói \"食べませんか\"; lựa chọn 2 là yêu cầu người khác ăn, lựa chọn 3 chỉ nhận xét món ăn ngon.",
+  "exp": "Muốn rủ đồng nghiệp ăn trưa cùng thì nói \"食べませんか\"; lựa chọn 1 chỉ nhận xét món ăn ngon, lựa chọn 2 là yêu cầu người khác ăn.",
   "dlg": [
    {
     "sp": "男",
