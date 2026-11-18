@@ -1230,7 +1230,9 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .rk-name{font-size:16.5px; font-weight:800; overflow-wrap:anywhere}
 .rk-prem{display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:700; color:#b97a0e; background:#fdf3d7; border-radius:999px; padding:2px 8px; white-space:nowrap}
 /* Nhãn "Bot" cạnh tên bot (mọi tên trong WEEK_TOP đều là bot minh họa) +
-   pill "Số minh họa" ở hàng "Bạn" (hạng/EXP web vẫn là số demo). */
+   pill trạng thái ở hàng "Bạn" (rk-demo: "Chưa đăng nhập" / "Đang tải
+   EXP…" / "Chưa tải được EXP") — chỉ hiện khi chưa có EXP thật; EXP thật
+   lấy từ ví đồng bộ, xem skFetchWalletExp. */
 .bot-tag{display:inline-block; font-size:11px; font-weight:800; line-height:1.4; padding:1px 7px; border-radius:999px; border:1px solid var(--line); color:var(--muted); vertical-align:2px; margin-left:6px; white-space:nowrap}
 .rk-demo{display:inline-block; font-size:12px; font-weight:700; color:var(--muted); background:var(--card2); border:1px solid var(--line); border-radius:999px; padding:2px 9px; margin-top:3px; white-space:nowrap}
 .rk-stats{display:flex; flex-wrap:wrap; justify-content:center; gap:4px 14px; font-size:13.5px; color:var(--muted); margin-top:4px}
@@ -1246,6 +1248,19 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .rk-row-stats{display:flex; gap:16px; align-items:center; font-size:13.5px; color:var(--muted); white-space:nowrap}
 .rk-row-stats .rk-xp{font-size:15.5px}
 .rk-me{border:2px solid var(--red); background:var(--red-soft)}
+/* The "Cap bac cua ban" (Xep hang) + chip cap o hang "Ban": cap tinh theo
+   tong EXP, xem SK_RANK_STEPS / skRankFromExp. */
+.rk-rankchip{display:inline-block; font-size:12.5px; font-weight:800; color:#b97a0e; background:#fdf3d7; border:1px solid #f0d48a; border-radius:999px; padding:2px 9px; margin-top:3px; white-space:nowrap}
+.rk-mycard{background:var(--card); border:2px solid var(--gold); border-radius:16px; padding:16px 18px; margin:0 0 18px; box-shadow:var(--shadow)}
+.rk-mycard-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px}
+.rk-mycard h3{margin:0 0 4px; font-size:15px}
+.rk-mycard-top p{margin:0; color:var(--muted); font-size:13.5px}
+.rk-mycard .rk-myname{font-size:19px; font-weight:900; color:var(--ink)}
+.rk-mycard .rk-myexp{font-size:15px; font-weight:800; color:var(--gold); margin-top:2px}
+.rk-myic{flex:none; width:48px; height:48px; border-radius:13px; background:var(--gold); color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900}
+.rk-bar{height:10px; border-radius:99px; background:var(--card2); border:1px solid var(--line); margin:12px 0 8px; overflow:hidden}
+.rk-bar-fill{display:block; height:100%; background:var(--gold); border-radius:99px}
+.rk-mynext{margin:0; font-size:13.5px; color:var(--muted)}
 @media (max-width:640px){
   .rk-podium{flex-direction:column; align-items:stretch; gap:26px}
   .rk-card{min-height:0}
@@ -8890,19 +8905,176 @@ function rankRowsHTML(list, mode){
       '<span class="rk-cards">🗂 ' + r.cards + '</span></span></div>';
   }).join("") + "</div>";
 }
-/* Hàng "Bạn": web chưa có ví EXP (wallet chỉ có trên mobile — adapter web
-   trả undefined cho doc wallet) nên hạng + EXP tạm dùng số demo giống bản
-   mobile (Hạng 18 · 1.240 EXP); tên + avatar lấy từ tài khoản đang đăng nhập
-   (webCurrentUser), chưa đăng nhập thì hiện "Bạn". Hàng mang pill "Số minh họa"
-   (class rk-demo) để số demo không bị nhầm là hạng/EXP thật. Khi web có ví
-   EXP thật, chỉ cần thay rankMeData() và bỏ pill. */
+/* ================= CẤP BẬC THEO EXP (USER QUYẾT 2026-11-18) =================
+   Cấp bậc hiển thị tính từ TỔNG EXP (field tuvi trong doc wallet), KHÔNG
+   tính từ cấp đã khai (declaredLvW/appliedLv — chỉ dùng để khóa/mở nội
+   dung + chọn cấp lộ trình 30 ngày). Thang 10 cấp, cùng ngưỡng với mobile:
+   0 / 1.000 / 2.000 / 4.000 / 7.000 / 12.000 / 20.000 / 32.000 / 50.000 /
+   80.000. "Bậc" = chỉ số cấp (Tân binh Bậc 1 … Tướng Bậc 10).
+   Nguồn EXP trên web: đọc CHỈ ĐỌC doc kanji_progress/{uid}/sync/wallet
+   qua skDb() (skFetchWalletExp) — KHÔNG qua SKSync: module không expose
+   đọc wallet, adapter web trả undefined cho doc này nên pull/push wallet
+   đều bỏ qua; đọc trực tiếp tránh mọi rủi ro delta ghi nhầm lên ví.
+   Kết quả cache vào localStorage "sk_web_wallet_exp" {uid, exp, at} +
+   biến RAM để render đồng bộ; fetch lại khi đăng nhập + khi mở trang
+   Xếp hạng. Web không cộng EXP (luyện thi trên web chưa cộng EXP).
+   Chưa đăng nhập -> thẻ hiện nút Đăng nhập, hàng "Bạn" hiện "—" + pill
+   "Chưa đăng nhập"; đã đăng nhập mà chưa có doc wallet -> EXP 0. */
+var SK_RANK_STEPS = [
+  {n: "Tân binh", min: 0},
+  {n: "Binh nhì", min: 1000},
+  {n: "Binh nhất", min: 2000},
+  {n: "Hạ sĩ", min: 4000},
+  {n: "Trung sĩ", min: 7000},
+  {n: "Thượng sĩ", min: 12000},
+  {n: "Thiếu úy", min: 20000},
+  {n: "Trung úy", min: 32000},
+  {n: "Thượng úy", min: 50000},
+  {n: "Tướng", min: 80000}
+];
+/* Tính cấp từ tổng EXP. Trả {idx (0-9), name, bac (1-10), min, exp,
+   next {name, min} | null, need (EXP còn thiếu tới mốc tiếp, 0 ở Tướng),
+   progress (0-1 trong chặng hiện tại, 1 ở Tướng)}. EXP âm/NaN -> 0. */
+function skRankFromExp(exp){
+  var e = Math.floor(Number(exp) || 0);
+  if(e < 0) e = 0;
+  var idx = 0;
+  for(var i = 0; i < SK_RANK_STEPS.length; i++){ if(e >= SK_RANK_STEPS[i].min) idx = i; }
+  var cur = SK_RANK_STEPS[idx];
+  var nxt = idx + 1 < SK_RANK_STEPS.length ? SK_RANK_STEPS[idx + 1] : null;
+  return {
+    idx: idx, name: cur.n, bac: idx + 1, min: cur.min, exp: e,
+    next: nxt ? {name: nxt.n, min: nxt.min} : null,
+    need: nxt ? (nxt.min - e) : 0,
+    progress: nxt ? ((e - cur.min) / (nxt.min - cur.min)) : 1
+  };
+}
+function skFmtExp(n){ return Number(n || 0).toLocaleString("vi-VN"); }
+
+var SK_WEB_WALLET_KEY = "sk_web_wallet_exp";
+var skWalletExpMem = null; /* null = chưa biết EXP; số = EXP đã biết */
+var skWalletExpErr = false; /* fetch lỗi + không có cache */
+var skWalletFetching = false;
+function skWebExpCacheRead(){
+  try{
+    var u = webCurrentUser();
+    if(!u) return null;
+    var c = JSON.parse(localStorage.getItem(SK_WEB_WALLET_KEY) || "null");
+    if(!c || c.uid !== u.uid || typeof c.exp !== "number") return null;
+    return c.exp;
+  }catch(e){ return null; }
+}
+function skWebExpCacheWrite(exp){
+  try{
+    var u = webCurrentUser();
+    if(!u) return;
+    localStorage.setItem(SK_WEB_WALLET_KEY, JSON.stringify({uid: u.uid, exp: exp, at: Date.now()}));
+  }catch(e){}
+}
+function skWebExpClear(){
+  skWalletExpMem = null; skWalletExpErr = false;
+  try{ localStorage.removeItem(SK_WEB_WALLET_KEY); }catch(e){}
+}
+/* Trạng thái EXP cho render: {status, exp} — status: "loggedout" |
+   "loading" | "known" | "error". */
+function skWebExp(){
+  var u = null;
+  try{ u = webCurrentUser(); }catch(e){ u = null; }
+  if(!u) return {status: "loggedout", exp: 0};
+  if(skWalletExpMem !== null) return {status: "known", exp: skWalletExpMem};
+  var c = skWebExpCacheRead();
+  if(c !== null){ skWalletExpMem = c; return {status: "known", exp: c}; }
+  if(skWalletExpErr) return {status: "error", exp: 0};
+  return {status: "loading", exp: 0};
+}
+/* Đọc CHỈ ĐỌC tổng EXP (wallet.data.tuvi) của tài khoản đang đăng nhập.
+   Không có doc wallet -> EXP 0. Chỉ vẽ lại trang Xếp hạng khi EXP đổi
+   (hoặc lần đầu biết / lần đầu lỗi) nên không lặp render. */
+function skFetchWalletExp(){
+  var u = null;
+  try{ u = webCurrentUser(); }catch(e){ u = null; }
+  if(!u || skWalletFetching) return;
+  var db = null;
+  try{ db = skDb(); }catch(e){ db = null; }
+  if(!db){
+    /* Chưa có Firebase (SDK chưa nạp / offline): báo lỗi để UI nói rõ,
+       nút "Thử lại" fetch lại sau. Không lặp: status "error" thì trang
+       Xếp hạng không tự fetch nữa. */
+    skWalletExpErr = true;
+    if((location.hash || "#/") === "#/xephang"){ try{ renderRankPage(); }catch(e){} }
+    return;
+  }
+  skWalletFetching = true;
+  var prevKnown = (skWalletExpMem !== null), prevExp = skWalletExpMem;
+  db.collection("kanji_progress").doc(u.uid).collection("sync").doc("wallet").get().then(function(snap){
+    skWalletFetching = false;
+    skWalletExpErr = false;
+    var exp = 0;
+    if(snap && snap.exists){
+      var d = (snap.data() || {}).data || {};
+      exp = Math.floor(Number(d.tuvi) || 0);
+      if(exp < 0) exp = 0;
+    }
+    skWalletExpMem = exp;
+    skWebExpCacheWrite(exp);
+    if((!prevKnown || prevExp !== exp) && (location.hash || "#/") === "#/xephang"){ try{ renderRankPage(); }catch(e){} }
+  }).catch(function(){
+    skWalletFetching = false;
+    /* Lỗi mạng/quyền: giữ cache cũ nếu có, không thì báo lỗi để UI nói rõ. */
+    if(skWebExpCacheRead() === null && skWalletExpMem === null) skWalletExpErr = true;
+    if((location.hash || "#/") === "#/xephang"){ try{ renderRankPage(); }catch(e){} }
+  });
+}
+/* Thẻ "Cấp bậc của bạn" trên trang Xếp hạng: tên cấp + Bậc + tổng EXP +
+   thanh tiến độ tới mốc tiếp theo. % thanh = floor (0-99 trong chặng,
+   100 chỉ ở Tướng). data-* để kiểm chứng trực tiếp. */
+function skRankCardHTML(){
+  var st = skWebExp();
+  if(st.status === "loggedout"){
+    return '<div class="rk-mycard" id="rankMyCard" data-rank-status="loggedout">' +
+      '<div class="rk-mycard-top"><div><h3>Cấp bậc của bạn</h3>' +
+      '<p>Đăng nhập để xem cấp bậc theo tổng EXP của bạn.</p></div>' +
+      '<button type="button" class="btn" id="rkLoginBtn">Đăng nhập</button></div></div>';
+  }
+  if(st.status === "loading"){
+    return '<div class="rk-mycard" id="rankMyCard" data-rank-status="loading">' +
+      '<div class="rk-mycard-top"><div><h3>Cấp bậc của bạn</h3><p>Đang tải EXP…</p></div></div></div>';
+  }
+  if(st.status === "error"){
+    return '<div class="rk-mycard" id="rankMyCard" data-rank-status="error">' +
+      '<div class="rk-mycard-top"><div><h3>Cấp bậc của bạn</h3>' +
+      '<p>Không tải được EXP — kiểm tra mạng rồi thử lại.</p></div>' +
+      '<button type="button" class="btn ghost" id="rkRetryBtn">Thử lại</button></div></div>';
+  }
+  var r = skRankFromExp(st.exp);
+  var pct = r.next ? Math.floor(r.progress * 100) : 100;
+  var nextHtml = r.next
+    ? '<span class="rk-next">Mốc tiếp theo: <b>' + esc(r.next.name) + ' · ' + skFmtExp(r.next.min) + ' EXP</b> — còn ' + skFmtExp(r.need) + ' EXP</span>'
+    : '<span class="rk-next">Đã đạt cấp cao nhất — <b>Tướng</b></span>';
+  return '<div class="rk-mycard" id="rankMyCard" data-rank-status="known" data-rank-name="' + esc(r.name) + '" data-rank-num="' + r.bac + '" data-exp="' + r.exp + '" data-next-name="' + (r.next ? esc(r.next.name) : "") + '" data-next-min="' + (r.next ? r.next.min : "") + '" data-need="' + r.need + '" data-progress="' + pct + '">' +
+    '<div class="rk-mycard-top"><div><h3>Cấp bậc của bạn</h3>' +
+    '<p class="rk-myname">' + esc(r.name) + ' · Bậc ' + r.bac + '</p>' +
+    '<p class="rk-myexp">' + skFmtExp(r.exp) + ' EXP</p></div>' +
+    '<span class="rk-myic">' + r.bac + '</span></div>' +
+    '<div class="rk-bar" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100"><span class="rk-bar-fill" style="width:' + pct + '%"></span></div>' +
+    '<p class="rk-mynext">' + nextHtml + '</p></div>';
+}
+/* Hàng "Bạn": web không có dữ liệu hạng toàn cục nên cột hạng hiện "—";
+   EXP lấy từ ví đồng bộ (skWebExp) kèm cấp theo EXP. Chưa đăng nhập thì
+   EXP hiện "—" + pill "Chưa đăng nhập"; đang tải / lỗi thì pill nói rõ. */
 function rankMeData(){
   var u = null;
   try{ u = webCurrentUser(); }catch(e){ u = null; }
+  var st = skWebExp();
+  var rk = st.status === "known" ? skRankFromExp(st.exp) : null;
   return {
     name: (u && (u.name || u.email)) ? (u.name || u.email) : "Bạn",
     photo: (u && u.photoURL) ? u.photoURL : "",
-    rank: 18, exp: 1240
+    rank: null, /* web không có bảng xếp hạng toàn cục */
+    exp: st.status === "known" ? st.exp : null,
+    expStatus: st.status,
+    rankName: rk ? rk.name : "",
+    rankNum: rk ? rk.bac : 0
   };
 }
 function rankMeHTML(){
@@ -8910,11 +9082,19 @@ function rankMeHTML(){
   var av = m.photo
     ? '<span class="rk-av rk-avimg"><img src="' + esc(m.photo) + '" alt=""></span>'
     : '<span class="rk-av">' + esc(m.name.charAt(0).toUpperCase()) + '</span>';
-  return '<div class="rk-row rk-me" data-rank="me">' +
-    '<span class="rk-num">' + m.rank + '</span>' + av +
+  var rankChip = m.rankName ? '<span class="rk-rankchip">' + esc(m.rankName) + ' · Bậc ' + m.rankNum + '</span>' : "";
+  var pill = "";
+  if(m.expStatus === "loggedout") pill = '<span class="rk-demo">Chưa đăng nhập</span>';
+  else if(m.expStatus === "loading") pill = '<span class="rk-demo">Đang tải EXP…</span>';
+  else if(m.expStatus === "error") pill = '<span class="rk-demo">Chưa tải được EXP</span>';
+  var xpHtml = m.exp === null
+    ? '<span class="rk-xp">⚡ —</span>'
+    : '<span class="rk-xp">⚡ ' + rankFmtK(m.exp) + ' XP</span>';
+  return '<div class="rk-row rk-me" data-rank="me" data-rank-name="' + esc(m.rankName) + '" data-rank-num="' + (m.rankNum || "") + '" data-exp="' + (m.exp === null ? "" : m.exp) + '">' +
+    '<span class="rk-num" title="Chưa có bảng xếp hạng toàn cục">—</span>' + av +
     '<span class="rk-row-main"><b>' + esc(m.name) + '</b>' +
-    (m.name === "Bạn" ? "" : '<span class="rk-me-tag">Bạn</span>') + '<span class="rk-demo">Số minh họa</span></span>' +
-    '<span class="rk-row-stats"><span class="rk-xp">⚡ ' + rankFmtK(m.exp) + ' XP</span></span></div>';
+    (m.name === "Bạn" ? "" : '<span class="rk-me-tag">Bạn</span>') + rankChip + pill + '</span>' +
+    '<span class="rk-row-stats">' + xpHtml + '</span></div>';
 }
 function rankBoardHTML(mode){
   var list = rankSorted(mode);
@@ -8942,14 +9122,22 @@ function renderRankPage(){
   var rTok = skBeginRender();
   document.title = "Xếp hạng & cấp bậc | SoraKanji";
   document.body.classList.remove("plain");
+  var st = skWebExp();
+  var rk = st.status === "known" ? skRankFromExp(st.exp) : null;
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Xếp hạng</div>' +
     "<h1>Xếp hạng</h1>" +
     "<p>Cấp bậc quân đội — tích EXP từ nhiệm vụ, quiz và đề thi để thăng cấp từ Tân binh lên Tướng.</p></div>" +
+    skRankCardHTML() +
     '<div id="rankBoard"></div>' +
     '<h2 class="secttl">Thang cấp bậc</h2>' +
     REALM_LADDER.map(function(r){
-      return '<div class="realmrow"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' + esc(r.n) +
-        "</b><span>" + esc(r.tv) + "</span></span></div>";
+      var kn = parseInt(r.k, 10), cls = "", badge = "";
+      if(rk){
+        if(kn < rk.bac){ cls = " got"; badge = '<span class="r-state">Đã đạt</span>'; }
+        else if(kn === rk.bac){ cls = " cur"; badge = '<span class="r-state">Cấp của bạn</span>'; }
+      }
+      return '<div class="realmrow' + cls + '" data-rank-num="' + kn + '"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' + esc(r.n) +
+        "</b><span>" + esc(r.tv) + "</span></span>" + badge + "</div>";
     }).join("") +
     '<h2 class="secttl">Hạng thành viên</h2>' +
     '<p style="color:var(--muted);margin:0 0 12px;max-width:720px">Lên hạng bằng <b>Điểm đóng góp</b> — kiếm từ thắng Đấu trường, tặng Xu cho cộng đồng và giúp bạn học trong phòng chat. Điểm này không mua được bằng tiền.</p>' +
@@ -8960,6 +9148,11 @@ function renderRankPage(){
     '<p style="padding-bottom:34px"><a class="btn" href="#/thi">Luyện thi để tích EXP</a></p>';
   $app.innerHTML = h;
   renderRankBoard();
+  var rkLoginBtn = document.getElementById("rkLoginBtn");
+  if(rkLoginBtn) rkLoginBtn.addEventListener("click", function(){ openAuthModal(); });
+  var rkRetryBtn = document.getElementById("rkRetryBtn");
+  if(rkRetryBtn) rkRetryBtn.addEventListener("click", function(){ skWalletExpErr = false; skFetchWalletExp(); });
+  if(st.status === "loading") skFetchWalletExp();
 }
 
 /* ================= CÁ NHÂN HOÁ ================= */
@@ -9059,11 +9252,10 @@ function renderPersonalPage(){
   var rTok = skBeginRender();
   document.title = "Cá nhân hoá — lộ trình học | SoraKanji";
   document.body.classList.remove("plain");
-  var cur = REALMS_PATH[declaredLvW];
   var courseLv = ["N5", "N4", "N3", "N2", "N1", "N1"][declaredLvW];
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Cá nhân hoá</div>' +
     "<h1>Lộ trình học cá nhân</h1>" +
-    "<p>Khai trình độ JLPT bạn đã đạt — bên dưới là lộ trình 30 ngày của cấp bạn đang học, bắt đầu từ cấp bậc tương ứng. Hoàn thành ngày 30 (đề thi thử tổng kết) là sẵn sàng thăng cấp lên cấp bậc tiếp theo.</p></div>" +
+    "<p>Khai trình độ JLPT bạn đã đạt — bên dưới là lộ trình 30 ngày của cấp bạn đang học, bắt đầu từ chặng tương ứng với trình độ đã khai. Hoàn thành ngày 30 (đề thi thử tổng kết) là xong lộ trình của cấp đang học. Cấp bậc quân đội tính theo tổng EXP — xem ở <a href=\"#/xephang\">Xếp hạng</a>.</p></div>" +
     '<div class="card" id="lvPickerCard" style="margin:16px 0"><h3 style="margin-top:0">Khai trình độ</h3>' +
     '<div class="cd-lv" style="padding:0">' +
     LV_NAMES_W.map(function(n, i){
@@ -9071,8 +9263,8 @@ function renderPersonalPage(){
     }).join("") + "</div>" +
     '<p id="pathSummary" style="margin:12px 0 0;font-weight:700">' +
     (declaredLvW === 0
-      ? "Chưa khai trình độ → lộ trình bắt đầu từ Tân binh (" + REALMS_PATH[0].courseLbl + ")."
-      : "Đã khai: " + LV_NAMES_W[declaredLvW] + " → lộ trình bắt đầu từ " + cur.n + " (" + cur.courseLbl + ").") +
+      ? "Chưa khai trình độ → lộ trình 30 ngày cấp N5 (chặng 1)."
+      : "Đã khai: " + LV_NAMES_W[declaredLvW] + " → lộ trình 30 ngày cấp " + courseLv + " (chặng " + (declaredLvW + 1) + ").") +
     "</p></div>" +
     '<div class="plan30-head"><h2 class="secttl" style="margin:0">Lộ trình · ' + courseLv + '</h2>' +
     '<button type="button" class="btn ghost sm" id="planChangeLv">⇄ Đổi cấp</button></div>' +
@@ -9083,11 +9275,11 @@ function renderPersonalPage(){
     '<a class="btn ghost" href="#/tuvung/' + courseLv + '">Từ vựng ' + courseLv + '</a>' +
     '<a class="btn ghost" href="#/nguphap/' + courseLv + '">Ngữ pháp ' + courseLv + '</a>' +
     '<a class="btn ghost" href="#/thi/' + courseLv + '">Thi thử ' + courseLv + "</a></p>" +
-    '<h2 class="secttl">Toàn bộ lộ trình — 10 cấp bậc</h2><div style="padding-bottom:36px">' +
+    '<h2 class="secttl">Toàn bộ lộ trình — 10 chặng</h2><div style="padding-bottom:36px">' +
     REALMS_PATH.map(function(r, i){
       var cls = "", st = "", sub = r.courseLbl;
       if(i < declaredLvW){ cls = "got"; st = "Đã qua"; sub += " · Miễn học lại"; }
-      else if(i === declaredLvW){ cls = "cur"; st = "Chặng của bạn"; sub += " · Bạn đang học tại đây"; }
+      else if(i === declaredLvW){ cls = "cur"; st = "Chặng lộ trình"; sub += " · Lộ trình cấp đang học"; }
       else { st = "Chưa mở"; sub += " · Đậu Thi thử chặng trước mới mở"; }
       return '<div class="realmrow ' + cls + '"><span class="r-ic jp">' + esc(r.k) + '</span><span class="r-main"><b>' +
         esc(r.n) + "</b><span>" + esc(sub) + '</span></span><span class="r-state">' + st + "</span></div>";
@@ -11186,11 +11378,11 @@ var SORA_TOPICS = [
     actions:[{label:"Mở Từ vựng", action:"flash"},{label:"Mở Luyện nghe", action:"listen"}] },
   { id:"path", label:"Lộ trình, nhiệm vụ, EXP là gì?",
     keywords:["lo trinh","khai trinh do","nhiem vu","exp","cap bac","streak","thang cap","chinh tuyen"],
-    answer:"Lộ trình cá nhân nằm ở cột dọc bên trái → “Lộ trình cá nhân”:\n\n• Bấm “Khai trình độ”, chọn trình độ bạn đã đạt (Chưa khai / N5 / N4 / N3 / N2 / N1) — lộ trình bắt đầu từ chặng cấp bậc tương ứng (chưa khai → Tân binh, đã khai N5 → Binh nhì, N4 → Binh nhất, N3 → Hạ sĩ, N2 → Trung sĩ, N1 → Thượng sĩ) với lộ trình 30 ngày của cấp đang học: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết; học xong một ngày thì bấm “Đánh dấu đã xong” trong panel của ngày đó để mở khóa ngày tiếp theo.\n• Ở trang chủ, thẻ “Đếm ngược JLPT” tính theo cấp mục tiêu bạn chọn: lộ trình ôn Học mới 60% / Luyện đề 25% / Tổng ôn 15% và gợi ý “Hôm nay nên học” theo số liệu thật của cấp đó.\n• EXP và thang 10 cấp bậc Tân binh → Tướng xem ở tab “Xếp hạng”. Nhiệm vụ hôm nay và streak là tính năng của ứng dụng di động.\n\nChuông thông báo ở thanh trên cùng cũng nhắc bạn 3 việc: còn bao nhiêu ngày tới kỳ thi JLPT, bạn đang ở ngày nào của lộ trình 30 ngày (hôm nay đã đánh dấu xong chưa) và có bao nhiêu từ đang chờ ôn tập trong Mục đã lưu.",
+    answer:"Lộ trình cá nhân nằm ở cột dọc bên trái → “Lộ trình cá nhân”:\n\n• Bấm “Khai trình độ”, chọn trình độ bạn đã đạt (Chưa khai / N5 / N4 / N3 / N2 / N1) — lộ trình bắt đầu từ chặng tương ứng với trình độ đã khai (chưa khai → chặng 1, đã khai N5 → chặng 2, N4 → chặng 3, N3 → chặng 4, N2 → chặng 5, N1 → chặng 6) với lộ trình 30 ngày của cấp đang học: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết; học xong một ngày thì bấm “Đánh dấu đã xong” trong panel của ngày đó để mở khóa ngày tiếp theo.\n• Ở trang chủ, thẻ “Đếm ngược JLPT” tính theo cấp mục tiêu bạn chọn: lộ trình ôn Học mới 60% / Luyện đề 25% / Tổng ôn 15% và gợi ý “Hôm nay nên học” theo số liệu thật của cấp đó.\n• Cấp bậc quân đội tính theo tổng EXP của bạn (Tân binh → Tướng, mốc 0 → 80.000 EXP) — xem thẻ “Cấp bậc của bạn” ở tab “Xếp hạng”. EXP đồng bộ từ ứng dụng di động (nhiệm vụ, Đấu trường, luyện thi trên app). Nhiệm vụ hôm nay và streak là tính năng của ứng dụng di động.\n\nChuông thông báo ở thanh trên cùng cũng nhắc bạn 3 việc: còn bao nhiêu ngày tới kỳ thi JLPT, bạn đang ở ngày nào của lộ trình 30 ngày (hôm nay đã đánh dấu xong chưa) và có bao nhiêu từ đang chờ ôn tập trong Mục đã lưu.",
     actions:[{label:"Khai trình độ", action:"path"},{label:"Xem Xếp hạng", action:"rank"}] },
   { id:"duel", label:"Đấu trường đấu thế nào?",
     keywords:["dau truong","dau lech gio","thi dau","doi thu"],
-    answer:"Đấu trường hiện là tính năng của ứng dụng di động SoraKanji: đấu lệch giờ 10 câu (15 giây/câu) với bạn học cùng cấp bậc, thắng trận được cộng EXP, Điểm đóng góp và Xu, mỗi ngày 3 lượt đấu.\n\nTrên bản web, bạn tích EXP bằng cách luyện thi ở phòng Sora JLPT và xem thang cấp bậc ở tab Xếp hạng.",
+    answer:"Đấu trường hiện là tính năng của ứng dụng di động SoraKanji: đấu lệch giờ 10 câu (15 giây/câu) với bạn học cùng cấp bậc, thắng trận được cộng EXP, Điểm đóng góp và Xu, mỗi ngày 3 lượt đấu.\n\nTrên bản web, EXP của bạn đồng bộ từ ứng dụng di động; bản web hiện chưa cộng EXP khi luyện thi. Xem cấp bậc theo EXP ở tab Xếp hạng.",
     actions:[{label:"Mở Luyện thi", action:"exam"},{label:"Xem Xếp hạng", action:"rank"}] },
   { id:"shop", label:"Xu, điểm đóng góp, Cửa hàng là gì?",
     keywords:["xu","diem dong gop","cua hang","mua do","khung avatar","hang thanh vien"],
@@ -11222,7 +11414,7 @@ var SORA_TOPICS = [
     actions:[{label:"Mở Cài đặt", action:"settings"}] },
   { id:"start", label:"Mới học thì bắt đầu từ đâu?",
     keywords:["bat dau","moi hoc","nguoi moi","hoc tu dau","lo trinh hoc","xin chao","chao ban","hello"],
-    answer:"Chào bạn! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: tab “Lộ trình cá nhân” → chọn “Chưa khai” (hoặc cấp bạn đã đạt) để app xếp chặng cấp bậc và lộ trình 30 ngày của cấp đang học cho bạn: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết.\n2. Chọn cấp mục tiêu ở thẻ “Đếm ngược JLPT” trên trang chủ — thẻ sẽ gợi ý hôm nay nên học bao nhiêu kanji / từ vựng / ngữ pháp của cấp đó.\n3. Học theo thứ tự: Kanji ở trang chủ → Từ vựng (Sora Tango) → Ngữ pháp (Sora Bunpo) → Luyện nghe & Đọc hiểu → vào phòng thi Sora JLPT khi gần tới kỳ thi.",
+    answer:"Chào bạn! Nếu mới bắt đầu, đi theo đúng 3 bước này:\n\n1. Khai trình độ: tab “Lộ trình cá nhân” → chọn “Chưa khai” (hoặc cấp bạn đã đạt) để app xếp chặng lộ trình và lộ trình 30 ngày của cấp đang học cho bạn: mỗi tuần một vòng Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử, ngày 29 tổng ôn, ngày 30 thi thử tổng kết.\n2. Chọn cấp mục tiêu ở thẻ “Đếm ngược JLPT” trên trang chủ — thẻ sẽ gợi ý hôm nay nên học bao nhiêu kanji / từ vựng / ngữ pháp của cấp đó.\n3. Học theo thứ tự: Kanji ở trang chủ → Từ vựng (Sora Tango) → Ngữ pháp (Sora Bunpo) → Luyện nghe & Đọc hiểu → vào phòng thi Sora JLPT khi gần tới kỳ thi.",
     actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Về trang chủ", action:"home"}] },
   { id:"premium", label:"Gói miễn phí mở những gì, Premium khác gì?",
     keywords:["mien phi","goi free","premium","nang cap","mua goi","gia goi","tra phi","499","999"],
@@ -11620,6 +11812,7 @@ function initWebAuth(){
       /* Xóa dữ liệu đồng bộ của tài khoản cũ khỏi máy để tài khoản khác
          đăng nhập sau không gộp nhầm (xem SYNC-DESIGN.md §8). */
       if(window.SKSync) SKSync.clearLocalForLogout();
+      skWebExpClear(); /* xóa cache EXP của tài khoản cũ */
     }
     /* Đã biết tài khoản (kể cả chưa đăng nhập): ghi lượt truy cập 1 lần/phiên,
        bỏ qua admin (xem skLogVisitOnce). */
@@ -11631,6 +11824,7 @@ function initWebAuth(){
       skLoadPremium(true);
       skPremiumWatchStart();
       skSyncStart();
+      skFetchWalletExp(); /* lấy EXP ví đồng bộ cho thẻ cấp bậc */
       /* Đang ở trang Nâng cấp thì vẽ lại để nút mua đổi trạng thái. */
       if(/^\#\/(nangcap|trondoi)/.test(location.hash || "")) route();
     }
@@ -11954,7 +12148,9 @@ function setupHeader(){
      videos     <- sk_sv_mine (danh sách video tự tạo, xem ở Luyện nghe)
      grammar    <- sk_grammar_learned ("N5|12" -> 1)
    Các doc chỉ mobile có (wallet, missions, kanji, jlpt, examBest, settings,
-   avatar) trả undefined — module bỏ qua. Không đồng bộ: sk_pending_order,
+   avatar) trả undefined — module bỏ qua. Riêng wallet: web đọc CHỈ ĐỌC
+   trực tiếp doc wallet để lấy EXP cho thẻ cấp bậc (skFetchWalletExp),
+   không qua module nên không ảnh hưởng delta ví. Không đồng bộ: sk_pending_order,
    sk_notif_read, sk_view (theo thiết kế).
    Bài giả vocab_sync: từ mobile lưu mà web không tra được bài gốc -> lưu
    trong sk_sync_words + khóa sk_vocab_prog_sync (chỉ số trong danh sách
