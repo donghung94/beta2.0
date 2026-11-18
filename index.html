@@ -9471,6 +9471,101 @@ var SK_PREMIUM = {loaded: false, active: false, until: null, pkg: null};
 var skLockedTarget = null; /* hash trang bị khóa — về đó sau khi Premium kích hoạt */
 function skIsPremium(){ return !!SK_PREMIUM.active; }
 function skLevelLocked(lv){ return lv !== "N5" && !skIsPremium(); }
+/* Chuẩn hóa field premium trong doc kanji_progress/{uid} thành
+   {loaded, active, until, pkg} — dùng chung cho get() 1 lần (skLoadPremium)
+   và listener onSnapshot (skPremiumWatchStart) để 2 đường đọc cùng 1 luật:
+   premium === true → trọn đời; until === null → trọn đời; until là
+   Timestamp/millis/giây/chuỗi ISO còn trong tương lai → còn hạn.
+   Đọc p.plan TRƯỚC p.package/p.pkg vì backend ghi plan (year/lifetime). */
+function skParsePremium(p){
+  var active = false, until = null, pkg = null;
+  if(p === true){ active = true; }
+  else if(p && typeof p === "object"){
+    pkg = p.plan || p.package || p.pkg || null;
+    if(p.until === null){ active = true; until = null; }
+    else if(p.until != null){
+      var ms = null;
+      if(typeof p.until === "number") ms = p.until < 1e12 ? p.until * 1000 : p.until;
+      else if(typeof p.until.toMillis === "function") ms = p.until.toMillis();
+      else if(typeof p.until === "string"){ var t = Date.parse(p.until); if(!isNaN(t)) ms = t; }
+      if(ms != null){ until = ms; active = ms > Date.now(); }
+    }
+  }
+  return {loaded: true, active: active, until: until, pkg: pkg};
+}
+/* Áp trạng thái Premium mới vào SK_PREMIUM; chỉ khi active ĐỔI (free →
+   Premium hoặc Premium → free/hết hạn) mới refresh UI — lần đọc đầu /
+   lần đọc trùng trạng thái không vẽ lại, tránh nháy trang. Mọi đường phát
+   hiện Premium đổi (get 1 lần, listener onSnapshot, poll trang thanh toán)
+   đều đi qua đây. Trả về true khi có đổi trạng thái. */
+function skApplyPremiumState(next){
+  var prev = !!SK_PREMIUM.active;
+  SK_PREMIUM = next;
+  if(prev === !!next.active) return false;
+  skRefreshPremiumUI();
+  return true;
+}
+/* Refresh UI sau khi trạng thái Premium đổi — KHÔNG cần bấm hay tải lại.
+   - Đang ở trang khóa (skLockedTarget): về trang đã định (hành vi cũ).
+   - Đang ở Nâng cấp / Thanh toán (#/nangcap, #/trondoi) và đã Premium:
+     xóa đơn chờ, hiện màn hình trạng thái Premium.
+   - Lên Premium ở trang khác: gỡ ổ khóa TẠI CHỖ trên view hiện tại
+     (skUnlockPremiumUI) — không route() lại để khỏi mất vị trí cuộn,
+     mất trạng thái bài thi / audio / flashcard / video đang mở. Mọi cổng
+     khóa đều kiểm tra skLevelLocked() lúc bấm nên gỡ icon xong là mở được.
+   - Mất Premium (hết hạn): vẽ lại trang để ổ khóa hiện lại, trừ view có
+     trạng thái dở (skPremiumSafeToRerender) thì giữ nguyên — cổng khóa
+     lúc bấm vẫn chặn. */
+function skRefreshPremiumUI(){
+  if(SK_PREMIUM.active){
+    if(skLockedTarget){ var t = skLockedTarget; skLockedTarget = null; goHash(t); return; }
+    var h0 = location.hash || "#/";
+    if(/^\#\/(nangcap|trondoi)/.test(h0)){
+      skPendingOrderClear();
+      renderPremiumStatusView("🎉 Premium đã được kích hoạt — chúc bạn học tốt!");
+      return;
+    }
+    skUnlockPremiumUI();
+    return;
+  }
+  if(skPremiumSafeToRerender()) route();
+}
+/* View có trạng thái dở thì KHÔNG vẽ lại khi mất Premium: làm đề, player
+   video Shadowing, hội thoại, bài đọc AI, bài đọc, flashcard bài từ vựng,
+   bài/chi tiết ngữ pháp (kể cả Trợ từ + Cách chia thể có quiz). */
+function skPremiumSafeToRerender(){
+  var h0 = location.hash || "#/";
+  return !/^\#\/(thi\/[^\/]+\/[^\/]+\/lam|nghe\/video\/|nghe\/[^\/]+\/[^\/]+|dokkai\/[^\/]+|doc\/[^\/]+\/[^\/]+\/[^\/]+|tuvung\/[^\/]+\/[^\/]+|nguphap\/chia-the|nguphap\/[^\/]+\/[^\/]+)/.test(h0);
+}
+/* Gỡ ổ khóa tại chỗ trên view hiện tại sau khi lên Premium — không vẽ lại
+   trang nên giữ nguyên vị trí cuộn và trạng thái đang học/dở. Quét text
+   node trong #app, gỡ "🔒" ở mọi chỗ (pills cấp, thẻ cấp, badge bài đọc,
+   link bài tiếp), gỡ hậu tố " · Premium" chỉ trong .lesson-card/.dk-badge/
+   .dk-top (hậu tố này chỉ xuất hiện ở thẻ cấp bị khóa), và gỡ nhãn
+   "▶ Xem thử 30s" + class pw-trial khỏi thẻ video Shadowing.
+   Trả về số điểm đã gỡ (0 khi trang không còn khóa nào). */
+function skUnlockPremiumUI(){
+  var root = (typeof $app !== "undefined" && $app) || document.getElementById("app");
+  var n = 0;
+  if(!root) return n;
+  root.querySelectorAll(".sv-card-trial").forEach(function(el){ el.remove(); n++; });
+  root.querySelectorAll(".sv-card.pw-trial").forEach(function(el){ el.classList.remove("pw-trial"); n++; });
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+  var nodes = [], node;
+  while((node = walker.nextNode())) nodes.push(node);
+  nodes.forEach(function(tn){
+    var v = tn.nodeValue;
+    if(v.indexOf("🔒") < 0 && v.indexOf(" · Premium") < 0) return;
+    var nv = v.split(" · 🔒 Premium").join("").split("🔒 ").join("").split(" 🔒").join("").split("🔒").join("");
+    var par = tn.parentNode;
+    if(nv.indexOf(" · Premium") >= 0 && par && par.closest &&
+       par.closest(".lesson-card, .dk-badge, .dk-top")){
+      nv = nv.split(" · Premium").join("");
+    }
+    if(nv !== v){ tn.nodeValue = nv; n++; }
+  });
+  return n;
+}
 function skLoadPremium(force){
   var u = webCurrentUser();
   if(!u){
@@ -9482,34 +9577,58 @@ function skLoadPremium(force){
   if(!db){ SK_PREMIUM.loaded = true; return Promise.resolve(SK_PREMIUM); }
   return db.collection("kanji_progress").doc(u.uid).get().then(function(snap){
     var p = (snap.exists && snap.data()) ? snap.data().premium : null;
-    var active = false, until = null, pkg = null;
-    if(p === true){ active = true; }
-    else if(p && typeof p === "object"){
-      pkg = p.package || p.pkg || null;
-      if(p.until === null){ active = true; until = null; }
-      else if(p.until != null){
-        var ms = null;
-        if(typeof p.until === "number") ms = p.until < 1e12 ? p.until * 1000 : p.until;
-        else if(typeof p.until.toMillis === "function") ms = p.until.toMillis();
-        else if(typeof p.until === "string"){ var t = Date.parse(p.until); if(!isNaN(t)) ms = t; }
-        if(ms != null){ until = ms; active = ms > Date.now(); }
-      }
-    }
-    SK_PREMIUM = {loaded: true, active: active, until: until, pkg: pkg};
-    if(active){
-      /* Vừa xác nhận Premium: nếu đang ở trang khóa thì về trang đã định,
-         nếu đang ở trang danh sách cấp thì vẽ lại để gỡ ổ khóa. */
-      if(skLockedTarget){ var t = skLockedTarget; skLockedTarget = null; goHash(t); }
-      else{
-        var h0 = location.hash || "#/";
-        if(/^\#\/(tuvung|nguphap|thi|nghe|doc|kanji|nangcap|trondoi)?(\?.*)?$/.test(h0)) route();
-      }
-    }
+    skApplyPremiumState(skParsePremium(p));
     return SK_PREMIUM;
   }).catch(function(){
     SK_PREMIUM.loaded = true;
     return SK_PREMIUM;
   });
+}
+/* Listener Firestore cho Premium: theo dõi doc kanji_progress/{uid} để khi
+   webhook SePay (hoặc admin cấp tay) ghi premium mới, app biết ngay mà
+   không cần đợi user bấm vào mục khóa. Trước đây web chỉ get() 1 lần lúc
+   đăng nhập / mở trang khóa / bấm "Kiểm tra lại" nên icon khóa đứng yên
+   sau khi nâng cấp — đây là nguyên nhân gốc của bug. */
+var skPremiumUnsub = null;
+var skPremiumWatchUid = null;
+function skPremiumWatchStart(){
+  var u = webCurrentUser();
+  if(!u) return;
+  if(skPremiumWatchUid === u.uid && skPremiumUnsub) return;
+  skPremiumWatchStop();
+  var db = skDb();
+  if(!db || !db.collection) return;
+  try{
+    var ref = db.collection("kanji_progress").doc(u.uid);
+    if(!ref || typeof ref.onSnapshot !== "function") return;
+    skPremiumWatchUid = u.uid;
+    skPremiumUnsub = ref.onSnapshot(function(snap){
+      var p = (snap && snap.exists && snap.data()) ? snap.data().premium : null;
+      skApplyPremiumState(skParsePremium(p));
+    }, function(){ /* lỗi listener (mất mạng/quyền): get() 1 lần khi cần vẫn chạy */ });
+  }catch(e){ skPremiumWatchUid = null; skPremiumUnsub = null; }
+}
+function skPremiumWatchStop(){
+  if(typeof skPremiumUnsub === "function"){ try{ skPremiumUnsub(); }catch(e){} }
+  skPremiumUnsub = null;
+  skPremiumWatchUid = null;
+}
+/* Poll dự phòng ở trang Thanh toán: nếu listener không chạy được (SDK lỗi),
+   vẫn tự phát hiện kích hoạt mà không cần bấm "Kiểm tra lại". Chỉ chạy khi
+   đang ở trang thanh toán đã bấm "Tôi đã chuyển khoản" (có nút #recheckBtn);
+   tự dừng khi rời trang / đã Premium. */
+var skCheckoutPoll = null;
+function skCheckoutPollStart(){
+  if(skCheckoutPoll) return;
+  skCheckoutPoll = setInterval(function(){
+    if(!document.getElementById("recheckBtn") || SK_PREMIUM.active){
+      skCheckoutPollStop(); return;
+    }
+    skLoadPremium(true);
+  }, 30000);
+}
+function skCheckoutPollStop(){
+  if(skCheckoutPoll){ clearInterval(skCheckoutPoll); skCheckoutPoll = null; }
 }
 /* Trả về {lv, label} nếu hash đang trỏ tới nội dung N4+ đang bị khóa. */
 function skGateForHash(hash){
@@ -9984,6 +10103,7 @@ function renderCheckoutView(o){
     skPendingOrderClear();
     renderPackagesView();
   });
+  if(document.getElementById("recheckBtn")) skCheckoutPollStart();
   skRenderChatBox(o.code);
 }
 
@@ -10887,6 +11007,10 @@ function syncNavToHash(){
 var _skLastRouted = null; /* hash mà route() xử lý gần nhất — cho lớp điều hướng dự phòng bên dưới */
 function route(){
   _skLastRouted = location.hash || "#/";
+  /* Target trang khóa cũ còn sót (user rời trang khóa bằng link khác) thì
+     xóa — lần Premium đổi sau đó không kéo user về trang cũ bất ngờ.
+     renderLockedPage (chỉ gọi từ route()) gán lại target mới khi còn khóa. */
+  skLockedTarget = null;
   var raw = (location.hash || "#/").replace(/^#/, "");
   var parts = raw.split("?");
   var segs = parts[0].split("/").filter(Boolean).map(function(s){ return decodeURIComponent(s); });
@@ -11492,6 +11616,7 @@ function initWebAuth(){
     }else{
       window.SK_USER = null;
       SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
+      skPremiumWatchStop();
       /* Xóa dữ liệu đồng bộ của tài khoản cũ khỏi máy để tài khoản khác
          đăng nhập sau không gộp nhầm (xem SYNC-DESIGN.md §8). */
       if(window.SKSync) SKSync.clearLocalForLogout();
@@ -11504,6 +11629,7 @@ function initWebAuth(){
        khóa / gỡ ổ khóa); đăng xuất thì khóa lại ngay nếu đang ở nội dung N4+. */
     if(user){
       skLoadPremium(true);
+      skPremiumWatchStart();
       skSyncStart();
       /* Đang ở trang Nâng cấp thì vẽ lại để nút mua đổi trạng thái. */
       if(/^\#\/(nangcap|trondoi)/.test(location.hash || "")) route();
