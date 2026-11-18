@@ -1215,6 +1215,10 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .rk-avimg img{width:100%; height:100%; object-fit:cover}
 .rk-name{font-size:16.5px; font-weight:800; overflow-wrap:anywhere}
 .rk-prem{display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:700; color:#b97a0e; background:#fdf3d7; border-radius:999px; padding:2px 8px; white-space:nowrap}
+/* Nhãn "Bot" cạnh tên bot (mọi tên trong WEEK_TOP đều là bot minh họa) +
+   pill "Số minh họa" ở hàng "Bạn" (hạng/EXP web vẫn là số demo). */
+.bot-tag{display:inline-block; font-size:11px; font-weight:800; line-height:1.4; padding:1px 7px; border-radius:999px; border:1px solid var(--line); color:var(--muted); vertical-align:2px; margin-left:6px; white-space:nowrap}
+.rk-demo{display:inline-block; font-size:12px; font-weight:700; color:var(--muted); background:var(--card2); border:1px solid var(--line); border-radius:999px; padding:2px 9px; margin-top:3px; white-space:nowrap}
 .rk-stats{display:flex; flex-wrap:wrap; justify-content:center; gap:4px 14px; font-size:13.5px; color:var(--muted); margin-top:4px}
 .rk-xp{color:var(--gold); font-weight:800; font-size:16px; white-space:nowrap}
 .rk-rows{margin-top:14px; display:flex; flex-direction:column; gap:10px}
@@ -8826,6 +8830,10 @@ function rankSorted(mode){
   return list;
 }
 function rankPremHTML(p){ return p ? '<span class="rk-prem">👑 Premium</span>' : ""; }
+/* Nhãn "Bot": mọi tên trong WEEK_TOP đều là bot minh họa (USER QUYẾT
+   2026-11-16 giữ dữ liệu bot, không dùng dữ liệu thật) — nhãn hiện cạnh
+   tên để bot không bị nhầm là học viên thật. */
+function botTagHtml(){ return '<span class="bot-tag">Bot</span>'; }
 function rankPrimaryHTML(r, mode){
   return mode === "duel"
     ? '<span class="rk-xp">⚔️ ' + r.duelWins + ' thắng</span>'
@@ -8840,7 +8848,7 @@ function rankPodiumHTML(list, mode){
     return '<div class="rk-card r' + rk + '" data-rank="' + rk + '">' +
       '<span class="rk-medal" aria-hidden="true">' + rk + '</span>' +
       '<span class="rk-av">' + esc(r.avatar) + '</span>' +
-      '<b class="rk-name">' + esc(r.name) + '</b>' + rankPremHTML(r.premium) +
+      '<b class="rk-name">' + esc(r.name) + botTagHtml() + '</b>' + rankPremHTML(r.premium) +
       '<div class="rk-stats">' + rankPrimaryHTML(r, mode) +
       '<span>🗂 ' + r.cards + '</span><span>📖 ' + r.days + '</span></div></div>';
   }).join("") + "</div>";
@@ -8851,7 +8859,7 @@ function rankRowsHTML(list, mode){
     return '<div class="rk-row" data-rank="' + rk + '">' +
       '<span class="rk-num">' + (rk < 10 ? "0" + rk : rk) + '</span>' +
       '<span class="rk-av">' + esc(r.avatar) + '</span>' +
-      '<span class="rk-row-main"><b>' + esc(r.name) + '</b>' + rankPremHTML(r.premium) + '</span>' +
+      '<span class="rk-row-main"><b>' + esc(r.name) + botTagHtml() + '</b>' + rankPremHTML(r.premium) + '</span>' +
       '<span class="rk-row-stats">' + rankPrimaryHTML(r, mode) +
       '<span class="rk-cards">🗂 ' + r.cards + '</span></span></div>';
   }).join("") + "</div>";
@@ -8859,8 +8867,9 @@ function rankRowsHTML(list, mode){
 /* Hàng "Bạn": web chưa có ví EXP (wallet chỉ có trên mobile — adapter web
    trả undefined cho doc wallet) nên hạng + EXP tạm dùng số demo giống bản
    mobile (Hạng 18 · 1.240 EXP); tên + avatar lấy từ tài khoản đang đăng nhập
-   (webCurrentUser), chưa đăng nhập thì hiện "Bạn". Khi web có ví EXP thật,
-   chỉ cần thay rankMeData(). */
+   (webCurrentUser), chưa đăng nhập thì hiện "Bạn". Hàng mang pill "Số minh họa"
+   (class rk-demo) để số demo không bị nhầm là hạng/EXP thật. Khi web có ví
+   EXP thật, chỉ cần thay rankMeData() và bỏ pill. */
 function rankMeData(){
   var u = null;
   try{ u = webCurrentUser(); }catch(e){ u = null; }
@@ -8878,7 +8887,7 @@ function rankMeHTML(){
   return '<div class="rk-row rk-me" data-rank="me">' +
     '<span class="rk-num">' + m.rank + '</span>' + av +
     '<span class="rk-row-main"><b>' + esc(m.name) + '</b>' +
-    (m.name === "Bạn" ? "" : '<span class="rk-me-tag">Bạn</span>') + '</span>' +
+    (m.name === "Bạn" ? "" : '<span class="rk-me-tag">Bạn</span>') + '<span class="rk-demo">Số minh họa</span></span>' +
     '<span class="rk-row-stats"><span class="rk-xp">⚡ ' + rankFmtK(m.exp) + ' XP</span></span></div>';
 }
 function rankBoardHTML(mode){
