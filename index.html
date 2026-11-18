@@ -253,6 +253,20 @@ section.blk{padding:34px 0 6px}
 .adm-row:last-child{border-bottom:0}
 .adm-uid{font-size:12px;color:var(--muted);word-break:break-all}
 .adm-note{font-size:13px;color:var(--muted);line-height:1.6}
+.adm-grid-3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){ .adm-grid-3{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:560px){ .adm-grid-3{grid-template-columns:1fr} }
+.stat small{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:4px}
+.adm-range{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.adm-range-btn{font:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:999px;border:1.5px solid var(--line-strong);background:var(--card);color:var(--ink);cursor:pointer}
+.adm-range-btn.on{background:var(--red);border-color:var(--red);color:#fff}
+.adm-chart{display:flex;align-items:stretch;gap:4px;min-height:150px}
+.adm-bar-col{flex:1;display:flex;flex-direction:column;min-width:0;cursor:pointer}
+.adm-bar-track{height:124px;display:flex;align-items:flex-end;border-bottom:1px solid var(--line)}
+.adm-bar{width:100%;max-width:36px;margin:0 auto;background:var(--red);opacity:.45;border-radius:4px 4px 0 0;min-height:3px}
+.adm-bar-col:hover .adm-bar{opacity:.75}
+.adm-bar-today{opacity:1 !important}
+.adm-bar-lab{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;white-space:nowrap;overflow:hidden}
 .auth-field select{display:block;width:100%;margin-top:6px;font:inherit;font-size:14.5px;font-weight:400;padding:11px 12px;border:1.5px solid var(--line-strong);border-radius:10px;background:#fff;color:var(--ink)}
 @media (max-width:640px){ .adm-row{flex-direction:column} .adm-row .btn{align-self:flex-start} }
 
@@ -10343,13 +10357,17 @@ function renderPrivacyPage(){
 
 /* ================= BẢNG ĐIỀU KHIỂN ADMIN (#/admin) =================
    Chỉ tài khoản admin (webIsAdmin) thấy. Dữ liệu Firestore thật:
-   - kanji_progress: đếm học viên + trạng thái Premium từng người.
-   - sk_orders: doanh thu, đơn chờ, danh sách đơn (mới nhất trước).
-   Rules (deploy riêng): admin được đọc 2 collection trên và ghi CHỈ field
-   premium của kanji_progress. Đếm ở client (v1 — lượng user còn nhỏ).
+   - kanji_progress: đếm học viên (count aggregation) + trạng thái Premium
+     từng người (fetch tối đa 1000 doc).
+   - sk_orders: doanh thu, đơn chờ, danh sách đơn (mới nhất trước), đăng ký
+     Premium theo kỳ JST (fetch tối đa 1000 đơn, hiển thị 100).
+   - sk_stats: lượt truy cập (do function logVisit ghi; doc id
+     visits-daily-{YYYY-MM-DD} / visits-monthly-{YYYY-MM} / visits-total).
+   Rules (deploy riêng): admin được đọc các collection trên và ghi CHỈ field
+   premium của kanji_progress.
    Không có Tặng Xu / Khóa tài khoản: bản mobile chỉ là dữ liệu mẫu local,
    app chưa có cơ chế thật cho 2 việc đó. */
-var SK_ADM = {students: [], orders: [], stats: null};
+var SK_ADM = {students: [], orders: [], stats: null, visits: null, visitRange: "7"};
 function skAdminTsMs(v){
   if(v == null) return null;
   if(typeof v === "number") return v < 1e12 ? v * 1000 : v;
@@ -10369,8 +10387,13 @@ function skAdminPremiumInfo(p){
   return {active: ms != null && ms > Date.now(), plan: plan, untilMs: ms};
 }
 /* Thống kê từ dữ liệu thô (hàm thuần — test được bằng harness):
-   progDocs: [{uid, premium}], orderDocs: [{id, package, amount, status}]. */
-function skAdminStats(progDocs, orderDocs){
+   progDocs: [{uid, premium}], orderDocs: [{id, package, amount, status,
+   createdAt, createdAtMs}]. totalCount: số đếm chính xác từ count()
+   (null → dùng số doc đã fetch). nowMs: mốc thời gian (mặc định Date.now()).
+   Trả về {total, year, lifetime, active, revenue, pending,
+   today, week, month} — today/week/month là {count, revenue} của đơn paid
+   theo mốc JST (xem skAdminJstBounds). */
+function skAdminStats(progDocs, orderDocs, totalCount, nowMs){
   var year = 0, lifetime = 0, revenue = 0, pending = 0;
   (progDocs || []).forEach(function(d){
     var info = skAdminPremiumInfo(d.premium);
@@ -10382,7 +10405,210 @@ function skAdminStats(progDocs, orderDocs){
     if(o.status === "paid" && typeof o.amount === "number") revenue += o.amount;
     if(o.status === "pending") pending++;
   });
-  return {total: (progDocs || []).length, year: year, lifetime: lifetime, revenue: revenue, pending: pending};
+  var periods = skAdminPeriodStats(orderDocs, nowMs);
+  return {total: (totalCount != null ? totalCount : (progDocs || []).length),
+    year: year, lifetime: lifetime, active: year + lifetime,
+    revenue: revenue, pending: pending,
+    today: periods.today, week: periods.week, month: periods.month};
+}
+/* Mốc giờ JST (UTC+9, Nhật không có giờ mùa hè): mọi kỳ thống kê
+   (Hôm nay / Tuần này / Tháng này, ngày truy cập) đều tính theo giờ JST. */
+var SK_JST_OFFSET_MS = 9 * 3600 * 1000;
+function skAdminPad2(n){ return (n < 10 ? "0" : "") + n; }
+/* Mốc kỳ theo giờ JST, trả về ms UTC: {dayStart, weekStart, monthStart}.
+   dayStart = 00:00 JST hôm nay; weekStart = 00:00 JST Thứ 2 tuần này;
+   monthStart = 00:00 JST ngày 1 tháng này. (Hàm thuần.) */
+function skAdminJstBounds(nowMs){
+  var j = new Date((nowMs == null ? Date.now() : nowMs) + SK_JST_OFFSET_MS);
+  var y = j.getUTCFullYear(), m = j.getUTCMonth(), d = j.getUTCDate();
+  var dayStart = Date.UTC(y, m, d) - SK_JST_OFFSET_MS;
+  var weekStart = dayStart - ((j.getUTCDay() + 6) % 7) * 86400000;
+  var monthStart = Date.UTC(y, m, 1) - SK_JST_OFFSET_MS;
+  return {dayStart: dayStart, weekStart: weekStart, monthStart: monthStart};
+}
+/* Ngày YYYY-MM-DD / tháng YYYY-MM theo giờ JST. (Hàm thuần.) */
+function skAdminJstDateStr(ms){
+  var j = new Date(ms + SK_JST_OFFSET_MS);
+  return j.getUTCFullYear() + "-" + skAdminPad2(j.getUTCMonth() + 1) + "-" + skAdminPad2(j.getUTCDate());
+}
+function skAdminJstMonthStr(ms){
+  var j = new Date(ms + SK_JST_OFFSET_MS);
+  return j.getUTCFullYear() + "-" + skAdminPad2(j.getUTCMonth() + 1);
+}
+/* Mốc thời gian tạo đơn: ưu tiên field createdAtMs (số, ms hoặc giây —
+   backend ghi khi kích hoạt), dự phòng createdAt (Timestamp server). */
+function skAdminOrderMs(o){
+  if(o && typeof o.createdAtMs === "number")
+    return o.createdAtMs < 1e12 ? o.createdAtMs * 1000 : o.createdAtMs;
+  return skAdminTsMs(o ? o.createdAt : null);
+}
+/* Đơn paid + doanh thu theo kỳ JST (hàm thuần). Đơn không có mốc thời gian
+   đọc được thì không xếp vào kỳ nào (nhưng vẫn tính vào doanh thu tổng). */
+function skAdminPeriodStats(orderDocs, nowMs){
+  var b = skAdminJstBounds(nowMs);
+  var res = {today: {count: 0, revenue: 0}, week: {count: 0, revenue: 0}, month: {count: 0, revenue: 0}};
+  (orderDocs || []).forEach(function(o){
+    if(o.status !== "paid") return;
+    var ms = skAdminOrderMs(o);
+    if(ms == null) return;
+    var amt = (typeof o.amount === "number") ? o.amount : 0;
+    if(ms >= b.monthStart){ res.month.count++; res.month.revenue += amt; }
+    if(ms >= b.weekStart){ res.week.count++; res.week.revenue += amt; }
+    if(ms >= b.dayStart){ res.today.count++; res.today.revenue += amt; }
+  });
+  return res;
+}
+/* ---- Lượt truy cập (do function logVisit ghi) ----
+   ĐÃ ĐỐI CHIẾU backend đã deploy thật (18/11/2026 — xem VERIFY-REPORT.md
+   của W-backend): 1 collection top-level "sk_stats", doc id có tiền tố:
+   - "visits-daily-{YYYY-MM-DD}" (ngày JST), field {count}
+   - "visits-monthly-{YYYY-MM}", field {count}
+   - "visits-total", field {count}
+   Đường dẫn tập trung ở SK_STATS_COLL + skStatsDocId (đổi 1 chỗ nếu
+   backend dùng dạng khác). Giống bản mobile (ADM_STATS_COLL/admStatsDocId). */
+var SK_STATS_COLL = "sk_stats";
+function skStatsDocId(kind, key){ return kind + "-" + key; }
+/* Tổng lượt truy cập (hàm thuần): daily/monthly là map id → count. */
+function skAdminVisitTotals(daily, monthly, totalCount, nowMs){
+  var now = (nowMs == null ? Date.now() : nowMs);
+  var d7 = 0, d30 = 0;
+  for(var i = 0; i < 30; i++){
+    var c = (daily || {})[skAdminJstDateStr(now - i * 86400000)] || 0;
+    d30 += c;
+    if(i < 7) d7 += c;
+  }
+  return {today: (daily || {})[skAdminJstDateStr(now)] || 0, d7: d7, d30: d30,
+    total: (typeof totalCount === "number" ? totalCount : 0)};
+}
+/* Chuỗi cột biểu đồ (hàm thuần). range: "7" | "30" | "12m".
+   Trả về [{key, label, full, count, isToday}] theo thứ tự cũ → mới. */
+function skAdminVisitSeries(daily, monthly, range, nowMs){
+  var now = (nowMs == null ? Date.now() : nowMs);
+  var out = [];
+  if(range === "12m"){
+    for(var j = 11; j >= 0; j--){
+      var d = new Date(now + SK_JST_OFFSET_MS);
+      d.setUTCDate(1);
+      d.setUTCMonth(d.getUTCMonth() - j);
+      var key = d.getUTCFullYear() + "-" + skAdminPad2(d.getUTCMonth() + 1);
+      out.push({key: key, label: skAdminPad2(d.getUTCMonth() + 1) + "/" + d.getUTCFullYear(),
+        full: "Tháng " + skAdminPad2(d.getUTCMonth() + 1) + "/" + d.getUTCFullYear(),
+        count: (monthly || {})[key] || 0, isToday: false});
+    }
+    return out;
+  }
+  var n = (range === "30" ? 30 : 7);
+  for(var i = n - 1; i >= 0; i--){
+    var ms = now - i * 86400000;
+    var dj = new Date(ms + SK_JST_OFFSET_MS);
+    var key2 = skAdminJstDateStr(ms);
+    out.push({key: key2,
+      label: skAdminPad2(dj.getUTCDate()) + "/" + skAdminPad2(dj.getUTCMonth() + 1),
+      full: "Ngày " + skAdminPad2(dj.getUTCDate()) + "/" + skAdminPad2(dj.getUTCMonth() + 1) + "/" + dj.getUTCFullYear(),
+      count: (daily || {})[key2] || 0, isToday: i === 0});
+  }
+  return out;
+}
+/* Đếm chính xác tổng học viên bằng count aggregation (compat 10.12.2 hỗ trợ).
+   Lỗi / SDK không hỗ trợ → null để caller dùng số doc đã fetch. */
+function skAdminCountTotal(db){
+  try{
+    var q = db.collection("kanji_progress").count();
+    if(!q || typeof q.get !== "function") return Promise.resolve(null);
+    return q.get().then(function(snap){
+      var n = snap && snap.data ? snap.data().count : null;
+      return (typeof n === "number") ? n : null;
+    }).catch(function(){ return null; });
+  }catch(e){ return Promise.resolve(null); }
+}
+/* Đọc lượt truy cập: 30 doc daily + 12 monthly + total. Không bao giờ reject:
+   lỗi từng doc → count 0; lỗi toàn bộ → object 0 + hasData false. */
+function skAdminLoadVisits(db){
+  var nowMs = Date.now();
+  var dayIds = [], monIds = [];
+  for(var i = 29; i >= 0; i--) dayIds.push(skAdminJstDateStr(nowMs - i * 86400000));
+  for(var j = 11; j >= 0; j--){
+    var d = new Date(nowMs + SK_JST_OFFSET_MS);
+    d.setUTCDate(1);
+    d.setUTCMonth(d.getUTCMonth() - j);
+    monIds.push(d.getUTCFullYear() + "-" + skAdminPad2(d.getUTCMonth() + 1));
+  }
+  /* docId: id đầy đủ trong sk_stats; key: khóa không tiền tố để lưu vào
+     map daily/monthly (skAdminVisitTotals tra cứu theo "YYYY-MM-DD"). */
+  function readOne(coll, docId, key){
+    try{
+      return db.collection(coll).doc(docId).get().then(function(snap){
+        if(!snap || !snap.exists) return {id: key, count: 0, exists: false};
+        var c = (snap.data() || {}).count;
+        return {id: key, count: (typeof c === "number" ? c : 0), exists: true};
+      }).catch(function(){ return {id: key, count: 0, exists: false}; });
+    }catch(e){ return Promise.resolve({id: key, count: 0, exists: false}); }
+  }
+  var jobs = [];
+  dayIds.forEach(function(id){ jobs.push(readOne(SK_STATS_COLL, skStatsDocId("visits-daily", id), id)); });
+  monIds.forEach(function(id){ jobs.push(readOne(SK_STATS_COLL, skStatsDocId("visits-monthly", id), id)); });
+  jobs.push(readOne(SK_STATS_COLL, "visits-total", "total"));
+  return Promise.all(jobs).then(function(rows){
+    var daily = {}, monthly = {}, total = 0, hasData = false;
+    rows.forEach(function(r, idx){
+      if(r.exists) hasData = true;
+      if(idx < 30) daily[r.id] = r.count;
+      else if(idx < 42) monthly[r.id] = r.count;
+      else total = r.count;
+    });
+    var t = skAdminVisitTotals(daily, monthly, total, nowMs);
+    return {today: t.today, d7: t.d7, d30: t.d30, total: t.total,
+      daily: daily, monthly: monthly, hasData: hasData};
+  }).catch(function(){
+    return {today: 0, d7: 0, d30: 0, total: 0, daily: {}, monthly: {}, hasData: false};
+  });
+}
+/* ---- Ghi lượt truy cập (logVisit) ----
+   Gọi 1 lần mỗi phiên (flag sessionStorage) khi app mở, fire-and-forget:
+   lỗi mạng / function chưa deploy đều bỏ qua, không ảnh hưởng app.
+   Bỏ qua khi tài khoản đang đăng nhập là admin (không tính lượt của admin).
+   URL đã đối chiếu với function đã deploy thật 18/11/2026 (logVisit là
+   onRequest, nhận mọi method — POST không body như dưới đây là hợp lệ). */
+var SK_LOGVISIT_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/logVisit";
+function skLogVisitOnce(){
+  try{ if(window.sessionStorage && sessionStorage.getItem("sk_visit_logged")) return; }catch(e){}
+  var u = null;
+  try{ u = webCurrentUser(); }catch(e){ u = null; }
+  if(u && (u.isAdmin || (typeof SK_ADMIN_UIDS !== "undefined" && SK_ADMIN_UIDS.indexOf(u.uid) >= 0))) return;
+  try{ if(window.sessionStorage) sessionStorage.setItem("sk_visit_logged", "1"); }catch(e){}
+  try{
+    if(typeof fetch === "function"){
+      var p = fetch(SK_LOGVISIT_URL, {method: "POST", mode: "no-cors", keepalive: true});
+      if(p && p.catch) p.catch(function(){});
+    }
+  }catch(e){}
+}
+/* HTML 1 thẻ đăng ký theo kỳ. data-adm-count/data-adm-revenue là số thô. */
+function skAdminPeriodCard(key, label, p){
+  p = p || {count: 0, revenue: 0};
+  return '<div class="stat" data-adm-period="' + key + '" data-adm-count="' + p.count + '" data-adm-revenue="' + p.revenue + '">' +
+    '<b>' + p.count.toLocaleString("vi-VN") + ' đơn</b><span>Doanh thu: ' + skFmtVND(p.revenue) + '</span><small>' + label + ' (giờ JST)</small></div>';
+}
+/* Vẽ biểu đồ cột lượt truy cập (div thuần, không thư viện) theo kỳ đang chọn
+   (SK_ADM.visitRange: "7" | "30" | "12m"). Cột hôm nay tô đậm. */
+function skAdminRenderChart(){
+  var el = document.getElementById("admVisitChart");
+  if(!el) return;
+  var v = SK_ADM.visits;
+  if(!v || !v.hasData){
+    el.innerHTML = '<p class="adm-note" style="margin:0">Chưa có số liệu truy cập — ghi log chưa được bật hoặc chưa có lượt truy cập nào được ghi.</p>';
+    return;
+  }
+  var series = skAdminVisitSeries(v.daily, v.monthly, SK_ADM.visitRange, Date.now());
+  var max = 0;
+  series.forEach(function(p){ if(p.count > max) max = p.count; });
+  if(max <= 0) max = 1;
+  el.innerHTML = series.map(function(p){
+    var h = Math.max(3, Math.round(p.count / max * 100));
+    return '<div class="adm-bar-col" data-adm-bar="' + esc(p.key) + '" data-adm-count="' + p.count + '" data-adm-full="' + esc(p.full) + '" title="' + esc(p.full) + ': ' + p.count.toLocaleString("vi-VN") + ' lượt">' +
+      '<div class="adm-bar-track"><div class="adm-bar' + (p.isToday ? ' adm-bar-today' : '') + '" style="height:' + h + '%"></div></div>' +
+      '<div class="adm-bar-lab">' + esc(p.label) + '</div></div>';
+  }).join("");
 }
 function skAdminFmtDate(v){
   var ms = skAdminTsMs(v);
@@ -10450,19 +10676,43 @@ function skAdminRenderStudents(){
   });
 }
 function skAdminFill(){
-  var st = SK_ADM.stats || {total: 0, year: 0, lifetime: 0, revenue: 0, pending: 0};
+  var st = SK_ADM.stats || {total: 0, year: 0, lifetime: 0, active: 0, revenue: 0, pending: 0,
+    today: {count: 0, revenue: 0}, week: {count: 0, revenue: 0}, month: {count: 0, revenue: 0}};
   var statsEl = document.getElementById("admStats");
   if(statsEl){
     statsEl.innerHTML =
-      '<div class="stat"><b>' + st.total.toLocaleString("vi-VN") + '</b><span>Tổng học viên</span></div>' +
-      '<div class="stat"><b>' + st.year.toLocaleString("vi-VN") + '</b><span>Premium Năm</span></div>' +
-      '<div class="stat"><b>' + st.lifetime.toLocaleString("vi-VN") + '</b><span>Premium Trọn đời</span></div>' +
-      '<div class="stat"><b>' + skFmtVND(st.revenue) + '</b><span>Doanh thu (đơn đã thanh toán)</span></div>' +
-      '<div class="stat"><b>' + st.pending.toLocaleString("vi-VN") + '</b><span>Đơn chờ xử lý</span></div>';
+      '<div class="stat" data-adm-stat="total"><b>' + st.total.toLocaleString("vi-VN") + '</b><span>Tổng thành viên</span></div>' +
+      '<div class="stat" data-adm-stat="active"><b>' + st.active.toLocaleString("vi-VN") + '</b><span>Premium đang hoạt động</span><small>Năm: ' + st.year.toLocaleString("vi-VN") + ' · Trọn đời: ' + st.lifetime.toLocaleString("vi-VN") + '</small></div>' +
+      '<div class="stat" data-adm-stat="revenue"><b>' + skFmtVND(st.revenue) + '</b><span>Doanh thu (đơn đã thanh toán)</span></div>' +
+      '<div class="stat" data-adm-stat="pending"><b>' + st.pending.toLocaleString("vi-VN") + '</b><span>Đơn chờ xử lý</span></div>';
+  }
+  var perEl = document.getElementById("admPeriodStats");
+  if(perEl){
+    perEl.innerHTML =
+      skAdminPeriodCard("today", "Hôm nay", st.today) +
+      skAdminPeriodCard("week", "Tuần này", st.week) +
+      skAdminPeriodCard("month", "Tháng này", st.month);
+  }
+  var visEl = document.getElementById("admVisitStats");
+  var v = SK_ADM.visits || {today: 0, d7: 0, d30: 0, total: 0, hasData: false};
+  if(visEl){
+    visEl.innerHTML =
+      '<div class="stat" data-adm-visit="today"><b>' + v.today.toLocaleString("vi-VN") + '</b><span>Lượt truy cập hôm nay</span></div>' +
+      '<div class="stat" data-adm-visit="d7"><b>' + v.d7.toLocaleString("vi-VN") + '</b><span>7 ngày qua</span></div>' +
+      '<div class="stat" data-adm-visit="d30"><b>' + v.d30.toLocaleString("vi-VN") + '</b><span>30 ngày qua</span></div>' +
+      '<div class="stat" data-adm-visit="total"><b>' + v.total.toLocaleString("vi-VN") + '</b><span>Tổng lượt truy cập</span></div>';
+  }
+  skAdminRenderChart();
+  var sn = document.getElementById("admStudentNote");
+  if(sn){
+    sn.textContent = (st.total > SK_ADM.students.length)
+      ? "Danh sách hiển thị tối đa 1000 học viên — số Premium đang hoạt động cũng tính trên 1000 học viên này (tổng " + st.total.toLocaleString("vi-VN") + " thành viên)."
+      : "";
   }
   var ob = document.getElementById("admOrderBody");
   if(ob){
-    ob.innerHTML = SK_ADM.orders.length ? SK_ADM.orders.map(skAdminOrderRowHtml).join("")
+    var shown = SK_ADM.orders.slice(0, 100);
+    ob.innerHTML = shown.length ? shown.map(skAdminOrderRowHtml).join("")
       : '<tr><td colspan="5" class="adm-note">Chưa có đơn hàng nào.</td></tr>';
   }
   skAdminRenderStudents();
@@ -10472,6 +10722,19 @@ function skAdminRenderShell(){
     "<h1>Bảng điều khiển</h1><p>Thống kê học viên và doanh thu, đơn hàng và cấp Premium tay — chỉ tài khoản quản trị thấy trang này.</p></div>" +
     '<div style="max-width:960px;padding-bottom:36px">' +
     '<div id="admStats" class="stat-grid"></div>' +
+    '<p class="adm-note" style="margin:10px 0 0">Tổng thành viên chỉ đếm tài khoản đã có dữ liệu học tập (doc kanji_progress) — tài khoản mới đăng ký chưa mở app học chưa được đếm.</p>' +
+    '<h2 class="secttl">Đăng ký Premium theo kỳ</h2>' +
+    '<div id="admPeriodStats" class="stat-grid adm-grid-3"></div>' +
+    '<p class="adm-note" style="margin:10px 0 0">Chỉ tính đơn đã thanh toán (status paid). Mốc kỳ theo giờ Nhật (JST): hôm nay từ 00:00 JST, tuần này từ Thứ 2, tháng này từ ngày 1.</p>' +
+    '<h2 class="secttl">Lượt truy cập</h2>' +
+    '<div id="admVisitStats" class="stat-grid"></div>' +
+    '<div class="card" style="margin-top:14px"><div class="adm-range" role="group" aria-label="Khoảng thời gian biểu đồ">' +
+    '<button type="button" class="adm-range-btn on" data-adm-range="7">7 ngày</button>' +
+    '<button type="button" class="adm-range-btn" data-adm-range="30">30 ngày</button>' +
+    '<button type="button" class="adm-range-btn" data-adm-range="12m">12 tháng</button></div>' +
+    '<div id="admVisitChart" class="adm-chart"></div>' +
+    '<p id="admVisitDetail" class="adm-note" style="margin:10px 0 0">Bấm vào một cột để xem số lượt của ngày/tháng đó.</p>' +
+    '<p class="adm-note" style="margin:6px 0 0">Số liệu truy cập chỉ có từ ngày bật ghi log — không có dữ liệu trước đó.</p></div>' +
     '<h2 class="secttl">Cấp Premium tay</h2>' +
     '<div class="card" id="admGrantCard"><p class="adm-note" style="margin:0">Nhập UID học viên (lấy từ danh sách bên dưới — bấm "Cấp Premium" ở từng dòng để điền sẵn), chọn gói rồi bấm Cấp. Gói Năm có hạn 12 tháng, Trọn đời không hết hạn. Cấp cho UID chưa từng mở app cũng được.</p>' +
     '<label class="auth-field">UID học viên<input id="admGrantUid" type="text" autocomplete="off" placeholder="VD: xSqrzV8AKHdi8yNs0mlcw885N492"></label>' +
@@ -10484,10 +10747,25 @@ function skAdminRenderShell(){
     '<p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 100 đơn mới nhất.</p></div>' +
     '<h2 class="secttl">Học viên</h2>' +
     '<div class="card"><label class="auth-field" style="margin-top:0">Tìm kiếm<input id="admSearch" type="text" autocomplete="off" placeholder="Tìm theo tên, email hoặc UID"></label>' +
-    '<div id="admStudentList" style="margin-top:6px"></div></div>' +
+    '<div id="admStudentList" style="margin-top:6px"></div><p class="adm-note" id="admStudentNote" style="margin:10px 0 0"></p></div>' +
     '</div>';
   $app.innerHTML = h;
   document.getElementById("admSearch").addEventListener("input", skAdminRenderStudents);
+  document.querySelectorAll("[data-adm-range]").forEach(function(b){
+    b.addEventListener("click", function(){
+      SK_ADM.visitRange = b.getAttribute("data-adm-range");
+      document.querySelectorAll("[data-adm-range]").forEach(function(x){ x.classList.toggle("on", x === b); });
+      skAdminRenderChart();
+    });
+  });
+  var chartEl = document.getElementById("admVisitChart");
+  if(chartEl) chartEl.addEventListener("click", function(e){
+    var col = e.target.closest ? e.target.closest("[data-adm-bar]") : null;
+    if(!col) return;
+    var detail = document.getElementById("admVisitDetail");
+    if(detail) detail.textContent = col.getAttribute("data-adm-full") + ": " +
+      Number(col.getAttribute("data-adm-count") || 0).toLocaleString("vi-VN") + " lượt truy cập.";
+  });
   var grantBtn = document.getElementById("admGrantBtn");
   var grantMsg = document.getElementById("admGrantMsg");
   grantBtn.addEventListener("click", function(){
@@ -10519,8 +10797,10 @@ function skAdminLoad(){
   var db = skDb();
   if(!db) return Promise.reject(new Error("not-ready"));
   return Promise.all([
-    db.collection("kanji_progress").get(),
-    db.collection("sk_orders").orderBy("createdAt", "desc").limit(100).get()
+    db.collection("kanji_progress").limit(1000).get(),
+    db.collection("sk_orders").orderBy("createdAt", "desc").limit(1000).get(),
+    skAdminCountTotal(db),
+    skAdminLoadVisits(db)
   ]).then(function(res){
     if(!skRenderAlive(rTok)) return;
     var progDocs = [];
@@ -10529,7 +10809,7 @@ function skAdminLoad(){
     res[1].forEach(function(snap){
       var d = snap.data() || {};
       orderDocs.push({id: snap.id, uid: d.uid || "", package: d.package, amount: d.amount, status: d.status,
-        email: d.email || "", displayName: d.displayName || "", createdAt: d.createdAt});
+        email: d.email || "", displayName: d.displayName || "", createdAt: d.createdAt, createdAtMs: d.createdAtMs});
     });
     /* Tên/email học viên lấy từ đơn hàng của họ (doc kanji_progress không lưu
        email) — đơn mới nhất trước nên gặp UID nào trước thì giữ tên đó. */
@@ -10549,7 +10829,8 @@ function skAdminLoad(){
     });
     SK_ADM.students = students;
     SK_ADM.orders = orderDocs;
-    SK_ADM.stats = skAdminStats(progDocs, orderDocs);
+    SK_ADM.stats = skAdminStats(progDocs, orderDocs, res[2], Date.now());
+    SK_ADM.visits = res[3];
     if(!document.getElementById("admStats")) skAdminRenderShell();
     skAdminFill();
   });
@@ -11187,7 +11468,7 @@ function skAuthErrorVI(err){
 }
 function initWebAuth(){
   var auth = skAuth();
-  if(!auth) return;
+  if(!auth){ skLogVisitOnce(); return; } /* không có Auth để biết tài khoản: ghi lượt ẩn danh */
   /* Đăng nhập bằng link email (nếu trang mở lên từ link trong hộp thư):
      hoàn tất ngay nếu cùng trình duyệt, hoặc để lại trạng thái chờ để
      modal đăng nhập hỏi lại email — chạy trước listener để lần bắn đầu
@@ -11215,6 +11496,9 @@ function initWebAuth(){
          đăng nhập sau không gộp nhầm (xem SYNC-DESIGN.md §8). */
       if(window.SKSync) SKSync.clearLocalForLogout();
     }
+    /* Đã biết tài khoản (kể cả chưa đăng nhập): ghi lượt truy cập 1 lần/phiên,
+       bỏ qua admin (xem skLogVisitOnce). */
+    skLogVisitOnce();
     renderHeaderUser();
     /* Premium: đăng nhập thì đi lấy trạng thái (xong sẽ tự vẽ lại trang
        khóa / gỡ ổ khóa); đăng xuất thì khóa lại ngay nếu đang ở nội dung N4+. */
