@@ -17863,8 +17863,10 @@ function furiHTML(text){
   })();
 
   /* ----- Bot bạn học: đua top tuần + chat tuần (client-side, không backend) ----- */
-  /* BOT_BADGE: mặc định TẮT để bot trông như người thật; đổi thành true sẽ hiện nhãn nhỏ "Bot" cạnh tên bot ở Xếp hạng và Phòng chat. */
-  var BOT_BADGE = false;
+  /* BOT_BADGE: BẬT — hiện nhãn nhỏ "Bot" cạnh tên bot ở Xếp hạng và Phòng chat
+     để bot không bị nhầm là học viên thật (dữ liệu bot vẫn giữ nguyên theo
+     quyết định của user 2026-11-16, chỉ thêm nhãn). */
+  var BOT_BADGE = true;
   var BOTS = [
     { id:"bot-01", name:"Mai Phương",  lv:"N3", realm:"Trung sĩ",  rk:4, base:7100, av:"assets/bot-avatars/bot-01.jpg" },
     { id:"bot-02", name:"Đức Anh",     lv:"N2", realm:"Hạ sĩ", rk:3, base:5900, av:"assets/bot-avatars/bot-02.jpg" },
