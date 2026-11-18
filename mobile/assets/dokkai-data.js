@@ -5819,7 +5819,7 @@ window.DOKKAI_PASSAGES = [
    {
     "w": "きっさてん",
     "r": "きっさてん",
-    "hv": "TRÀ ĐIẾM",
+    "hv": "KHIẾT TRÀ ĐIẾM",
     "vi": "Quán trà, quán cà phê"
    },
    {
@@ -6597,7 +6597,7 @@ window.DOKKAI_PASSAGES = [
    {
     "w": "おべんとう",
     "r": "おべんとう",
-    "hv": "BỆN ĐƯƠNG",
+    "hv": "BIỆN ĐƯƠNG",
     "vi": "Cơm hộp"
    },
    {
@@ -7956,6 +7956,12 @@ window.DOKKAI_PASSAGES = [
     "r": "らいねん",
     "hv": "LAI NIÊN",
     "vi": "Năm sau, sang năm"
+   },
+   {
+    "w": "金魚",
+    "r": "きんぎょ",
+    "hv": "KIM NGƯ",
+    "vi": "Cá vàng"
    }
   ],
   "grammar": [
@@ -10700,6 +10706,12 @@ window.DOKKAI_PASSAGES = [
     "r": "ぎゅうにゅう",
     "hv": "NGƯU NHŨ",
     "vi": "Sữa"
+   },
+   {
+    "w": "袋",
+    "r": "ふくろ",
+    "hv": "ĐẠI",
+    "vi": "Túi (đựng đồ)"
    }
   ],
   "grammar": [
@@ -11257,7 +11269,7 @@ window.DOKKAI_PASSAGES = [
       null
      ]
     ],
-    "vi": "Ngày mai tôi cũng sẽ đến thư viện."
+    "vi": "Ngày mai chắc tôi cũng sẽ đến thư viện."
    }
   ],
   "vocab": [
@@ -11311,7 +11323,7 @@ window.DOKKAI_PASSAGES = [
     "lv": "N4",
     "vi": "Chắc là… / hẳn là… (dự đoán)",
     "ex": "あしたも 図書館に 来るはずです。",
-    "exVi": "Ngày mai tôi cũng sẽ đến thư viện."
+    "exVi": "Ngày mai chắc tôi cũng sẽ đến thư viện."
    }
   ],
   "quiz": [
@@ -11904,7 +11916,7 @@ window.DOKKAI_PASSAGES = [
   ],
   "grammar": [
    {
-    "p": "〜た ばかりです / 〜て ばかり",
+    "p": "〜た ばかりです",
     "lv": "N4",
     "vi": "Vừa mới…",
     "ex": "夏休みが 終わったばかりです。",
@@ -11915,7 +11927,7 @@ window.DOKKAI_PASSAGES = [
     "lv": "N4",
     "vi": "…đấy / …mà (giải thích, nhấn mạnh)",
     "ex": "今年の 夏休みは、 とくべつだったんです。",
-    "exVi": "Kỷ niệm hè năm nay thật đặc biệt."
+    "exVi": "Kỳ nghỉ hè năm nay thật đặc biệt."
    }
   ],
   "quiz": [
@@ -12875,7 +12887,7 @@ window.DOKKAI_PASSAGES = [
     "q": "どうして のりと ご飯を 分けて つつんでいますか。",
     "options": [
      "安く 作るためです。",
-     "のりを パリパリに たもつためです。",
+     "のりを パリパリの ままに するためです。",
      "温めやすく するためです。",
      "肉料理と 分けるためです。"
     ],
@@ -15297,6 +15309,12 @@ window.DOKKAI_PASSAGES = [
     "r": "れつ",
     "hv": "LIỆT",
     "vi": "Hàng, dãy (người xếp hàng)"
+   },
+   {
+    "w": "漏れる",
+    "r": "もれる",
+    "hv": "LẬU",
+    "vi": "Lọt ra ngoài, rò rỉ"
    }
   ],
   "grammar": [
@@ -16244,6 +16262,18 @@ window.DOKKAI_PASSAGES = [
     "r": "かんきょう",
     "hv": "HOÀN CẢNH",
     "vi": "Môi trường"
+   },
+   {
+    "w": "散らかす",
+    "r": "ちらかす",
+    "hv": "TÁN",
+    "vi": "Làm bừa bộn, bày bừa ra"
+   },
+   {
+    "w": "つながる",
+    "r": "つながる",
+    "hv": "HỆ",
+    "vi": "Kết nối, dẫn đến"
    }
   ],
   "grammar": [
@@ -17087,6 +17117,12 @@ window.DOKKAI_PASSAGES = [
     "r": "ふえる",
     "hv": "TĂNG",
     "vi": "Tăng lên"
+   },
+   {
+    "w": "実物",
+    "r": "じつぶつ",
+    "hv": "THỰC VẬT",
+    "vi": "Đồ thật, hàng thật"
    }
   ],
   "grammar": [
@@ -17958,6 +17994,12 @@ window.DOKKAI_PASSAGES = [
     "r": "とうばん",
     "hv": "ĐƯƠNG PHIÊN",
     "vi": "Trực nhật"
+   },
+   {
+    "w": "配る",
+    "r": "くばる",
+    "hv": "PHỐI",
+    "vi": "Phân phát, chia"
    }
   ],
   "grammar": [
@@ -19564,6 +19606,12 @@ window.DOKKAI_PASSAGES = [
     "r": "あいさつ",
     "hv": null,
     "vi": "Chào hỏi"
+   },
+   {
+    "w": "改めて",
+    "r": "あらためて",
+    "hv": "CẢI",
+    "vi": "Một lần nữa, lại"
    }
   ],
   "grammar": [
@@ -21811,6 +21859,24 @@ window.DOKKAI_PASSAGES = [
     "r": "でんとうてき",
     "hv": "TRUYỀN THỐNG ĐÍCH",
     "vi": "Mang tính truyền thống"
+   },
+   {
+    "w": "浸かる",
+    "r": "つかる",
+    "hv": "TẨM",
+    "vi": "Ngâm mình (trong bồn tắm)"
+   },
+   {
+    "w": "果たす",
+    "r": "はたす",
+    "hv": "QUẢ",
+    "vi": "Hoàn thành, thực hiện (vai trò...)"
+   },
+   {
+    "w": "多様",
+    "r": "たよう",
+    "hv": "ĐA DẠNG",
+    "vi": "Đa dạng, nhiều loại"
    }
   ],
   "grammar": [
@@ -26858,7 +26924,7 @@ window.DOKKAI_PASSAGES = [
    {
     "w": "はつもうで",
     "r": "はつもうで",
-    "hv": "SƠ CHIẾU",
+    "hv": "SƠ NGHỆ",
     "vi": "Đi lễ đền/chùa đầu năm mới"
    },
    {
@@ -27979,6 +28045,12 @@ window.DOKKAI_PASSAGES = [
     "r": "へんか",
     "hv": "BIẾN HÓA",
     "vi": "Sự thay đổi"
+   },
+   {
+    "w": "苦しめる",
+    "r": "くるしめる",
+    "hv": "KHỔ",
+    "vi": "Làm khổ, gây khổ sở"
    }
   ],
   "grammar": [
@@ -29102,12 +29174,6 @@ window.DOKKAI_PASSAGES = [
     "r": "いぞん",
     "hv": "Y TỒN",
     "vi": "Phụ thuộc, lệ thuộc"
-   },
-   {
-    "w": "減らす",
-    "r": "へらす",
-    "hv": "GIẢM",
-    "vi": "Giảm (cái gì)"
    },
    {
     "w": "人間関係",
@@ -30876,7 +30942,7 @@ window.DOKKAI_PASSAGES = [
      ],
      [
       "思い出",
-      "おもいで"
+      "おもいだ"
      ],
      [
       "します",
@@ -32147,12 +32213,6 @@ window.DOKKAI_PASSAGES = [
     "r": "ちえ",
     "hv": "TRI HUỆ",
     "vi": "Trí tuệ, sự khôn ngoan"
-   },
-   {
-    "w": "教訓",
-    "r": "きょうくん",
-    "hv": "GIÁO HUẤN",
-    "vi": "Bài học (răn dạy)"
    },
    {
     "w": "伝える",
