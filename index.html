@@ -5816,11 +5816,21 @@ function svuOpenMine(id){
 function skSvMineSectionHTML(){
   var u = webCurrentUser();
   var h = '<h2 class="secttl" style="margin-top:8px">Video tôi tạo</h2>';
-  if(!u){
-    return h + '<div class="empty-note" style="margin:0 0 34px">Đăng nhập để xem các video shadowing bạn đã tạo trên app di động — danh sách sẽ tự đồng bộ về đây.</div>';
-  }
+  /* Loi 4 (18/11/2026): danh sach local (sk_sv_mine) hien CA khi chua dang
+     nhap. svuCreate khong yeu cau dang nhap nen nguoi hoc tao duoc video
+     nhung quay lai tab chi thay dong "Dang nhap de xem…" — 0 the, 0 nut
+     xoa; gate 1 video bao "Xoa video da tao roi tao video moi" ma khong
+     xoa duoc (dead-end). Dang nhap chi can cho DONG BO, khong phai de
+     xem/xoa video da luu tren may nay. Nut xoa tai dung svMineDelete san
+     co (xac nhan + tombstone qua SKSync.markVideoRemoved — ghi local khi
+     chua dang nhap, day len server khi dang nhap sau); svRenderMine da
+     gan svBindMineDel khong phu thuoc dang nhap. Markup the + nut xoa
+     giu nguyen tung byte; nhanh da dang nhap giu nguyen hanh vi cu. */
   var mine = svMineLoad();
   if(!mine.length){
+    if(!u){
+      return h + '<div class="empty-note" style="margin:0 0 34px">Chưa có video nào. Dán link YouTube vào ô phía trên để tạo bài shadowing — video lưu trên máy này; đăng nhập để đồng bộ với app di động.</div>';
+    }
     return h + '<div class="empty-note" style="margin:0 0 34px">Chưa có video nào. Dán link YouTube vào ô phía trên để tạo bài shadowing — video tạo trên app di động cũng tự đồng bộ về đây.</div>';
   }
   var cards = mine.map(function(v){
@@ -5832,7 +5842,9 @@ function skSvMineSectionHTML(){
       '<span class="svm-meta">Video của bạn' + (v.lines ? ' · ' + v.lines + ' câu' : '') + '</span></a>' +
       '<button type="button" class="svm-del" data-del-vid="' + esc(v.id) + '" aria-label="Xóa video: ' + esc(v.title || v.id) + '">×</button></div>';
   }).join("");
-  return h + '<div class="svm-grid">' + cards + '</div>';
+  /* Chua dang nhap: ghi ro video chi luu tren may nay + dang nhap de dong bo. */
+  var note = u ? "" : '<div class="empty-note" style="margin:12px 0 34px">Video lưu trên máy này — đăng nhập để đồng bộ với app di động.</div>';
+  return h + '<div class="svm-grid">' + cards + '</div>' + note;
 }
 /* ===== W2-SV2-PLAYER BEGIN (port trinh phat sv2 tu mobile, slice W2) ===== */
 /* ----- svFmt (trich tu mobile, dong 9971-9974) ----- */
