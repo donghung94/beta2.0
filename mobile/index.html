@@ -5500,7 +5500,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      gói "lifetime" có until = null. Premium còn hiệu lực khi until == null
      hoặc until nằm trong tương lai. Cache ở localStorage "sk_premium"
      (kèm uid) để mở app là biết ngay; làm mới lại khi đăng nhập
-     (onAuthStateChanged) và khi mở app có phiên Firebase sẵn.
+     (onAuthStateChanged), khi mở app có phiên Firebase sẵn, và liên tục
+     trong lúc app mở: listener onSnapshot trên doc (webhook SePay kích
+     hoạt Premium ở backend thì app biết ngay) + poll 60s + refresh khi
+     app quay lại màn hình trước / có mạng lại (xem premiumWatchStart,
+     premiumStartFallbackRefresh). Khi Premium đổi trạng thái,
+     premiumApplyLocks() vẽ lại toàn bộ UI khóa, không cần bấm vào mục.
      Đăng nhập trên bản mobile là Firebase Auth thật (khối “Đăng nhập
      Firebase Auth” ở phần Tài khoản, cùng project donghung-3208d với bản
      web): onAuthStateChanged dưới đây tự đọc Premium khi đăng nhập và xóa
@@ -5626,9 +5631,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(isPremium()) return true;
     return showPremiumPrompt();
   }
-  /* Cập nhật ổ khóa trên các nút chọn cấp + vẽ lại danh sách cấp đang mở. */
+  /* Cập nhật ổ khóa trên các nút chọn cấp + vẽ lại TẤT CẢ danh sách có
+     khóa (kể cả overlay đang đóng — lần mở sau khỏi thấy khóa cũ) +
+     dọn cờ xem thử 30s của player đang mở + đóng bảng nâng cấp nếu
+     Premium vừa bật. Chỉ gọi khi trạng thái Premium ĐỔI (xem
+     premiumApplyDocData) nên không vẽ lại thừa mỗi lần poll. */
   function premiumApplyLocks(){
     var prem = isPremium();
+    /* Bảng nâng cấp đang mở mà Premium vừa bật thì tự đóng — user vừa
+       trả tiền xong quay lại app không phải nhìn bảng "Nâng cấp" nữa. */
+    if(prem) closePremiumPrompt();
     ["lvRow", "flashLvRow", "writeLvRow"].forEach(function(rowId){
       document.querySelectorAll("#" + rowId + " .lv").forEach(function(b){
         var lv = b.getAttribute("data-lv") || b.getAttribute("data-flv") || b.getAttribute("data-wlv");
@@ -5646,25 +5658,38 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         });
       }
     }catch(_){}
-    /* Vẽ lại các danh sách cấp đang mở (nếu có) để cập nhật ổ khóa. */
+    /* Vẽ lại mọi danh sách có khóa để cập nhật ổ khóa — KHÔNG chờ
+       overlay mở: danh sách của overlay đang đóng cũng vẽ lại ngay để
+       lần mở sau không còn khóa cũ (ô Luyện nghe ở Home mở overlay mà
+       không vẽ lại, tab JLPT của Đọc hiểu cũng vậy). Các hàm render này
+       vốn đã chạy 1 lần lúc tải trang nên gọi lại là an toàn. */
     try{
-      var vo = document.getElementById("wordsOverlay");
-      if(vo && vo.classList.contains("open") && typeof renderWvLevels === "function") renderWvLevels();
-      var go = document.getElementById("grammarOverlay");
-      if(go && go.classList.contains("open") && typeof renderGrLevels === "function") renderGrLevels();
-      var ko = document.getElementById("kjOverlay");
-      if(ko && ko.classList.contains("open") && typeof renderKjLevels === "function") renderKjLevels();
-      var lo = document.getElementById("listenOverlay");
-      if(lo && lo.classList.contains("open")){
-        if(typeof lsRenderLevels === "function") lsRenderLevels();
-        if(typeof svRenderRows === "function") svRenderRows();
+      if(typeof renderWvLevels === "function") renderWvLevels();
+      if(typeof renderGrLevels === "function") renderGrLevels();
+      if(typeof renderKjLevels === "function") renderKjLevels();
+      if(typeof lsRenderLevels === "function") lsRenderLevels();
+      if(typeof svRenderRows === "function") svRenderRows();
+      if(typeof rdRenderLevels === "function") rdRenderLevels();
+      if(typeof tkRender === "function") tkRender();
+      if(typeof dkRenderLib === "function") dkRenderLib();
+      /* Link bài tiếp trong trang bài đọc (kèm 🔒 nếu bài tiếp khóa). */
+      if(typeof dkRenderNextLink === "function") dkRenderNextLink();
+      /* Trang "Xem thêm" của Shadowing đang mở: vẽ lại theo trạng thái
+         mới để mất/hiện tag "Xem thử 30s" (lúc này listenOverlay đang
+         ẩn nên svRenderRows ở trên không chạm tới nó). */
+      var ao = document.getElementById("svAllOverlay");
+      if(ao && ao.classList.contains("open") && typeof svAllLast !== "undefined" && svAllLast){
+        if(svAllLast.mine){ if(typeof svOpenAllMine === "function") svOpenAllMine(); }
+        else if(typeof svOpenAllSeries === "function") svOpenAllSeries(svAllLast.cat, svAllLast.idx);
       }
-      var ro = document.getElementById("readOverlay");
-      if(ro && ro.classList.contains("open") && typeof rdRenderLevels === "function") rdRenderLevels();
-      var to = document.getElementById("tokuteiOverlay");
-      if(to && to.classList.contains("open") && typeof tkRender === "function") tkRender();
-      var dko = document.getElementById("dkLibOverlay");
-      if(((dko && dko.classList.contains("open")) || (ro && ro.classList.contains("open"))) && typeof dkRenderLib === "function") dkRenderLib();
+      /* Player Shadowing đang mở: tính lại giới hạn xem thử 30s theo
+         trạng thái Premium mới để video đang xem thử được xem trọn vẹn
+         ngay, không phải mở lại bài. */
+      var s2o = document.getElementById("sv2Overlay");
+      if(s2o && s2o.classList.contains("open") && typeof SV2_ID !== "undefined" && SV2_ID && typeof svPreviewOnly === "function"){
+        sv2Preview = svPreviewOnly(SV2_ID);
+        if(!sv2Preview) sv2PreviewDone = false;
+      }
     }catch(_){}
   }
   /* ---------- Đọc Premium từ Firestore ---------- */
@@ -5683,36 +5708,99 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(typeof v.seconds === "number") return v.seconds * 1000;
     return null;
   }
+  /* Áp dụng dữ liệu doc kanji_progress/{uid} (dùng chung cho .get() và
+     onSnapshot): lưu cache mới, và CHỈ vẽ lại UI khi trạng thái active
+     ĐỔI (free → Premium hoặc ngược lại) — poll định kỳ mà vẽ lại hoài
+     thì danh sách đang mở bị reset vị trí cuộn. */
+  function premiumApplyDocData(data){
+    var before = isPremium();
+    var prem = data && data.premium ? data.premium : null;
+    var uid = premiumWatchUid;
+    try{ var u = firebase.auth().currentUser; if(u) uid = u.uid; }catch(_){}
+    if(prem && prem.plan){
+      premiumCacheSave({plan: prem.plan, since: premiumTsToMs(prem.since), until: premiumTsToMs(prem.until), uid: uid, fetchedAt: Date.now()});
+    }else{
+      premiumCacheSave(null);
+    }
+    if(isPremium() !== before) premiumApplyLocks();
+  }
+  /* Đọc lại Premium từ Firestore (đường .get()). Chống gọi dồn 15 giây:
+     focus + visibilitychange hay bắn cùng lúc khi user quay lại app. */
+  var premiumLastFetchMs = 0;
+  /* done: callback chạy sau khi đọc xong (cổng chờ đăng nhập dùng để
+     đánh giá lại gate sau khi có trạng thái Premium mới — giữ từ bản
+     login-optional). Chống dồn 15s CHỈ áp cho lần gọi không có done:
+     lần gọi có done luôn đọc mới để callback không chạy trên cache cũ. */
   function premiumRefresh(done){
     function skPremDone(){ if(typeof done === "function"){ try{ done(); }catch(_){} } }
     try{
+      if(typeof done !== "function" && Date.now() - premiumLastFetchMs < 15000) return;
       var app = premiumFbApp();
       if(!app || !firebase.auth || !firebase.firestore){ skPremDone(); return; }
       var user = firebase.auth().currentUser;
       if(!user){ skPremDone(); return; } /* chưa đăng nhập Firebase: giữ cache, mặc định gói miễn phí */
+      premiumLastFetchMs = Date.now();
       firebase.firestore().collection("kanji_progress").doc(user.uid).get().then(function(snap){
         var data = (snap && snap.exists) ? snap.data() : null;
-        var prem = data && data.premium ? data.premium : null;
-        if(prem && prem.plan){
-          premiumCacheSave({plan: prem.plan, since: premiumTsToMs(prem.since), until: premiumTsToMs(prem.until), uid: user.uid, fetchedAt: Date.now()});
-        }else{
-          premiumCacheSave(null);
-        }
-        premiumApplyLocks();
+        premiumApplyDocData(data);
         skPremDone();
       }).catch(function(){ skPremDone(); /* offline/lỗi đọc: giữ cache cũ */ });
     }catch(_){ skPremDone(); }
   }
-  var premiumSawUser = false;
-  function premiumInitAuth(){
+  /* Listener Firestore cho Premium: webhook SePay kích hoạt Premium ở
+     backend trong khi app đang mở — onSnapshot báo ngay khi doc đổi,
+     không cần đăng nhập lại hay tải lại trang. Lỗi listener thì im lặng
+     (poll dự phòng ở premiumStartFallbackRefresh vẫn chạy). */
+  var premiumUnsub = null;
+  var premiumWatchUid = null;
+  function premiumWatchStart(){
     try{
       var app = premiumFbApp();
+      if(!app || !firebase.auth || !firebase.firestore) return;
+      var user = firebase.auth().currentUser;
+      if(!user) return;
+      if(premiumUnsub && premiumWatchUid === user.uid) return; /* đang nghe rồi */
+      premiumWatchStop();
+      premiumWatchUid = user.uid;
+      premiumUnsub = firebase.firestore().collection("kanji_progress").doc(user.uid)
+        .onSnapshot(function(snap){
+          var data = (snap && snap.exists) ? snap.data() : null;
+          premiumApplyDocData(data);
+        }, function(){ /* lỗi listener: poll dự phòng vẫn chạy */ });
+    }catch(_){}
+  }
+  function premiumWatchStop(){
+    try{ if(premiumUnsub) premiumUnsub(); }catch(_){}
+    premiumUnsub = null;
+    premiumWatchUid = null;
+  }
+  /* Làm mới dự phòng khi listener không báo được (mất mạng rồi có lại,
+     listener rớt): poll 60 giây + mỗi lần app quay lại màn hình trước /
+     có mạng lại — đúng luồng user trả tiền trên web rồi quay lại app. */
+  var premiumFallbackStarted = false;
+  function premiumStartFallbackRefresh(){
+    if(premiumFallbackStarted) return;
+    premiumFallbackStarted = true;
+    try{
+      setInterval(function(){ if(!document.hidden) premiumRefresh(); }, 60000);
+      document.addEventListener("visibilitychange", function(){ if(!document.hidden) premiumRefresh(); });
+      window.addEventListener("focus", function(){ premiumRefresh(); });
+      window.addEventListener("online", function(){ premiumInitAuth(); });
+    }catch(_){}
+  }
+  var premiumSawUser = false;
+  var premiumAuthInitDone = false;
+  function premiumInitAuth(){
+    try{
+      if(premiumAuthInitDone){ premiumRefresh(); premiumWatchStart(); return; }
+      var app = premiumFbApp();
       if(!app || !firebase.auth) return;
+      premiumAuthInitDone = true;
       firebase.auth().onAuthStateChanged(function(user){
-        if(user){ premiumSawUser = true; premiumRefresh(); }
-        else if(premiumSawUser){ premiumSawUser = false; premiumCacheSave(null); premiumApplyLocks(); }
+        if(user){ premiumSawUser = true; premiumRefresh(); premiumWatchStart(); }
+        else if(premiumSawUser){ premiumSawUser = false; premiumWatchStop(); premiumCacheSave(null); premiumApplyLocks(); }
       });
-      if(firebase.auth().currentUser){ premiumSawUser = true; premiumRefresh(); }
+      if(firebase.auth().currentUser){ premiumSawUser = true; premiumRefresh(); premiumWatchStart(); }
     }catch(_){}
   }
   /* Khởi tạo sau khi toàn bộ script đã chạy (SVU_FB_CONFIG, curLevel và
@@ -5720,6 +5808,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      trước setTimeout(renderTests, 0) để kịp đổi cấp mặc định về N5). */
   setTimeout(function(){
     premiumInitAuth();
+    premiumStartFallbackRefresh(); /* poll 60s + refresh khi quay lại app / có mạng */
     /* Trang Thi JLPT mặc định mở N4 — gói miễn phí thì về N5. */
     if(!isPremium() && typeof curLevel !== "undefined" && curLevel !== "N5") curLevel = "N5";
     premiumApplyLocks();
@@ -10472,6 +10561,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       '</span>' +
     '</button>';
   }
+  var svAllLast = null; /* trang "Xem thêm" đang mở: {cat, idx} hoặc {mine:true} — để premiumApplyLocks vẽ lại khi Premium đổi */
   function svOpenAllList(title, videos, isMine){
     document.getElementById("svAllTitle").textContent = title;
     var box = document.getElementById("svAllList");
@@ -10491,9 +10581,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var groups = svGroupByCat(SV_VIDEOS);
     var row = groups[cat] && groups[cat][idx];
     if(!row) return;
+    svAllLast = {cat: cat, idx: idx};
     svOpenAllList(row.series, row.videos);
   }
   function svOpenAllMine(){
+    svAllLast = {mine: true};
     svOpenAllList("Video tôi tạo", svMineLoad().map(svMineToCard), true);
   }
   function svSetTopTab(tab){
