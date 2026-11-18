@@ -103,7 +103,8 @@ window.READ_N4_SHORT = [
       { w: "通います", r: "かよいます", m: "đi lại thường xuyên (học, làm)" },
       { w: "作り方", r: "つくりかた", m: "cách làm" },
       { w: "習います", r: "ならいます", m: "học (từ thầy, lớp học)" },
-      { w: "優しい", r: "やさしい", m: "hiền, dịu dàng, tốt bụng" }
+      { w: "優しい", r: "やさしい", m: "hiền, dịu dàng, tốt bụng" },
+      { w: "週", r: "しゅう", m: "tuần" }
     ]
   },
   {
@@ -174,7 +175,7 @@ window.READ_N4_SHORT = [
       }
     ],
     vocab: [
-      { w: "引っ越します", r: "ひっこします", m: "chuyển nhà" },
+      { w: "引っ越しします", r: "ひっこしします", m: "chuyển nhà" },
       { w: "日当たり", r: "ひあたり", m: "sự đón nắng (của phòng/nhà)" },
       { w: "家賃", r: "やちん", m: "tiền thuê nhà" },
       { w: "生活します", r: "せいかつします", m: "sinh hoạt, sống" },
@@ -203,7 +204,8 @@ window.READ_N4_SHORT = [
       { w: "心配", r: "しんぱい", m: "lo lắng" },
       { w: "連れて行きます", r: "つれていきます", m: "dẫn theo, đưa đi cùng" },
       { w: "調子", r: "ちょうし", m: "tình trạng (sức khỏe, máy móc)" },
-      { w: "薬", r: "くすり", m: "thuốc" }
+      { w: "薬", r: "くすり", m: "thuốc" },
+      { w: "走り回ります", r: "はしりまわります", m: "chạy quanh, chạy khắp nơi" }
     ]
   },
   {
@@ -253,7 +255,8 @@ window.READ_N4_SHORT = [
       { w: "遅れます", r: "おくれます", m: "bị chậm, bị trễ" },
       { w: "間に合います", r: "まにあいます", m: "kịp giờ" },
       { w: "仕方がない", r: "しかたがない", m: "không có cách nào khác, đành vậy" },
-      { w: "急ぎます", r: "いそぎます", m: "vội, gấp" }
+      { w: "急ぎます", r: "いそぎます", m: "vội, gấp" },
+      { w: "迷います", r: "まよいます", m: "lạc đường" }
     ]
   }
 ];

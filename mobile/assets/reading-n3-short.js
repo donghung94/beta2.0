@@ -201,7 +201,8 @@ window.READ_N3_SHORT = [
       { w: "習慣", r: "しゅうかん", m: "tập quán, phong tục" },
       { w: "隣", r: "となり", m: "bên cạnh, nhà bên" },
       { w: "煮物", r: "にもの", m: "món hầm, món ninh" },
-      { w: "持たせます", r: "もたせます", m: "đưa cho mang theo" }
+      { w: "持たせます", r: "もたせます", m: "đưa cho mang theo" },
+      { w: "手作り", r: "てづくり", m: "làm bằng tay, tự làm" }
     ]
   },
   {

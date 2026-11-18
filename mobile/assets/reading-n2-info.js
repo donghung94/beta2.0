@@ -127,7 +127,8 @@ vocab: [
 { w: "接種", r: "せっしゅ", m: "tiêm chủng, chích ngừa"},
 { w: "証明書", r: "しょうめいしょ", m: "giấy chứng nhận"},
 { w: "生後", r: "せいご", m: "sau khi sinh (〜か月: … tháng tuổi)"},
-{ w: "治療中", r: "ちりょうちゅう", m: "đang trong quá trình điều trị"}
+{ w: "治療中", r: "ちりょうちゅう", m: "đang trong quá trình điều trị"},
+{ w: "泊", r: "はく", m: "đêm (đơn vị đếm số đêm nghỉ lại)"}
 ]
 },
   {
@@ -152,7 +153,8 @@ vocab: [
       { w: "抜粋", r: "ばっすい", m: "trích đoạn, phần trích" },
       { w: "違約金", r: "いやくきん", m: "tiền phạt vi phạm hợp đồng" },
       { w: "負います", r: "おいます", m: "gánh chịu, chịu (trách nhiệm, thương tích)" },
-      { w: "給油", r: "きゅうゆ", m: "đổ xăng, tiếp nhiên liệu" }
+      { w: "給油", r: "きゅうゆ", m: "đổ xăng, tiếp nhiên liệu" },
+      { w: "負担", r: "ふたん", m: "gánh nặng; sự gánh chịu (chi phí)" }
     ]
   },
   {

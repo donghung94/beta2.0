@@ -51,7 +51,9 @@ window.READ_N4_MID = [
       { w: "書類", r: "しょるい", m: "giấy tờ, tài liệu" },
       { w: "直します", r: "なおします", m: "sửa, sửa chữa" },
       { w: "新人", r: "しんじん", m: "người mới (vào công ty)" },
-      { w: "後輩", r: "こうはい", m: "hậu bối, đàn em" }
+      { w: "後輩", r: "こうはい", m: "hậu bối, đàn em" },
+      { w: "心配", r: "しんぱい", m: "lo lắng" },
+      { w: "報告します", r: "ほうこくします", m: "báo cáo" }
     ]
   },
   {
@@ -76,7 +78,8 @@ window.READ_N4_MID = [
       { w: "熱", r: "ねつ", m: "sốt; nhiệt" },
       { w: "下がります", r: "さがります", m: "hạ xuống, giảm xuống" },
       { w: "無理をします", r: "むりをします", m: "cố quá sức" },
-      { w: "優しさ", r: "やさしさ", m: "sự dịu dàng, tốt bụng" }
+      { w: "優しさ", r: "やさしさ", m: "sự dịu dàng, tốt bụng" },
+      { w: "お粥", r: "おかゆ", m: "cháo" }
     ]
   },
   {
@@ -126,7 +129,8 @@ window.READ_N4_MID = [
       { w: "興味", r: "きょうみ", m: "hứng thú, quan tâm" },
       { w: "夢", r: "ゆめ", m: "ước mơ; giấc mơ" },
       { w: "試験", r: "しけん", m: "kỳ thi" },
-      { w: "あきらめます", r: "あきらめます", m: "từ bỏ, bỏ cuộc" }
+      { w: "あきらめます", r: "あきらめます", m: "từ bỏ, bỏ cuộc" },
+      { w: "勧めます", r: "すすめます", m: "giới thiệu, khuyên (nên...)" }
     ]
   },
   {
@@ -151,7 +155,8 @@ window.READ_N4_MID = [
       { w: "畑", r: "はたけ", m: "ruộng, nương (trồng rau)" },
       { w: "袋", r: "ふくろ", m: "túi, bao" },
       { w: "遊びに行きます", r: "あそびにいきます", m: "đi chơi (đến nhà ai)" },
-      { w: "なさい", r: "なさい", m: "hãy… (mệnh lệnh nhẹ: 来なさい)" }
+      { w: "なさい", r: "なさい", m: "hãy… (mệnh lệnh nhẹ: 来なさい)" },
+      { w: "手作り", r: "てづくり", m: "làm bằng tay, tự làm" }
     ]
   },
   {
@@ -201,7 +206,8 @@ window.READ_N4_MID = [
       { w: "景色", r: "けしき", m: "phong cảnh, cảnh sắc" },
       { w: "素晴らしい", r: "すばらしい", m: "tuyệt vời" },
       { w: "水族館", r: "すいぞくかん", m: "thủy cung, viện hải dương" },
-      { w: "窓", r: "まど", m: "cửa sổ" }
+      { w: "窓", r: "まど", m: "cửa sổ" },
+      { w: "泊", r: "はく", m: "đêm (đơn vị đếm số đêm nghỉ lại)" }
     ]
   },
   {

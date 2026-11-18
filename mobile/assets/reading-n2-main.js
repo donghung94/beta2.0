@@ -26,7 +26,8 @@ window.READ_N2_MAIN = [
       { w: "慎重", r: "ちんちょう", m: "thận trọng, cẩn trọng" },
       { w: "風土", r: "ふうど", m: "phong thổ; không khí, nếp văn hóa (xã hội)" },
       { w: "むしろ", r: "むしろ", m: "thà… còn hơn, đúng hơn là" },
-      { w: "見守ります", r: "みまもります", m: "dõi theo, trông nom (ủng hộ âm thầm)" }
+      { w: "見守ります", r: "みまもります", m: "dõi theo, trông nom (ủng hộ âm thầm)" },
+      { w: "挑戦", r: "ちょうせん", m: "thử thách, sự thử sức" }
     ]
   },
   {
@@ -76,7 +77,8 @@ window.READ_N2_MAIN = [
       { w: "簡素化", r: "かんそか", m: "đơn giản hóa" },
       { w: "絆", r: "きずな", m: "sợi dây gắn kết, tình gắn bó" },
       { w: "柔軟", r: "じゅうなん", m: "linh hoạt, mềm dẻo" },
-      { w: "凍結", r: "とうけつ", m: "đóng băng (cả nghĩa bóng)" }
+      { w: "凍結", r: "とうけつ", m: "đóng băng (cả nghĩa bóng)" },
+      { w: "負担", r: "ふたん", m: "gánh nặng; sự gánh chịu (chi phí)" }
     ]
   },
   {
@@ -151,7 +153,8 @@ window.READ_N2_MAIN = [
       { w: "言い訳", r: "いいわけ", m: "lời bào chữa, lý do biện minh" },
       { w: "黙々と", r: "もくもくと", m: "âm thầm, lặng lẽ (làm việc)" },
       { w: "力量", r: "りきりょう", m: "năng lực thực sự, sức thực thi" },
-      { w: "一朝一夕", r: "いっちょういっせき", m: "một sớm một chiều (thời gian ngắn)" }
+      { w: "一朝一夕", r: "いっちょういっせき", m: "một sớm một chiều (thời gian ngắn)" },
+      { w: "鍛えます", r: "きたえます", m: "rèn luyện, tôi luyện" }
     ]
   },
   {
@@ -201,7 +204,8 @@ window.READ_N2_MAIN = [
       { w: "陰", r: "かげ", m: "phía sau, mặt khuất （陰で: ở phía sau, âm thầm)" },
       { w: "肩代わり", r: "かたがわり", m: "gánh thay, làm thay (phần việc)" },
       { w: "反面", r: "はんめん", m: "mặt khác, mặt trái" },
-      { w: "あえて", r: "あえて", m: "cố ý, dám (chọn làm)" }
+      { w: "あえて", r: "あえて", m: "cố ý, dám (chọn làm)" },
+      { w: "使いこなします", r: "つかいこなします", m: "sử dụng thành thạo" }
     ]
   },
   {
@@ -226,7 +230,9 @@ window.READ_N2_MAIN = [
       { w: "当たり前", r: "あたりまえ", m: "đương nhiên, lẽ thường" },
       { w: "懐かしい", r: "なつかしい", m: "thân thương, gợi nhớ (quá khứ)" },
       { w: "踏み出します", r: "ふみだします", m: "bước ra, bắt đầu dấn thân" },
-      { w: "支え", r: "ささえ", m: "chỗ dựa, sự nâng đỡ" }
+      { w: "支え", r: "ささえ", m: "chỗ dựa, sự nâng đỡ" },
+      { w: "挑戦", r: "ちょうせん", m: "thử thách, sự thử sức" },
+      { w: "郷土", r: "きょうど", m: "quê hương" }
     ]
   },
   {
@@ -251,7 +257,8 @@ window.READ_N2_MAIN = [
       { w: "ならでは", r: "ならでは", m: "chỉ riêng… mới có （大人ならでは）" },
       { w: "結びつけます", r: "むすびつけます", m: "gắn kết, liên kết với" },
       { w: "学び直し", r: "まなびなおし", m: "học lại, học bổ sung (ở tuổi trưởng thành)" },
-      { w: "財産", r: "ざいさん", m: "tài sản, vốn quý" }
+      { w: "財産", r: "ざいさん", m: "tài sản, vốn quý" },
+      { w: "挑戦", r: "ちょうせん", m: "thử thách, sự thử sức" }
     ]
   }
 ];

@@ -75,7 +75,8 @@ window.READ_N2_SHORT = [
       { w: "客足", r: "きゃくあし", m: "lượng khách đến (lui tới)" },
       { w: "空き店舗", r: "あきてんぽ", m: "mặt bằng cửa hàng đang trống" },
       { w: "客層", r: "きゃくそう", m: "tầng lớp/thành phần khách hàng" },
-      { w: "再生", r: "さいせい", m: "tái sinh, hồi phục, khôi phục" }
+      { w: "再生", r: "さいせい", m: "tái sinh, hồi phục, khôi phục" },
+      { w: "挑戦", r: "ちょうせん", m: "thử thách, sự thử sức" }
     ]
   },
   {

@@ -26,7 +26,8 @@ window.READ_N3_LONG = [
       { w: "木造", r: "もくぞう", m: "làm bằng gỗ (công trình)" },
       { w: "倉庫", r: "そうこ", m: "nhà kho" },
       { w: "体験します", r: "たいけんします", m: "trải nghiệm thực tế" },
-      { w: "願います", r: "ねがいます", m: "mong ước, cầu chúc" }
+      { w: "願います", r: "ねがいます", m: "mong ước, cầu chúc" },
+      { w: "地元", r: "じもと", m: "địa phương, quê nhà" }
     ]
   },
   {
@@ -101,7 +102,8 @@ window.READ_N3_LONG = [
       { w: "店主", r: "てんしゅ", m: "chủ quán, chủ cửa hàng" },
       { w: "常連", r: "じょうれん", m: "khách quen, khách thường xuyên" },
       { w: "残念", r: "ざんねん", m: "tiếc nuối, đáng tiếc" },
-      { w: "励まします", r: "はげまします", m: "động viên, khích lệ" }
+      { w: "励まします", r: "はげまします", m: "động viên, khích lệ" },
+      { w: "元", r: "もと", m: "chỗ, nơi (ở của ai đó)" }
     ]
   },
   {
@@ -126,7 +128,10 @@ window.READ_N3_LONG = [
       { w: "活動", r: "かつどう", m: "hoạt động" },
       { w: "川辺", r: "かわべ", m: "bờ sông, ven sông" },
       { w: "汚れます", r: "よごれます", m: "bị bẩn, bị ô nhiễm" },
-      { w: "全体", r: "ぜんたい", m: "toàn thể, toàn bộ" }
+      { w: "全体", r: "ぜんたい", m: "toàn thể, toàn bộ" },
+      { w: "地元", r: "じもと", m: "địa phương, quê nhà" },
+      { w: "役所", r: "やくしょ", m: "cơ quan hành chính, ủy ban" },
+      { w: "漁師", r: "りょうし", m: "ngư dân" }
     ]
   },
   {
@@ -151,7 +156,8 @@ window.READ_N3_LONG = [
       { w: "不安", r: "ふあん", m: "bất an, lo lắng" },
       { w: "転機", r: "てんき", m: "bước ngoặt, điểm chuyển biến" },
       { w: "自信", r: "じしん", m: "sự tự tin" },
-      { w: "財産", r: "ざいさん", m: "tài sản (cả nghĩa bóng: vốn quý)" }
+      { w: "財産", r: "ざいさん", m: "tài sản (cả nghĩa bóng: vốn quý)" },
+      { w: "受かります", r: "うかります", m: "đỗ (kỳ thi)" }
     ]
   },
   {
@@ -251,7 +257,8 @@ window.READ_N3_LONG = [
       { w: "水揚げ", r: "みずあげ", m: "đánh bắt đưa lên bờ (thủy sản)" },
       { w: "競り", r: "せり", m: "đấu giá (tại chợ)" },
       { w: "見分けます", r: "みわけます", m: "phân biệt, nhận ra (bằng mắt)" },
-      { w: "誇り", r: "ほこり", m: "niềm tự hào" }
+      { w: "誇り", r: "ほこり", m: "niềm tự hào" },
+      { w: "別人", r: "べつじん", m: "người hoàn toàn khác" }
     ]
   }
 ];

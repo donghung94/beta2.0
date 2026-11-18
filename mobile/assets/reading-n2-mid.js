@@ -125,7 +125,8 @@ window.READ_N2_MID = [
       { w: "確保", r: "かくほ", m: "đảm bảo, giữ được (thời gian, nguồn lực)" },
       { w: "寝だめ", r: "ねだめ", m: "ngủ bù, ngủ tích trữ (ngủ liền nhiều để bù)" },
       { w: "崩します", r: "くずします", m: "làm đổ vỡ, phá vỡ (nhịp, cân bằng)" },
-      { w: "逆効果", r: "ぎゃくこうか", m: "hiệu quả ngược, phản tác dụng" }
+      { w: "逆効果", r: "ぎゃくこうか", m: "hiệu quả ngược, phản tác dụng" },
+      { w: "指摘します", r: "してきします", m: "chỉ ra (vấn đề)" }
     ]
   },
   {
@@ -150,7 +151,8 @@ window.READ_N2_MID = [
       { w: "両立", r: "りょうりつ", m: "đứng vững cả hai, cân bằng cả hai" },
       { w: "託児", r: "たくじ", m: "gửi trông trẻ" },
       { w: "育児休業", r: "いくじきゅうぎょう", m: "nghỉ việc để chăm con (chế độ)" },
-      { w: "取得率", r: "しゅとくりつ", m: "tỷ lệ sử dụng/đạt được (chế độ, bằng cấp)" }
+      { w: "取得率", r: "しゅとくりつ", m: "tỷ lệ sử dụng/đạt được (chế độ, bằng cấp)" },
+      { w: "対応", r: "たいおう", m: "ứng phó, đối phó" }
     ]
   },
   {

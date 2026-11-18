@@ -102,7 +102,8 @@ window.READ_N5 = [
       { w: "午後", r: "ごご", m: "buổi chiều" },
       { w: "空", r: "そら", m: "bầu trời" },
       { w: "明日", r: "あした", m: "ngày mai" },
-      { w: "山", r: "やま", m: "núi" }
+      { w: "山", r: "やま", m: "núi" },
+      { w: "楽しみ", r: "たのしみ", m: "niềm vui, điều mong chờ" }
     ]
   },
   {

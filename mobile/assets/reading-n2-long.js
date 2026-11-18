@@ -26,7 +26,8 @@ window.READ_N2_LONG = [
       { w: "あえて", r: "あえて", m: "dám, cố ý (chọn làm điều khác thường)" },
       { w: "打ち込みます", r: "うちこみます", m: "dồn tâm huyết, say mê (công việc)" },
       { w: "婚活", r: "こんかつ", m: "hoạt động tìm bạn đời để kết hôn" },
-      { w: "本来", r: "ほんらい", m: "vốn dĩ, theo lẽ thường" }
+      { w: "本来", r: "ほんらい", m: "vốn dĩ, theo lẽ thường" },
+      { w: "指摘します", r: "してきします", m: "chỉ ra (vấn đề)" }
     ]
   },
   {
@@ -101,7 +102,9 @@ window.READ_N2_LONG = [
       { w: "有給休暇", r: "ゆうきゅうきゅうか", m: "nghỉ phép có lương" },
       { w: "着実に", r: "ちゃくじつに", m: "chắc chắn, từng bước vững vàng" },
       { w: "持ち帰ります", r: "もちかえります", m: "mang về (nhà)" },
-      { w: "実感", r: "じっかん", m: "cảm nhận thực tế" }
+      { w: "実感", r: "じっかん", m: "cảm nhận thực tế" },
+      { w: "指摘します", r: "してきします", m: "chỉ ra (vấn đề)" },
+      { w: "廃止", r: "はいし", m: "bãi bỏ, hủy bỏ" }
     ]
   },
   {
@@ -176,7 +179,8 @@ window.READ_N2_LONG = [
       { w: "歯止め", r: "はどめ", m: "sự hãm lại, ngăn chặn đà (suy giảm)" },
       { w: "税収", r: "ぜいしゅう", m: "thu thuế, nguồn thu từ thuế" },
       { w: "溶け込みます", r: "とけこみます", m: "hòa nhập, hòa mình vào" },
-      { w: "根を下ろします", r: "ねをおろします", m: "bén rễ, định cư ổn định" }
+      { w: "根を下ろします", r: "ねをおろします", m: "bén rễ, định cư ổn định" },
+      { w: "潤います", r: "うるおいます", m: "được hưởng lợi, sung túc lên; ẩm ướt" }
     ]
   },
   {
@@ -201,7 +205,9 @@ window.READ_N2_LONG = [
       { w: "合理的", r: "ごうりてき", m: "hợp lý, có lý tính kinh tế" },
       { w: "捉え直します", r: "とらえなおします", m: "nhìn lại, định nghĩa lại cách nhìn" },
       { w: "負荷", r: "ふか", m: "tải trọng, gánh nặng （環境負荷）" },
-      { w: "価値観", r: "かちかん", m: "quan điểm giá trị, hệ giá trị" }
+      { w: "価値観", r: "かちかん", m: "quan điểm giá trị, hệ giá trị" },
+      { w: "負担", r: "ふたん", m: "gánh nặng; sự gánh chịu (chi phí)" },
+      { w: "廃止", r: "はいし", m: "bãi bỏ, hủy bỏ" }
     ]
   },
   {
@@ -251,7 +257,8 @@ window.READ_N2_LONG = [
       { w: "精密", r: "せいみつ", m: "tinh xảo, chính xác cao" },
       { w: "工程", r: "こうてい", m: "công đoạn, quy trình sản xuất" },
       { w: "捉えます", r: "とらえます", m: "nắm bắt, nhận ra" },
-      { w: "左右します", r: "さゆうします", m: "ảnh hưởng quyết định, chi phối" }
+      { w: "左右します", r: "さゆうします", m: "ảnh hưởng quyết định, chi phối" },
+      { w: "使いこなします", r: "つかいこなします", m: "sử dụng thành thạo" }
     ]
   }
 ];

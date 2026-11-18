@@ -101,7 +101,8 @@ window.READ_N4_INFO = [
       { w: "会費", r: "かいひ", m: "hội phí (đóng định kỳ)" },
       { w: "利用", r: "りよう", m: "sử dụng, tận dụng" },
       { w: "両方", r: "りょうほう", m: "cả hai phía/bên" },
-      { w: "開館", r: "かいかん", m: "mở cửa (cơ sở công cộng)" }
+      { w: "開館", r: "かいかん", m: "mở cửa (cơ sở công cộng)" },
+      { w: "料金", r: "りょうきん", m: "phí, cước" }
     ]
   },
   {
@@ -126,7 +127,8 @@ window.READ_N4_INFO = [
       { w: "利用", r: "りよう", m: "sử dụng (ご利用: việc quý khách sử dụng)" },
       { w: "無料", r: "むりょう", m: "miễn phí" },
       { w: "切符", r: "きっぷ", m: "vé (tàu xe)" },
-      { w: "いつもどおり", r: "いつもどおり", m: "như thường lệ" }
+      { w: "いつもどおり", r: "いつもどおり", m: "như thường lệ" },
+      { w: "皆様", r: "みなさま", m: "quý vị, mọi người" }
     ]
   },
   {
@@ -151,7 +153,12 @@ window.READ_N4_INFO = [
       { w: "出発", r: "しゅっぱつ", m: "xuất phát" },
       { w: "見学します", r: "けんがくします", m: "tham quan học hỏi" },
       { w: "含みます", r: "ふくみます", m: "bao gồm" },
-      { w: "申し込み", r: "もうしこみ", m: "đăng ký, nộp đơn" }
+      { w: "申し込み", r: "もうしこみ", m: "đăng ký, nộp đơn" },
+      { w: "旅", r: "たび", m: "chuyến đi, cuộc hành trình" },
+      { w: "昼食", r: "ちゅうしょく", m: "bữa trưa" },
+      { w: "滝", r: "たき", m: "thác nước" },
+      { w: "料金", r: "りょうきん", m: "phí, cước" },
+      { w: "ホテル代", r: "ホテルだい", m: "tiền khách sạn" }
     ]
   },
   {
@@ -176,7 +183,11 @@ window.READ_N4_INFO = [
       { w: "司書", r: "ししょ", m: "thủ thư, nhân viên thư viện" },
       { w: "絵本", r: "えほん", m: "sách tranh (cho trẻ em)" },
       { w: "対象", r: "たいしょう", m: "đối tượng (áp dụng)" },
-      { w: "ただし", r: "ただし", m: "tuy nhiên, với điều kiện là" }
+      { w: "ただし", r: "ただし", m: "tuy nhiên, với điều kiện là" },
+      { w: "日時", r: "にちじ", m: "ngày giờ" },
+      { w: "内容", r: "ないよう", m: "nội dung" },
+      { w: "参加します", r: "さんかします", m: "tham gia" },
+      { w: "読書会", r: "どくしょかい", m: "câu lạc bộ đọc sách" }
     ]
   },
   {
@@ -226,7 +237,8 @@ window.READ_N4_INFO = [
       { w: "以内", r: "いない", m: "trong vòng, không quá" },
       { w: "事務所", r: "じむしょ", m: "văn phòng (làm việc)" },
       { w: "賞品", r: "しょうひん", m: "giải thưởng, phần thưởng" },
-      { w: "市民会館", r: "しみんかいかん", m: "nhà văn hóa/hội trường của thành phố" }
+      { w: "市民会館", r: "しみんかいかん", m: "nhà văn hóa/hội trường của thành phố" },
+      { w: "日時", r: "にちじ", m: "ngày giờ" }
     ]
   },
   {

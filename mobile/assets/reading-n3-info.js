@@ -26,7 +26,8 @@ vocab: [
 { w: "開館", r: "かいかん", m: "mở cửa (cơ sở công cộng)"},
 { w: "競泳", r: "きょうえい", m: "bơi thi đấu, bơi tốc độ"},
 { w: "貸し出します", r: "かしだします", m: "cho mượn ra (dịch vụ cho thuê)"},
-{ w: "祝日", r: "しゅくじつ", m: "ngày lễ (quốc gia)"}
+{ w: "祝日", r: "しゅくじつ", m: "ngày lễ (quốc gia)"},
+{ w: "ただし", r: "ただし", m: "tuy nhiên, với điều kiện là"}
 ]
 },
 {
@@ -101,7 +102,8 @@ vocab: [
 { w: "更新", r: "こうしん", m: "gia hạn, làm mới"},
 { w: "手数料", r: "てすうりょう", m: "phí thủ tục, lệ phí"},
 { w: "高齢者", r: "こうれいしゃ", m: "người cao tuổi"},
-{ w: "違反", r: "いはん", m: "vi phạm"}
+{ w: "違反", r: "いはん", m: "vi phạm"},
+{ w: "高齢者講習", r: "こうれいしゃこうしゅう", m: "khóa học (lái xe) dành cho người cao tuổi"}
 ]
 },
 {
@@ -126,7 +128,8 @@ vocab: [
 { w: "素泊まり", r: "すどまり", m: "chỉ ở trọ, không kèm bữa ăn"},
 { w: "延ばします", r: "のばします", m: "kéo dài (thời gian)"},
 { w: "全額", r: "ぜんがく", m: "toàn bộ số tiền"},
-{ w: "台数", r: "だいすう", m: "số lượng (xe, máy móc)"}
+{ w: "台数", r: "だいすう", m: "số lượng (xe, máy móc)"},
+{ w: "泊", r: "はく", m: "đêm (đơn vị đếm số đêm nghỉ lại)"}
 ]
 },
 {
@@ -152,7 +155,12 @@ vocab: [
 { w: "含みます", r: "ふくみます", m: "bao gồm"},
 { w: "保護者", r: "ほごしゃ", m: "người giám hộ, phụ huynh"},
 { w: "同意書", r: "どういしょ", m: "giấy đồng ý"},
-{ w: "定員", r: "ていいん", m: "số lượng người tối đa, sức chứa"}
+{ w: "定員", r: "ていいん", m: "số lượng người tối đa, sức chứa"},
+{ w: "日程", r: "にってい", m: "lịch trình, chương trình theo ngày"},
+{ w: "泊", r: "はく", m: "đêm (đơn vị đếm số đêm nghỉ lại)"},
+{ w: "ただし", r: "ただし", m: "tuy nhiên, với điều kiện là"},
+{ w: "締め切り", r: "しめきり", m: "hạn chót, hạn đăng ký"},
+{ w: "運転免許証", r: "うんてんめんきょしょう", m: "bằng lái xe"}
 ]
 },
 {
@@ -177,7 +185,8 @@ vocab: [
 { w: "集積所", r: "しゅうせきじょ", m: "điểm tập kết (rác)"},
 { w: "分別", r: "ぶんべつ", m: "phân loại (rác)"},
 { w: "届け出", r: "とどけで", m: "đơn khai báo, thông báo (cho cơ quan)"},
-{ w: "裏側", r: "うらがわ", m: "phía sau, mặt sau"}
+{ w: "裏側", r: "うらがわ", m: "phía sau, mặt sau"},
+{ w: "皆様", r: "みなさま", m: "quý vị, mọi người"}
 ]
 },
 {
@@ -202,7 +211,8 @@ vocab: [
 { w: "書道", r: "しょどう", m: "thư pháp"},
 { w: "絵画", r: "かいが", m: "hội họa"},
 { w: "初回", r: "しょかい", m: "lần đầu tiên"},
-{ w: "月謝", r: "げっしゃ", m: "học phí theo tháng"}
+{ w: "月謝", r: "げっしゃ", m: "học phí theo tháng"},
+{ w: "英会話", r: "えいかいわ", m: "hội thoại tiếng Anh"}
 ]
 },
 {
@@ -227,7 +237,9 @@ vocab: [
 { w: "総務部", r: "そうむぶ", m: "phòng tổng vụ"},
 { w: "経理部", r: "けいりぶ", m: "phòng kế toán"},
 { w: "予備日", r: "よびび", m: "ngày dự phòng"},
-{ w: "人事部", r: "じんじぶ", m: "phòng nhân sự"}
+{ w: "人事部", r: "じんじぶ", m: "phòng nhân sự"},
+{ w: "健康診断", r: "けんこうしんだん", m: "khám sức khỏe (định kỳ)"},
+{ w: "日程", r: "にってい", m: "lịch trình, chương trình theo ngày"}
 ]
 },
 {
