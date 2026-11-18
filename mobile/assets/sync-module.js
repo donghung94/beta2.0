@@ -8,7 +8,9 @@
  * sk_grammar_learned, sk_sync_uid, sk_sync_wu, sk_sync_words,
  * sk_sync_saved_keys) + A14: sửa lỗi migration/push không lưu meta
  * (xem UNIFY-REPORT.md) + tombstone xóa video tự tạo (doc videos:
- * {mine, removed}, API markVideoRemoved — sao chép pattern savedWords).
+ * {mine, removed}, API markVideoRemoved — sao chép pattern savedWords)
+ * + createdAt (2026-11-18): syncAll tạo doc cha kanji_progress/{uid} kèm
+ * createdAt = serverTimestamp nếu chưa có (xem ensureParentDoc).
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -54,6 +56,7 @@
   var LS_MIGRATED = "sk_sync_migrated"; // đã đồng bộ lần đầu chưa
   var LS_SEEN = "sk_sync_seen";         // docId -> updatedAt đã thấy
   var LS_META = "sk_sync_meta_";        // + docId: bản đóng dấu lần cuối
+  var LS_PARENTDOC = "sk_parentdoc";    // {uid: 1}: doc cha kanji_progress/{uid} đã có
 
   // Nhóm key local thuộc phạm vi đồng bộ — XÓA HẾT khi đăng xuất để tài
   // khoản khác đăng nhập trên cùng máy không gộp nhầm dữ liệu cũ.
@@ -66,7 +69,8 @@
     "sk_plan_done_N2", "sk_plan_done_N1",
     "sk_grammar_learned", "sk_sync_uid", "sk_sync_wu",
     "sk_sync_words", "sk_sync_saved_keys",
-    "sk_sync_baseline", "sk_sync_migrated", "sk_sync_seen"
+    "sk_sync_baseline", "sk_sync_migrated", "sk_sync_seen",
+    "sk_parentdoc"
     // sk_vocab_prog_* (web): xóa bằng cách quét prefix, xem clearLocalForLogout
     // sk_sync_meta_*: xóa bằng cách quét prefix
   ];
@@ -81,6 +85,7 @@
   var unsubListener = null;
   var syncingAll = false;
   var enabled = true; // công tắc đồng bộ (Cài đặt mobile: settings.sync)
+  var parentEnsureTried = {}; // uid -> true: đã thử tạo doc cha trong lần tải trang này
 
   /* ---------------- tiện ích ---------------- */
 
@@ -121,6 +126,45 @@
   }
   function wrap(data) {
     return { v: 1, data: data, updatedAt: now(), updatedBy: getDeviceId() };
+  }
+
+  /* ---------------- doc cha kanji_progress/{uid}: createdAt ----------------
+   * Module chỉ ghi subcollection sync — doc cha KHÔNG tự tồn tại khi ghi
+   * subcollection (Firestore: doc cha vẫn "không tồn tại", count()/list ở
+   * bảng Admin không đếm được). Lần đồng bộ đầu tiên của mỗi tài khoản:
+   * tạo doc cha (chỉ field createdAt = serverTimestamp) NẾU chưa có —
+   * transaction get-then-set để 2 máy cùng tạo không ghi đè nhau.
+   * Best-effort: lỗi (mất mạng, rules chưa cho ghi) thì bỏ qua, không làm
+   * hỏng đồng bộ; lần tải trang sau thử lại (cờ RAM chỉ chặn thử lại trong
+   * cùng 1 lần tải trang; cờ localStorage chỉ ghi khi đã chắc doc có).
+   * Rules hiện tại cho owner create doc cha với mọi field nên giao dịch
+   * này thành công (xem progress-sync/firestore.rules). */
+  function parentFieldValue() {
+    try {
+      if (typeof firebase !== "undefined" && firebase.firestore && firebase.firestore.FieldValue) return firebase.firestore.FieldValue;
+    } catch (_) {}
+    return null;
+  }
+  function parentDocDone(uid) {
+    try { return !!lsGetJSON(LS_PARENTDOC, {})[uid]; } catch (_) { return false; }
+  }
+  function parentDocMark(uid) {
+    try { var m = lsGetJSON(LS_PARENTDOC, {}); m[uid] = 1; lsSetJSON(LS_PARENTDOC, m); } catch (_) {}
+  }
+  function ensureParentDoc(uid) {
+    if (!uid || !cfg || !cfg.db) return Promise.resolve(false);
+    if (parentEnsureTried[uid] || parentDocDone(uid)) return Promise.resolve(false);
+    parentEnsureTried[uid] = true;
+    var fv = parentFieldValue();
+    if (!fv || typeof fv.serverTimestamp !== "function") return Promise.resolve(false);
+    var ref = cfg.db.collection("kanji_progress").doc(uid);
+    return cfg.db.runTransaction(function (tx) {
+      return tx.get(ref).then(function (snap) {
+        if (snap && snap.exists) return false;
+        tx.set(ref, { createdAt: fv.serverTimestamp() });
+        return true;
+      });
+    }).then(function () { parentDocMark(uid); return true; }).catch(function () { return false; });
   }
 
   /* Meta đóng dấu lần cuối của 1 doc (để biết mục nào thay đổi kể từ lần
@@ -1234,6 +1278,7 @@
     if (!uid) return Promise.resolve(false); // chưa đăng nhập: không đồng bộ
     if (syncingAll) return Promise.resolve(false);
     syncingAll = true;
+    ensureParentDoc(uid); // fire-and-forget: tạo doc cha + createdAt nếu chưa có
     return ensureMigrated(uid).then(function (migrated) {
       if (migrated) return true;
       return allDocIds(uid).then(function (ids) { return syncAllIds(uid, ids); });
@@ -1384,7 +1429,8 @@
       stamped: mergeStamped, counterMap: mergeCounterMap, counterTotal: counterTotal
     },
     _stampDiff: stampDiff,
-    _savedWordKey: savedWordKey
+    _savedWordKey: savedWordKey,
+    _ensureParentDoc: ensureParentDoc
   };
 
   global.SKSync = api;
