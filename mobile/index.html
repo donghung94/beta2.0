@@ -2531,6 +2531,12 @@
   .adm-input:focus{outline:none; border-color:var(--red);}
   .stat i{display:block; font-style:normal; font-size:12px; color:var(--ink-2); font-weight:600; margin-top:2px;}
   .adm-note{font-size:12.5px; color:var(--ink-3); line-height:1.55; margin:10px 2px 0;}
+  .stat.clickable{cursor:pointer;}
+  .stat.clickable:active{opacity:.75;}
+  .adm-pager{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center; margin:12px 0 4px;}
+  .adm-pager .admbtn{min-height:36px; padding:0 11px;}
+  .adm-pager .admbtn.on{background:var(--red); border-color:var(--red); color:#fff;}
+  .adm-flash{outline:2px solid var(--red); outline-offset:2px;}
   .adm-chart-toggle{display:flex; gap:8px; margin:12px 0 10px;}
   .adm-chart-toggle .admbtn.on{background:var(--red); border-color:var(--red); color:#fff;}
   .adm-chart{display:flex; align-items:flex-end; gap:3px; height:132px; padding:10px 6px 0; background:var(--card); border:1px solid var(--line); border-radius:14px;}
@@ -4925,7 +4931,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         </div>
         <div id="admMain" hidden>
         <div class="balstrip" style="grid-template-columns:1fr 1fr;">
-          <div class="stat"><b id="admUsers">…</b><span>TỔNG HỌC VIÊN</span></div>
+          <div class="stat clickable" id="admUsersCard" role="button" tabindex="0" aria-label="Tổng học viên — bấm để xem danh sách học viên"><b id="admUsers">…</b><span>TỔNG HỌC VIÊN</span><i>Bấm để xem danh sách</i></div>
           <div class="stat"><b id="admPremYear">…</b><span>PREMIUM NĂM</span></div>
           <div class="stat"><b id="admPremLife">…</b><span>PREMIUM TRỌN ĐỜI</span></div>
           <div class="stat"><b id="admRevenue">…</b><span>DOANH THU (Đ)</span></div>
@@ -4975,9 +4981,10 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
           <input id="admSearch" type="text" placeholder="Tìm học viên theo tên…" autocomplete="off" aria-label="Tìm học viên" />
         </div>
-        <h2 class="secttl">Danh sách học viên</h2>
+        <h2 class="secttl" id="admListTitle">Danh sách học viên</h2>
         <div class="card shopcard" id="admList" style="margin-top:0;"></div>
-        <p id="admFootNote" style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Danh sách hiện tối đa 1.000 học viên và 100 đơn mới nhất.</p>
+        <div class="adm-pager" id="admPager"></div>
+        <p id="admFootNote" style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Danh sách 10 học viên/trang, mới nhất lên đầu (học viên chưa có ngày tạo xếp cuối); hiện tối đa 1.000 học viên và 100 đơn mới nhất.</p>
         <h2 class="secttl">Thư góp ý</h2>
         <div class="card shopcard" id="admInbox" style="margin-top:0;"></div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Góp ý do học viên gửi từ khung góp ý trong màn flashcard (theo từng từ) và mục “Bình luận góp ý sửa lỗi” ở cuối trang danh sách từ — lưu trên máy này kèm từ/bài liên quan và thời gian gửi, mới nhất xếp trên cùng.</p>
@@ -18627,6 +18634,11 @@ function furiHTML(text){
      createdAt giảm dần); thêm thẻ Premium đang hoạt động, đăng ký Premium
      theo kỳ (mốc JST) + doanh thu, và lượt truy cập từ collection sk_stats
      (đọc 30 ngày + 12 tháng + tổng; xem admLoadVisits).
+     V3 (2026-11-19): thẻ Tổng học viên bấm được → cuộn tới danh sách;
+     danh sách phân trang 10/trang, mới nhất lên đầu (createdAt giảm dần,
+     thiếu createdAt xếp cuối, KHÔNG dùng orderBy(createdAt) ở query vì
+     nó loại doc thiếu field); dòng học viên thêm email (join sk_orders)
+     + ngày tạo ("—" khi thiếu).
      "Tổng học viên" chỉ đếm tài khoản ĐÃ CÓ doc kanji_progress (tài khoản
      mới đăng ký chưa có dữ liệu học/Premium thì chưa có doc — không đếm
      được từ client vì không đọc được danh sách Firebase Auth).
@@ -18649,6 +18661,8 @@ function furiHTML(text){
   var admVisitsErr = "";
   var admChartRange = "7"; /* "7" | "30" | "12" */
   var admChartSel = -1; /* index cột đang chọn trong range hiện tại */
+  var ADM_STUDENTS_PER_PAGE = 10; /* số học viên mỗi trang danh sách (V3) */
+  var admStudentsPage = 1; /* trang hiện tại (1-based) của danh sách học viên */
   var adminOverlay = document.getElementById("adminOverlay");
   function admMsg(t){ setTxt("admMsg", t); }
   function admPlanLabel(pkg){ return pkg === "lifetime" ? "Trọn đời" : (pkg === "year" ? "Gói Năm" : "—"); }
@@ -18699,9 +18713,14 @@ function furiHTML(text){
       admStudents = [];
       kp.forEach(function(doc){
         var d = doc.data() || {};
-        admStudents.push({uid: doc.id, name: admStudentName(d), premium: (d.premium && d.premium.plan) ? d.premium : null, bestExam: d.bestExam, examDone: d.examDone});
+        admStudents.push({uid: doc.id, name: admStudentName(d), premium: (d.premium && d.premium.plan) ? d.premium : null, bestExam: d.bestExam, examDone: d.examDone, createdAtMs: premiumTsToMs(d.createdAt), email: ""});
       });
+      /* Mới nhất lên đầu: createdAt giảm dần; doc cũ thiếu createdAt
+         (createdAtMs null → 0) xếp cuối, KHÔNG bị loại. Hòa nhau thì
+         xếp theo tên rồi UID cho ổn định. */
       admStudents.sort(function(a, b){
+        var am = a.createdAtMs || 0, bm = b.createdAtMs || 0;
+        if(bm !== am) return bm - am;
         if(a.name && b.name) return a.name.localeCompare(b.name, "vi");
         if(a.name) return -1;
         if(b.name) return 1;
@@ -18713,6 +18732,14 @@ function furiHTML(text){
         admOrders.push({code: doc.id, uid: d.uid || "", email: d.email || "", displayName: d.displayName || "", package: d.package || "", amount: (typeof d.amount === "number" ? d.amount : 0), status: d.status || "", createdAtMs: premiumTsToMs(d.createdAt)});
       });
       admOrders.sort(function(a, b){ return (b.createdAtMs || 0) - (a.createdAtMs || 0); });
+      /* Join email từ đơn mới nhất của từng UID (đơn đã sắp mới nhất
+         trước — đơn đầu tiên gặp là đơn mới nhất của UID đó). */
+      var emailByUid = {};
+      admOrders.forEach(function(o){
+        if(o.uid && o.email && !emailByUid[o.uid]) emailByUid[o.uid] = o.email;
+      });
+      admStudents.forEach(function(s){ s.email = emailByUid[s.uid] || ""; });
+      admStudentsPage = 1; /* dữ liệu mới → về trang đầu */
       admLoaded = true;
       admLoading = false;
       admLoadErr = "";
@@ -18847,8 +18874,8 @@ function furiHTML(text){
     var fn = document.getElementById("admFootNote");
     if(fn){
       fn.textContent = admTotalUsersMode === "fallback"
-        ? "Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Đếm chính xác tạm thời không dùng được nên tổng đang đếm từ danh sách đã tải (tối đa 1.000 học viên). Danh sách hiện tối đa 1.000 học viên và 100 đơn mới nhất."
-        : "Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Danh sách hiện tối đa 1.000 học viên và 100 đơn mới nhất.";
+        ? "Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Đếm chính xác tạm thời không dùng được nên tổng đang đếm từ danh sách đã tải (tối đa 1.000 học viên). Danh sách 10 học viên/trang, mới nhất lên đầu (học viên chưa có ngày tạo xếp cuối); hiện tối đa 1.000 học viên và 100 đơn mới nhất."
+        : "Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Danh sách 10 học viên/trang, mới nhất lên đầu (học viên chưa có ngày tạo xếp cuối); hiện tối đa 1.000 học viên và 100 đơn mới nhất.";
     }
   }
   /* ---------- Mốc thời gian JST (Asia/Tokyo, UTC+9, không DST) ----------
@@ -19070,6 +19097,8 @@ function furiHTML(text){
     var q = norm(document.getElementById("admSearch").value || "").trim();
     var list = document.getElementById("admList");
     list.innerHTML = "";
+    var pager0 = document.getElementById("admPager");
+    if(pager0) pager0.innerHTML = ""; /* xóa pager cũ khi đang tải/lỗi */
     if(admLoading){
       list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải danh sách học viên…</p>';
       renderAdminInbox();
@@ -19082,10 +19111,17 @@ function furiHTML(text){
       renderAdminReports();
       return;
     }
-    var shown = 0;
-    admStudents.forEach(function(s){
-      if(q && norm(s.name + " " + s.uid).indexOf(q) < 0) return;
-      shown++;
+    /* Lọc theo từ khóa rồi phân trang phía client (10/trang): danh sách đã
+       sắp createdAt giảm dần ở admLoadDashboard, thiếu createdAt xếp cuối. */
+    var filtered = admStudents.filter(function(s){
+      return !q || norm(s.name + " " + s.uid + " " + (s.email || "")).indexOf(q) >= 0;
+    });
+    var totalPages = Math.max(1, Math.ceil(filtered.length / ADM_STUDENTS_PER_PAGE));
+    if(admStudentsPage > totalPages) admStudentsPage = totalPages;
+    if(admStudentsPage < 1) admStudentsPage = 1;
+    var pageStart = (admStudentsPage - 1) * ADM_STUDENTS_PER_PAGE;
+    var pageItems = filtered.slice(pageStart, pageStart + ADM_STUDENTS_PER_PAGE);
+    pageItems.forEach(function(s){
       var badge;
       if(s.premium && premiumIsActive(s.premium)){
         badge = '<span class="badge">' + esc(s.premium.plan === "lifetime" ? "Trọn đời" : "Gói Năm") + (s.premium.plan === "year" && s.premium.until ? " · hết hạn " + esc(admFmtDate(premiumTsToMs(s.premium.until))) : "") + '</span>';
@@ -19095,20 +19131,24 @@ function furiHTML(text){
         badge = '<span class="badge todo">Miễn phí</span>';
       }
       var bits = ["UID " + admShortUid(s.uid)];
+      if(s.email) bits.push(s.email);
       if(s.examDone !== undefined && s.examDone !== null) bits.push("Đã thi " + s.examDone + " đề");
       if(s.bestExam !== undefined && s.bestExam !== null) bits.push("Điểm cao nhất " + s.bestExam);
+      bits.push("Ngày tạo " + admFmtDate(s.createdAtMs)); /* thiếu createdAt → "Ngày tạo —" */
       var av = ((s.name || s.uid || "?").charAt(0) || "?").toUpperCase();
       var row = document.createElement("div");
       row.className = "sturow";
+      row.setAttribute("data-uid", s.uid);
       row.innerHTML = '<div class="stu-top"><span class="stu-av">' + esc(av) + '</span>' +
         '<span class="stu-main"><b>' + esc(s.name || admShortUid(s.uid)) + '</b>' +
         '<span>' + esc(bits.join(" · ")) + '</span></span>' + badge + '</div>' +
         '<div class="stu-actions"><button class="admbtn" data-admgrant="' + esc(s.uid) + '">Cấp Premium</button></div>';
       list.appendChild(row);
     });
-    if(!shown){
+    if(!filtered.length){
       list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + (admStudents.length ? "Không thấy học viên nào khớp với từ khóa." : "Chưa có tài khoản học viên nào có dữ liệu.") + '</p>';
     }
+    renderAdmPager(filtered.length, totalPages);
     list.querySelectorAll("[data-admgrant]").forEach(function(b){
       b.addEventListener("click", function(){
         var uid = b.getAttribute("data-admgrant");
@@ -19121,6 +19161,70 @@ function furiHTML(text){
     });
     renderAdminInbox();
     renderAdminReports();
+  }
+  /* ---------- Phân trang danh sách học viên (V3, 2026-11-19) ----------
+     Phân trang phía client trên admStudents đã fetch (tối đa 1.000):
+     KHÔNG dùng orderBy(createdAt) ở Firestore — query đó loại doc thiếu
+     field createdAt. Danh sách số trang hiển thị dạng cửa sổ: đủ trang
+     khi ít (≤7), còn nhiều thì 1 … k-2 k-1 k k+1 k+2 … N. */
+  function admPageList(total, cur){
+    if(total <= 7){ var all = []; for(var i = 1; i <= total; i++) all.push(i); return all; }
+    var pages = [1];
+    var lo = Math.max(2, cur - 2), hi = Math.min(total - 1, cur + 2);
+    if(lo > 2) pages.push("…");
+    for(var p = lo; p <= hi; p++) pages.push(p);
+    if(hi < total - 1) pages.push("…");
+    pages.push(total);
+    return pages;
+  }
+  function admGotoStudentsPage(n){
+    admStudentsPage = n;
+    renderAdmin();
+    var t = document.getElementById("admListTitle");
+    if(t && t.scrollIntoView) t.scrollIntoView({behavior: "smooth", block: "start"});
+  }
+  function renderAdmPager(totalCount, totalPages){
+    var pager = document.getElementById("admPager");
+    if(!pager) return;
+    pager.innerHTML = "";
+    if(!totalCount) return; /* danh sách trống: không hiện phân trang */
+    function mkBtn(label, page, dis, on){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "admbtn" + (on ? " on" : "");
+      b.textContent = label;
+      if(dis) b.disabled = true;
+      if(page != null) b.setAttribute("data-admpage", String(page));
+      if(!dis) b.addEventListener("click", function(){ admGotoStudentsPage(page); });
+      return b;
+    }
+    pager.appendChild(mkBtn("‹ Trước", admStudentsPage - 1, admStudentsPage <= 1, false));
+    admPageList(totalPages, admStudentsPage).forEach(function(p){
+      if(p === "…"){
+        var gap = document.createElement("span");
+        gap.textContent = "…";
+        gap.style.cssText = "font-size:13px; color:var(--ink-3); padding:0 2px;";
+        pager.appendChild(gap);
+      }else{
+        pager.appendChild(mkBtn(String(p), p, false, p === admStudentsPage));
+      }
+    });
+    pager.appendChild(mkBtn("Sau ›", admStudentsPage + 1, admStudentsPage >= totalPages, false));
+    var info = document.createElement("span");
+    info.id = "admPagerInfo";
+    info.className = "adm-note";
+    info.style.cssText = "width:100%; text-align:center; margin:2px 0 0;";
+    info.textContent = "Trang " + admStudentsPage + "/" + totalPages + " · " + fmtN(totalCount) + " học viên";
+    pager.appendChild(info);
+  }
+  function admOpenStudentsList(){
+    var t = document.getElementById("admListTitle");
+    if(t && t.scrollIntoView) t.scrollIntoView({behavior: "smooth", block: "start"});
+    var box = document.getElementById("admList");
+    if(box){
+      box.classList.add("adm-flash");
+      setTimeout(function(){ box.classList.remove("adm-flash"); }, 1200);
+    }
   }
   function admGrantPremium(){
     var inp = document.getElementById("admGrantUid");
@@ -19215,7 +19319,16 @@ function furiHTML(text){
     if(isAdminAccount) admLoadDashboard();
     showOv(adminOverlay);
   }
-  document.getElementById("admSearch").addEventListener("input", renderAdmin);
+  document.getElementById("admSearch").addEventListener("input", function(){ admStudentsPage = 1; renderAdmin(); });
+  (function(){
+    var card = document.getElementById("admUsersCard");
+    if(card){
+      card.addEventListener("click", admOpenStudentsList);
+      card.addEventListener("keydown", function(ev){
+        if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); admOpenStudentsList(); }
+      });
+    }
+  })();
   document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
   document.getElementById("admGrantBtn").addEventListener("click", admGrantPremium);
