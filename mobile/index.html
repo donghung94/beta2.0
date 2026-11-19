@@ -6825,6 +6825,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       closeExam(); closeKanji(); stopDTimer(); closeSheet();
       apHalt(null); /* dừng tự động phát flashcard từ vựng nếu đang phát */
       if(typeof dkStopAudio === "function") dkStopAudio(); /* dừng đọc Đọc hiểu AI nếu đang đọc */
+      lsShadowEntry = false; /* Rời trang bằng thanh tab: hủy entry Shadowing (overlay bị ẩn mà không qua nút đóng). */
       document.querySelectorAll(".overlay.front").forEach(function(o){ hideOv(o); });
       goTab(b.dataset.tab);
     });
@@ -10278,7 +10279,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     shIdx = (shIdx + 1) % SHADOW.length; shRender();
     shStatus("Đã chuyển câu. Nghe câu mẫu rồi ghi âm nhắc lại nhé.");
   });
-  document.getElementById("utilShadow").addEventListener("click", function(){ shRender(); showOv(shadowOverlay); });
+  document.getElementById("utilShadow").addEventListener("click", function(){ lsShadowEntry = true; lsRenderLevels(); showOv(listenOverlay); });
   document.getElementById("closeShadow").addEventListener("click", function(){
     if(shRecorder && shRecorder.state === "recording") shRecorder.stop();
     if(shSR){ scAbort(shSR); shSR = null; }
@@ -10307,6 +10308,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var LS_COUNTS = {N5: 24, N4: 28, N3: 28, N2: 32, N1: 37};
   var LS_TYPES = {1:"Dạng 1 · Chọn hình", 2:"Dạng 2 · Chọn đáp án", 3:"Dạng 3 · Chọn lời đáp", 4:"Dạng 4 · Chọn câu trả lời", 5:"Dạng 5 · Thảo luận"};
   var lsLevel = null; /* Chưa chọn cấp nào khi mới mở trang — các ô N5–N1 đều trắng, bấm vào ô nào ô đó mới đỏ. */
+  var lsShadowEntry = false; /* Vào trang chọn cấp từ ô Shadowing ở Home: chọn cấp xong tự cuộn tới mục Shadowing của cấp đó. */
   var lsData = {};       /* cấp -> mảng hội thoại (sau khi nạp) */
   var lsLoad = {};       /* cấp -> {state: 0 chưa nạp · 1 đang nạp · 2 xong · 3 lỗi, queue: []} */
   var lsAnswered = {};   /* khóa "N4:3" -> đáp án đã chọn trong phiên */
@@ -10417,6 +10419,19 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           lsLevel = lv;
           lsRenderLevel();
           hideOv(listenOverlay); showOv(lsN5Overlay);
+          if(lsShadowEntry){
+            lsShadowEntry = false;
+            /* Vào từ ô Shadowing ở Home: cuộn khung chi tiết tới mục
+               Shadowing của cấp — cùng pattern màn luyện viết (không dùng
+               scrollIntoView vì nó cuộn cả trang ngoài). */
+            var shTitle = document.getElementById("lsShadowSecTitle");
+            var shBody = shTitle ? shTitle.closest(".detailbody") : null;
+            if(shTitle && shBody){
+              var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              var top = shTitle.getBoundingClientRect().top - shBody.getBoundingClientRect().top + shBody.scrollTop - 8;
+              shBody.scrollTo({ top: top, behavior: reduce ? "auto" : "smooth" });
+            }
+          }
         });
       });
       box.appendChild(b);
@@ -10684,7 +10699,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   document.getElementById("closeLsN5").addEventListener("click", function(){ hideOv(lsN5Overlay); lsRenderLevels(); showOv(listenOverlay); });
 
-  document.getElementById("closeListen").addEventListener("click", function(){ hideOv(listenOverlay); });
+  document.getElementById("closeListen").addEventListener("click", function(){ lsShadowEntry = false; hideOv(listenOverlay); });
   document.getElementById("closeRead").addEventListener("click", function(){ hideOv(readOverlay); });
   lsRenderLevels();
 
@@ -17354,7 +17369,7 @@ function furiHTML(text){
       else if(a === "vocab") openWords();
       else if(a === "grammar") openGrammar();
       else if(a === "jlpt") goTab("jlpt");
-      else if(a === "listen") showOv(document.getElementById("listenOverlay"));
+      else if(a === "listen"){ lsShadowEntry = false; showOv(document.getElementById("listenOverlay")); }
       else if(a === "read") rdOpenPage();
       else if(a === "tokutei") openTokutei();
       else if(a === "review" || a === "flash") goTab("review");
@@ -22601,11 +22616,11 @@ function furiHTML(text){
       actions:[{label:"Vẽ kanji", action:"draw"},{label:"Luyện viết", action:"write"},{label:"Bảng kana", action:"kana"}] },
     { id:"shadow", label:"Shadowing luyện thế nào?",
       keywords:["shadowing","noi duoi","ghi am","luyen noi","phat am"],
-      answer:"Có 2 chỗ luyện Shadowing:\n\n• Nhanh nhất: hàng tiện ích đầu Home → “Shadowing” — 8 câu mẫu kiểu Minna: nghe câu mẫu → nghe chậm → “Ghi âm nhắc lại” (nói đuổi theo ngay) → “Nghe giọng mình” để so sánh với câu mẫu.\n• Theo cấp: Mục học → Luyện nghe → chọn cấp → mục Shadowing của cấp đó: luyện từng câu trong chính các hội thoại Part 3, nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy (nghe / nghe chậm / ghi âm tối đa 30 giây / nghe lại).\n\nLần đầu ghi âm, trình duyệt sẽ hỏi quyền micro — bấm Cho phép thì mới ghi được. Nếu không nghe thấy câu mẫu, kiểm tra mục Âm thanh trong tab Cài đặt.",
+      answer:"Ô Shadowing ở hàng tiện ích đầu Home mở mục Shadowing đầy đủ: chọn cấp N5–N1 → shadowing theo từng hội thoại Part 3 của cấp đó — nghe cả hội thoại bằng giọng đã duyệt, rồi luyện từng câu bằng giọng máy: nghe / nghe chậm / ghi âm tối đa 30 giây / nghe lại để so sánh với câu mẫu.\n\n8 câu mẫu Minna vẫn còn ở cuối trang N5 (nút “8 câu Minna”).\n\nLần đầu ghi âm, trình duyệt sẽ hỏi quyền micro — bấm Cho phép thì mới ghi được. Nếu không nghe thấy câu mẫu, kiểm tra mục Âm thanh trong tab Cài đặt.",
       actions:[{label:"Mở Shadowing", action:"shadow"},{label:"Mở Luyện nghe", action:"listen"}] },
     { id:"flash", label:"Flashcard ôn ở đâu?",
       keywords:["flashcard","on tap","the ghi nho","da thuoc","chua thuoc","on the"],
-      answer:"Ôn flashcard có 2 đường:\n\n• Ôn kanji theo bài: hàng tiện ích đầu Home → “Flashcard” (hoặc nhiệm vụ “Ôn thẻ đến hạn”) → chọn cấp N5–N1 → chọn bài (12 chữ/bài) → bấm vào thẻ để lật xem cách đọc + nghĩa, rồi bấm “Đã thuộc” hoặc “Chưa thuộc”. Ôn xong bài là hoàn thành nhiệm vụ ôn thẻ của ngày.\n• Ôn từ vựng theo bài: mở Từ vựng → cấp → bài → trang danh sách từ → nút “Flashcard” đỏ ở góc phải trên.\n\nKhu “Sắp đến hạn” ở trang Ôn tập liệt kê các chữ sắp quên để bạn ôn lại trước.\n\nShadowing (luyện nói đuổi): hàng tiện ích đầu Home → “Shadowing” để luyện 8 câu Minna (nghe mẫu → ghi âm nhắc lại tối đa 30 giây → nghe lại so sánh), hoặc vào Luyện nghe → chọn cấp để shadowing theo từng hội thoại Part 3 và xem video phụ đề chạy.",
+      answer:"Ôn flashcard có 2 đường:\n\n• Ôn kanji theo bài: hàng tiện ích đầu Home → “Flashcard” (hoặc nhiệm vụ “Ôn thẻ đến hạn”) → chọn cấp N5–N1 → chọn bài (12 chữ/bài) → bấm vào thẻ để lật xem cách đọc + nghĩa, rồi bấm “Đã thuộc” hoặc “Chưa thuộc”. Ôn xong bài là hoàn thành nhiệm vụ ôn thẻ của ngày.\n• Ôn từ vựng theo bài: mở Từ vựng → cấp → bài → trang danh sách từ → nút “Flashcard” đỏ ở góc phải trên.\n\nKhu “Sắp đến hạn” ở trang Ôn tập liệt kê các chữ sắp quên để bạn ôn lại trước.\n\nShadowing (luyện nói đuổi): hàng tiện ích đầu Home → “Shadowing” mở mục Shadowing đầy đủ — chọn cấp N5–N1 rồi shadowing theo từng hội thoại Part 3 (nghe mẫu → nghe chậm → ghi âm nhắc lại tối đa 30 giây → nghe lại so sánh); 8 câu Minna vẫn còn ở cuối trang N5. Vào Luyện nghe → chọn cấp cũng tới được mục này và xem video phụ đề chạy.",
       actions:[{label:"Mở Flashcard", action:"flash"},{label:"Mở Shadowing", action:"shadow"}] },
     { id:"path", label:"Lộ trình, nhiệm vụ, EXP là gì?",
       keywords:["lo trinh","khai trinh do","nhiem vu","exp","cap do","streak","thang cap","chinh tuyen"],
