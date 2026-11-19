@@ -267,6 +267,15 @@ section.blk{padding:34px 0 6px}
 .adm-bar-col:hover .adm-bar{opacity:.75}
 .adm-bar-today{opacity:1 !important}
 .adm-bar-lab{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;white-space:nowrap;overflow:hidden}
+.stat-click{cursor:pointer}
+.stat-click:hover{border-color:var(--red)}
+.stat-click:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.adm-pager{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.adm-page-btn{font:inherit;font-size:13.5px;font-weight:700;padding:6px 12px;border-radius:8px;border:1.5px solid var(--line-strong);background:var(--card);color:var(--ink);cursor:pointer}
+.adm-page-btn.on{background:var(--red);border-color:var(--red);color:#fff}
+.adm-page-btn:disabled{opacity:.45;cursor:default}
+.adm-page-gap{color:var(--muted);font-weight:700;padding:0 2px}
+.adm-pager-label{font-size:13px;color:var(--muted);margin-left:4px}
 .auth-field select{display:block;width:100%;margin-top:6px;font:inherit;font-size:14.5px;font-weight:400;padding:11px 12px;border:1.5px solid var(--line-strong);border-radius:10px;background:#fff;color:var(--ink)}
 @media (max-width:640px){ .adm-row{flex-direction:column} .adm-row .btn{align-self:flex-start} }
 
@@ -11005,11 +11014,14 @@ function renderPrivacyPage(){
    - sk_stats: lượt truy cập (do function logVisit ghi; doc id
      visits-daily-{YYYY-MM-DD} / visits-monthly-{YYYY-MM} / visits-total).
    - sk_reports: báo lỗi câu hỏi do học viên gửi (mới nhất trước, tối đa 50).
+   - Danh sách học viên: phân trang 10/trang phía client, mới nhất trước
+     (createdAt giảm dần); doc cũ thiếu createdAt vẫn hiện, xếp cuối.
    Rules (deploy riêng): admin được đọc các collection trên và ghi CHỈ field
    premium của kanji_progress.
    Không có Tặng Xu / Khóa tài khoản: bản mobile chỉ là dữ liệu mẫu local,
    app chưa có cơ chế thật cho 2 việc đó. */
-var SK_ADM = {students: [], orders: [], reports: [], stats: null, visits: null, visitRange: "7"};
+var SK_ADM = {students: [], orders: [], reports: [], stats: null, visits: null, visitRange: "7", stuPage: 1};
+var SK_ADM_PAGE_SIZE = 10; /* so hoc vien moi trang danh sach admin */
 function skAdminTsMs(v){
   if(v == null) return null;
   if(typeof v === "number") return v < 1e12 ? v * 1000 : v;
@@ -11292,9 +11304,69 @@ function skAdminStudentRowHtml(s){
   var badge = !info.active ? "<span class=\"adm-badge adm-free\">Miễn phí</span>"
     : info.plan === "year" ? "<span class=\"adm-badge adm-year\">Năm" + (info.untilMs ? " đến " + esc(skAdminFmtDate(info.untilMs)) : "") + "</span>"
     : "<span class=\"adm-badge adm-life\">Trọn đời</span>";
-  return "<div class=\"adm-row\"><div><b>" + esc(s.name || "—") + "</b> " + badge +
-    "<div class=\"adm-uid\">" + (s.email ? esc(s.email) + "<br>" : "") + esc(s.uid) + "</div></div>" +
+  return "<div class=\"adm-row\" data-adm-uid=\"" + esc(s.uid) + "\"><div><b>" + esc(s.name || "—") + "</b> " + badge +
+    "<div class=\"adm-uid\">" + (s.email ? esc(s.email) + "<br>" : "") + esc(s.uid) + "<br>Ngày tạo: " + esc(skAdminFmtDate(s.createdAt)) + "</div></div>" +
     "<button class=\"btn sm ghost\" type=\"button\" data-adm-grant=\"" + esc(s.uid) + "\">Cấp Premium</button></div>";
+}
+/* ---- Phân trang danh sách học viên (10/trang, mới nhất trước) ---- */
+/* Sắp xếp học viên: mới nhất trước (createdAt giảm dần); doc cũ thiếu
+   createdAt vẫn hiện, xếp cuối; hòa thì theo UID để ổn định. (Hàm thuần.) */
+function skAdminSortStudents(list){
+  return (list || []).slice().sort(function(a, b){
+    var am = skAdminTsMs(a.createdAt), bm = skAdminTsMs(b.createdAt);
+    if(am == null && bm == null) return a.uid < b.uid ? -1 : (a.uid > b.uid ? 1 : 0);
+    if(am == null) return 1;
+    if(bm == null) return -1;
+    if(bm !== am) return bm - am;
+    return a.uid < b.uid ? -1 : (a.uid > b.uid ? 1 : 0);
+  });
+}
+/* Số trang cho n dòng, mỗi trang SK_ADM_PAGE_SIZE dòng. (Hàm thuần.) */
+function skAdminPageCount(n){
+  return Math.max(1, Math.ceil((n || 0) / SK_ADM_PAGE_SIZE));
+}
+/* Các số trang hiển thị: ≤7 trang thì hiện đủ; nhiều hơn thì cửa sổ
+   1 … (trang-2..trang+2) … N. Trả về mảng số và chuỗi "…". (Hàm thuần.) */
+function skAdminPageList(page, totalPages){
+  var all = [];
+  if(totalPages <= 7){
+    for(var i = 1; i <= totalPages; i++) all.push(i);
+    return all;
+  }
+  var keep = {};
+  keep[1] = 1;
+  keep[totalPages] = 1;
+  var d;
+  for(d = -2; d <= 2; d++){
+    var p = page + d;
+    if(p >= 1 && p <= totalPages) keep[p] = 1;
+  }
+  var nums = Object.keys(keep).map(function(k){ return parseInt(k, 10); });
+  nums.sort(function(a, b){ return a - b; });
+  var prev = 0;
+  nums.forEach(function(n){
+    if(prev && n - prev > 1) all.push("…");
+    all.push(n);
+    prev = n;
+  });
+  return all;
+}
+/* Chuyển tới trang p (kẹp trong [1, số trang] khi render). */
+function skAdminGotoPage(p){
+  SK_ADM.stuPage = p;
+  skAdminRenderStudents();
+}
+/* Bấm thẻ "Tổng thành viên": về trang 1 danh sách học viên (xóa bộ lọc
+   tìm kiếm), cuộn tới mục Học viên, focus ô tìm kiếm. Dùng lại mục quản
+   lý học viên hiện có — không làm màn riêng. */
+function skAdminOpenStudents(){
+  SK_ADM.stuPage = 1;
+  var q = document.getElementById("admSearch");
+  if(q) q.value = "";
+  skAdminRenderStudents();
+  var card = document.getElementById("admStudentCard");
+  if(card) card.scrollIntoView({behavior: "smooth", block: "start"});
+  if(q) q.focus({preventScroll: true});
 }
 function skAdminRenderStudents(){
   var list = document.getElementById("admStudentList");
@@ -11306,8 +11378,14 @@ function skAdminRenderStudents(){
       (s.name || "").toLowerCase().indexOf(q) >= 0 ||
       (s.email || "").toLowerCase().indexOf(q) >= 0;
   });
-  list.innerHTML = rows.length ? rows.map(skAdminStudentRowHtml).join("")
-    : "<p class=\"adm-note\">Không có học viên nào khớp.</p>";
+  var totalPages = skAdminPageCount(rows.length);
+  if(SK_ADM.stuPage > totalPages) SK_ADM.stuPage = totalPages;
+  if(SK_ADM.stuPage < 1) SK_ADM.stuPage = 1;
+  var start = (SK_ADM.stuPage - 1) * SK_ADM_PAGE_SIZE;
+  var page = rows.slice(start, start + SK_ADM_PAGE_SIZE);
+  list.innerHTML = page.length ? page.map(skAdminStudentRowHtml).join("")
+    : (q ? "<p class=\"adm-note\">Không có học viên nào khớp.</p>"
+         : "<p class=\"adm-note\">Chưa có học viên nào.</p>");
   list.querySelectorAll("[data-adm-grant]").forEach(function(b){
     b.addEventListener("click", function(){
       var uidEl = document.getElementById("admGrantUid");
@@ -11316,6 +11394,36 @@ function skAdminRenderStudents(){
       if(card) card.scrollIntoView({behavior: "smooth", block: "start"});
     });
   });
+  skAdminRenderPager(rows.length, totalPages);
+}
+/* Vẽ nút phân trang dưới danh sách học viên: Trước / số trang / Sau +
+   nhãn "Trang X / N · Y học viên". Danh sách trống → pager rỗng. */
+function skAdminRenderPager(totalRows, totalPages){
+  var pager = document.getElementById("admStudentPager");
+  if(!pager) return;
+  if(totalRows <= 0){ pager.innerHTML = ""; return; }
+  var cur = SK_ADM.stuPage;
+  var h = '<button type="button" class="adm-page-btn" data-adm-prev' +
+    (cur <= 1 ? " disabled" : "") + ">‹ Trước</button>";
+  skAdminPageList(cur, totalPages).forEach(function(p){
+    if(p === "…"){ h += '<span class="adm-page-gap">…</span>'; return; }
+    h += '<button type="button" class="adm-page-btn' + (p === cur ? " on" : "") +
+      '" data-adm-page="' + p + '">' + p + "</button>";
+  });
+  h += '<button type="button" class="adm-page-btn" data-adm-next' +
+    (cur >= totalPages ? " disabled" : "") + ">Sau ›</button>";
+  h += '<span class="adm-pager-label">Trang ' + cur + " / " + totalPages + " · " +
+    totalRows.toLocaleString("vi-VN") + " học viên</span>";
+  pager.innerHTML = h;
+  pager.querySelectorAll("[data-adm-page]").forEach(function(b){
+    b.addEventListener("click", function(){
+      skAdminGotoPage(parseInt(b.getAttribute("data-adm-page"), 10));
+    });
+  });
+  var prev = pager.querySelector("[data-adm-prev]");
+  if(prev) prev.addEventListener("click", function(){ skAdminGotoPage(cur - 1); });
+  var next = pager.querySelector("[data-adm-next]");
+  if(next) next.addEventListener("click", function(){ skAdminGotoPage(cur + 1); });
 }
 function skAdminFill(){
   var st = SK_ADM.stats || {total: 0, year: 0, lifetime: 0, active: 0, revenue: 0, pending: 0,
@@ -11323,10 +11431,17 @@ function skAdminFill(){
   var statsEl = document.getElementById("admStats");
   if(statsEl){
     statsEl.innerHTML =
-      '<div class="stat" data-adm-stat="total"><b>' + st.total.toLocaleString("vi-VN") + '</b><span>Tổng thành viên</span></div>' +
+      '<div class="stat stat-click" data-adm-stat="total" role="button" tabindex="0" title="Bấm để xem danh sách học viên"><b>' + st.total.toLocaleString("vi-VN") + '</b><span>Tổng thành viên</span><small>Bấm để xem danh sách</small></div>' +
       '<div class="stat" data-adm-stat="active"><b>' + st.active.toLocaleString("vi-VN") + '</b><span>Premium đang hoạt động</span><small>Năm: ' + st.year.toLocaleString("vi-VN") + ' · Trọn đời: ' + st.lifetime.toLocaleString("vi-VN") + '</small></div>' +
       '<div class="stat" data-adm-stat="revenue"><b>' + skFmtVND(st.revenue) + '</b><span>Doanh thu (đơn đã thanh toán)</span></div>' +
       '<div class="stat" data-adm-stat="pending"><b>' + st.pending.toLocaleString("vi-VN") + '</b><span>Đơn chờ xử lý</span></div>';
+    var totalCard = statsEl.querySelector('[data-adm-stat="total"]');
+    if(totalCard){
+      totalCard.addEventListener("click", skAdminOpenStudents);
+      totalCard.addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); skAdminOpenStudents(); }
+      });
+    }
   }
   var perEl = document.getElementById("admPeriodStats");
   if(perEl){
@@ -11391,11 +11506,11 @@ function skAdminRenderShell(){
     '<h2 class="secttl">Báo lỗi câu hỏi</h2>' +
     '<div class="card"><div id="admReportList"></div><p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 50 báo cáo mới nhất (cả ẩn danh). Báo cáo lưu ở collection sk_reports.</p></div>' +
     '<h2 class="secttl">Học viên</h2>' +
-    '<div class="card"><label class="auth-field" style="margin-top:0">Tìm kiếm<input id="admSearch" type="text" autocomplete="off" placeholder="Tìm theo tên, email hoặc UID"></label>' +
-    '<div id="admStudentList" style="margin-top:6px"></div><p class="adm-note" id="admStudentNote" style="margin:10px 0 0"></p></div>' +
+    '<div class="card" id="admStudentCard"><label class="auth-field" style="margin-top:0">Tìm kiếm<input id="admSearch" type="text" autocomplete="off" placeholder="Tìm theo tên, email hoặc UID"></label>' +
+    '<div id="admStudentList" style="margin-top:6px"></div><div id="admStudentPager" class="adm-pager"></div><p class="adm-note" id="admStudentNote" style="margin:10px 0 0"></p></div>' +
     '</div>';
   $app.innerHTML = h;
-  document.getElementById("admSearch").addEventListener("input", skAdminRenderStudents);
+  document.getElementById("admSearch").addEventListener("input", function(){ SK_ADM.stuPage = 1; skAdminRenderStudents(); });
   document.querySelectorAll("[data-adm-range]").forEach(function(b){
     b.addEventListener("click", function(){
       SK_ADM.visitRange = b.getAttribute("data-adm-range");
@@ -11450,7 +11565,7 @@ function skAdminLoad(){
   ]).then(function(res){
     if(!skRenderAlive(rTok)) return;
     var progDocs = [];
-    res[0].forEach(function(snap){ progDocs.push({uid: snap.id, premium: (snap.data() || {}).premium}); });
+    res[0].forEach(function(snap){ var pd = snap.data() || {}; progDocs.push({uid: snap.id, premium: pd.premium, createdAt: pd.createdAt}); });
     var orderDocs = [];
     res[1].forEach(function(snap){
       var d = snap.data() || {};
@@ -11465,14 +11580,11 @@ function skAdminLoad(){
     });
     var students = progDocs.map(function(d){
       var known = byUid[d.uid] || {};
-      return {uid: d.uid, premium: d.premium, email: known.email || "", name: known.name || ""};
+      return {uid: d.uid, premium: d.premium, createdAt: d.createdAt, email: known.email || "", name: known.name || ""};
     });
-    students.sort(function(a, b){
-      var ai = skAdminPremiumInfo(a.premium).active ? 0 : 1;
-      var bi = skAdminPremiumInfo(b.premium).active ? 0 : 1;
-      if(ai !== bi) return ai - bi;
-      return a.uid < b.uid ? -1 : (a.uid > b.uid ? 1 : 0);
-    });
+    /* Mới nhất trước; doc cũ thiếu createdAt vẫn hiện, xếp cuối
+       (không dùng orderBy(createdAt) — query đó loại doc thiếu field). */
+    students = skAdminSortStudents(students);
     SK_ADM.students = students;
     SK_ADM.orders = orderDocs;
     SK_ADM.stats = skAdminStats(progDocs, orderDocs, res[2], Date.now());
