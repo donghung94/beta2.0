@@ -833,8 +833,8 @@
   .sheet.open{transform:translateY(0);}
   @media (prefers-reduced-motion: reduce){ .sheet{transition:none;} }
   @media (max-width:480px){
-    /* Bảng/scrim bám viewport trên mobile (xem ghi chú ở .sheet). */
-    .sheet,.scrim{position:fixed;}
+    /* Bảng/scrim/dialog bám viewport trên mobile (xem ghi chú ở .sheet). */
+    .sheet,.scrim,.pwdlg{position:fixed;}
   }
   /* ---------- Cong loi khi Firebase SDK chua tai duoc (Loi 3) ----------
      Phu kin khung #phone (.phone la position:relative + overflow:hidden nen
@@ -876,9 +876,45 @@
   .sg.now{outline:2.5px solid var(--ink); outline-offset:1px;}
   /* Thi JLPT đầy đủ */
   .testrow.locked{opacity:.55;}
-  /* ---------- Paywall: ổ khóa Premium + bảng nâng cấp ---------- */
-  #premiumScrim{z-index:69;}
-  #premiumSheet{z-index:70; max-height:84%; overflow-y:auto;}
+  /* ---------- Paywall: ổ khóa Premium + dialog căn giữa + trang gói ----------
+     Dialog căn giữa (thay bottom sheet cũ, 18/11): scrim z-80 + thẻ z-81 —
+     trên thanh tab nổi (60), nút Sora (70), khung chat Sora (71–72) và mọi
+     overlay (≤49, Điều khoản/Chính sách 60); dưới cổng lỗi SDK #skAuthGate
+     (90, cao nhất file). KHÔNG dựa vào .tab-hidden để ẩn tab bar: dialog
+     nằm trên hẳn bằng z-index (bài học bug 5 — MutationObserver ép
+     tabShow() khi có sheet mở, nên ẩn tab bar bằng class là không chắc). */
+  #pwDialogScrim{z-index:80;}
+  .pwdlg{position:absolute; inset:0; z-index:81; display:flex; align-items:center; justify-content:center;
+    padding:24px; opacity:0; pointer-events:none; transition:opacity .22s;}
+  .pwdlg.open{opacity:1; pointer-events:auto;}
+  .pwdlg-card{position:relative; width:100%; max-width:320px; text-align:center;
+    background:var(--card); border:1px solid var(--line); border-radius:24px;
+    padding:22px 20px 18px; box-shadow:var(--shadow);
+    transform:translateY(12px) scale(.97); transition:transform .22s cubic-bezier(.32,.72,.28,1);}
+  .pwdlg.open .pwdlg-card{transform:none;}
+  @media (prefers-reduced-motion: reduce){ .pwdlg,.pwdlg-card{transition:none;} }
+  .pwdlg-img{display:block; margin:2px auto 12px; height:96px; width:auto; max-width:100%; object-fit:contain;}
+  .pwdlg-card h3{margin:0 0 6px; font-size:19px; font-weight:800;}
+  .pwdlg-card p{margin:0 0 16px; font-size:14px; color:var(--ink-2); line-height:1.55;}
+  .pwdlg-x{position:absolute; top:8px; right:10px; width:36px; height:36px; border:none; background:transparent; font-size:24px; line-height:1; color:var(--ink-2); cursor:pointer;}
+  .pwdlg-btns{display:flex; gap:10px; align-items:center;}
+  .pwdlg-later{flex:1; min-height:46px; border:none; background:transparent; color:#1e88e5; cursor:pointer; font-family:inherit; font-size:15.5px; font-weight:700; border-radius:12px;}
+  .pwdlg-later:active{background:var(--bg);}
+  .pwdlg-plans{flex:1.35; min-height:46px; border:none; background:#1e88e5; color:#fff; cursor:pointer; font-family:inherit; font-size:15px; font-weight:700; border-radius:12px; box-shadow:0 6px 16px rgba(30,136,229,.32);}
+  .pwdlg-plans:active{background:#1976d2;}
+  /* Trang gói Premium (#pwPlansOverlay): dùng lại .pw-plans/.pw-plan/.pw-guide
+     của sheet cũ + vài rule riêng cho dòng giá/ngày, nhãn tiết kiệm, danh
+     sách quyền lợi, dải giảm giá, thẻ gói miễn phí. Trang là .overlay thường
+     (z do skOvRaise cấp, ≤49) nên thanh tab nổi (60) vẫn ở trên như mọi
+     trang con khác — nội dung cuộn xuyên qua dưới thanh tab như thường. */
+  .pw-per{font-size:12.5px; color:var(--ink-2); font-weight:600; margin-top:2px;}
+  .pw-save{display:inline-block; margin-top:6px; font-size:12.5px; font-weight:800; color:var(--red); background:var(--red-soft); border-radius:99px; padding:3px 10px;}
+  .pw-plan ul{margin:8px 0 0; padding-left:18px; font-size:13.5px; color:var(--ink-2); line-height:1.7;}
+  .pw-plan ul li{margin-bottom:2px;}
+  .pw-sale{background:var(--red-soft); border:1px solid var(--line); border-radius:14px; padding:12px 14px; font-size:13.5px; line-height:1.6; margin:0 0 14px;}
+  .pw-free{margin:0 0 14px;}
+  .pw-free ul{margin:8px 0 0; padding-left:18px; font-size:13.5px; color:var(--ink-2); line-height:1.7;}
+  .pw-free ul li{margin-bottom:2px;}
   #loginSheet{max-height:84%; overflow-y:auto;} /* bảng đăng nhập: cho cuộn trong bảng nếu nội dung dài */
   #loginSheet h3{font-size:20px; margin-bottom:6px;}
   .login-mascot{display:block; margin:0 auto 12px; height:84px; width:auto; max-width:100%; object-fit:contain;}
@@ -3960,32 +3996,83 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
-    <!-- bảng nâng cấp Premium (paywall): CHỈ chữ hướng dẫn mua trên web,
-         KHÔNG có link — xem ghi chú trong khối Premium ở đầu script chính -->
-    <div class="scrim" id="premiumScrim"></div>
-    <div class="sheet" id="premiumSheet" aria-hidden="true" role="dialog" aria-label="Nâng cấp Premium">
-      <div class="grab"></div>
-      <h3>🔒 Nâng cấp Premium</h3>
-      <p class="snote">Nội dung N4–N1, ôn thi Tokutei xây dựng và các video Shadowing còn lại thuộc gói Premium. Gói miễn phí gồm toàn bộ N5 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo; các video Shadowing còn lại chỉ xem thử 30 giây.</p>
-      <div class="pw-plans">
-        <div class="pw-plan">
-          <b>Gói Năm</b>
-          <span class="pw-price">499.000đ</span><span class="pw-old">799.000đ</span>
-          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng trong 12 tháng, xem trọn vẹn mọi video Shadowing.</p>
-        </div>
-        <div class="pw-plan hot">
-          <b>Gói Trọn đời · Phổ biến nhất</b>
-          <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
-          <p>Mở toàn bộ nội dung N4–N1 + Tokutei xây dựng vĩnh viễn, không gia hạn, xem trọn vẹn mọi video Shadowing.</p>
+    <!-- Dialog Premium căn giữa (thay bottom sheet cũ, 18/11): CHỈ thông báo
+         khóa + 2 nút — nội dung gói đã chuyển sang trang #pwPlansOverlay.
+         KHÔNG có link mua trong app (quy tắc App Store). -->
+    <div class="scrim" id="pwDialogScrim"></div>
+    <div class="pwdlg" id="pwDialog" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Tính năng Premium">
+      <div class="pwdlg-card">
+        <button class="pwdlg-x" id="pwDialogClose" type="button" aria-label="Đóng">×</button>
+        <img class="pwdlg-img" src="assets/chibi.png" alt="">
+        <h3>Tính năng Premium</h3>
+        <p>Bài học này là tính năng dành cho tài khoản Premium.</p>
+        <div class="pwdlg-btns">
+          <button class="pwdlg-later" id="pwDialogLater" type="button">Để sau</button>
+          <button class="pwdlg-plans" id="pwDialogPlans" type="button">Xem các gói nâng cấp</button>
         </div>
       </div>
-      <p class="snote">Giá giảm đến 06/12/2026 — sau thời gian này gói về giá gốc.</p>
-      <div class="pw-guide">
-        <b>Cách mua gói</b>
-        <p>Mở trình duyệt Chrome trên điện thoại của bạn, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Sau khi chuyển khoản thành công, Premium sẽ được mở cho tài khoản của bạn — thường trong vài phút, tối đa 24 giờ.</p>
+    </div>
+
+    <!-- Trang giới thiệu gói Premium (mở từ dialog hoặc nút "Nâng cấp Premium"
+         ở Tokutei): nội dung như trang #/nangcap bản web — 2 gói, quyền lợi
+         từng gói, ghi chú giảm giá, hướng dẫn mua bằng chữ. KHÔNG có nút mua
+         hay link nào (quy tắc App Store — mua trên web). -->
+    <div class="overlay front" id="pwPlansOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closePwPlans" aria-label="Quay lại — đóng trang gói Premium">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Nâng cấp Premium</h2><span>Gói Năm · Gói Trọn đời</span></div>
       </div>
-      <div style="display:flex; gap:10px;">
-        <button class="sheetbtn" id="premiumClose" type="button" style="flex:1; justify-content:center;">Đóng</button>
+      <div class="detailbody">
+        <h3 class="wvsec">Nâng cấp Premium</h3>
+        <p class="wvinfo">Gói miễn phí mở toàn bộ nội dung <b>N5</b> ở mọi mục. Premium mở thêm <b>N4–N1</b> — kanji, từ vựng, ngữ pháp, đề thi JLPT, luyện nghe và đọc hiểu — trên cả web và app điện thoại, đồng bộ theo tài khoản.</p>
+        <div class="pw-sale">🎉 Ưu đãi ra mắt — giảm giá đến <b>06/12/2026</b> (ngày thi JLPT). Sau thời gian này gói về giá gốc.</div>
+        <div class="pw-plans">
+          <div class="pw-plan">
+            <b>Gói Năm</b>
+            <div class="pw-per">Chỉ ~1.370đ/ngày</div>
+            <span class="pw-price">499.000đ</span><span class="pw-old">799.000đ</span>
+            <span class="pw-save">Tiết kiệm 300.000đ</span>
+            <ul>
+              <li>Mở toàn bộ N4–N1: kanji, từ vựng, ngữ pháp</li>
+              <li>Đề thi JLPT N4–N1 Test 1–9, chấm /180</li>
+              <li>Luyện nghe + video Shadowing (xem trọn vẹn)</li>
+              <li>Đọc hiểu N4–N1</li>
+              <li>Tokutei xây dựng 730 câu</li>
+              <li>Đồng bộ web và app điện thoại</li>
+            </ul>
+          </div>
+          <div class="pw-plan hot">
+            <b>Gói Trọn đời · Phổ biến nhất</b>
+            <div class="pw-per">Mua 1 lần, học mãi mãi</div>
+            <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
+            <span class="pw-save">Tiết kiệm 1.500.000đ</span>
+            <ul>
+              <li>Tất cả tính năng của Gói Năm</li>
+              <li>Không cần gia hạn, không lo hết hạn</li>
+              <li>Thanh toán 1 lần duy nhất</li>
+              <li>Dùng trọn đời trên web và app điện thoại</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card pw-free">
+          <h3 style="margin:0;font-size:16px;font-weight:800;">Gói miễn phí — toàn bộ N5</h3>
+          <p style="margin:6px 0 0;">Không cần trả phí, bạn vẫn học được toàn bộ nội dung N5 ở mọi mục:</p>
+          <ul>
+            <li>126 kanji N5, có thứ tự nét, chiết tự và video câu chuyện</li>
+            <li>1.205 từ vựng N5 kèm hình minh họa + 75 từ số đếm</li>
+            <li>84 mẫu ngữ pháp N5 theo đúng 25 bài Minna no Nihongo</li>
+            <li>Đề thi JLPT N5 Test 1–9, phần viết và phần nghe, chấm /180</li>
+            <li>24 hội thoại luyện nghe N5 và bài đọc hiểu N5</li>
+            <li>Video Shadowing: 1 video đầu tiên mỗi mục xem full (5 video), các video còn lại xem thử 30 giây; tự tạo 1 video từ link YouTube</li>
+          </ul>
+        </div>
+        <div class="pw-guide">
+          <b>Cách mua gói</b>
+          <p>Mở trình duyệt Chrome trên điện thoại của bạn, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Sau khi chuyển khoản thành công, Premium sẽ được mở cho tài khoản của bạn — thường trong vài phút, tối đa 24 giờ.</p>
+        </div>
+        <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -5583,8 +5670,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Firebase Auth” ở phần Tài khoản, cùng project donghung-3208d với bản
      web): onAuthStateChanged dưới đây tự đọc Premium khi đăng nhập và xóa
      cache khi đăng xuất, không cần sửa thêm.
-     KHÔNG có link mua trong app: bảng nâng cấp chỉ hướng dẫn bằng chữ
-     (mở Chrome, đăng nhập tại sorakanji.com, mua bằng VND). */
+     KHÔNG có link mua trong app: dialog Premium chỉ thông báo khóa + nút
+     "Xem các gói nâng cấp" mở trang gói (hướng dẫn mua bằng chữ: mở
+     Chrome, đăng nhập tại sorakanji.com, mua bằng VND). */
   var SK_PREMIUM_KEY = "sk_premium";
   var SV_FREE_PER_CAT = 1; /* 1 video Shadowing miễn phí đầu tiên của mỗi thể loại (5 tab = 5 video) */
   var SV_PREVIEW_SECS = 30; /* Xem thử: video Shadowing không free, chưa Premium chỉ phát tới 30 giây */
@@ -5634,7 +5722,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     setTimeout(finish, 3000); /* dự phòng: đọc Premium treo thì vẫn đánh giá lại sau 3s */
     try{ premiumRefresh(finish); }catch(_){ finish(); }
   }
-  /* Mở bảng nâng cấp Premium; trả về false để handler dừng lại. */
+  /* Mở dialog Premium căn giữa; trả về false để handler dừng lại. */
   function showPremiumPrompt(){
     if(!signedInUid){
       /* Chưa đăng nhập: mở bảng đăng nhập trước (đăng nhập xong đánh giá
@@ -5645,19 +5733,39 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       openLogin();
       return false;
     }
-    var sh = document.getElementById("premiumSheet");
-    var sc = document.getElementById("premiumScrim");
-    if(!sh) return false;
-    sh.classList.add("open");
-    sh.setAttribute("aria-hidden", "false");
+    var dg = document.getElementById("pwDialog");
+    var sc = document.getElementById("pwDialogScrim");
+    if(!dg) return false;
+    dg.classList.add("open");
+    dg.setAttribute("aria-hidden", "false");
     if(sc) sc.classList.add("open");
     return false;
   }
+  /* Đóng dialog Premium (và trang gói nếu đang mở — Premium vừa kích hoạt
+     thì cả 2 đều phải biến mất, xem premiumApplyLocks). Lũy đẳng. */
   function closePremiumPrompt(){
-    var sh = document.getElementById("premiumSheet");
-    var sc = document.getElementById("premiumScrim");
-    if(sh){ sh.classList.remove("open"); sh.setAttribute("aria-hidden", "true"); }
+    var dg = document.getElementById("pwDialog");
+    var sc = document.getElementById("pwDialogScrim");
+    if(dg){ dg.classList.remove("open"); dg.setAttribute("aria-hidden", "true"); }
     if(sc) sc.classList.remove("open");
+    closePwPlans();
+  }
+  /* Mở trang giới thiệu gói Premium (overlay thường, như mọi trang con):
+     đóng dialog trước (nếu đang mở), cuộn trang gói về đầu rồi showOv —
+     z-index do skOvRaise cấp nên trang luôn nằm trên overlay đang mở
+     (vd mở từ Tokutei thì nút quay lại về lại Tokutei). Mở được cả khi
+     chưa đăng nhập (trang chỉ giới thiệu, không mua trong app). */
+  function openPwPlans(){
+    closePremiumPrompt();
+    var ov = document.getElementById("pwPlansOverlay");
+    if(!ov) return;
+    var body = ov.querySelector(".detailbody");
+    if(body) body.scrollTop = 0;
+    showOv(ov);
+  }
+  function closePwPlans(){
+    var ov = document.getElementById("pwPlansOverlay");
+    if(ov) hideOv(ov);
   }
   /* Gate chung cho nội dung theo cấp: N5 luôn mở; N4–N1 cần Premium.
      Trả true = được mở; false = đã hiện bảng nâng cấp, handler dừng lại. */
@@ -5711,8 +5819,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      premiumApplyDocData) nên không vẽ lại thừa mỗi lần poll. */
   function premiumApplyLocks(){
     var prem = isPremium();
-    /* Bảng nâng cấp đang mở mà Premium vừa bật thì tự đóng — user vừa
-       trả tiền xong quay lại app không phải nhìn bảng "Nâng cấp" nữa. */
+    /* Dialog Premium / trang gói đang mở mà Premium vừa bật thì tự đóng —
+       user vừa trả tiền xong quay lại app không phải nhìn bảng "Nâng cấp"
+       nữa (closePremiumPrompt đóng cả 2). */
     if(prem) closePremiumPrompt();
     ["lvRow", "flashLvRow", "writeLvRow"].forEach(function(rowId){
       document.querySelectorAll("#" + rowId + " .lv").forEach(function(b){
@@ -5885,10 +5994,18 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     /* Trang Thi JLPT mặc định mở N4 — gói miễn phí thì về N5. */
     if(!isPremium() && typeof curLevel !== "undefined" && curLevel !== "N5") curLevel = "N5";
     premiumApplyLocks();
-    var pc = document.getElementById("premiumClose");
-    if(pc) pc.addEventListener("click", closePremiumPrompt);
-    var ps = document.getElementById("premiumScrim");
-    if(ps) ps.addEventListener("click", closePremiumPrompt);
+    var pwX = document.getElementById("pwDialogClose");
+    if(pwX) pwX.addEventListener("click", closePremiumPrompt);
+    var pwLater = document.getElementById("pwDialogLater");
+    if(pwLater) pwLater.addEventListener("click", closePremiumPrompt);
+    var pwSc = document.getElementById("pwDialogScrim");
+    if(pwSc) pwSc.addEventListener("click", closePremiumPrompt);
+    var pwDlg = document.getElementById("pwDialog");
+    if(pwDlg) pwDlg.addEventListener("click", function(e){ if(e.target === pwDlg) closePremiumPrompt(); });
+    var pwPlans = document.getElementById("pwDialogPlans");
+    if(pwPlans) pwPlans.addEventListener("click", openPwPlans);
+    var pwBack = document.getElementById("closePwPlans");
+    if(pwBack) pwBack.addEventListener("click", closePwPlans);
   }, 0);
 
   /* ---------- Data ---------- */
@@ -8854,7 +8971,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var t = e.touches[0];
       if(t.clientX < EDGE) return;
       /* Lop modal (sheet/panel) dang mo thi gesture thuoc ve no. */
-      if(document.querySelector(".sheet.open, .assistant-panel.open")) return;
+      if(document.querySelector(".sheet.open, .assistant-panel.open, .pwdlg.open")) return;
       var ov = topOverlay();
       if(!ov) return;
       if(!ov.contains(e.target)) return;
@@ -17057,7 +17174,7 @@ function furiHTML(text){
           '<p><b>🔒 Nội dung Premium</b> — nâng cấp để mở toàn bộ đề luyện.</p>' +
           '<button class="cta" id="tkGoPremium" type="button" style="max-width:280px;">Nâng cấp Premium</button></div>';
         var gp = document.getElementById("tkGoPremium");
-        if(gp) gp.addEventListener("click", function(){ showPremiumPrompt(); });
+        if(gp) gp.addEventListener("click", function(){ openPwPlans(); });
       }
       return;
     }
