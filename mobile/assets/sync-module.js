@@ -21,6 +21,10 @@
  * + mergeJlpt (2026-11-20): target null không bao giờ thắng giá trị
  * thật (null = chưa chọn cấp mục tiêu; app không có luồng xóa target
  * — chip chỉ đặt N5..N1); toSyncData không đóng dấu mới cho null.
+ * + M-14 (2026-11-20): doc shop thêm expBoostUntil — mốc hết hạn x2
+ * EXP của Vật phẩm Tăng Tốc, gộp max-wins (hết hạn muộn hơn thắng;
+ * 0/vắng = không có boost). App cộng EXP qua addExp() nên boost áp
+ * cho cả nhiệm vụ lẫn đấu trường.
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -448,7 +452,9 @@
   /* shop (M-11, chỉ mobile có — web không có shop nên adapter web bỏ
    * qua doc này): union owned theo khóa (mua rồi không mất), frame LWW
    * theo frameAt (lần đeo gần nhất thắng). frame phải thuộc owned, nếu
-   * không thì null (chưa đeo). Không có tombstone: vật phẩm không gỡ được. */
+   * không thì null (chưa đeo). Không có tombstone: vật phẩm không gỡ được.
+   * M-14: expBoostUntil (mốc hết hạn x2 EXP của Vật phẩm Tăng Tốc) gộp
+   * max-wins — hết hạn muộn hơn thắng; 0/vắng = không có boost. */
   function mergeShop(local, server) {
     local = local || {}; server = server || {};
     var owned = {};
@@ -460,7 +466,8 @@
     if (sa > la) { frame = server.frame; frameAt = sa; }
     else { frame = local.frame; frameAt = la; }
     if (typeof frame !== "string" || !frame || !owned[frame]) { frame = null; frameAt = 0; }
-    return { owned: Object.keys(owned), frame: frame, frameAt: frameAt };
+    return { owned: Object.keys(owned), frame: frame, frameAt: frameAt,
+             expBoostUntil: Math.max(num(local.expBoostUntil, 0), num(server.expBoostUntil, 0)) };
   }
 
   /* savedWords: union theo khóa word|reading, LWW từng entry theo u,
@@ -733,7 +740,7 @@
    *   missions: {date, rotKind, done, quizProg:number, kanjiProg:number, days}
    *   kanji:    mảng bit [0/1...] theo thứ tự KANJI
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
- *   shop:     {owned: [key...], frame, frameAt} (mobile only; web không có shop)
+ *   shop:     {owned: [key...], frame, frameAt, expBoostUntil} (mobile only; web không có shop)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
    *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
@@ -788,7 +795,8 @@
       return {
         owned: (sh.owned || []).filter(function (k) { return typeof k === "string" && k; }),
         frame: (typeof sh.frame === "string" && sh.frame) ? sh.frame : null,
-        frameAt: num(sh.frameAt, 0)
+        frameAt: num(sh.frameAt, 0),
+        expBoostUntil: num(sh.expBoostUntil, 0)
       };
     }
     if (docId === "settings") {
@@ -855,7 +863,8 @@
         local: {
           owned: (s2.owned || []).filter(function (k) { return typeof k === "string" && k; }),
           frame: (typeof s2.frame === "string" && s2.frame) ? s2.frame : null,
-          frameAt: num(s2.frameAt, 0)
+          frameAt: num(s2.frameAt, 0),
+          expBoostUntil: num(s2.expBoostUntil, 0)
         },
         meta: {}
       };
