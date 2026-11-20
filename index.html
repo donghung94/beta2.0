@@ -348,6 +348,8 @@ table.kv tr:last-child td{border-bottom:none}
 .kdguide{stroke:var(--line-strong); stroke-width:1; stroke-dasharray:5 5}
 .kdstroke{fill:none; stroke:var(--ink); stroke-linecap:round; stroke-linejoin:round}
 .kdnum{fill:var(--red); font-weight:700; font-family:"Be Vietnam Pro",sans-serif}
+#kdSvg.kd-arrows .kdstroke{marker-end:url(#kdArrow)}
+#kdArrow path{fill:var(--ink)}
 .mnem-img{border-radius:12px; border:1px solid var(--line); width:100%; background:#fff}
 .video-facade{
   position:relative; border-radius:12px; overflow:hidden; cursor:pointer;
@@ -2577,6 +2579,9 @@ function renderHome(){
   var D = daysToJlpt(), examD = nextJlpt();
   var byLv = kanjiByLevel();
   var h = "";
+  /* <h1> duy nhất của trang chủ (m-02): ẩn khỏi layout như nhãn vNav ở
+     mobile nhưng vẫn có cho SEO + trình đọc màn hình. */
+  h += '<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">SoraKanji — Bầu trời Kanji cho người Việt</h1>';
   h += '<div class="home-cols"><div>'; /* ===== CỘT TRÁI ===== */
   /* Banner đếm ngược JLPT */
   h += '<div class="jlpt-banner"><div class="jb-row"><div>' +
@@ -2937,7 +2942,8 @@ function strokeDiagramHTML(ch){
   var x0 = minX - pad - (side - w) / 2, y0 = minY - pad - (side - h) / 2;
   var sw = Math.max(7, side / 30), fs = side / 18;
   var midX = x0 + side / 2, midY = y0 + side / 2;
-  var svg = '<svg id="kdSvg" viewBox="' + x0.toFixed(1) + " " + y0.toFixed(1) + " " + side.toFixed(1) + " " + side.toFixed(1) + '" role="img" aria-label="Sơ đồ thứ tự nét của chữ ' + esc(ch) + '">';
+  var svg = '<svg id="kdSvg" class="kd-arrows" viewBox="' + x0.toFixed(1) + " " + y0.toFixed(1) + " " + side.toFixed(1) + " " + side.toFixed(1) + '" role="img" aria-label="Sơ đồ thứ tự nét của chữ ' + esc(ch) + '">' +
+    '<defs><marker id="kdArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>';
   svg += '<line class="kdguide" x1="' + x0.toFixed(1) + '" y1="' + midY.toFixed(1) + '" x2="' + (x0 + side).toFixed(1) + '" y2="' + midY.toFixed(1) + '"/>';
   svg += '<line class="kdguide" x1="' + midX.toFixed(1) + '" y1="' + y0.toFixed(1) + '" x2="' + midX.toFixed(1) + '" y2="' + (y0 + side).toFixed(1) + '"/>';
   var pathsHTML = "", numsHTML = "";
@@ -3047,9 +3053,8 @@ function renderKanjiDetail(ch){
         '<button class="btn blue sm" id="kdPlay" type="button" style="position:absolute;right:0;bottom:0;border-radius:50%;width:42px;height:42px;padding:0">▶</button></div>'
       : '<div class="kd-big jp">' + esc(ch) + '</div><p class="sub" style="text-align:center">Chữ này chưa có sơ đồ nét trong dữ liệu hiện tại.</p>') +
     '<div class="ctl-row">' +
-    '<button type="button" class="on">Hiển thị hạt mũi tên</button>' +
-    '<button type="button">Hiển thị liên kết ra</button>' +
-    '<button type="button">Vừa với màn hình</button>' +
+    '<button type="button" class="on" id="kdTglArrows">Hiển thị hạt mũi tên</button>' +
+    '<button type="button" id="kdTglFit">Vừa với màn hình</button>' +
     '<span style="margin-left:auto"><button type="button" id="kdZoomOut">−</button> <button type="button" id="kdZoomIn">+</button></span></div>' +
     "</div>" +
     '<div style="display:flex;align-items:flex-start;gap:10px;margin-top:18px"><h1 class="kd-title"><span class="jp">' + esc(ch) + '</span> - ' + esc((e.hanViet || "").toUpperCase()) + '</h1>' +
@@ -3109,11 +3114,19 @@ function renderKanjiDetail(ch){
   var zi = document.getElementById("kdZoomIn"), zo = document.getElementById("kdZoomOut");
   if(zi) zi.addEventListener("click", function(){ zoom = Math.min(1.6, zoom + 0.15); applyZoom(); });
   if(zo) zo.addEventListener("click", function(){ zoom = Math.max(0.6, zoom - 0.15); applyZoom(); });
-  /* ctl toggles (trạng thái hiển thị tại trang) */
-  $app.querySelectorAll(".ctl-row button").forEach(function(b){
-    if(b.id === "kdZoomIn" || b.id === "kdZoomOut") return;
-    b.addEventListener("click", function(){ b.classList.toggle("on"); });
+  /* Nút điều khiển sơ đồ nét (m-09): "Hiển thị hạt mũi tên" bật/tắt đầu
+     mũi tên ở cuối mỗi nét (marker SVG #kdArrow + class kd-arrows trên
+     #kdSvg); "Vừa với màn hình" đưa zoom về 1. Nút "Hiển thị liên kết ra"
+     đã xóa — sơ đồ không có thành phần liên kết nào để bật/tắt (nút chết). */
+  var kdTglArrows = document.getElementById("kdTglArrows");
+  if(kdTglArrows) kdTglArrows.addEventListener("click", function(){
+    var svg = document.getElementById("kdSvg");
+    var on = !kdTglArrows.classList.contains("on");
+    kdTglArrows.classList.toggle("on", on);
+    if(svg) svg.classList.toggle("kd-arrows", on);
   });
+  var kdTglFit = document.getElementById("kdTglFit");
+  if(kdTglFit) kdTglFit.addEventListener("click", function(){ zoom = 1; applyZoom(); });
   /* tìm kiếm cột trái */
   var inp = document.getElementById("kdSearch"), res = document.getElementById("kdResults");
   function doSearch(){
@@ -3300,8 +3313,12 @@ function vocabLessons(lv){
   return order.map(function(n){ return {n: n, words: map[n]}; });
 }
 function vocabImg(lv, lesson, i){ /* i: 0-based trong bài */
-  if(lv === "N4" && lesson === 36 && i + 1 === 51) return null;
-  if(lv === "N3" && lesson === 11 && i + 1 === 64) return null;
+  /* N1: không sinh fallback — thư mục thật là n1-l01..n1-l24 (có padding)
+     nên URL sinh ra (n1-l<lesson> không padding) toàn 404; từ nào có ảnh
+     thật thì caller đã dùng w.img trước khi gọi tới đây (m-12).
+     2 special-case N4 Bài 36 #51 + N3 Bài 11 #64 đã xóa (m-13): cả 2 ảnh
+     đã trả 200, mobile hiện được. */
+  if(lv === "N1") return null;
   var pfx = LV_LOWER[lv] + "-l" + lesson;
   return "mobile/assets/vocab-illus/" + pfx + "/" + pfx + "-" + (i + 1 < 10 ? "0" : "") + (i + 1) + ".jpg";
 }
@@ -4425,7 +4442,7 @@ function renderGrammarDetail(lv, idx){
       return !!(unit && ou && ou.kind === unit.kind && ou.key === unit.key);
     });
     var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nguphap">Ngữ pháp</a> / ' +
-      '<a href="#/nguphap/' + lv + '">' + lv + '</a> / <a href="' + unitHref + '">' + esc(unitName) + '</a> / <span class="jp">' + esc(g.p) + "</span></div>" +
+      '<a href="#/nguphap/' + lv + '">' + lv + '</a> / <a href="' + unitHref + '">' + esc(unitName) + '</a> / <span class="jp">' + grFuri(lv, g.p) + "</span></div>" +
       '<h1 class="jp">' + grFuri(lv, g.p) + "</h1><p>" + esc(grammarGroupOf(lv, g)) + " · Ngữ pháp " + lv + "</p></div>" +
       '<div style="max-width:780px;padding-bottom:36px">' +
       '<p style="margin:0 0 16px"><a class="btn ghost sm" href="' + unitHref + '">← Về ' + esc(unitName) + "</a></p>" +
@@ -4446,7 +4463,7 @@ function renderGrammarDetail(lv, idx){
       h += '<h3 style="margin:26px 0 10px">Mẫu liên quan — ' +
         ((lv === "N5" || lv === "N4") ? "cùng " + esc(grammarGroupOf(lv, g)) : "cùng nhóm " + esc(g.group || "")) +
         '</h3><div class="grel">' + rel.map(function(o){
-          return '<a href="#/nguphap/' + lv + "/" + o.i + '"><span class="jp">' + esc(o.x.p) + "</span></a>";
+          return '<a href="#/nguphap/' + lv + "/" + o.i + '"><span class="jp">' + grFuri(lv, o.x.p) + "</span></a>";
         }).join("") + "</div>";
     }
     h += '<h3 style="margin:28px 0 6px">Bài tập — ôn từ câu ví dụ</h3>' +
@@ -4455,8 +4472,8 @@ function renderGrammarDetail(lv, idx){
       '<button data-grq="0">Dịch nghĩa</button><button data-grq="1">Chọn câu Nhật</button><button data-grq="2">Chọn mẫu đúng</button></div>' +
       '<div id="grQuizBoxW" style="margin-top:14px"></div>';
     h += '<div class="kd-nav" style="margin-top:26px">' +
-      (prev ? '<a class="btn ghost sm" href="#/nguphap/' + lv + "/" + (idx - 1) + '">← <span class="jp">' + esc(prev.p) + "</span></a>" : "<span></span>") +
-      (next ? '<a class="btn ghost sm" href="#/nguphap/' + lv + "/" + (idx + 1) + '"><span class="jp">' + esc(next.p) + "</span> →</a>" : "<span></span>") +
+      (prev ? '<a class="btn ghost sm" href="#/nguphap/' + lv + "/" + (idx - 1) + '">← <span class="jp">' + grFuri(lv, prev.p) + "</span></a>" : "<span></span>") +
+      (next ? '<a class="btn ghost sm" href="#/nguphap/' + lv + "/" + (idx + 1) + '"><span class="jp">' + grFuri(lv, next.p) + "</span> →</a>" : "<span></span>") +
       "</div></div>";
     $app.innerHTML = h;
     document.getElementById("grDoneW").addEventListener("click", function(){
@@ -6028,6 +6045,22 @@ function skAdminRenderReports(){
   el.innerHTML = list.length ? list.map(skAdminReportRowHtml).join("")
     : '<p class="adm-note" style="margin:0">Chưa có báo lỗi nào.</p>';
 }
+/* --- Admin web: thư góp ý sửa lỗi (sk_feedback, mới nhất trước). --- */
+function skAdminFeedbackRowHtml(r){
+  var ms = skAdminTsMs(r.createdAt);
+  var when = ms ? new Date(ms).toLocaleString("vi-VN", {timeZone: "Asia/Tokyo"}) : "—";
+  var who = r.email ? esc(r.email) : (r.uid ? "UID " + esc(String(r.uid).slice(0, 8)) + "…" : "Ẩn danh");
+  return '<div class="adm-report">' +
+    '<div class="adm-report-meta">' + (r.ctx ? esc(r.ctx) + " · " : "") + esc(when) + " · " + who + "</div>" +
+    '<div class="adm-report-msg">' + esc(r.text || "") + "</div></div>";
+}
+function skAdminRenderFeedback(){
+  var el = document.getElementById("admFeedbackList");
+  if(!el) return;
+  var list = SK_ADM.feedback || [];
+  el.innerHTML = list.length ? list.map(skAdminFeedbackRowHtml).join("")
+    : '<p class="adm-note" style="margin:0">Chưa có góp ý nào.</p>';
+}
 </script>
 
 <script>
@@ -6683,8 +6716,9 @@ function sv2Tick(){
   /* Tô sáng câu đang nói trong tab Phụ đề + tự cuộn khung phụ đề theo câu
      đó. Câu đang nói lấy theo khung SV2_WIN (mỗi câu một khoảng riêng, kể
      cả câu trùng mốc giây) nên không câu nào bị bỏ qua. Khung cuộn có
-     position:relative nên offsetTop đo trong khung — câu đang đọc luôn
-     được đưa vào giữa khung, đúng như bài 1 */
+     position:relative nên offsetTop đo trong khung — câu đang đọc được
+     neo ở dòng thứ 2 của khung (như mobile), các dòng sắp tới hiện phía
+     dưới (m-18). */
   var idx = -1;
   SV2_WIN.forEach(function(w, i){ if(t >= w.start && t < w.end) idx = i; });
   /* Giữ câu cuối sáng tới hết video CHỈ khi khung của nó chạy tới cuối video
@@ -6702,8 +6736,17 @@ function sv2Tick(){
     var act = rows[idx], frame = document.getElementById("sv2Subs");
     if(act && frame && document.getElementById("sv2PanelSubs").classList.contains("on")){
       var rd = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var tg = act.offsetTop - frame.clientHeight / 2 + act.offsetHeight / 2;
+      /* Neo cau dang phat o DONG THU 2: target = offsetTop cua dong ngay
+         truoc no (= offsetTop cau dang phat tru chieu cao dong truoc +
+         khoang cach 2px giua 2 dong — moi cau cao khac nhau do furigana
+         + dich nen khong dung chieu cao co dinh). Cau dau (idx 0) khong
+         co dong truoc -> target 0 (nam dong 1); gan cuoi bai kep o max
+         scroll. (Port tu mobile, m-18.) */
+      var tg = idx > 0 ? rows[idx - 1].offsetTop : 0;
+      var mx = frame.scrollHeight - frame.clientHeight;
+      if(mx < 0) mx = 0;
       if(tg < 0) tg = 0;
+      if(tg > mx) tg = mx;
       if(typeof frame.scrollTo === "function") frame.scrollTo({top: tg, behavior: rd ? "auto" : "smooth"});
       else frame.scrollTop = tg;
     }
@@ -6806,7 +6849,7 @@ function sv2HideExp(){
   if(exp) exp.classList.remove("show");
 }
 /* ----- Bấm từng từ trong phụ đề để tra từ điển (có sẵn, không cần AI) -----
-   Từ điển dict-ja-vi.json: 10.689 từ từ dữ liệu từ vựng của app (N5–N1 +
+   Từ điển dict-ja-vi.json: 10.707 từ từ dữ liệu từ vựng của app (N5–N1 +
    chuyên ngành + số đếm + trợ từ/từ chỉ thị/tên nước bổ sung), tra cứu
    offline sau lần tải đầu. Cụm phụ đề là cụm furigana chứ chưa phải từ
    (vd "をしました"), nên khi bấm: quét tìm từ dài nhất trong cụm, dạng
@@ -7099,6 +7142,7 @@ function sv2ShowWord(i, res){
   sv2ExpIdx = i; sv2ExpMode = "word";
   var title = document.getElementById("sv2ExpTitle");
   var txt = document.getElementById("sv2ExpText");
+  if(!title || !txt) return; /* user đã chuyển trang khi từ điển đang load (m-22) */
   var word = res.found ? res.w : res.span;
   /* Đọc từ đã khớp trong câu (vd 分かりました); chưa tìm thấy thì đọc cụm đã bấm.
      Cách đọc hiện theo từ điển (dạng gốc); chưa có từ thì hiện cách đọc của cụm. */
@@ -7137,8 +7181,12 @@ function sv2WordTap(i, k){
   document.getElementById("sv2ExpText").textContent = "Đang tra từ điển…";
   sv2ExpOpen(i);
   svDictLoad().then(function(){
+    /* Đã rời player khi từ điển chưa tra xong thì bỏ kết quả (m-22) —
+       sv2ShowWord cũng tự guard, đây chặn luôn lỗi SV2_SUBS[i] đã đổi. */
+    if(!document.getElementById("sv2ExpTitle") || !SV2_SUBS[i]) return;
     sv2ShowWord(i, svDictLookupAt(SV2_SUBS[i].ja, offset, seg.b, seg.r));
   }).catch(function(){
+    if(!document.getElementById("sv2ExpTitle")) return;
     sv2ShowWord(i, {found: false, span: seg.b, surf: seg.b, reading: seg.r || "", dictFail: true});
   });
 }
@@ -8131,7 +8179,8 @@ function renderListenLevel(lv){
      localStorage); the xem thu bam vao van mo, toi 30s thi dung + skLockedPrompt().
    - The dung esc() cua web; thumb mine dung mqdefault (khong hqdefault).
    - svOpenCard chi doi hash '#/nghe/video/<id>' — player do W2.
-   - Trang "xem tat ca" ve vao $app (dang luoi .svm-grid), nut quay lai #/nghe.
+   - Trang "xem tat ca" co route rieng #/nghe/all/<cat>/<idx> (m-19), ve vao
+     $app (dang luoi .svm-grid), nut quay lai trang da bam "Xem them".
    - Tab "Video toi tao" tai dung skSvMineSectionHTML() + svuBoxHTML() (W3).
    Khong port player SV1 (svOpenLesson/svRenderLines/svKaraoke...) va svu*. */
 var SV_CATS = ["podcast", "anime", "daily", "jlpt", "karaoke"];
@@ -8141,7 +8190,7 @@ var SV_ROW_MAX = 4;
 var svTopTab = "ready";
 var svCat = "podcast";
 
-/* Nap luoi du lieu 139 bai (mobile/assets/sv-lessons.js, ~8,7MB): chi nap
+/* Nap luoi du lieu 190 bai (mobile/assets/sv-lessons.js, ~18,9MB): chi nap
    khi vao muc video, cache Promise; that bai thi reset de lan sau thu lai.
    File dinh nghia var SV_VIDEOS/SVU_DATA o top-level -> window.SV_VIDEOS. */
 var _svLessonsPromise = null;
@@ -8342,24 +8391,53 @@ function svRenderMine(){
   if(typeof svuBindBox === "function"){ try{ svuBindBox(box); }catch(_){} }
   if(typeof svBindMineDel === "function"){ try{ svBindMineDel(box); }catch(_){} }
 }
-/* Trang "xem tat ca video cua 1 chuoi": luoi day du + nut quay lai #/nghe. */
-function svOpenAllList(title, videos){
+/* Trang "xem tat ca video cua 1 chuoi": luoi day du + nut quay lai trang
+   da bam "Xem them" (#/nghe hoac #/shadowing); route rieng #/nghe/all/<cat>/<idx>. */
+function svOpenAllList(title, videos, returnTo){
   document.title = title + " | SoraKanji";
   document.body.classList.remove("plain");
   var list = videos || [];
-  var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a> / ' + esc(title) + '</div>' +
+  /* Trang xem-tất-cả có route riêng #/nghe/all/<cat>/<idx> (m-19); nút quay
+     lại về đúng trang đã bấm "Xem thêm" (#/nghe hoặc #/shadowing). */
+  var rt = returnTo || svAllReturnTo || {hash: "#/nghe", label: "Luyện nghe"};
+  var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="' + esc(rt.hash) + '">' + esc(rt.label) + '</a> / ' + esc(title) + '</div>' +
     '<h1>' + esc(title) + '</h1><p>' + list.length + ' video</p></div>' +
-    '<div style="padding:6px 0 10px"><a class="btn ghost" href="#/nghe">← Quay lại Luyện nghe</a></div>' +
+    '<div style="padding:6px 0 10px"><a class="btn ghost" href="' + esc(rt.hash) + '">← Quay lại ' + esc(rt.label) + '</a></div>' +
     '<div class="svm-grid">' + list.map(function(v){ return svCardHTML(v, svPlaysGet(v.id), svCardTrial(v.id)); }).join("") + '</div>';
   $app.innerHTML = h;
   svBindCards($app);
   window.scrollTo(0, 0);
 }
+/* Trang xem-tất-cả đi qua route #/nghe/all/<cat>/<idx> (m-19) để nút Back
+   của trình duyệt hoạt động + hash phản ánh đúng trang đang xem. Ghi nhớ
+   trang đã bấm "Xem thêm" để nút quay lại về đúng chỗ. */
+var svAllReturnTo = null;
 function svOpenAllSeries(cat, idx){
-  var groups = svGroupByCat(window.SV_VIDEOS || []);
-  var row = groups[cat] && groups[cat][idx];
-  if(!row) return;
-  svOpenAllList(row.series, row.videos);
+  var h0 = location.hash || "#/";
+  svAllReturnTo = (h0.indexOf("#/shadowing") === 0)
+    ? {hash: "#/shadowing", label: "Shadowing"} : {hash: "#/nghe", label: "Luyện nghe"};
+  goHash("#/nghe/all/" + encodeURIComponent(cat) + "/" + idx);
+}
+/* Render trang xem-tất-cả từ route (đảm bảo dữ liệu video đã nạp; vào thẳng
+   bằng link thì returnTo mặc định về #/nghe). */
+function svRenderAllPage(cat, idx){
+  var rTok = skBeginRender();
+  $app.innerHTML = loadingHTML("Đang tải video…");
+  ensureSvLessons().then(function(){
+    if(!skRenderAlive(rTok)) return;
+    var groups = svGroupByCat(window.SV_VIDEOS || []);
+    var row = groups[cat] && groups[cat][idx];
+    if(!row){
+      $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/nghe">Luyện nghe</a></div>' +
+        '<h1>Không tìm thấy chuỗi video</h1><p>Chuỗi video này không còn tồn tại.</p></div>' +
+        '<div style="padding:6px 0 10px"><a class="btn ghost" href="#/nghe">← Quay lại Luyện nghe</a></div>';
+      return;
+    }
+    svOpenAllList(row.series, row.videos);
+  }).catch(function(){
+    if(!skRenderAlive(rTok)) return;
+    $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được dữ liệu video. Kiểm tra kết nối rồi tải lại trang.</div>';
+  });
 }
 /* Khung muc "Shadowing bang video": 2 tab tren + 5 tab the loai + panel.
    Trang thai tab lay tu svTopTab/svCat (giua nguyen khi quay lai #/nghe). */
@@ -10185,8 +10263,8 @@ function skFmtVND(n){ return Number(n).toLocaleString("vi-VN") + "đ"; }
    skCreateOrder) — tiền tố SEVQR chỉ thêm ở phần hiển thị + VietQR. */
 function skTransferMemo(code){ return "SEVQR " + code; }
 function skVietQR(amount, memo){
-  return "https://img.vietqr.io/image/ICB-108888811513-compact2.png?amount=" + amount +
-    "&addInfo=" + encodeURIComponent(memo) + "&accountName=DONG%20THANH%20HUNG";
+  return "https://img.vietqr.io/image/ICB-" + SK_VTB_ACC + "-compact2.png?amount=" + amount +
+    "&addInfo=" + encodeURIComponent(memo) + "&accountName=" + encodeURIComponent(SK_VTB_NAME);
 }
 function skDb(){
   try{
@@ -10719,6 +10797,12 @@ function renderPackagesView(){
   if(sale) skStartSaleCountdown();
 }
 function skStartCheckout(pkg){
+  if(skIsPremium()){
+    /* Đã Premium rồi thì không tạo đơn mới — mirror guard của mobile
+       (tránh đơn trùng khi bấm mua lúc trang gói vừa tải, m-30). */
+    renderPremiumStatusView("Bạn đang dùng Premium rồi — toàn bộ nội dung N3–N1 đã mở cho tài khoản của bạn.");
+    return;
+  }
   var u = skAuthUser();
   if(!u){
     openAuthModalContinue(function(){ skStartCheckout(pkg); });
@@ -11222,6 +11306,7 @@ function renderPrivacyPage(){
    - sk_stats: lượt truy cập (do function logVisit ghi; doc id
      visits-daily-{YYYY-MM-DD} / visits-monthly-{YYYY-MM} / visits-total).
    - sk_reports: báo lỗi câu hỏi do học viên gửi (mới nhất trước, tối đa 50).
+   - sk_feedback: góp ý sửa lỗi từ vựng do học viên gửi từ app (mới nhất trước, tối đa 50).
    - sk_config/social: liên kết liên hệ (Facebook, TikTok, Zalo, email) hiện
      ở cột Liên hệ dưới chân trang — admin nhập ở mục "Liên kết liên hệ".
    - Danh sách học viên: phân trang 10/trang phía client, mới nhất trước
@@ -11230,7 +11315,7 @@ function renderPrivacyPage(){
    premium của kanji_progress.
    Không có Tặng Xu / Khóa tài khoản: bản mobile chỉ là dữ liệu mẫu local,
    app chưa có cơ chế thật cho 2 việc đó. */
-var SK_ADM = {students: [], orders: [], reports: [], stats: null, visits: null, visitRange: "7", stuPage: 1};
+var SK_ADM = {students: [], orders: [], reports: [], feedback: [], stats: null, visits: null, visitRange: "7", stuPage: 1};
 var SK_ADM_PAGE_SIZE = 10; /* so hoc vien moi trang danh sach admin */
 function skAdminTsMs(v){
   if(v == null) return null;
@@ -11684,6 +11769,7 @@ function skAdminFill(){
   }
   skAdminRenderStudents();
   skAdminRenderReports();
+  skAdminRenderFeedback();
 }
 function skAdminRenderShell(){
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/caidat">Cài đặt</a> / Bảng điều khiển</div>' +
@@ -11723,6 +11809,8 @@ function skAdminRenderShell(){
     '<p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 100 đơn mới nhất.</p></div>' +
     '<h2 class="secttl">Báo lỗi câu hỏi</h2>' +
     '<div class="card"><div id="admReportList"></div><p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 50 báo cáo mới nhất (cả ẩn danh). Báo cáo lưu ở collection sk_reports.</p></div>' +
+    '<h2 class="secttl">Thư góp ý</h2>' +
+    '<div class="card"><div id="admFeedbackList"></div><p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 50 góp ý mới nhất (cả ẩn danh). Góp ý lưu ở collection sk_feedback — học viên gửi từ khung góp ý trong app di động.</p></div>' +
     '<h2 class="secttl">Học viên</h2>' +
     '<div class="card" id="admStudentCard"><label class="auth-field" style="margin-top:0">Tìm kiếm<input id="admSearch" type="text" autocomplete="off" placeholder="Tìm theo tên, email hoặc UID"></label>' +
     '<div id="admStudentList" style="margin-top:6px"></div><div id="admStudentPager" class="adm-pager"></div><p class="adm-note" id="admStudentNote" style="margin:10px 0 0"></p></div>' +
@@ -11828,7 +11916,8 @@ function skAdminLoad(){
     db.collection("sk_orders").orderBy("createdAt", "desc").limit(1000).get(),
     skAdminCountTotal(db),
     skAdminLoadVisits(db),
-    db.collection("sk_reports").orderBy("createdAt", "desc").limit(50).get().catch(function(){ return null; })
+    db.collection("sk_reports").orderBy("createdAt", "desc").limit(50).get().catch(function(){ return null; }),
+    db.collection("sk_feedback").orderBy("createdAt", "desc").limit(50).get().catch(function(){ return null; })
   ]).then(function(res){
     if(!skRenderAlive(rTok)) return;
     var progDocs = [];
@@ -11863,6 +11952,13 @@ function skAdminLoad(){
       reportDocs.push(rd);
     });
     SK_ADM.reports = reportDocs;
+    var feedbackDocs = [];
+    if(res[5]) res[5].forEach(function(snap){
+      var fd = snap.data() || {};
+      fd.id = snap.id;
+      feedbackDocs.push(fd);
+    });
+    SK_ADM.feedback = feedbackDocs;
     if(!document.getElementById("admStats")) skAdminRenderShell();
     skAdminFill();
   });
@@ -11919,6 +12015,10 @@ function syncNavToHash(){
 var _skLastRouted = null; /* hash mà route() xử lý gần nhất — cho lớp điều hướng dự phòng bên dưới */
 function route(){
   _skLastRouted = location.hash || "#/";
+  /* Modal (showModal) sống ngoài #app nên không tự mất khi chuyển trang —
+     dọn ở đây để modal cũ không phủ lên trang mới (m-21). */
+  var _mr = document.getElementById("modalRoot");
+  if(_mr) _mr.innerHTML = "";
   /* Target trang khóa cũ còn sót (user rời trang khóa bằng link khác) thì
      xóa — lần Premium đổi sau đó không kéo user về trang cũ bất ngờ.
      renderLockedPage (chỉ gọi từ route()) gán lại target mới khi còn khóa. */
@@ -11983,6 +12083,7 @@ function route(){
     return;
   }
   if(seg === "nghe"){
+    if(segs[1] === "all" && segs[2] && segs[3] != null){ svRenderAllPage(segs[2], parseInt(segs[3], 10)); return; }
     if(segs[1] === "video" && segs[2]) renderSvVideoPage(segs[2]);
     else if(segs[1] && segs[2] != null) renderListenItem(segs[1], segs[2]);
     else if(segs[1]) renderListenLevel(segs[1]);
@@ -12479,16 +12580,18 @@ function webIsAdmin(){
 }
 function skAuthErrorVI(err){
   var code = (err && err.code) || "";
+  /* App chỉ có đăng nhập bằng link email + Google/Apple (không mật khẩu,
+     không nút Đăng ký) nên mọi message đều dẫn về link đăng nhập (m-26). */
   var map = {
     "auth/invalid-email": "Email chưa đúng định dạng — bạn kiểm tra lại email nhé.",
     "auth/missing-email": "Bạn chưa nhập email.",
-    "auth/missing-password": "Bạn chưa nhập mật khẩu.",
-    "auth/user-not-found": "Chưa có tài khoản nào với email này — bạn bấm Đăng ký để tạo tài khoản mới nhé.",
-    "auth/wrong-password": "Mật khẩu chưa đúng — bạn thử lại nhé.",
-    "auth/invalid-credential": "Email hoặc mật khẩu chưa đúng — bạn thử lại nhé.",
-    "auth/invalid-login-credentials": "Email hoặc mật khẩu chưa đúng — bạn thử lại nhé.",
-    "auth/email-already-in-use": "Email này đã được đăng ký rồi — bạn chuyển sang Đăng nhập nhé.",
-    "auth/weak-password": "Mật khẩu quá ngắn — cần ít nhất 6 ký tự.",
+    "auth/missing-password": "Chưa đủ thông tin để đăng nhập — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/user-not-found": "Chưa có tài khoản nào với email này — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/wrong-password": "Đăng nhập chưa thành công — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/invalid-credential": "Đăng nhập chưa thành công — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/invalid-login-credentials": "Đăng nhập chưa thành công — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/email-already-in-use": "Email này đã có tài khoản rồi — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/weak-password": "Không tạo được tài khoản — bạn nhập email để nhận link đăng nhập nhé.",
     "auth/too-many-requests": "Bạn đã thử quá nhiều lần — đợi ít phút rồi thử lại nhé.",
     "auth/network-request-failed": "Không kết nối được mạng — kiểm tra kết nối rồi thử lại.",
     "auth/popup-closed-by-user": "Bạn đã đóng cửa sổ đăng nhập Google trước khi hoàn tất.",
@@ -12498,7 +12601,14 @@ function skAuthErrorVI(err){
     "auth/user-disabled": "Tài khoản này đã bị khóa — bạn liên hệ hỗ trợ SoraKanji để được giúp nhé.",
     "auth/invalid-action-code": "Link đăng nhập đã hết hạn hoặc đã dùng rồi — bạn nhập email để nhận link mới nhé.",
     "auth/expired-action-code": "Link đăng nhập đã hết hạn — bạn nhập email để nhận link mới nhé.",
-    "auth/quota-exceeded": "Đã gửi quá nhiều link đăng nhập — bạn đợi ít phút rồi thử lại nhé."
+    "auth/quota-exceeded": "Đã gửi quá nhiều link đăng nhập — bạn đợi ít phút rồi thử lại nhé.",
+    "auth/operation-not-supported-in-this-environment": "Trình duyệt này chưa hỗ trợ cách đăng nhập này — bạn thử trình duyệt khác nhé.",
+    "auth/popup-blocked": "Trình duyệt đã chặn cửa sổ đăng nhập — bạn cho phép cửa sổ bật lên rồi thử lại nhé.",
+    "auth/redirect-operation-pending": "Đang chờ hoàn tất đăng nhập — bạn đợi giây lát rồi thử lại nhé.",
+    "auth/account-exists-with-different-credential": "Email này đã đăng nhập bằng cách khác — bạn nhập email để nhận link đăng nhập nhé.",
+    "auth/requires-recent-login": "Phiên đăng nhập đã lâu — bạn đăng xuất rồi đăng nhập lại rồi thử lại nhé.",
+    "auth/web-storage-unsupported": "Trình duyệt đang chặn lưu trữ — bạn bật cookie rồi thử lại nhé.",
+    "auth/timeout": "Đăng nhập quá thời gian chờ — kiểm tra mạng rồi thử lại nhé."
   };
   return map[code] || ("Chưa đăng nhập được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.");
 }
@@ -12747,9 +12857,23 @@ function skSessionDelete(uid){
   var ref = null;
   try{ ref = skSessionRef(uid); }catch(e){ ref = null; }
   if(!ref) return;
+  /* Chỉ xóa khi doc còn là của thiết bị này (m-28): đọc doc + đối chiếu
+     deviceId trước khi xóa — thiết bị stale trong cửa sổ race M-08 không
+     được xóa session của thiết bị đang giữ thật. Đọc lỗi (mất mạng) thì
+     bỏ qua — session sẽ stale sau 5 phút. */
+  var myId = null;
+  try{ myId = skReportDeviceId(); }catch(e){ myId = null; }
   try{
-    var p = ref.delete();
-    if(p && p.catch) p.catch(function(){});
+    var p = ref.get();
+    if(!p || !p.then) return;
+    p.then(function(snap){
+      if(!snap || !snap.exists) return;
+      var d = null;
+      try{ d = snap.data() || {}; }catch(e){ d = {}; }
+      if(myId && d.deviceId && d.deviceId !== myId) return;
+      var dp = ref.delete();
+      if(dp && dp.catch) dp.catch(function(){});
+    }).catch(function(){});
   }catch(e){}
 }
 
