@@ -1224,6 +1224,15 @@
     display:flex; align-items:center; gap:8px;
   }
   .ghostbtn svg{width:20px;height:20px;}
+  /* Nut Flashcard o chan trang chi tiet kanji (20/11): 2 nut ghost thu nho
+     de vua thanh o 320px ma khong cham nut Sora (mep trai FAB o VW-55).
+     Chan trang wrap 2 hang + nut CTA min-width 150px: khi chu thuoc Bai 12
+     (3 nut) thi nut "Danh dau da thuoc" xuong hang 2 full-width thay vi
+     bi ep thanh soi 30px o 320px; 2 nut thi van 1 hang nhu cu. */
+  #kanjiOverlay .detailfoot{flex-wrap:wrap;}
+  #kanjiOverlay .detailfoot .ghostbtn{padding:0 10px; font-size:14px; gap:6px; white-space:nowrap;}
+  #kanjiOverlay .detailfoot .ghostbtn svg{width:18px; height:18px;}
+  #kanjiOverlay .detailfoot .cta{font-size:15px; min-width:150px; line-height:1.25;}
 
   /* ---------- Search (home) ---------- */
   #scr-home{padding-top:0;}
@@ -3492,6 +3501,7 @@
           <div class="wframehead" style="margin-top:18px;">
             <b id="flashDeckTitle">Bài 1 · N5</b>
             <button class="ghostbtn" id="flashBackList" style="min-height:40px; padding:0 14px; font-size:13.5px;">Chọn bài khác</button>
+            <button class="ghostbtn" id="flashBackKanji" hidden style="min-height:40px; padding:0 14px; font-size:13.5px;">← Chi tiết chữ</button>
           </div>
           <div class="flash" id="flashCard" role="button" tabindex="0" aria-label="Thẻ ghi nhớ, bấm để lật" style="margin-top:0;">
             <div class="flash-inner">
@@ -4181,6 +4191,10 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="ghostbtn" id="kdWrite">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a4.6 4.6 0 0 0-7-7l-7 7v7Z"/><path d="m5 19 1.5-4.5L12 9"/></svg>
           Luyện viết
+        </button>
+        <button class="ghostbtn" id="kdFlash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-1"/></svg>
+          Flashcard
         </button>
         <button class="cta" id="kdDone">Đánh dấu đã thuộc</button>
       </div>
@@ -9447,6 +9461,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   flashLessonsEl.addEventListener("click", function(ev){
     var b = ev.target.closest("[data-flesson]");
     if(!b || !flashLists) return;
+    flashFromKanji = null; syncFlashBackKanji();
     openFlashLesson(parseInt(b.getAttribute("data-flesson"), 10));
   });
   document.getElementById("flashBackList").addEventListener("click", function(){
@@ -10242,6 +10257,62 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(drawMode !== "sheet") hideCand();
   });
   document.getElementById("kdWrite").addEventListener("click", function(){ if(currentKanji) openDraw("trace", currentKanji); });
+  /* Nut Flashcard o chan trang chi tiet kanji (20/11): mo dung bo flashcard
+     chua chu dang xem, bat dau ngay tai the cua chu do — cung mau nhu
+     openWvFlash(startIdx) ben tu vung. Mo tu chi tiet thi hien nut
+     "Ve chi tiet" o dau bo the de quay lai trang chi tiet. */
+  var flashFromKanji = null; /* chu kanji mo flashcard tu trang chi tiet (null: mo tu danh sach bai) */
+  function kdFlashChar(){
+    if(!currentKanji) return "";
+    return currentKanji.kanji || currentKanji.ch || "";
+  }
+  function syncFlashBackKanji(){
+    var b = document.getElementById("flashBackKanji");
+    if(!b) return;
+    if(flashFromKanji){
+      b.hidden = false;
+      b.textContent = "\u2190 Chi ti\u1ebft " + flashFromKanji;
+    } else b.hidden = true;
+  }
+  function openFlashForKanji(ch){
+    if(!ch) return;
+    ensureKanjiDB(function(db){
+      if(!db || !db[ch]) return;
+      var lv = db[ch].jlpt;
+      if(!lv || !premiumGateLevel(lv)) return;
+      flashListsBuild();
+      var list = flashLists[lv] || [];
+      var idx = -1;
+      for(var i = 0; i < list.length; i++){ if(list[i].kanji === ch){ idx = i; break; } }
+      if(idx < 0) return;
+      flashFromKanji = ch;
+      closeKanji();
+      /* An ca hub/luoi kanji (.overlay.front, z-index tren man review):
+         neu khong an, luoi van phu len tren bo flashcard du deck da mo
+         o duoi (loi thay bang screenshot harness 20/11). */
+      hideOv(document.getElementById("kjOverlay"));
+      hideOv(document.getElementById("kjGridOverlay"));
+      goTab("review");
+      flashLevel = lv;
+      renderFlashLessons();
+      openFlashLesson(Math.floor(idx / FLASH_PER));
+      flashIdx = idx % FLASH_PER;
+      renderFlash();
+      syncFlashBackKanji();
+      scrollReviewTo(flashWrap, 10);
+    });
+  }
+  document.getElementById("kdFlash").addEventListener("click", function(){
+    var ch = kdFlashChar();
+    if(ch) openFlashForKanji(ch);
+  });
+  document.getElementById("flashBackKanji").addEventListener("click", function(){
+    if(!flashFromKanji) return;
+    var ch = flashFromKanji;
+    flashFromKanji = null;
+    syncFlashBackKanji();
+    openKanjiChar(ch);
+  });
 
   /* ---------- Kana chart ---------- */
   var KANA = [
