@@ -11913,6 +11913,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       svuShowMsg("", false);
       svuActivate(d);
     }).catch(function(err){
+      /* M-13-client: chua dang nhap — bang dang nhap da mo trong svuFetchFn,
+         chi xoa thong bao "Đang mở bài..." chu khong hien loi. */
+      if(err && err.code === "svu/login-required"){ svuShowMsg("", false); return; }
       var msg = (err && err.message) || "Không mở được bài này. Thử dán lại link của video.";
       svuShowMsg(svuFriendlyErr(msg), true);
     });
@@ -13560,11 +13563,25 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      {"data": {...}} → {"result": {...}} hoặc {"error": {...}}. Chỉ dùng
      SDK khi trình duyệt không có fetch mà SDK đã tải sẵn. */
   var SVU_FN_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/makeLessonFromVideo";
+  /* M-13-client (21/11/2026): backend makeLessonFromVideo da gate auth/Premium
+     (M-13) — moi lan goi phai kem ID token cua user dang dang nhap, neu khong
+     server tra 401 voi MOI user. Chua dang nhap thi mo bang dang nhap (ham
+     openLogin() co san cua mobile), khong goi fetch — loi tra ve mang ma
+     rieng "svu/login-required" de caller biet ma khong hien thong bao loi. */
   function svuFetchFn(payload){
-    return fetch(SVU_FN_URL, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({data: payload})
+    var auth = null;
+    try{ auth = skAuth(); }catch(_){ auth = null; }
+    var user = auth && auth.currentUser;
+    if(!user){
+      try{ if(typeof openLogin === "function") openLogin(); }catch(_){}
+      return Promise.reject({code: "svu/login-required", message: ""});
+    }
+    return Promise.resolve().then(function(){ return user.getIdToken(); }).then(function(token){
+      return fetch(SVU_FN_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json", "Authorization": "Bearer " + token},
+        body: JSON.stringify({data: payload})
+      });
     }).then(function(r){
       return r.json().then(function(j){
         if(j && j.result) return {data: j.result};
@@ -13703,6 +13720,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       svuShowMsg("", false);
       svuActivate(d);
     }).catch(function(err){
+      /* M-13-client: chua dang nhap — bang dang nhap da mo trong svuFetchFn,
+         chi xoa thong bao "Đang tạo bài..." chu khong hien loi. */
+      if(err && err.code === "svu/login-required"){ svuShowMsg("", false); return; }
       var code = String((err && err.code) || "").replace(/^functions\//, "");
       var msg = (err && err.message) || "";
       /* Function chưa deploy: SDK trả not-found kèm message tiếng Anh của SDK,
