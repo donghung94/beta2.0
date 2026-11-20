@@ -956,6 +956,33 @@
   .pw-guide{border:1px dashed var(--line); border-radius:14px; padding:12px 14px; background:var(--card); margin:0 0 14px;}
   .pw-guide b{display:block; font-size:14px; margin-bottom:4px;}
   .pw-guide p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.6;}
+  /* Mua goi bang VietQR tren mobile web (20/11): nut mua trong the goi
+     (.pw-buy) + trang thanh toan #skCheckoutOverlay (.ck-*). Trong app boc
+     Capacitor, nut mua bi an bang JS (skCheckoutInit) — chi con huong dan
+     mua bang chu. .cta co display:flex nen [hidden] can rule rieng. */
+  .pw-buy{margin-top:10px; min-height:48px; font-size:15.5px;}
+  .pw-buy[hidden]{display:none;}
+  .pw-buy[disabled]{opacity:.55;}
+  .pw-plans-msg{font-size:13.5px; font-weight:700; line-height:1.6; margin:0 0 12px; color:var(--red);}
+  .pw-plans-msg:empty{display:none;}
+  .pw-plans-msg.ok{color:var(--good);}
+  .pw-retry{margin-left:8px; min-height:30px; padding:0 12px; border-radius:99px; border:1.5px solid var(--red); background:transparent; color:var(--red); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer;}
+  .ck-row{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:14px; line-height:1.5;}
+  .ck-row:last-child{border-bottom:none;}
+  .ck-k{color:var(--ink-2); font-weight:600; flex:0 0 auto;}
+  .ck-v{font-weight:700; text-align:right; word-break:break-word;}
+  .ck-amount{color:var(--red); font-size:18px;}
+  .ck-code{display:flex; align-items:center; gap:8px; background:var(--bg); border:1.5px dashed var(--red); border-radius:12px; padding:10px 12px; margin:8px 0 12px;}
+  .ck-code b{flex:1; font-size:16px; letter-spacing:.5px; word-break:break-all;}
+  .ck-copy{flex:0 0 auto; min-height:36px; padding:0 12px; border-radius:10px; border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;}
+  .ck-copy:active{background:var(--bg);}
+  .ck-qr{text-align:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 12px 10px; margin:0 0 12px;}
+  .ck-qr img{width:220px; max-width:100%; height:auto; display:block; margin:0 auto;}
+  .ck-qr p{margin:8px 0 0; font-size:13px; color:#555; line-height:1.5;}
+  .ck-note{border:1px solid var(--line); border-left:4px solid var(--amber); background:var(--amber-soft); border-radius:12px; padding:10px 12px; font-size:13.5px; line-height:1.6; margin:0 0 12px;}
+  .ck-ok{border:1px solid var(--line); border-left:4px solid var(--good); background:var(--good-soft); border-radius:12px; padding:10px 12px; font-size:13.5px; line-height:1.6; margin:0 0 12px;}
+  .ck-msg{font-size:13.5px; color:var(--good); font-weight:700; min-height:20px; margin:10px 0 0; line-height:1.5;}
+  .ck-msg.err{color:var(--red);}
   .resultwrap{overflow-y:auto; justify-content:flex-start; padding-top:34px;}
   .ex-pass{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; font-size:16.5px; line-height:1.95; margin-bottom:14px;}
   .ex-pass table{border-collapse:collapse; margin:8px 0; max-width:100%;}
@@ -3812,6 +3839,11 @@
           </button>
         </div>
         <div class="menu">
+          <button class="mrow" id="setPremiumBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 9l9 13 9-13Z"/><path d="M3 9h18M12 2 8.5 9 12 22M12 2l3.5 7L12 22"/></svg>
+            Nâng cấp Premium
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
           <button class="mrow" id="setBackupBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
             Sao lưu dữ liệu học
@@ -4080,10 +4112,12 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
-    <!-- Trang giới thiệu gói Premium (mở từ dialog hoặc nút "Nâng cấp Premium"
-         ở Tokutei): nội dung như trang #/nangcap bản web — 2 gói, quyền lợi
-         từng gói, ghi chú giảm giá, hướng dẫn mua bằng chữ. KHÔNG có nút mua
-         hay link nào (quy tắc App Store — mua trên web). -->
+    <!-- Trang giới thiệu gói Premium (mở từ dialog, nút "Nâng cấp Premium"
+         ở Tokutei, hoặc mục "Nâng cấp Premium" ở Cài đặt): nội dung như
+         trang #/nangcap bản web — 2 gói, quyền lợi từng gói, ghi chú giảm
+         giá. Trên mobile web (PWA) mỗi gói có nút mua mở trang thanh toán
+         VietQR (#skCheckoutOverlay); trong app bọc Capacitor nút mua bị ẩn
+         (quy tắc App Store 3.1.1 — IAP sau), chỉ còn hướng dẫn mua bằng chữ. -->
     <div class="overlay front" id="pwPlansOverlay" aria-hidden="true">
       <div class="detailhead">
         <button class="iconbtn" id="closePwPlans" aria-label="Quay lại — đóng trang gói Premium">
@@ -4109,6 +4143,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
               <li>Tokutei xây dựng 730 câu</li>
               <li>Đồng bộ web và app điện thoại</li>
             </ul>
+            <button class="cta pw-buy" id="pwBuyYear" type="button" data-pkg="year">Mua Gói Năm</button>
           </div>
           <div class="pw-plan hot">
             <b>Gói Trọn đời · Phổ biến nhất</b>
@@ -4121,8 +4156,10 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
               <li>Thanh toán 1 lần duy nhất</li>
               <li>Dùng trọn đời trên web và app điện thoại</li>
             </ul>
+            <button class="cta pw-buy" id="pwBuyLifetime" type="button" data-pkg="lifetime">Mua Gói Trọn đời</button>
           </div>
         </div>
+        <p class="pw-plans-msg" id="pwPlansMsg"></p>
         <div class="card pw-free">
           <h3 style="margin:0;font-size:16px;font-weight:800;">Gói miễn phí — toàn bộ N5–N4</h3>
           <p style="margin:6px 0 0;">Không cần trả phí, bạn vẫn học được toàn bộ nội dung N5–N4 ở mọi mục:</p>
@@ -4135,10 +4172,28 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <li>Video Shadowing: 1 video đầu tiên mỗi mục xem full (5 video), các video còn lại xem thử 30 giây; tự tạo 1 video từ link YouTube</li>
           </ul>
         </div>
-        <div class="pw-guide">
+        <div class="pw-guide" id="pwGuide">
           <b>Cách mua gói</b>
           <p>Mở trình duyệt Chrome trên điện thoại của bạn, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Sau khi chuyển khoản thành công, Premium sẽ được mở cho tài khoản của bạn — thường trong vài phút, tối đa 24 giờ.</p>
         </div>
+        <div class="wv-endpad" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- Trang thanh toán VietQR (mobile web, 20/11): mở từ nút mua trong
+         trang gói; nội dung do skRenderCheckout() vẽ vào #skCheckoutBody.
+         KHÔNG mở trong app bọc Capacitor (gate skIsNativeApp — App Store
+         3.1.1, IAP sẽ thay thế sau). Nút "Tôi đã chuyển khoản" chỉ ghi
+         nhận phía client; kích hoạt Premium do SePay webhook thực hiện. -->
+    <div class="overlay front" id="skCheckoutOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeSkCheckout" aria-label="Quay lại — đóng trang thanh toán">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2 id="skCkTitle">Thanh toán</h2><span id="skCkSub">VietQR · VietinBank</span></div>
+      </div>
+      <div class="detailbody">
+        <div id="skCheckoutBody"></div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
@@ -5770,9 +5825,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Firebase Auth” ở phần Tài khoản, cùng project donghung-3208d với bản
      web): onAuthStateChanged dưới đây tự đọc Premium khi đăng nhập và xóa
      cache khi đăng xuất, không cần sửa thêm.
-     KHÔNG có link mua trong app: dialog Premium chỉ thông báo khóa + nút
-     "Xem các gói nâng cấp" mở trang gói (hướng dẫn mua bằng chữ: mở
-     Chrome, đăng nhập tại sorakanji.com, mua bằng VND). */
+     Mua gói: trên mobile web (PWA) trang gói có nút mua mở trang thanh
+     toán VietQR (xem khối "THANH TOÁN VIETQR TRÊN MOBILE WEB" bên dưới);
+     trong app bọc Capacitor nút mua bị ẩn (App Store 3.1.1, IAP sau) và
+     trang gói chỉ còn hướng dẫn mua bằng chữ (mở Chrome, đăng nhập tại
+     sorakanji.com, mua bằng VND). */
   var SK_PREMIUM_KEY = "sk_premium";
   var SV_FREE_PER_CAT = 1; /* 1 video Shadowing miễn phí đầu tiên của mỗi thể loại (5 tab = 5 video) */
   var SV_PREVIEW_SECS = 30; /* Xem thử: video Shadowing không free, chưa Premium chỉ phát tới 30 giây */
@@ -5810,6 +5867,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Premium — xem skResumePendingGate). Chỉ là cờ — không lưu mục nào:
      sau đăng nhập, user Premium bấm lại mục vừa bấm để mở. */
   var skPendingGate = false;
+  var skPendingBuyPkg = null; /* gói user định mua khi bấm mua lúc chưa đăng nhập ("year"|"lifetime") — ý định mua sống sót qua lần đăng nhập: skResumePendingGate nối tiếp bằng skStartCheckout(pkg) thay vì hiện bảng Premium (xem khối VietQR). Xóa khi user đóng bảng đăng nhập (nút × / bấm nền — cùng chỗ xóa skPendingGate). */
   function skResumePendingGate(){
     if(!skPendingGate) return;
     skPendingGate = false;
@@ -5817,6 +5875,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     function finish(){
       if(done) return;
       done = true;
+      if(skPendingBuyPkg){
+        /* Vừa đăng nhập để mua gói: nối tiếp ý định mua (skStartCheckout
+           tự kiểm tra Premium — đã Premium thì chỉ hiện thông báo, không
+           tạo đơn). */
+        var pkg = skPendingBuyPkg;
+        skPendingBuyPkg = null;
+        skStartCheckout(pkg);
+        return;
+      }
       if(!isPremium()) showPremiumPrompt();
     }
     setTimeout(finish, 3000); /* dự phòng: đọc Premium treo thì vẫn đánh giá lại sau 3s */
@@ -5841,22 +5908,41 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(sc) sc.classList.add("open");
     return false;
   }
-  /* Đóng dialog Premium (và trang gói nếu đang mở — Premium vừa kích hoạt
-     thì cả 2 đều phải biến mất, xem premiumApplyLocks). Lũy đẳng. */
+  /* Đóng dialog Premium (và trang gói + trang thanh toán nếu đang mở —
+     Premium vừa kích hoạt thì cả 3 đều phải biến mất, xem
+     premiumApplyLocks). Lũy đẳng. */
   function closePremiumPrompt(){
     var dg = document.getElementById("pwDialog");
     var sc = document.getElementById("pwDialogScrim");
     if(dg){ dg.classList.remove("open"); dg.setAttribute("aria-hidden", "true"); }
     if(sc) sc.classList.remove("open");
     closePwPlans();
+    closeSkCheckout();
   }
   /* Mở trang giới thiệu gói Premium (overlay thường, như mọi trang con):
      đóng dialog trước (nếu đang mở), cuộn trang gói về đầu rồi showOv —
      z-index do skOvRaise cấp nên trang luôn nằm trên overlay đang mở
      (vd mở từ Tokutei thì nút quay lại về lại Tokutei). Mở được cả khi
-     chưa đăng nhập (trang chỉ giới thiệu, không mua trong app). */
+     chưa đăng nhập (trang gói hiện nút mua trên mobile web; khách bấm mua
+     thì hiện bảng đăng nhập trước — xem skStartCheckout). Có đơn chờ
+     thanh toán của chính tài khoản này thì mở lại trang thanh toán thay
+     vì trang gói (như bản web), tránh tạo trùng đơn; native thì không
+     có đơn chờ (không có VietQR) nên bỏ qua bước này. */
   function openPwPlans(){
     closePremiumPrompt();
+    if(!skIsNativeApp()){
+      var pend = skPendingOrderLoad();
+      var pu = skCheckoutUser();
+      if(pend && pu && pend.uid === pu.uid){
+        if(!isPremium()){ skOpenCheckout(pend); return; }
+        skPendingOrderClear(); /* đã Premium rồi: đơn chờ không còn cần */
+      }else if(pend && pu && pend.uid !== pu.uid){
+        skPendingOrderClear(); /* đơn chờ của tài khoản khác */
+      }
+      /* Chưa đăng nhập (pu null): giữ đơn chờ lại — đăng nhập xong bấm
+         lại sẽ thấy tiếp (đúng luật web). */
+    }
+    skClearPlansMsg();
     var ov = document.getElementById("pwPlansOverlay");
     if(!ov) return;
     var body = ov.querySelector(".detailbody");
@@ -6107,7 +6193,362 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(pwPlans) pwPlans.addEventListener("click", openPwPlans);
     var pwBack = document.getElementById("closePwPlans");
     if(pwBack) pwBack.addEventListener("click", closePwPlans);
+    skCheckoutInit(); /* VietQR checkout trên mobile web (20/11): wire nút mua + gate native */
   }, 0);
+
+  /* ================= THANH TOÁN VIETQR TRÊN MOBILE WEB (20/11) ================
+     Bản web desktop đã có VietQR từ 15/11; bản mobile trước đây chỉ hướng
+     dẫn mua bằng chữ. Đợt này thêm luồng mua ngay trên mobile web (PWA):
+     nút mua trong trang gói → tạo đơn Firestore sk_orders → hiện mã VietQR
+     + thông tin chuyển khoản → nút "Tôi đã chuyển khoản" chỉ ghi nhận phía
+     client; kích hoạt Premium là việc của SePay webhook (backend), app biết
+     qua listener onSnapshot có sẵn (premiumWatchStart) — CLIENT KHÔNG TỰ
+     MỞ PREMIUM. Không có khung Messenger trong đợt này.
+     Hằng số + shape đơn SAO Y bản web (skCreateOrder / skVietQR /
+     skTransferMemo trong index web) để webhook nhận diện được đơn:
+       - SK_VTB_ACC = "108888811513" (VietinBank, DONG THANH HUNG)
+       - memo = "SEVQR " + code (SePay chỉ nhận giao dịch VietinBank có nội
+         dung bắt đầu bằng SEVQR)
+       - doc sk_orders/{code}: {uid, email, displayName, package: "year"|
+         "lifetime", amount, status: "pending", createdAt: serverTimestamp}
+       - code = "SK" + 8 ký tự [A-Z0-9]; đơn chờ lưu localStorage key
+         "sk_pending_order" (CÙNG KEY với web — cùng origin sorakanji.com)
+       - VietQR: https://img.vietqr.io/image/ICB-108888811513-compact2.png
+         ?amount=<amount>&addInfo=<memo, encodeURIComponent>
+         &accountName=DONG%20THANH%20HUNG
+     GATE NATIVE (App Store 3.1.1): trong app bọc Capacitor, KHÔNG hiện
+     luồng VietQR — nút mua ẩn (skCheckoutInit), chỉ còn hướng dẫn mua bằng
+     chữ; IAP sẽ thay thế sau theo plan riêng. Phát hiện native qua
+     window.Capacitor, an toàn khi Capacitor vắng mặt (PWA).
+     Giá: Năm 360.000đ, Trọn đời 999.000đ (giảm đến 06/12/2026, sau đó về
+     giá gốc 799.000đ / 2.499.000đ — cùng luật skPrice của web). */
+  var SK_SALE_END = new Date("2026-12-06T23:59:59+07:00").getTime(); /* hết 06/12/2026 */
+  var SK_PACKAGES = {
+    year: {label: "Gói Năm", dur: "12 tháng", sale: 360000, full: 799000, save: 439000},
+    lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 2499000, save: 1500000}
+  };
+  var SK_VTB_ACC = "108888811513";
+  var SK_VTB_NAME = "DONG THANH HUNG";
+  var SK_NO_EMAIL_MSG = 'Tài khoản của bạn chưa có email nên chưa mua được gói. Bạn đăng xuất rồi đăng nhập lại bằng Google, bấm "Tiếp tục" ở màn đồng ý để bổ sung email, rồi quay lại mua nhé.';
+  function skSaleActive(){ return Date.now() <= SK_SALE_END; }
+  function skPrice(pkg){ var p = SK_PACKAGES[pkg] || SK_PACKAGES.year; return skSaleActive() ? p.sale : p.full; }
+  function skFmtVND(n){ return Number(n).toLocaleString("vi-VN") + "đ"; }
+  function skTransferMemo(code){ return "SEVQR " + code; }
+  function skVietQR(amount, memo){
+    return "https://img.vietqr.io/image/ICB-108888811513-compact2.png?amount=" + amount +
+      "&addInfo=" + encodeURIComponent(memo) + "&accountName=DONG%20THANH%20HUNG";
+  }
+  /* true khi chạy trong app bọc Capacitor (iOS/Android) — KHÔNG phải PWA
+     web. An toàn khi window.Capacitor vắng mặt: typeof + kiểm tra hàm
+     trước khi gọi, lỗi gì cũng coi là web. */
+  function skIsNativeApp(){
+    try{
+      return typeof window.Capacitor !== "undefined" && window.Capacitor &&
+        typeof window.Capacitor.isNativePlatform === "function" &&
+        !!window.Capacitor.isNativePlatform();
+    }catch(_){ return false; }
+  }
+  function skCheckoutDb(){
+    try{
+      var app = premiumFbApp();
+      return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
+    }catch(_){ return null; }
+  }
+  /* User hiện tại: ưu tiên window.SK_USER (applyAuthUser ghi), dự phòng
+     firebase.auth().currentUser — cùng luật skAuthUser của web (cần cho
+     đường "đăng nhập xong mua ngay": onAuthStateChanged có thể chưa kịp
+     chạy khi callback tiếp tục được gọi). */
+  function skCheckoutUser(){
+    try{
+      var u = window.SK_USER;
+      if(u && u.uid) return {uid: u.uid, email: u.email || "", displayName: u.displayName || "", name: u.name || ""};
+      var auth = skAuth();
+      var fu = auth && auth.currentUser;
+      if(fu) return {uid: fu.uid, email: fu.email || "", displayName: fu.displayName || "", name: fu.displayName || "Học viên"};
+    }catch(_){}
+    return null;
+  }
+  /* Mã đơn: "SK" + 8 ký tự [A-Z0-9], sinh bằng crypto — đúng luật web. */
+  function skGenOrderCode(){
+    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", out = "SK";
+    var buf = new Uint8Array(8);
+    if(window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(buf);
+    else for(var i = 0; i < 8; i++) buf[i] = Math.floor(Math.random() * 256);
+    for(var j = 0; j < 8; j++) out += chars.charAt(buf[j] % 36);
+    return out;
+  }
+  /* Tạo doc sk_orders/{code} theo hợp đồng backend (xem đầu khối). Rules
+     cấm client ĐỌC sk_orders nên không get() kiểm tra trùng được: rules
+     chỉ cho `create` (doc chưa tồn tại) — set() trùng mã sẽ bị chặn dạng
+     update (permission-denied) thì sinh mã mới thử lại, tối đa 3 lần.
+     Tài khoản chưa có email thì reject "no-email" (đơn không gắn được
+     email để đối soát) — cùng luật web. */
+  function skCreateOrder(pkg, amount, attempt){
+    attempt = attempt || 1;
+    var db = skCheckoutDb();
+    var u = skCheckoutUser();
+    if(!db || !u) return Promise.reject(new Error("not-ready"));
+    if(!u.email) return Promise.reject(new Error("no-email"));
+    var code = skGenOrderCode();
+    return db.collection("sk_orders").doc(code).set({
+      uid: u.uid, email: u.email || "", displayName: u.displayName || "", package: pkg, amount: amount, status: "pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){ return code; }).catch(function(err){
+      if(attempt < 3 && err && err.code === "permission-denied") return skCreateOrder(pkg, amount, attempt + 1);
+      throw err;
+    });
+  }
+  /* Đơn chờ thanh toán — lưu local để tải lại trang vẫn thấy lại mã đơn.
+     Key "sk_pending_order" DÙNG CHUNG với web (cùng origin). */
+  function skPendingOrderLoad(){
+    try{
+      var o = JSON.parse(window.localStorage.getItem("sk_pending_order") || "null");
+      return (o && o.code && o.pkg) ? o : null;
+    }catch(_){ return null; }
+  }
+  function skPendingOrderSave(o){
+    try{ window.localStorage.setItem("sk_pending_order", JSON.stringify(o)); }catch(_){}
+  }
+  function skPendingOrderClear(){
+    try{ window.localStorage.removeItem("sk_pending_order"); }catch(_){}
+  }
+  function skCopyFallback(text){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }catch(_){}
+  }
+  function skCopyText(text, okMsg){
+    function done(){
+      var m = document.getElementById("skCkMsg");
+      if(m){ m.textContent = okMsg || "Đã sao chép."; m.classList.remove("err"); }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){ skCopyFallback(text); done(); });
+    }else{ skCopyFallback(text); done(); }
+  }
+  /* Thông báo trong trang gói (#pwPlansMsg): đã Premium (xanh), lỗi tạo
+     đơn (đỏ) + nút "Thử lại" bấm lại đúng gói vừa lỗi. */
+  function skShowPlansMsg(text, ok){
+    var el = document.getElementById("pwPlansMsg");
+    if(!el) return;
+    el.classList.toggle("ok", !!ok);
+    el.textContent = text || "";
+  }
+  function skClearPlansMsg(){
+    var el = document.getElementById("pwPlansMsg");
+    if(!el) return;
+    el.classList.remove("ok");
+    el.innerHTML = "";
+  }
+  function skShowPlansError(msg, pkg){
+    var el = document.getElementById("pwPlansMsg");
+    if(!el) return;
+    el.classList.remove("ok");
+    el.textContent = "";
+    el.appendChild(document.createTextNode(msg));
+    if(pkg){
+      el.appendChild(document.createTextNode(" "));
+      var rb = document.createElement("button");
+      rb.className = "pw-retry";
+      rb.id = "pwPlansRetry";
+      rb.type = "button";
+      rb.textContent = "Thử lại";
+      rb.addEventListener("click", function(){ skStartCheckout(pkg); });
+      el.appendChild(rb);
+    }
+  }
+  /* Chống tạo đơn trùng: cờ in-flight theo phiên — bấm 2 lần (kể cả 2 gói
+     khác nhau) trong lúc đang tạo đơn thì lần sau bị bỏ qua; nút mua cũng
+     bị disable + đổi chữ "Đang tạo đơn…" cho tới khi xong/lỗi. */
+  var skCheckoutInFlight = false;
+  function skBuyBtn(pkg){ return document.getElementById(pkg === "lifetime" ? "pwBuyLifetime" : "pwBuyYear"); }
+  function skSetBuyBusy(pkg, busy){
+    var btn = skBuyBtn(pkg);
+    if(!btn) return;
+    btn.disabled = busy;
+    btn.textContent = busy ? "Đang tạo đơn…" : ("Mua " + (SK_PACKAGES[pkg] || SK_PACKAGES.year).label);
+  }
+  /* Luồng mua gói (mở từ nút mua trong trang gói, hoặc nối tiếp sau khi
+     đăng nhập — xem skResumePendingGate). Thứ tự kiểm tra:
+     native → đang tạo đơn → đã Premium → chưa đăng nhập → chưa có email →
+     đã có đơn chờ (mở lại, không tạo mới) → tạo đơn mới. */
+  function skStartCheckout(pkg){
+    pkg = (pkg === "lifetime") ? "lifetime" : "year";
+    if(skIsNativeApp()) return; /* GATE NATIVE: không tạo đơn trong app bọc */
+    if(skCheckoutInFlight) return;
+    if(isPremium()){
+      /* Đã Premium rồi thì không tạo đơn mới — đúng luật web
+         (renderNangcapPage hiện trang trạng thái thay vì nút mua). */
+      skShowPlansMsg("Bạn đang dùng Premium rồi — toàn bộ nội dung N3–N1 đã mở cho tài khoản của bạn.", true);
+      return;
+    }
+    var u = skCheckoutUser();
+    if(!u){
+      /* Khách chưa đăng nhập: hiện bảng đăng nhập TRƯỚC, ý định mua sống
+         sót qua lần đăng nhập (skPendingBuyPkg + skPendingGate — xem
+         skResumePendingGate). SDK chưa tải được thì hiện cổng lỗi + Thử
+         lại như showPremiumPrompt. */
+      skPendingBuyPkg = pkg;
+      skPendingGate = true;
+      if(!skAuth()){ skAuthGateShow(false); return; }
+      openLogin();
+      return;
+    }
+    if(!u.email){
+      skShowPlansError(SK_NO_EMAIL_MSG, null);
+      return;
+    }
+    var pend = skPendingOrderLoad();
+    if(pend && pend.uid === u.uid){
+      /* Đã có đơn chờ của chính tài khoản này: mở lại đơn đó thay vì tạo
+         đơn mới (tránh trùng đơn khi user đóng trang thanh toán rồi bấm
+         mua lại — đúng luật web). Muốn đổi gói thì bấm "Chọn gói khác"
+         trong trang thanh toán. */
+      skOpenCheckout(pend);
+      return;
+    }
+    if(pend) skPendingOrderClear(); /* đơn chờ của tài khoản khác */
+    skCheckoutInFlight = true;
+    skClearPlansMsg();
+    skSetBuyBusy(pkg, true);
+    var amount = skPrice(pkg);
+    skCreateOrder(pkg, amount).then(function(code){
+      skCheckoutInFlight = false;
+      skSetBuyBusy(pkg, false);
+      var order = {code: code, pkg: pkg, amount: amount, uid: u.uid, ack: false};
+      skPendingOrderSave(order);
+      skOpenCheckout(order);
+    }).catch(function(err){
+      skCheckoutInFlight = false;
+      skSetBuyBusy(pkg, false);
+      skShowPlansError(
+        (err && err.message === "no-email") ? SK_NO_EMAIL_MSG :
+        "Chưa tạo được đơn thanh toán — kiểm tra kết nối rồi thử lại." +
+        (err && err.code ? " (" + err.code + ")" : ""), pkg);
+    });
+  }
+  /* Mở/đóng trang thanh toán (overlay thường, như mọi trang con). */
+  function skOpenCheckout(order){
+    skRenderCheckout(order);
+    var ov = document.getElementById("skCheckoutOverlay");
+    if(!ov) return;
+    var body = ov.querySelector(".detailbody");
+    if(body) body.scrollTop = 0;
+    showOv(ov);
+  }
+  function closeSkCheckout(){
+    var ov = document.getElementById("skCheckoutOverlay");
+    if(ov) hideOv(ov);
+  }
+  function skCkMsg(t, isErr){
+    var m = document.getElementById("skCkMsg");
+    if(!m) return;
+    m.textContent = t || "";
+    m.classList.toggle("err", !!isErr);
+  }
+  /* Vẽ nội dung trang thanh toán cho 1 đơn chờ (dùng chung cho đơn vừa tạo
+     và đơn mở lại từ localStorage): tóm tắt đơn, mã VietQR, chuyển khoản
+     thủ công, nút "Tôi đã chuyển khoản" / "Kiểm tra lại trạng thái".
+     KHÔNG có khung Messenger trong đợt này. */
+  function skRenderCheckout(o){
+    var p = SK_PACKAGES[o.pkg] || SK_PACKAGES.year;
+    var title = document.getElementById("skCkTitle");
+    if(title) title.textContent = "Thanh toán — " + p.label;
+    var body = document.getElementById("skCheckoutBody");
+    if(!body) return;
+    var u = skCheckoutUser() || {};
+    var accountTxt = u.email || ((u.displayName || u.name || "Học viên") + " (chưa có email)");
+    var memo = skTransferMemo(o.code);
+    var qr = skVietQR(o.amount, memo);
+    var h = '<h3 class="wvsec">Đơn hàng của bạn</h3>' +
+      '<div class="card">' +
+      '<div class="ck-row"><span class="ck-k">Gói</span><span class="ck-v">' + p.label + " · " + p.dur + "</span></div>" +
+      '<div class="ck-row"><span class="ck-k">Số tiền</span><span class="ck-v ck-amount">' + skFmtVND(o.amount) + "</span></div>" +
+      '<div class="ck-row"><span class="ck-k">Tài khoản</span><span class="ck-v">' + esc(accountTxt) + "</span></div>" +
+      "</div>" +
+      '<p style="font-weight:800;margin:14px 0 4px;font-size:14px">Nội dung chuyển khoản — ghi ĐÚNG cả dòng này (kể cả SEVQR):</p>' +
+      '<div class="ck-code"><b id="skCkMemo">' + esc(memo) + "</b>" +
+      '<button class="ck-copy" id="skCkCopyMemo" type="button">Sao chép</button></div>' +
+      '<div class="ck-qr"><img id="skCkQr" src="' + qr + '" alt="Mã VietQR thanh toán ' + p.label + '">' +
+      "<p>Quét mã bằng app ngân hàng — số tiền và nội dung chuyển khoản đã điền sẵn.</p></div>" +
+      '<p style="font-weight:800;margin:14px 0 4px;font-size:14px">Hoặc chuyển khoản thủ công:</p>' +
+      '<div class="card">' +
+      '<div class="ck-row"><span class="ck-k">Ngân hàng</span><span class="ck-v">VietinBank</span></div>' +
+      '<div class="ck-row"><span class="ck-k">Chủ tài khoản</span><span class="ck-v">' + SK_VTB_NAME + "</span></div>" +
+      '<div class="ck-row"><span class="ck-k">Số tài khoản</span><span class="ck-v"><span id="skCkAcc">' + SK_VTB_ACC + '</span> <button class="ck-copy" id="skCkCopyAcc" type="button">Sao chép</button></span></div>' +
+      '<div class="ck-row"><span class="ck-k">Số tiền</span><span class="ck-v">' + skFmtVND(o.amount) + ' <button class="ck-copy" id="skCkCopyAmt" type="button">Sao chép</button></span></div>' +
+      '<div class="ck-row"><span class="ck-k">Nội dung</span><span class="ck-v">' + esc(memo) + "</span></div>" +
+      "</div>" +
+      '<div class="ck-note">⚠️ <b>Ghi ĐÚNG nội dung ' + esc(memo) + ' (kể cả SEVQR).</b> Sai hoặc thiếu nội dung, hệ thống không tự kích hoạt được — bạn sẽ cần liên hệ hỗ trợ để kích hoạt thủ công.</div>' +
+      (o.ack
+        ? '<div class="ck-ok">✅ <b>Đã ghi nhận!</b> Premium sẽ được kích hoạt tự động sau khi hệ thống nhận được chuyển khoản — <b>thường vài phút, tối đa 24h</b>. Bạn cứ học tiếp N5–N4 trong lúc chờ, không cần làm gì thêm.</div>' +
+          '<button class="ghostbtn" id="skCkRecheckBtn" type="button" style="width:100%;justify-content:center;">Kiểm tra lại trạng thái</button>'
+        : '<button class="cta" id="skCkPaidBtn" type="button" style="margin-top:0">Tôi đã chuyển khoản</button>') +
+      '<p class="ck-msg" id="skCkMsg"></p>' +
+      '<button class="ghostbtn" id="skCkOtherPkg" type="button" style="width:100%;justify-content:center;margin-top:10px;">← Chọn gói khác</button>';
+    body.innerHTML = h;
+    var cm = document.getElementById("skCkCopyMemo");
+    if(cm) cm.addEventListener("click", function(){ skCopyText(memo, "Đã sao chép nội dung chuyển khoản."); });
+    var ca = document.getElementById("skCkCopyAcc");
+    if(ca) ca.addEventListener("click", function(){ skCopyText(SK_VTB_ACC, "Đã sao chép số tài khoản."); });
+    var ct = document.getElementById("skCkCopyAmt");
+    if(ct) ct.addEventListener("click", function(){ skCopyText(String(o.amount), "Đã sao chép số tiền."); });
+    var paid = document.getElementById("skCkPaidBtn");
+    if(paid) paid.addEventListener("click", function(){
+      /* "Tôi đã chuyển khoản" CHỈ ghi nhận phía client (lưu ack vào đơn
+         chờ) — KHÔNG tự mở Premium; kích hoạt do SePay webhook thực hiện,
+         app biết qua listener onSnapshot (premiumWatchStart). */
+      o.ack = true;
+      skPendingOrderSave(o);
+      skRenderCheckout(o);
+    });
+    var re = document.getElementById("skCkRecheckBtn");
+    if(re) re.addEventListener("click", function(){
+      skCkMsg("Đang kiểm tra…");
+      premiumRefresh(function(){
+        if(isPremium()){
+          skPendingOrderClear();
+          closeSkCheckout();
+          closePwPlans();
+        }else{
+          skCkMsg("Chưa thấy kích hoạt — chuyển khoản thường được xử lý trong vài phút, tối đa 24h. Bạn thử kiểm tra lại sau nhé.", true);
+        }
+      });
+    });
+    var op = document.getElementById("skCkOtherPkg");
+    if(op) op.addEventListener("click", function(){
+      skPendingOrderClear();
+      closeSkCheckout();
+      openPwPlans();
+    });
+  }
+  /* Khởi tạo luồng mua (gọi trong setTimeout init của paywall): wire nút
+     mua + nút đóng trang thanh toán + mục "Nâng cấp Premium" ở Cài đặt.
+     GATE NATIVE — trong app bọc thì ẨN nút mua (chỉ còn hướng dẫn mua bằng
+     chữ), trên mobile web thì ẨN hướng dẫn mua bằng chữ (mua ngay tại đây). */
+  function skCheckoutInit(){
+    var native = skIsNativeApp();
+    var by = document.getElementById("pwBuyYear");
+    var bl = document.getElementById("pwBuyLifetime");
+    var guide = document.getElementById("pwGuide");
+    if(by){
+      by.hidden = native;
+      if(!native) by.addEventListener("click", function(){ skStartCheckout("year"); });
+    }
+    if(bl){
+      bl.hidden = native;
+      if(!native) bl.addEventListener("click", function(){ skStartCheckout("lifetime"); });
+    }
+    if(guide) guide.hidden = !native;
+    var back = document.getElementById("closeSkCheckout");
+    if(back) back.addEventListener("click", closeSkCheckout);
+    var sp = document.getElementById("setPremiumBtn");
+    if(sp) sp.addEventListener("click", openPwPlans);
+  }
 
   /* ---------- Data ---------- */
   var KANJI = [
@@ -20705,11 +21146,12 @@ function furiHTML(text){
   if(loginEmailInput) loginEmailInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doEmailLink(); } });
   document.getElementById("loginCancel2").addEventListener("click", closeLogin);
   /* Nút X đóng bảng đăng nhập (đăng nhập tùy chọn 18/11): user tự đóng
-     bảng = từ bỏ cổng đang chờ (xóa skPendingGate) rồi đóng như thường. */
+     bảng = từ bỏ cổng đang chờ (xóa skPendingGate + ý định mua
+     skPendingBuyPkg nếu có) rồi đóng như thường. */
   var loginCloseXBtn = document.getElementById("loginCloseX");
-  if(loginCloseXBtn) loginCloseXBtn.addEventListener("click", function(){ skPendingGate = false; closeLogin(); });
+  if(loginCloseXBtn) loginCloseXBtn.addEventListener("click", function(){ skPendingGate = false; skPendingBuyPkg = null; closeLogin(); });
   document.getElementById("loginLogout").addEventListener("click", doLogout);
-  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")){ skPendingGate = false; closeLogin(); } });
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")){ skPendingGate = false; skPendingBuyPkg = null; closeLogin(); } });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
      Nguồn ảnh, theo thứ tự người dùng chọn (lưu localStorage "sk_avatar_choice"):
@@ -23359,7 +23801,7 @@ function furiHTML(text){
   var TOPICS = [
     { id:"exam", label:"Luyện thi JLPT ở đâu, làm đề thế nào?",
       keywords:["luyen thi","thi jlpt","lam de","de thi","phong thi","test 1","nop bai","phieu dap an","de chuan","thi thu","180 diem","cham diem"],
-      answer:"Vào phòng thi theo 2 đường: Home → lưới Mục học → ô “Luyện thi”, hoặc Home → Nhiệm vụ hôm nay → “Thi thử”.\n\nCách làm đề:\n• Chọn cấp N5–N1 ở hàng nút trên cùng, rồi bấm 1 đề Test trong danh sách (riêng N3 có thêm “Đề chuẩn · N3” 102 câu theo đúng cấu trúc chính thức).\n• Trong phòng thi có đồng hồ đếm ngược chung cho cả đề, bấm đáp án để chọn, dùng nút “Phiếu đáp án” để nhảy nhanh tới câu bất kỳ.\n• Bấm “Nộp bài” để xem điểm trên thang 180, điểm từng phần và “Xem lại đáp án” kèm giải thích.\n\nLưu ý: cả 5 cấp N5/N4/N3/N2/N1 đều đã mở đủ Test 1–9 (phần viết của N3/N2/N1 là 9 bộ đề cố định mỗi cấp, mỗi đề một bộ riêng không trùng câu). Chỗ trống trong câu hỏi hiển thị dạng (........).",
+      answer:"Vào phòng thi theo 2 đường: Home → lưới Mục học → ô “Luyện JLPT”, hoặc Home → Nhiệm vụ hôm nay → “Thi thử”.\n\nCách làm đề:\n• Chọn cấp N5–N1 ở hàng nút trên cùng, rồi bấm 1 đề Test trong danh sách (riêng N3 có thêm “Đề chuẩn · N3” 102 câu theo đúng cấu trúc chính thức).\n• Trong phòng thi có đồng hồ đếm ngược chung cho cả đề, bấm đáp án để chọn, dùng nút “Phiếu đáp án” để nhảy nhanh tới câu bất kỳ.\n• Bấm “Nộp bài” để xem điểm trên thang 180, điểm từng phần và “Xem lại đáp án” kèm giải thích.\n\nLưu ý: cả 5 cấp N5/N4/N3/N2/N1 đều đã mở đủ Test 1–9 (phần viết của N3/N2/N1 là 9 bộ đề cố định mỗi cấp, mỗi đề một bộ riêng không trùng câu). Chỗ trống trong câu hỏi hiển thị dạng (........).",
       actions:[{label:"Mở Luyện thi", action:"exam"}] },
     { id:"listen", label:"Luyện nghe ở đâu?",
       keywords:["luyen nghe","nghe hieu","part 3","file nghe","mp3","nghe o dau"],
