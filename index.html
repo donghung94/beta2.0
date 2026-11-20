@@ -2080,6 +2080,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <h4>Liên hệ</h4>
           <a href="#/congdong">Cộng đồng học viên</a>
           <a href="#/nangcap">Nâng Premium</a>
+          <div id="skFooterContact" style="display:none"></div>
         </div>
       </div>
     </div>
@@ -2093,7 +2094,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
 <script src="mobile/assets/kanji-mnemonic-images.js"></script>
 <script>
 /* Link kênh chính thức của SoraKanji — nguồn chính là Firestore sk_config/social
-   (admin nhập trong trang Cài đặt, mục "Liên kết mạng xã hội"). 2 hằng số dưới
+   (admin nhập ở Bảng điều khiển #/admin, mục "Liên kết liên hệ"). 2 hằng số dưới
    chỉ là fallback khi Firestore chưa có doc; giá trị "#" = chưa có link (TUYỆT
    ĐỐI không tự bịa URL). Chưa có link thật thì nút tương ứng ở header bị ẨN. */
 var SOCIAL_TIKTOK_URL = "#"; /* fallback khi Firestore chưa có link TikTok */
@@ -10549,7 +10550,7 @@ function skMessengerUrl(fbUrl){
   }catch(e){ return fbUrl; }
 }
 /* Khung chat nhắn fanpage sau khi bấm "Tôi đã chuyển khoản": chỉ hiện khi đã có
-   link fanpage (Firestore sk_config/social, admin nhập ở Cài đặt) — chưa cấu
+   link fanpage (Firestore sk_config/social, admin nhập ở Bảng điều khiển) — chưa cấu
    hình hoặc đọc lỗi thì ẩn hẳn, không bao giờ mở link chết. */
 function skRenderChatBox(orderCode){
   var box = document.getElementById("skChatBox");
@@ -10829,12 +10830,6 @@ function renderSettingsPage(){
     '<button class="setrow" id="setPrivacy"><span class="grow">Chính sách quyền riêng tư</span><span aria-hidden="true">›</span></button>' +
     (webIsAdmin() ?
       '<h2 class="secttl">Quản trị</h2>' +
-      '<div class="card"><b style="font-size:16px">Liên kết mạng xã hội</b>' +
-      '<p style="margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6">Link Fanpage Facebook và TikTok hiện ở header trang web, và (sau này) dùng cho khung chat nhắn fanpage ở trang thanh toán. Để trống một ô rồi Lưu là xóa link đó.</p>' +
-      '<label class="auth-field">URL Fanpage Facebook<input id="skFbUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.facebook.com/ten-trang"></label>' +
-      '<label class="auth-field">URL TikTok<input id="skTtUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.tiktok.com/@ten-tai-khoan"></label>' +
-      '<p id="skSocialMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
-      '<button class="btn" id="skSocialSave" type="button" style="margin-top:10px">Lưu liên kết</button></div>' +
       '<div class="card" style="margin-top:14px"><b style="font-size:16px">Bảng điều khiển</b>' +
       '<p style="margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6">Thống kê học viên và doanh thu, danh sách đơn hàng, quản lý học viên và cấp Premium tay.</p>' +
       '<p style="margin:10px 0 0"><a class="btn" href="#/admin">Mở bảng điều khiển</a></p></div>'
@@ -10868,47 +10863,6 @@ function renderSettingsPage(){
   document.getElementById("setPrivacy").addEventListener("click", function(){ location.hash = "#/chinhsach"; });
   var delBtn = document.getElementById("setDelAcc");
   if(delBtn) delBtn.addEventListener("click", function(){ skDeleteAccountAsk(); });
-  /* --- Quản trị: liên kết mạng xã hội (chỉ admin mới thấy mục này) --- */
-  if(webIsAdmin()){
-    var fbEl = document.getElementById("skFbUrl"),
-        ttEl = document.getElementById("skTtUrl"),
-        saveBtn = document.getElementById("skSocialSave"),
-        socMsg = document.getElementById("skSocialMsg");
-    var socNote = function(text, ok){
-      if(!socMsg) return;
-      socMsg.textContent = text;
-      socMsg.style.color = ok ? "var(--ok)" : "var(--bad)";
-    };
-    if(fbEl && ttEl){
-      skLoadSocial().then(function(s){
-        fbEl.value = s.facebook || "";
-        ttEl.value = s.tiktok || "";
-      }).catch(function(){
-        socNote("Không tải được liên kết đã lưu — kiểm tra mạng rồi mở lại trang.", false);
-      });
-    }
-    if(saveBtn){
-      saveBtn.addEventListener("click", function(){
-        var fb = skSocialValidate(fbEl ? fbEl.value : "");
-        var tt = skSocialValidate(ttEl ? ttEl.value : "");
-        if(fb === null || tt === null){
-          socNote("Link chưa đúng định dạng — link phải bắt đầu bằng http:// hoặc https://, hoặc để trống để xóa link.", false);
-          return;
-        }
-        saveBtn.disabled = true;
-        socNote("Đang lưu…", true);
-        skSaveSocial(fb, tt).then(function(){
-          socNote("Đã lưu liên kết mạng xã hội.", true);
-        }).catch(function(err){
-          var code = (err && err.code) || "";
-          if(err && err.message === "not-ready") socNote("Chưa kết nối được Firebase — tải lại trang rồi thử lại.", false);
-          else if(code === "permission-denied") socNote("Bạn không có quyền lưu — cần đăng nhập bằng tài khoản quản trị.", false);
-          else if(code === "unavailable" || code === "deadline-exceeded") socNote("Không kết nối được mạng — kiểm tra kết nối rồi thử lại.", false);
-          else socNote("Chưa lưu được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.", false);
-        }).then(function(){ saveBtn.disabled = false; });
-      });
-    }
-  }
 }
 
 /* ================= TRANG PHÁP LÝ (#/dieukhoan, #/chinhsach) =================
@@ -11037,6 +10991,8 @@ function renderPrivacyPage(){
    - sk_stats: lượt truy cập (do function logVisit ghi; doc id
      visits-daily-{YYYY-MM-DD} / visits-monthly-{YYYY-MM} / visits-total).
    - sk_reports: báo lỗi câu hỏi do học viên gửi (mới nhất trước, tối đa 50).
+   - sk_config/social: liên kết liên hệ (Facebook, TikTok, Zalo, email) hiện
+     ở cột Liên hệ dưới chân trang — admin nhập ở mục "Liên kết liên hệ".
    - Danh sách học viên: phân trang 10/trang phía client, mới nhất trước
      (createdAt giảm dần); doc cũ thiếu createdAt vẫn hiện, xếp cuối.
    Rules (deploy riêng): admin được đọc các collection trên và ghi CHỈ field
@@ -11522,6 +11478,14 @@ function skAdminRenderShell(){
     '<label class="auth-field">Gói<select id="admGrantPkg"><option value="year">Gói Năm — 12 tháng</option><option value="lifetime">Gói Trọn đời</option></select></label>' +
     '<p id="admGrantMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
     '<button class="btn" id="admGrantBtn" type="button" style="margin-top:10px">Cấp Premium</button></div>' +
+    '<h2 class="secttl">Liên kết liên hệ</h2>' +
+    '<div class="card" id="admSocialCard"><p class="adm-note" style="margin:0">Link Facebook, TikTok, Zalo và email hỗ trợ hiện ở cột Liên hệ dưới chân trang web (kênh nào để trống thì ẩn). Facebook và TikTok còn hiện nút ở header và dùng cho khung chat nhắn fanpage ở trang thanh toán.</p>' +
+    '<label class="auth-field">URL Fanpage Facebook<input id="skAdmFbUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.facebook.com/ten-trang"></label>' +
+    '<label class="auth-field">URL TikTok<input id="skAdmTtUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.tiktok.com/@ten-tai-khoan"></label>' +
+    '<label class="auth-field">URL Zalo<input id="skAdmZaloUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://zalo.me/..."></label>' +
+    '<label class="auth-field">Email hỗ trợ<input id="skAdmEmail" type="email" inputmode="email" autocomplete="off" placeholder="vidu@email.com"></label>' +
+    '<p id="skAdmSocialMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
+    '<button class="btn" id="skAdmSocialSave" type="button" style="margin-top:10px">Lưu liên kết</button></div>' +
     '<h2 class="secttl">Đơn hàng (mới nhất trước)</h2>' +
     '<div class="card"><div class="adm-scroll"><table class="adm-table"><thead><tr><th>Mã đơn</th><th>Gói</th><th>Số tiền</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead>' +
     '<tbody id="admOrderBody"></tbody></table></div>' +
@@ -11574,6 +11538,55 @@ function skAdminRenderShell(){
       }).then(function(){ grantBtn.disabled = false; });
     });
   });
+  /* --- Liên kết liên hệ (chỉ admin mới tới được trang này) --- */
+  var socFbEl = document.getElementById("skAdmFbUrl"),
+      socTtEl = document.getElementById("skAdmTtUrl"),
+      socZlEl = document.getElementById("skAdmZaloUrl"),
+      socEmEl = document.getElementById("skAdmEmail"),
+      socSaveBtn = document.getElementById("skAdmSocialSave"),
+      socMsg = document.getElementById("skAdmSocialMsg");
+  var socNote = function(text, ok){
+    if(!socMsg) return;
+    socMsg.textContent = text;
+    socMsg.style.color = ok ? "var(--ok)" : "var(--bad)";
+  };
+  if(socFbEl && socTtEl && socZlEl && socEmEl){
+    skLoadSocial().then(function(s){
+      socFbEl.value = s.facebook || "";
+      socTtEl.value = s.tiktok || "";
+      socZlEl.value = s.zalo || "";
+      socEmEl.value = s.email || "";
+    }).catch(function(){
+      socNote("Không tải được liên kết đã lưu — kiểm tra mạng rồi mở lại trang.", false);
+    });
+  }
+  if(socSaveBtn){
+    socSaveBtn.addEventListener("click", function(){
+      var fb = skSocialValidate(socFbEl ? socFbEl.value : "");
+      var tt = skSocialValidate(socTtEl ? socTtEl.value : "");
+      var zl = skSocialValidate(socZlEl ? socZlEl.value : "");
+      var em = skSocialValidateEmail(socEmEl ? socEmEl.value : "");
+      if(fb === null || tt === null || zl === null){
+        socNote("Link chưa đúng định dạng — link phải bắt đầu bằng http:// hoặc https://, hoặc để trống để xóa link.", false);
+        return;
+      }
+      if(em === null){
+        socNote("Email chưa đúng định dạng — bạn kiểm tra lại email, hoặc để trống để xóa email.", false);
+        return;
+      }
+      socSaveBtn.disabled = true;
+      socNote("Đang lưu…", true);
+      skSaveSocial(fb, tt, zl, em).then(function(){
+        socNote("Đã lưu liên kết liên hệ.", true);
+      }).catch(function(err){
+        var code = (err && err.code) || "";
+        if(err && err.message === "not-ready") socNote("Chưa kết nối được Firebase — tải lại trang rồi thử lại.", false);
+        else if(code === "permission-denied") socNote("Bạn không có quyền lưu — cần đăng nhập bằng tài khoản quản trị.", false);
+        else if(code === "unavailable" || code === "deadline-exceeded") socNote("Không kết nối được mạng — kiểm tra kết nối rồi thử lại.", false);
+        else socNote("Chưa lưu được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.", false);
+      }).then(function(){ socSaveBtn.disabled = false; });
+    });
+  }
 }
 function skAdminLoad(){
   var rTok = _skRenderSeq; /* chup phien render hien tai (ham phu — khong mo phien moi) */
@@ -12783,19 +12796,25 @@ function openInstallGuide(){
     "Xem hướng dẫn cài", "Đóng", function(){ goHash("#/caidat"); });
 }
 
-/* ----- Link mạng xã hội (Firestore sk_config/social, admin nhập ở Cài đặt) -----
-   Doc sk_config/social: {facebook, tiktok, updatedAt, updatedBy}. Ai cũng đọc
-   được (link công khai); chỉ UID admin mới ghi được (xem firestore.rules).
-   Header + (sau này) khung chat ở trang thanh toán đọc từ SK_SOCIAL này. */
-var SK_SOCIAL = {loaded: false, facebook: "", tiktok: ""};
+/* ----- Link liên hệ (Firestore sk_config/social, admin nhập ở Bảng điều khiển #/admin) -----
+   Doc sk_config/social: {facebook, tiktok, zalo, email, updatedAt, updatedBy}.
+   Ai cũng đọc được (link công khai); chỉ UID admin mới ghi được (xem firestore.rules).
+   Header + footer + khung chat ở trang thanh toán đọc từ SK_SOCIAL này. */
+var SK_SOCIAL = {loaded: false, facebook: "", tiktok: "", zalo: "", email: ""};
 function skSocialNorm(v){
   v = (typeof v === "string") ? v.trim() : "";
   return (v && v !== "#") ? v : "";
 }
 function skSocialUrl(kind){
-  var v = skSocialNorm(kind === "facebook" ? SK_SOCIAL.facebook : SK_SOCIAL.tiktok);
+  if(kind === "email"){
+    var em = skSocialNorm(SK_SOCIAL.email);
+    return em ? "mailto:" + em : "";
+  }
+  var v = skSocialNorm(SK_SOCIAL[kind] || "");
   if(v) return v;
-  return skSocialNorm(kind === "facebook" ? SOCIAL_FACEBOOK_URL : SOCIAL_TIKTOK_URL);
+  if(kind === "facebook") return skSocialNorm(SOCIAL_FACEBOOK_URL);
+  if(kind === "tiktok") return skSocialNorm(SOCIAL_TIKTOK_URL);
+  return "";
 }
 function skLoadSocial(){
   if(SK_SOCIAL.loaded) return Promise.resolve(SK_SOCIAL);
@@ -12806,6 +12825,8 @@ function skLoadSocial(){
       var d = snap.data() || {};
       SK_SOCIAL.facebook = skSocialNorm(d.facebook);
       SK_SOCIAL.tiktok = skSocialNorm(d.tiktok);
+      SK_SOCIAL.zalo = skSocialNorm(d.zalo);
+      SK_SOCIAL.email = skSocialNorm(d.email);
     }
     SK_SOCIAL.loaded = true;
     applySocialLinks();
@@ -12826,6 +12847,28 @@ function applySocialLinks(){
     a.setAttribute("target", "_blank");
     a.setAttribute("rel", "noopener");
   });
+  applyFooterContact();
+}
+/* Vẽ 4 kênh liên hệ ở cột "Liên hệ" dưới chân trang (footer tĩnh, ngoài #app):
+   lấy từ SK_SOCIAL (Firestore sk_config/social) — kênh chưa nhập thì ẨN.
+   Email mở bằng mailto:. Không có kênh nào thì ẩn cả khối. */
+function applyFooterContact(){
+  var box = document.getElementById("skFooterContact");
+  if(!box) return;
+  var items = [
+    ["facebook", "Facebook"],
+    ["tiktok", "TikTok"],
+    ["zalo", "Zalo"],
+    ["email", "Email"]
+  ];
+  var html = "";
+  items.forEach(function(it){
+    var url = skSocialUrl(it[0]);
+    if(!url) return;
+    html += '<a href="' + esc(url) + '"' + (it[0] === "email" ? "" : ' target="_blank" rel="noopener"') + ">" + it[1] + "</a>";
+  });
+  box.innerHTML = html;
+  box.style.display = html ? "" : "none";
 }
 /* Validate URL link mạng xã hội: để trống = xóa link; có nhập thì phải bắt đầu
    bằng http:// hoặc https://. Trả về chuỗi đã trim, hoặc null khi không hợp lệ. */
@@ -12835,19 +12878,32 @@ function skSocialValidate(v){
   if(/^https?:\/\//i.test(v)) return v;
   return null;
 }
-/* Lưu 2 link vào sk_config/social (chỉ admin — rules chặn tài khoản khác).
-   Trả về Promise; lưu xong cập nhật cache + header ngay. */
-function skSaveSocial(facebook, tiktok){
+/* Validate email hỗ trợ: để trống = xóa email; có nhập thì phải đúng dạng
+   email (local@domain.tld). Trả về chuỗi đã trim, hoặc null khi không hợp lệ. */
+function skSocialValidateEmail(v){
+  v = (typeof v === "string") ? v.trim() : "";
+  if(!v) return "";
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return v;
+  return null;
+}
+/* Lưu 4 kênh liên hệ vào sk_config/social (chỉ admin — rules chặn tài khoản
+   khác). zalo/email là tham số mới (mặc định "" để tương thích lệnh gọi cũ).
+   Trả về Promise; lưu xong cập nhật cache + header + footer ngay. */
+function skSaveSocial(facebook, tiktok, zalo, email){
   var db = skDb();
   var u = skAuthUser();
   if(!db || !u) return Promise.reject(new Error("not-ready"));
+  zalo = zalo || "";
+  email = email || "";
   return db.collection("sk_config").doc("social").set({
-    facebook: facebook, tiktok: tiktok,
+    facebook: facebook, tiktok: tiktok, zalo: zalo, email: email,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     updatedBy: u.uid
   }, {merge: true}).then(function(){
     SK_SOCIAL.facebook = facebook;
     SK_SOCIAL.tiktok = tiktok;
+    SK_SOCIAL.zalo = zalo;
+    SK_SOCIAL.email = email;
     SK_SOCIAL.loaded = true;
     applySocialLinks();
   });
