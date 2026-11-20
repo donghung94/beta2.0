@@ -1908,6 +1908,7 @@ body:has(.sv2-page) footer.site{padding-bottom:81px; padding-bottom:calc(81px + 
 .fc-exbox{margin-top:12px; border-top:1px solid rgba(255,255,255,.14); padding-top:12px}
 .fc-exlab{font-size:11px; font-weight:800; letter-spacing:.08em; color:#8fa1c7; margin-bottom:5px}
 .fc-ex{font-size:18.5px; font-weight:600; color:#fff; line-height:1.7}
+.fc-exitem + .fc-exitem{margin-top:10px; border-top:1px solid rgba(255,255,255,.10); padding-top:10px}
 .fc-spk{width:44px; height:44px; border-radius:50%; border:0; background:transparent; color:#8fa1c7; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0}
 .fc-spk:hover{color:#fff; background:rgba(255,255,255,.08)}
 .fc-spk svg{width:24px; height:24px}
@@ -3449,9 +3450,55 @@ function wordExample(w){
   jp = String(jp || "").trim(); vi = String(vi || "").trim();
   return jp ? {jp: jp, vi: vi} : null;
 }
+/* TOAN BO cau vi du cua 1 tu (ban mobile: wvExPairs): data long
+   [[jp, vi], ...] boc du moi cap (thuong 5 cau); cac dang con lai
+   (phang, chuoi, example / exJp..., VOCAB_EXAMPLES) cho toi da 1 cap.
+   Chuoi fallback giong het wordExample(): nguon nao khong cho cap hop le
+   thi roi xuong nguon tiep theo. Tu chua co data thi tra mang rong —
+   giao dien khong hien khoi vi du, khong tu bia. */
+function wordExamples(w){
+  if(!w) return [];
+  if(Array.isArray(w.ex)){
+    if(w.ex.length && Array.isArray(w.ex[0])){
+      var out = [];
+      w.ex.forEach(function(p){
+        if(Array.isArray(p) && p[0] && String(p[0]).trim())
+          out.push({jp: String(p[0]).trim(), vi: p[1] ? String(p[1]).trim() : ""});
+      });
+      if(out.length) return out;
+    }
+    else if(w.ex[0]) return [{jp: String(w.ex[0]).trim(), vi: w.ex[1] ? String(w.ex[1]).trim() : ""}];
+  }
+  else if(typeof w.ex === "string" && w.ex.trim()) return [{jp: w.ex.trim(), vi: ""}];
+  if(w.example){
+    if(typeof w.example === "string" && w.example.trim()) return [{jp: w.example.trim(), vi: ""}];
+    if(w.example.jp) return [{jp: String(w.example.jp).trim(), vi: w.example.vi ? String(w.example.vi).trim() : ""}];
+  }
+  if(w.exJp) return [{jp: String(w.exJp).trim(), vi: w.exVi ? String(w.exVi).trim() : ""}];
+  if(w.exampleJp) return [{jp: String(w.exampleJp).trim(), vi: w.exampleVi ? String(w.exampleVi).trim() : ""}];
+  if(window.VOCAB_EXAMPLES){
+    var e = window.VOCAB_EXAMPLES[w.word + "|" + (w.reading || "")] || window.VOCAB_EXAMPLES[w.word];
+    if(e){
+      if(typeof e === "string" && e.trim()) return [{jp: e.trim(), vi: ""}];
+      if(Array.isArray(e)){
+        if(e.length && Array.isArray(e[0])){
+          var out2 = [];
+          e.forEach(function(p){
+            if(Array.isArray(p) && p[0] && String(p[0]).trim())
+              out2.push({jp: String(p[0]).trim(), vi: p[1] ? String(p[1]).trim() : ""});
+          });
+          return out2;
+        }
+        if(e[0]) return [{jp: String(e[0]).trim(), vi: e[1] ? String(e[1]).trim() : ""}];
+      }
+      else if(e.jp) return [{jp: String(e.jp).trim(), vi: e.vi ? String(e.vi).trim() : ""}];
+    }
+  }
+  return [];
+}
 function normWord(w, img){
   return {word: w.word, reading: w.reading || "", meaning: w.meaning || "",
-    hanViet: w.hanViet || "", img: w.img || img || null, ex: wordExample(w)};
+    hanViet: w.hanViet || "", img: w.img || img || null, ex: wordExample(w), exPairs: wordExamples(w)};
 }
 /* Furigana cho câu ví dụ từ vựng: chỉ N5/N4 có (đúng quy tắc bản mobile);
    N3/N2/N1 và chuyên ngành hiện chữ Hán trần. Khác GR_FURI_LEVELS của ngữ pháp (N5/N4/N3). */
@@ -3578,9 +3625,12 @@ function fcSpeakBtn(text, label){
 function cardFaceHTML(w){
   var img = (deck.settings.showImg && w.img) ? '<img class="fc-img" src="' + esc(w.img) + '" alt="Hình minh họa từ ' + esc(w.word) + '" onerror="this.style.display=\'none\'">' : "";
   var exBlock = "";
-  if(w.ex){
-    exBlock = '<div class="fc-exbox"><div class="fc-exlab">VÍ DỤ</div><div class="fc-ex jp">' + wvExFuri(deck.lv, w.ex.jp) + "</div>" +
-      (w.ex.vi ? '<div class="fc-exvi">' + esc(w.ex.vi) + "</div>" : "") + "</div>";
+  var exPairs = (w.exPairs && w.exPairs.length) ? w.exPairs : (w.ex ? [w.ex] : []);
+  if(exPairs.length){
+    exBlock = '<div class="fc-exbox"><div class="fc-exlab">VÍ DỤ</div>' + exPairs.map(function(p){
+      return '<div class="fc-exitem"><div class="fc-ex jp">' + wvExFuri(deck.lv, p.jp) + "</div>" +
+        (p.vi ? '<div class="fc-exvi">' + esc(p.vi) + "</div>" : "") + "</div>";
+    }).join("") + "</div>";
   }
   if(deck.cardMode === "example"){
     if(!deck.flipped){
@@ -9305,6 +9355,7 @@ function skFmtExp(n){ return Number(n || 0).toLocaleString("vi-VN"); }
 
 var SK_WEB_WALLET_KEY = "sk_web_wallet_exp";
 var skWalletExpMem = null; /* null = chưa biết EXP; số = EXP đã biết */
+var skWalletWinsMem = null; /* null = chưa biết số thắng; số = số trận thắng Đấu trường (M-01) */
 var skWalletExpErr = false; /* fetch lỗi + không có cache */
 var skWalletFetching = false;
 function skWebExpCacheRead(){
@@ -9313,34 +9364,38 @@ function skWebExpCacheRead(){
     if(!u) return null;
     var c = JSON.parse(localStorage.getItem(SK_WEB_WALLET_KEY) || "null");
     if(!c || c.uid !== u.uid || typeof c.exp !== "number") return null;
-    return c.exp;
+    /* Cache cũ (trước M-01) không có wins -> null: tab đấu trí hiện "—"
+       cho tới khi fetch ví làm mới. */
+    return {exp: c.exp, wins: (typeof c.wins === "number" ? c.wins : null)};
   }catch(e){ return null; }
 }
-function skWebExpCacheWrite(exp){
+function skWebExpCacheWrite(exp, wins){
   try{
     var u = webCurrentUser();
     if(!u) return;
-    localStorage.setItem(SK_WEB_WALLET_KEY, JSON.stringify({uid: u.uid, exp: exp, at: Date.now()}));
+    localStorage.setItem(SK_WEB_WALLET_KEY, JSON.stringify({uid: u.uid, exp: exp, wins: (typeof wins === "number" ? wins : null), at: Date.now()}));
   }catch(e){}
 }
 function skWebExpClear(){
-  skWalletExpMem = null; skWalletExpErr = false;
+  skWalletExpMem = null; skWalletWinsMem = null; skWalletExpErr = false;
   try{ localStorage.removeItem(SK_WEB_WALLET_KEY); }catch(e){}
 }
-/* Trạng thái EXP cho render: {status, exp} — status: "loggedout" |
-   "loading" | "known" | "error". */
+/* Trạng thái EXP cho render: {status, exp, wins} — status: "loggedout" |
+   "loading" | "known" | "error". wins = số trận thắng Đấu trường (M-01),
+   null khi chưa biết (cache cũ / chưa fetch). */
 function skWebExp(){
   var u = null;
   try{ u = webCurrentUser(); }catch(e){ u = null; }
-  if(!u) return {status: "loggedout", exp: 0};
-  if(skWalletExpMem !== null) return {status: "known", exp: skWalletExpMem};
+  if(!u) return {status: "loggedout", exp: 0, wins: null};
+  if(skWalletExpMem !== null) return {status: "known", exp: skWalletExpMem, wins: skWalletWinsMem};
   var c = skWebExpCacheRead();
-  if(c !== null){ skWalletExpMem = c; return {status: "known", exp: c}; }
-  if(skWalletExpErr) return {status: "error", exp: 0};
-  return {status: "loading", exp: 0};
+  if(c !== null){ skWalletExpMem = c.exp; skWalletWinsMem = c.wins; return {status: "known", exp: c.exp, wins: c.wins}; }
+  if(skWalletExpErr) return {status: "error", exp: 0, wins: null};
+  return {status: "loading", exp: 0, wins: null};
 }
-/* Đọc CHỈ ĐỌC tổng EXP (wallet.data.tuvi) của tài khoản đang đăng nhập.
-   Không có doc wallet -> EXP 0. Chỉ vẽ lại trang Xếp hạng khi EXP đổi
+/* Đọc CHỈ ĐỌC tổng EXP (wallet.data.tuvi) + số trận thắng Đấu trường
+   (wallet.data.wins, M-01) của tài khoản đang đăng nhập. Không có doc
+   wallet -> EXP 0, thắng 0. Chỉ vẽ lại trang Xếp hạng khi EXP/thắng đổi
    (hoặc lần đầu biết / lần đầu lỗi) nên không lặp render. */
 function skFetchWalletExp(){
   var u = null;
@@ -9357,19 +9412,22 @@ function skFetchWalletExp(){
     return;
   }
   skWalletFetching = true;
-  var prevKnown = (skWalletExpMem !== null), prevExp = skWalletExpMem;
+  var prevKnown = (skWalletExpMem !== null), prevExp = skWalletExpMem, prevWins = skWalletWinsMem;
   db.collection("kanji_progress").doc(u.uid).collection("sync").doc("wallet").get().then(function(snap){
     skWalletFetching = false;
     skWalletExpErr = false;
-    var exp = 0;
+    var exp = 0, wins = 0;
     if(snap && snap.exists){
       var d = (snap.data() || {}).data || {};
       exp = Math.floor(Number(d.tuvi) || 0);
       if(exp < 0) exp = 0;
+      wins = Math.floor(Number(d.wins) || 0);
+      if(wins < 0) wins = 0;
     }
     skWalletExpMem = exp;
-    skWebExpCacheWrite(exp);
-    if((!prevKnown || prevExp !== exp) && (location.hash || "#/") === "#/xephang"){ try{ renderRankPage(); }catch(e){} }
+    skWalletWinsMem = wins;
+    skWebExpCacheWrite(exp, wins);
+    if((!prevKnown || prevExp !== exp || prevWins !== wins) && (location.hash || "#/") === "#/xephang"){ try{ renderRankPage(); }catch(e){} }
   }).catch(function(){
     skWalletFetching = false;
     /* Lỗi mạng/quyền: giữ cache cũ nếu có, không thì báo lỗi để UI nói rõ. */
@@ -9412,8 +9470,9 @@ function skRankCardHTML(){
     '<p class="rk-mynext">' + nextHtml + '</p></div>';
 }
 /* Hàng "Bạn": web không có dữ liệu hạng toàn cục nên cột hạng hiện "—";
-   EXP lấy từ ví đồng bộ (skWebExp) kèm cấp theo EXP. Chưa đăng nhập thì
-   EXP hiện "—" + pill "Chưa đăng nhập"; đang tải / lỗi thì pill nói rõ. */
+   EXP + số thắng lấy từ ví đồng bộ (skWebExp) kèm cấp theo EXP. Chưa
+   đăng nhập thì chỉ số hiện "—" + pill "Chưa đăng nhập"; đang tải / lỗi
+   thì pill nói rõ. M-01: tab đấu trí hiện số thắng, tab XP hiện EXP. */
 function rankMeData(){
   var u = null;
   try{ u = webCurrentUser(); }catch(e){ u = null; }
@@ -9424,12 +9483,13 @@ function rankMeData(){
     photo: (u && u.photoURL) ? u.photoURL : "",
     rank: null, /* web không có bảng xếp hạng toàn cục */
     exp: st.status === "known" ? st.exp : null,
+    wins: st.status === "known" ? st.wins : null,
     expStatus: st.status,
     rankName: rk ? rk.name : "",
     rankNum: rk ? rk.bac : 0
   };
 }
-function rankMeHTML(){
+function rankMeHTML(mode){
   var m = rankMeData();
   var av = m.photo
     ? '<span class="rk-av rk-avimg"><img src="' + esc(m.photo) + '" alt=""></span>'
@@ -9439,14 +9499,20 @@ function rankMeHTML(){
   if(m.expStatus === "loggedout") pill = '<span class="rk-demo">Chưa đăng nhập</span>';
   else if(m.expStatus === "loading") pill = '<span class="rk-demo">Đang tải EXP…</span>';
   else if(m.expStatus === "error") pill = '<span class="rk-demo">Chưa tải được EXP</span>';
-  var xpHtml = m.exp === null
-    ? '<span class="rk-xp">⚡ —</span>'
-    : '<span class="rk-xp">⚡ ' + rankFmtK(m.exp) + ' XP</span>';
-  return '<div class="rk-row rk-me" data-rank="me" data-rank-name="' + esc(m.rankName) + '" data-rank-num="' + (m.rankNum || "") + '" data-exp="' + (m.exp === null ? "" : m.exp) + '">' +
+  /* M-01: chỉ số chính theo tab như hàng bot (rankPrimaryHTML) — tab đấu
+     trí hiện số trận thắng, tab Tổng XP hiện EXP. */
+  var statHtml = (mode === "duel")
+    ? (m.wins === null
+      ? '<span class="rk-xp">⚔️ —</span>'
+      : '<span class="rk-xp">⚔️ ' + m.wins + ' thắng</span>')
+    : (m.exp === null
+      ? '<span class="rk-xp">⚡ —</span>'
+      : '<span class="rk-xp">⚡ ' + rankFmtK(m.exp) + ' XP</span>');
+  return '<div class="rk-row rk-me" data-rank="me" data-rank-name="' + esc(m.rankName) + '" data-rank-num="' + (m.rankNum || "") + '" data-exp="' + (m.exp === null ? "" : m.exp) + '" data-wins="' + (m.wins === null ? "" : m.wins) + '">' +
     '<span class="rk-num" title="Chưa có bảng xếp hạng toàn cục">—</span>' + av +
     '<span class="rk-row-main"><b>' + esc(m.name) + '</b>' +
     (m.name === "Bạn" ? "" : '<span class="rk-me-tag">Bạn</span>') + rankChip + pill + '</span>' +
-    '<span class="rk-row-stats">' + xpHtml + '</span></div>';
+    '<span class="rk-row-stats">' + statHtml + '</span></div>';
 }
 function rankBoardHTML(mode){
   var list = rankSorted(mode);
@@ -9456,7 +9522,7 @@ function rankBoardHTML(mode){
     '<button type="button" class="rk-tab' + (mode === "xp" ? " on" : "") + '" data-mode="xp" role="tab" aria-selected="' + (mode === "xp") + '">⚡ Tổng XP</button>' +
     '<button type="button" class="rk-tab' + (mode === "duel" ? " on" : "") + '" data-mode="duel" role="tab" aria-selected="' + (mode === "duel") + '">⚔️ Đấu trí thắng</button></div>' +
     '<div class="rk-cols"><span>' + firstLbl + '</span><span>🗂 Thẻ ghi nhớ</span><span>📖 Ngày lộ trình</span></div>' +
-    rankPodiumHTML(list, mode) + rankRowsHTML(list, mode) + rankMeHTML();
+    rankPodiumHTML(list, mode) + rankRowsHTML(list, mode) + rankMeHTML(mode);
 }
 function renderRankBoard(){
   var box = document.getElementById("rankBoard");
