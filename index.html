@@ -1381,6 +1381,7 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .sh-btns button{border:1.5px solid var(--line-strong); background:var(--card); color:var(--ink); border-radius:9px; padding:6px 12px; font-size:13px; font-weight:700; cursor:pointer}
 .sh-btns button:hover{border-color:var(--blue); color:var(--blue-dark)}
 .sh-btns button.rec{border-color:var(--bad); color:var(--bad)}
+.sh-score{display:block} /* M-06: hop diem phat am tung cau shadowing */
 .sh-btns button:disabled{opacity:.45; cursor:default}
 
 /* ===== Đọc hiểu AI: thư viện + trang bài karaoke ===== */
@@ -4943,6 +4944,14 @@ function validOptsC(correct, d){
   return true;
 }
 
+/* M-07: map kindKey → nhóm chấm điểm (sec), khớp base() của bản mobile
+   (yomi/hyoki/ctx/syn/yoho/kotoba → vocab; g1/g1dlg/star/bunsho → grammar;
+   readS/readM/readL/tougou/shuchou/info → reading). Chỉ dùng dự phòng khi
+   EXAM_COMP row[3] thiếu. */
+var EX_SEC_BY_KEY = {yomi: "vocab", hyoki: "vocab", ctx: "vocab", syn: "vocab", yoho: "vocab", kotoba: "vocab",
+  g1: "grammar", g1dlg: "grammar", star: "grammar", bunsho: "grammar",
+  readS: "reading", readM: "reading", readL: "reading", tougou: "reading", shuchou: "reading", info: "reading"};
+
 /* --- Dựng phần viết --- */
 function buildWritten(lv, testNo){
   var spec = window.EXAM_COMP[lv];
@@ -5069,6 +5078,7 @@ function buildWritten(lv, testNo){
   var madeMap = {};
   for(var si = 0; si < spec.length; si++){
     var row = spec[si], key = row[0], kindName = row[1], need = row[2], made = 0;
+    var base0 = qs.length; /* M-07: mốc để gắn sec cho câu của đúng dòng spec này */
     if(fixed){
       if(key === "yomi" || key === "hyoki" || key === "ctx" || key === "syn" || key === "yoho" || key === "kotoba"){
         var items = fixed[key] || [];
@@ -5220,6 +5230,10 @@ function buildWritten(lv, testNo){
         });
       }
     }
+    /* M-07: gắn nhóm chấm điểm (sec) cho câu vừa dựng — lấy từ EXAM_COMP
+       row[3] (vocab/grammar/reading), dự phòng EX_SEC_BY_KEY nếu thiếu. */
+    var sec = row[3] || EX_SEC_BY_KEY[key] || null;
+    for(var ti = base0; ti < qs.length; ti++) qs[ti].sec = sec;
     madeMap[key] = made;
   }
   EX_RNG = Math.random;
@@ -5235,6 +5249,7 @@ function buildListening(lv, testNo){
   var OFFK = ["課題理解", "ポイント理解", "概要理解", "即時応答", "総合理解"];
   return items.map(function(it){
     var q = newQ("listen", official ? (OFFK[it.t - 1] || "Nghe hiểu") : (comp[it.t - 1] || ["Nghe hiểu"])[0], "listen" + it.t);
+    q.sec = "listen"; /* M-07 */
     q.audio = (official ? "mobile/assets/listen-exam-n3/" : "mobile/assets/listen-" + LV_LOWER[lv] + "/") + it.au;
     q.prompt = it.q || "";
     if(it.imgs && it.imgs.length){
@@ -5422,6 +5437,7 @@ function startExam(lv, testNo, qs, mins, label){
   if(exTimer){ clearInterval(exTimer); exTimer = null; }
   EX = {
     lv: lv, test: testNo, label: label || ("Test " + testNo), qs: qs, mins: mins,
+    official: (lv === "N3" && testNo === 0), /* M-07: De chuan N3 cham theo nhom N2/N1 nhu mobile */
     answers: qs.map(function(q){ return q.type === "star" ? [] : -1; }),
     submitted: false, timeLeft: mins * 60, result: null
   };
@@ -5451,10 +5467,12 @@ function renderExamPlayer(){
       : '<button class="btn sm" id="exSubmit">Nộp bài</button>') +
     "</div><div id=\"exBody\" style=\"padding-bottom:40px\">";
   var lastKind = null, lastPart = null, num = 0;
+  var groups = exPartGroups(EX.lv); /* M-07: tiêu đề theo 3 nhóm chấm điểm */
   EX.qs.forEach(function(q, i){
-    if(q.part !== lastPart){
-      lastPart = q.part; lastKind = null;
-      h += '<h2 style="margin:28px 0 0;font-size:21px">' + (q.part === "written" ? "Phần 1 · Ngôn ngữ & Đọc hiểu (đề viết)" : "Phần 2 · Nghe hiểu") + "</h2>";
+    var gi = exGroupIndex(q);
+    if(gi !== lastPart){
+      lastPart = gi; lastKind = null;
+      h += '<h2 style="margin:28px 0 0;font-size:21px">Phần ' + (gi + 1) + " · " + esc(groups[gi].name) + "</h2>";
     }
     if(q.kind !== lastKind){
       lastKind = q.kind;
@@ -5596,33 +5614,85 @@ function confirmSubmit(){
     function(){ submitExam(false); }
   );
 }
+/* ---------- Chấm điểm /180: 3 nhóm × /60, đúng như bản mobile (M-07) ----------
+   Nhóm chấm (exPartGroups — port nguyên văn từ mobile):
+   - N2/N1 hoặc Đề chuẩn N3: [Từ vựng + Ngữ pháp] / [Đọc hiểu] / [Nghe hiểu]
+   - N5/N4/N3 thường: [Từ vựng・Kanji] / [Văn pháp・Đọc hiểu] / [Nghe hiểu]
+   Mỗi nhóm: điểm = làm tròn(% đúng × 60); hạng A ≥ 67%, B ≥ 34%, còn lại C.
+   Đỗ khi: tổng ≥ điểm đậu của cấp VÀ mỗi phần ≥ 31,7% (so sánh trên % đúng,
+   đúng phép so sánh của mobile — p.pct < 31.7 là trượt, KHÔNG phải ≥ 19/60). */
+function exGrade(pct){ return pct >= 67 ? "A" : (pct >= 34 ? "B" : "C"); }
+function exPartGroups(lv){
+  if((EX && EX.official) || lv === "N2" || lv === "N1"){
+    return [
+      {name: "Ngôn ngữ kiến thức (Từ vựng + Ngữ pháp)", secs: ["vocab", "grammar"]},
+      {name: "Đọc hiểu", secs: ["reading"]},
+      {name: "Nghe hiểu", secs: ["listen"]}
+    ];
+  }
+  return [
+    {name: "Từ vựng・Kanji", secs: ["vocab"]},
+    {name: "Văn pháp・Đọc hiểu", secs: ["grammar", "reading"]},
+    {name: "Nghe hiểu", secs: ["listen"]}
+  ];
+}
+/* Nhóm chấm của 1 câu (chỉ số trong exPartGroups); dự phòng theo q.part
+   nếu câu chưa được gắn sec. */
+function exGroupIndex(q){
+  var groups = exPartGroups(EX.lv);
+  for(var i = 0; i < groups.length; i++){
+    if(groups[i].secs.indexOf(q.sec) >= 0) return i;
+  }
+  return q.part === "listen" ? groups.length - 1 : 0;
+}
+function exIsCorrect(q, a){
+  if(q.type === "star") return Array.isArray(a) && a.length === 4 && a[0] === 0 && a[1] === 1 && a[2] === 2 && a[3] === 3;
+  return a === q.ans;
+}
+function exScore(){
+  var groups = exPartGroups(EX.lv);
+  var parts = groups.map(function(g){
+    var total = 0, correct = 0;
+    EX.qs.forEach(function(q, i){
+      if(g.secs.indexOf(q.sec) < 0) return;
+      total++;
+      if(exIsCorrect(q, EX.answers[i])) correct++;
+    });
+    var pct = total ? correct / total * 100 : 0;
+    return {name: g.name, total: total, correct: correct, pct: pct, score: Math.round(pct / 100 * 60), grade: exGrade(pct)};
+  });
+  var totalScore = parts.reduce(function(a, p){ return a + p.score; }, 0);
+  var passMark = EXAM_TOTALS[EX.lv][3];
+  var reasons = [];
+  if(totalScore < passMark) reasons.push("Tổng điểm " + totalScore + " chưa đạt ngưỡng " + passMark + "/180 của " + EX.lv + ".");
+  parts.forEach(function(p){ if(p.pct < 31.7) reasons.push("Phần " + p.name + " chỉ đúng " + Math.round(p.pct * 10) / 10 + "% (cần ≥ 31,7%)."); });
+  return {parts: parts, totalScore: totalScore, pass: reasons.length === 0, reasons: reasons};
+}
 function submitExam(auto){
   if(!EX || EX.submitted) return;
   EX.submitted = true;
   if(exTimer){ clearInterval(exTimer); exTimer = null; }
-  var wT = 0, wC = 0, lT = 0, lC = 0;
   var byKind = {};
   EX.qs.forEach(function(q, i){
-    var a = EX.answers[i], ok;
-    if(q.type === "star") ok = Array.isArray(a) && a.length === 4 && a[0] === 0 && a[1] === 1 && a[2] === 2 && a[3] === 3;
-    else ok = a === q.ans;
     if(!byKind[q.kind]) byKind[q.kind] = [0, 0];
     byKind[q.kind][1]++;
-    if(ok) byKind[q.kind][0]++;
-    if(q.part === "written"){ wT++; if(ok) wC++; } else { lT++; if(ok) lC++; }
+    if(exIsCorrect(q, EX.answers[i])) byKind[q.kind][0]++;
   });
-  var estW = wT ? Math.round(120 * wC / wT) : 0;
-  var estL = lT ? Math.round(60 * lC / lT) : 0;
-  EX.result = {wC: wC, wT: wT, lC: lC, lT: lT, est: estW + estL, estW: estW, estL: estL, byKind: byKind, auto: auto};
+  var res = exScore();
+  EX.result = {parts: res.parts, totalScore: res.totalScore, pass: res.pass, reasons: res.reasons,
+    est: res.totalScore, byKind: byKind, auto: auto};
   renderExamResult();
   window.scrollTo(0, 0);
 }
 function renderExamResult(){
   var rTok = skBeginRender();
   var r = EX.result, t = EXAM_TOTALS[EX.lv];
-  var passTotal = r.est >= t[3];
-  var passParts = (r.wT === 0 || r.wC / r.wT >= 0.317) && (r.lT === 0 || r.lC / r.lT >= 0.317);
+  var pass = r.pass; /* M-07: đỗ/trượt do exScore() tính theo 3 nhóm */
   var rows = "";
+  r.parts.forEach(function(p){
+    rows += '<tr><td>' + esc(p.name) + '</td><td class="n">' + p.correct + " / " + p.total + " câu · " +
+      (Math.round(p.pct * 10) / 10) + "% → " + p.score + "/60 · " + p.grade + "</td></tr>";
+  });
   Object.keys(r.byKind).forEach(function(k){
     rows += "<tr><td>" + esc(k) + '</td><td class="n">' + r.byKind[k][0] + " / " + r.byKind[k][1] + "</td></tr>";
   });
@@ -5630,14 +5700,12 @@ function renderExamResult(){
     '<a href="#/thi/' + EX.lv + '">' + EX.lv + "</a> / " + EX.label + "</div>" +
     "<h1>Kết quả — JLPT " + EX.lv + " " + EX.label + "</h1></div>" +
     '<div class="card" style="max-width:680px;margin:14px auto 20px"><div class="score-hero">' +
-    '<div style="color:var(--muted);font-weight:700">ĐIỂM ƯỚC LƯỢNG</div><b>' + r.est + '</b><span style="font-size:22px;color:var(--muted);font-weight:800"> / 180</span>' +
-    '<div style="margin-top:6px" class="' + (passTotal && passParts ? "pass" : "fail") + '">' +
-    (passTotal && passParts ? "Đạt chuẩn đậu của cấp " + EX.lv + " (điểm đậu tham chiếu " + t[3] + "/180)"
-                             : "Chưa đạt chuẩn đậu " + t[3] + "/180 — xem lại các câu sai bên dưới để ôn tiếp") + "</div>" +
-    '<p class="hint" style="max-width:520px;margin:10px auto 0">Điểm ước lượng quy đổi theo tỉ lệ câu đúng (phần viết /120, phần nghe /60). JLPT thật dùng thang điểm chuẩn hóa riêng; điều kiện đậu tham chiếu: tổng ≥ ' + t[3] + " và mỗi phần đạt tối thiểu ~31,7%.</p></div>" +
+    '<div style="color:var(--muted);font-weight:700">ĐIỂM ƯỚC LƯỢNG</div><b>' + r.totalScore + '</b><span style="font-size:22px;color:var(--muted);font-weight:800"> / 180</span>' +
+    '<div style="margin-top:6px" class="' + (pass ? "pass" : "fail") + '">' +
+    (pass ? "Đạt chuẩn đậu của cấp " + EX.lv + " (điểm đậu tham chiếu " + t[3] + "/180)"
+                             : "Chưa đạt chuẩn đậu " + t[3] + "/180 — " + r.reasons.join(" ") + " Xem lại các câu sai bên dưới để ôn tiếp") + "</div>" +
+    '<p class="hint" style="max-width:520px;margin:10px auto 0">Điểm ước lượng quy đổi theo tỉ lệ câu đúng (mỗi phần /60, tổng /180). JLPT thật dùng thang điểm chuẩn hóa riêng; điều kiện đậu tham chiếu: tổng ≥ ' + t[3] + " và mỗi phần đạt tối thiểu 31,7%.</p></div>" +
     '<table class="score"><tbody>' +
-    '<tr><td>Phần viết</td><td class="n">' + r.wC + " / " + r.wT + " câu → " + r.estW + "/120</td></tr>" +
-    '<tr><td>Phần nghe</td><td class="n">' + r.lC + " / " + r.lT + " câu → " + r.estL + "/60</td></tr>" +
     rows + "</tbody></table>" +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">' +
     '<a class="btn" href="#/thi/' + EX.lv + '">Làm đề khác</a>' +
@@ -5649,8 +5717,10 @@ function renderExamResult(){
     if(wrap.dataset.done){ wrap.scrollIntoView({behavior: "smooth"}); return; }
     wrap.dataset.done = "1";
     var rh = "", lastKind = null, lastPart = null, num = 0;
+    var groups = exPartGroups(EX.lv); /* M-07: tiêu đề xem lại theo 3 nhóm chấm điểm */
     EX.qs.forEach(function(q, i){
-      if(q.part !== lastPart){ lastPart = q.part; lastKind = null; rh += '<h2 style="margin:26px 0 0;font-size:20px">' + (q.part === "written" ? "Phần viết — xem lại" : "Phần nghe — xem lại") + "</h2>"; }
+      var gi = exGroupIndex(q);
+      if(gi !== lastPart){ lastPart = gi; lastKind = null; rh += '<h2 style="margin:26px 0 0;font-size:20px">Phần ' + (gi + 1) + " · " + esc(groups[gi].name) + " — xem lại</h2>"; }
       if(q.kind !== lastKind){ lastKind = q.kind; rh += '<div class="ex-sec"><span class="jp">' + esc(q.kind) + "</span></div>"; }
       num++;
       rh += qcardHTML(q, i, num);
@@ -8341,6 +8411,7 @@ function svInitCatalog(){
 /* ================= HET SHADOWING VIDEO — CATALOG (W1) ================= */
 
 var listenPick = -1, listenChecked = false;
+var lsWebScores = {}; /* M-06: diem phat am tung cau shadowing Part 3, key lv-idx-li — giu khi roi trang roi quay lai (nhu lsScores mobile) */
 function speakRate(text, rate){
   if(!SET_SOUND) return;
   try{
@@ -8399,7 +8470,8 @@ function renderListenItem(lv, idx){
             '<button type="button" data-sh-slow="' + li + '">Nghe chậm</button>' +
             '<button type="button" data-sh-rec="' + li + '">Ghi âm nhắc lại</button>' +
             '<button type="button" data-sh-play="' + li + '" disabled>Nghe giọng mình</button></span>' +
-            '<span class="hint" data-sh-st="' + li + '" style="display:block;margin:4px 0 0"></span></span></div>';
+            '<span class="hint" data-sh-st="' + li + '" style="display:block;margin:4px 0 0"></span>' +
+            '<span class="sh-score" data-sh-score="' + li + '">' + (lsWebScores[lv + "-" + idx + "-" + li] || "") + '</span></span></div>';
         }).join("") + "</div>";
     }
     $app.innerHTML = h;
@@ -8429,7 +8501,7 @@ function renderListenItem(lv, idx){
         }).join("") + "</div>" : "");
     });
     /* Shadowing: nghe mẫu / nghe chậm / ghi âm nhắc lại từng câu (tối đa 30 giây) */
-    var shAudio = {}, shRec = null, shStream = null, shTimer = null, shLine = -1;
+    var shAudio = {}, shRec = null, shStream = null, shTimer = null, shLine = -1, shSR = null;
     function shStatus(li, txt){
       var s = $app.querySelector('[data-sh-st="' + li + '"]');
       if(s) s.textContent = txt;
@@ -8438,6 +8510,14 @@ function renderListenItem(lv, idx){
       if(shTimer){ clearTimeout(shTimer); shTimer = null; }
       if(shRec && shRec.state !== "inactive"){ try{ shRec.stop(); }catch(e){} }
       shRec = null;
+    }
+    /* M-06: hien hop diem phat am tung cau (port lsShowScore mobile) */
+    function shShowScore(st, jp, li){
+      if(st && st.err === "aborted") return;
+      var html = scPanelHTML(scResultFor(st, [jp]));
+      lsWebScores[lv + "-" + idx + "-" + li] = html;
+      var box = $app.querySelector('[data-sh-score="' + li + '"]');
+      if(box) box.innerHTML = html;
     }
     $app.querySelectorAll("[data-sh-say]").forEach(function(b){
       b.addEventListener("click", function(){ speakRate(it.dlg[parseInt(b.getAttribute("data-sh-say"), 10)].jp, 0.92); });
@@ -8460,10 +8540,17 @@ function renderListenItem(lv, idx){
           shStatus(li, "Trình duyệt này không hỗ trợ ghi âm — hãy nghe mẫu và tự nhắc lại thành tiếng.");
           return;
         }
+        /* M-06: xoa diem cu cua cau nay truoc khi ghi lai (nhu mobile lsStartRec) */
+        delete lsWebScores[lv + "-" + idx + "-" + li];
+        var scBox = $app.querySelector('[data-sh-score="' + li + '"]');
+        if(scBox) scBox.innerHTML = "";
         navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream){
           shStream = stream; shLine = li;
           var chunks = [];
-          var mr = new MediaRecorder(stream);
+          var mySR = scBegin(); shSR = mySR; /* M-06: bat nhan dien giong noi de cham diem */
+          var mr;
+          try{ mr = new MediaRecorder(stream); }
+          catch(e){ scAbort(mySR); if(shStream){ shStream.getTracks().forEach(function(t){ t.stop(); }); shStream = null; } shStatus(li, "Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
           shRec = mr;
           mr.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
           mr.onstop = function(){
@@ -8477,6 +8564,8 @@ function renderListenItem(lv, idx){
               if(pb) pb.disabled = false;
               shStatus(li, "Đã ghi xong — bấm “Nghe giọng mình” để so sánh với câu mẫu.");
             }
+            scStop(mySR, function(st){ shShowScore(st, it.dlg[li].jp, li); }); /* M-06: cham diem phat am */
+            if(shSR === mySR) shSR = null;
           };
           mr.start();
           b.textContent = "■ Dừng ghi";
