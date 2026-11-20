@@ -3256,6 +3256,12 @@
             <path d="M22.3 20c.9 1 2.5 1 3.4 0" stroke="#B3543F" stroke-width="1.3" fill="none" stroke-linecap="round"/>
             <circle cx="17.5" cy="26" r="1.7" fill="#C8102E"/><circle cx="24" cy="26" r="1.7" fill="#E3A008"/><circle cx="30.5" cy="26" r="1.7" fill="#C8102E"/>
           </symbol>
+          <!-- icon Lo trinh hoc: route Lucide, phong x2 tu icon tab 24px -->
+          <symbol id="ic-path" viewBox="0 0 48 48">
+            <circle cx="12" cy="38" r="6" fill="none" stroke="#C8102E" stroke-width="4"/>
+            <path d="M18 38h17a7 7 0 0 0 0-14h-22a7 7 0 0 1 0-14H30" fill="none" stroke="#C8102E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="36" cy="10" r="6" fill="none" stroke="#C8102E" stroke-width="4"/>
+          </symbol>
           <symbol id="ic-shop" viewBox="0 0 48 48">
             <path d="M24.5 7C24.8 3.8 27.5 1.8 30.8 2.2c-.3 3.3-2.6 5.4-6.3 4.8z" fill="#1E7D46"/>
             <circle cx="24" cy="14.5" r="7.5" fill="#D9A441"/>
@@ -3380,8 +3386,8 @@
           <button class="appicon" data-app="shop">
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-shop"></use></svg></span><span>Cửa hàng</span>
           </button>
-          <button class="appicon" data-app="chat">
-            <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-chat"></use></svg></span><span>Phòng chat</span>
+          <button class="appicon" data-app="path">
+            <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-path"></use></svg></span><span>Lộ trình học</span>
           </button>
           <button class="appicon" data-app="duel">
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-duel"></use></svg></span><span>Đấu trường</span>
@@ -3471,6 +3477,7 @@
               <button class="pathbtn" id="pathOpenBtn">Khai trình độ</button>
             </div>
             <div class="pathsteps" id="pathSteps"></div>
+            <div class="pathmap" id="pathMapHome"></div>
             <p class="pb-note" id="pathNote">Lộ trình <b>30 ngày</b> theo cấp đang học: mỗi tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử; ngày 29 <b>Tổng ôn</b>, ngày 30 <b>Thi thử tổng kết</b>. Học xong ngày nào, đánh dấu đã xong để mở ngày tiếp theo.</p>
           </div>
           </div>
@@ -3881,13 +3888,13 @@
       </section>
     </div>
 
-    <!-- bottom nav kieu Facebook: chi icon, 5 nut ngang hang (Xep hang - Lo trinh hoc - Home - Ca nhan - Cai dat) -->
+    <!-- bottom nav kieu Facebook: chi icon, 5 nut ngang hang (Xep hang - Phong chat - Home - Ca nhan - Cai dat) -->
     <nav class="tabbar" id="tabbar">
       <button class="tabbtn" data-tab="rank" aria-label="Xếp hạng">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/><path d="M7 6H4a2 2 0 0 0 0 4h3M17 6h3a2 2 0 0 1 0 4h-3"/></svg>
       </button>
-      <button class="tabbtn" data-tab="path" aria-label="Lộ trình học">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>
+      <button class="tabbtn" data-tab="chat" aria-label="Phòng chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z"/></svg>
       </button>
       <button class="tabbtn on" data-tab="home" aria-label="Home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
@@ -5745,7 +5752,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     </div>
 
   </div>
-  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu hiện đại, lưới Mục học, thanh tab: Xếp hạng · Lộ trình học · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu trường (đấu lệch giờ 10 câu, thắng cộng điểm đóng góp), ví Xu trong tab Cá nhân và Cửa hàng để tiêu Xu / đổi đồ hiếm bằng điểm đóng góp. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cấp độ tương ứng, kèm lộ trình 30 ngày theo cấp đang học (nhịp tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử × 4 tuần + tổng ôn + thi thử tổng kết, mở khóa từng ngày theo thứ tự, tiến độ lưu riêng từng cấp). Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Mục học và hàng tiện ích đã đổi sang phong cách chibi hiện đại (học viên chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Xu (tinh thạch ngọc lục) và Điểm đóng góp (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Cửa hàng với 6 khung kèm giá (60–250 Xu, khung Ngọc Bội 500 điểm đóng góp) — mua xong khung đeo luôn lên avatar; quân hàm cấp độ kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → huy hiệu cấp Tướng). Lưới Mục học nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Cửa hàng · Phòng chat · Đấu trường. Ô Tokutei (icon học viên chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): danh sách dọc 1 cột 14 ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ), Xây dựng ở hàng đầu và mỗi hàng ghi “(đang biên soạn)” sau tên ngành — bấm vào 1 hàng là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Mục học và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nối theo tài khoản Firebase Auth thật: đầu tab Cá nhân có mục Tài khoản để đăng nhập bằng Google, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ. Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 Xu và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu trường, Cửa hàng, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Mục học, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng Google thì app tự lấy ảnh hồ sơ của tài khoản đó làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như cũ. Đăng nhập bằng Google là app tự lấy ảnh hồ sơ của chính tài khoản đó (photoURL của Firebase) làm avatar; ai cũng tự tải ảnh từ máy lên được.</p>
+  <p class="hint">Bản xem thử giao diện điện thoại của SoraKanji — logo chibi thu nhỏ ở đầu Home, “Nhiệm vụ hôm nay” kiểu hiện đại, lưới Mục học, thanh tab: Xếp hạng · Phòng chat · Home (giữa) · Cá nhân · Cài đặt. Mới thêm: Đấu trường (đấu lệch giờ 10 câu, thắng cộng điểm đóng góp), ví Xu trong tab Cá nhân và Cửa hàng để tiêu Xu / đổi đồ hiếm bằng điểm đóng góp. Lộ trình học cá nhân: khai trình độ JLPT sau đăng ký (nút “Khai trình độ” trong Nhiệm vụ hôm nay, hoặc tab Cá nhân) — app soạn chính tuyến riêng bắt đầu từ cấp độ tương ứng, kèm lộ trình 30 ngày theo cấp đang học (nhịp tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử × 4 tuần + tổng ôn + thi thử tổng kết, mở khóa từng ngày theo thứ tự, tiến độ lưu riêng từng cấp). Icon Dịch ảnh đã bỏ, chờ thêm icon khác sau. Toàn bộ icon ở lưới Mục học và hàng tiện ích đã đổi sang phong cách chibi hiện đại (học viên chibi cầm kiếm/bút lông, hồ lô, cúp vàng, tia sét…), giữ tông đỏ · kem · vàng đồng. Mới thêm: icon Xu (tinh thạch ngọc lục) và Điểm đóng góp (huy chương vàng) ở ví, nút giá và số dư; mục Khung avatar trong Cửa hàng với 6 khung kèm giá (60–250 Xu, khung Ngọc Bội 500 điểm đóng góp) — mua xong khung đeo luôn lên avatar; quân hàm cấp độ kiểu quân đội nằm cạnh tên cấp ở mọi nơi (1–3 vạch chevron → sao → huy hiệu cấp Tướng). Lưới Mục học nay 11 ô (4 cột): Từ vựng · Ngữ pháp · Kanji · Luyện thi · Luyện nghe · Đọc hiểu · Tokutei / Xếp hạng · Cửa hàng · Lộ trình học · Đấu trường. Ô Tokutei (icon học viên chibi đội mũ bảo hộ vàng có chữ 特) mở trang Kỹ năng đặc định (特定技能): danh sách dọc 1 cột 14 ngành lấy chung danh sách với mục Từ vựng → Chuyên ngành (Xây dựng · Thực phẩm · Kaigo · Nông nghiệp · Ngư nghiệp · Vệ sinh tòa nhà · Ô tô · Hàng không · Lưu trú · Ăn uống · Đóng tàu · Chế tạo · Lâm nghiệp · Chế biến gỗ), Xây dựng ở hàng đầu và mỗi hàng ghi “(đang biên soạn)” sau tên ngành — bấm vào 1 hàng là thẻ ngành đổi theo, mỗi thẻ hiện huy hiệu “Đang biên soạn” vì nội dung ôn thi Tokutei chưa có, không bịa bài học; cuối thẻ gợi ý học trước từ vựng của ngành ở mục Từ vựng → Chuyên ngành. Ô Luyện nghe nay mở trang chọn cấp: cả 5 cấp N5–N1 đều có nội dung thật — tổng 149 hội thoại Part 3 có file nghe MP3 giọng đã duyệt (N5 24, N4 28, N3 28, N2 32, N1 37; nghe, chọn đáp án dạng hình hoặc chữ, chấm đúng/sai, xem giải thích — giải thích N2/N1 đã dịch sang tiếng Việt) và mục Shadowing theo cấp luyện từng câu theo đúng các hội thoại đó (nghe cả hội thoại bằng giọng đã duyệt, luyện câu bằng giọng máy kèm furigana và dịch Việt, ghi âm tối đa 30 giây nghe lại so sánh; riêng N1 lượt thoại dài tách thành từng câu), kèm nhóm 8 câu Minna cũ ở trang N5. Ô Đọc hiểu nay mở mục luyện đọc thật: chọn cấp → dạng bài → danh sách bài → trang đọc. Đã có đủ 200 bài đọc tự viết mới (400 câu hỏi) trên 20 ô cấp × dạng — N5/N4 có 3 dạng (Ngắn · Vừa · Tìm thông tin), N3 thêm dạng Dài, N2/N1 đủ 5 dạng (thêm Hiểu ý chính); mỗi dạng 10 bài, mỗi bài 2 câu hỏi trắc nghiệm kèm giải thích tiếng Việt vì sao đúng / vì sao các đáp án khác sai và phần từ vựng cuối bài, đúng chuẩn từng cấp (furigana cho N5/N4/N3); trả lời hết câu hỏi thì bài được đánh dấu “ĐÃ ĐỌC”. Mới thêm: trang Quản lý học viên dành riêng cho Admin (ô “Quản trị” trong lưới Mục học và mục Quản lý học viên ở tab Cá nhân chỉ hiện khi tài khoản đang đăng nhập là Admin) — quyền Admin nối theo tài khoản Firebase Auth thật: đầu tab Cá nhân có mục Tài khoản để đăng nhập bằng Google, đăng nhập bằng nongaphao@gmail.com là ô Quản trị hiện và trang quản lý mở khóa ngay, email khác vẫn ẩn như cũ. Trang quản lý hiện tổng số người dùng app và số tài khoản bị khóa; từng học viên có nút Tặng 50 Xu và Khóa / Mở khóa, kèm ô tìm kiếm theo tên. Mọi trang con (phòng thi, chi tiết kanji, Đấu trường, Cửa hàng, lộ trình, quản trị…) đều có nút quay lại ở góc trái trên cùng, và thanh tab dưới luôn hiện ở mọi trang — bấm tab bất kỳ là đóng trang con để về tab đó. Khung Nhiệm vụ hôm nay: cuộn hết bên trong khung thì lực cuộn chuyền tiếp ra trang ngoài, kéo xuống tới lưới Mục học, không bị kẹt trong khung. Mới thêm PWA: manifest + icon bé gái chibi (192/512 + maskable + Apple touch), banner “Cài SoraKanji lên màn hình chính” cuối Home, mục “App trên điện thoại (PWA)” ở tab Cài đặt hiện trạng thái hiển thị / kết nối / service worker và hướng dẫn cài cho Android Chrome + iPhone Safari, kèm lối tắt Thi JLPT / Ôn tập / Xếp hạng khi mở từ icon đã cài. File service worker nằm ở assets/sw.js kèm theo bộ PWA — trong bản xem thử này nó chỉ đăng ký được cho thư mục assets/ (trình duyệt giới hạn phạm vi theo vị trí file), khi phát hành thật đặt bản sao của nó cạnh index.html là học offline áp cho toàn app. Mới thêm: tài nguyên chữ đầy đủ 2.138 kanji N5–N1 — hàng gợi ý ở màn Vẽ kanji thu gọn thành một thanh nhỏ phía trên khung vẽ (kiểu Mazii), bấm vào một chữ gợi ý (hoặc nút kính lúp) là mở trang chi tiết của chữ đó: Hán Việt, phát âm On/Kun dạng chip có nghe, số nét + cấp JLPT, bộ và phân tích thành phần, nghĩa kèm ví dụ, mẹo ghi nhớ, danh sách từ vựng, bình luận của học viên (đăng thêm được ngay trong phiên), và hai mục Âm Kun / Âm On nhóm từ vựng theo từng cách đọc ở phía dưới. Mới thêm: đổi ảnh đại diện ở tab Cá nhân (bấm thẳng vào avatar có huy hiệu máy ảnh, hoặc mục “Ảnh đại diện” trong danh sách) — đăng nhập bằng Google thì app tự lấy ảnh hồ sơ của tài khoản đó làm avatar; ai cũng tự tải ảnh từ máy lên được (app tự cắt vuông, thu nhỏ 256px, lưu trên máy này), hoặc quay về avatar chữ 空 mặc định; ảnh hiện đồng bộ ở tab Cá nhân, hàng “Bạn” ở Xếp hạng và tin nhắn của bạn trong Phòng chat, khung avatar mua ở Cửa hàng vẫn bọc quanh ảnh như cũ. Đăng nhập bằng Google là app tự lấy ảnh hồ sơ của chính tài khoản đó (photoURL của Firebase) làm avatar; ai cũng tự tải ảnh từ máy lên được.</p>
 </div>
 
   <!-- handwriting.js (MIT) — lớp gọi Google Input Tools, file nguyên bản ở assets/ -->
@@ -7509,10 +7516,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(typeof dkStopAudio === "function") dkStopAudio(); /* dừng đọc Đọc hiểu AI nếu đang đọc */
       lsShadowEntry = false; /* Rời trang bằng thanh tab: hủy entry Shadowing (overlay bị ẩn mà không qua nút đóng). */
       document.querySelectorAll(".overlay.front").forEach(function(o){ hideOv(o); });
-      /* Tab Lo trinh hoc mo OVERLAY (khong phai screen) nen khong qua goTab:
-         goTab("path") se tat het screen vi screens khong co "path". */
-      if(b.dataset.tab === "path") openPath();
-      else goTab(b.dataset.tab);
+      goTab(b.dataset.tab);
     });
   });
   /* ---------- Thanh tab dưới ẩn/hiện theo cuộn (kiểu Facebook) ----------
@@ -18304,7 +18308,7 @@ function furiHTML(text){
       else if(a === "duel") openDuel();
       else if(a === "shop") openShop();
       else if(a === "rank") goTab("rank");
-      else if(a === "chat") goTab("chat");
+      else if(a === "path") openPath();
       else if(a === "me") goTab("me");
       else if(a === "settings") goTab("settings");
       else if(a === "admin") openAdmin();
@@ -18624,20 +18628,17 @@ function furiHTML(text){
     sh.classList.add("open");
     sh.setAttribute("aria-hidden", "false");
   }
-  function renderPathMap(){
-    var lv = planCourseLv();
-    var done = planDoneGet(lv);
-    var days = planDays(lv);
-    var r = REALMS[appliedLv];
-    document.getElementById("pathTitle").textContent = "Lộ trình · " + lv;
-    document.getElementById("planSectTitle").textContent = "Lộ trình 30 ngày · " + lv;
-    document.getElementById("pathProgCard").innerHTML =
-      '<div class="pp-top"><div class="pp-name">Ngày ' + Math.min(done + 1, 30) + ' / 30<span>Lộ trình ' + lv + ' · Chặng ' + r.n + ' — ' + r.courseLbl + '</span></div>' +
-      '<div class="pp-count">' + done + '/30 ✓</div></div>' +
-      '<div class="pp-bar"><div class="pp-fill" style="transform:scaleX(' + (Math.round(done / 30 * 100) / 100) + ')"></div></div>';
-
+  /* ---------- Duong 30 ngay dung chung cho overlay + Home ----------
+     renderRoadInto() ve duong (SVG + 30 nut .pnode + nhan .plabel) vao 1
+     container bat ky tu CUNG nguon state (lv/done/days) — overlay (#pathMap)
+     va Home (#pathMapHome) luon nhat quan vi cung 1 ham sinh HTML.
+     hintEl: phan tu hien thi goi y khi bam ngay khoa — chi overlay co
+     #pathMapHint; Home truyen null (bam ngay khoa o Home khong lam gi).
+     Sheet chi tiet ngay (#planSheet) la toan cuc nen khong can nhan doi. */
+  function renderRoadInto(el, lv, done, days, hintEl){
+    if(!el) return;
     var ROW = 92, W = 360, H = ROW * days.length;
-    var xs = days.map(function(_, i){ return i % 2 === 0 ? 238 : 122; }); /* xen kẽ phải / trái */
+    var xs = days.map(function(_, i){ return i % 2 === 0 ? 238 : 122; }); /* xen ke phai / trai */
     var ys = days.map(function(_, i){ return i * ROW + ROW / 2; });
     var d = "M " + xs[0] + " " + ys[0];
     for(var k = 1; k < xs.length; k++){
@@ -18666,21 +18667,42 @@ function furiHTML(text){
         'aria-label="Ngày ' + day + ": " + task.name + " — " + stTxt + '">' + extra +
         '<span class="pnum">' + day + "</span>" + inner + "</button>";
     });
-    var mapEl = document.getElementById("pathMap");
-    mapEl.style.height = H + "px";
-    mapEl.innerHTML = h;
-    mapEl.querySelectorAll(".pnode").forEach(function(b){
+    el.style.height = H + "px";
+    el.innerHTML = h;
+    el.querySelectorAll(".pnode").forEach(function(b){
       b.addEventListener("click", function(){
         var day = parseInt(b.getAttribute("data-pday"), 10);
         var curDone = planDoneGet(planCourseLv());
         if(day > curDone + 1){
-          document.getElementById("pathMapHint").textContent =
+          if(hintEl) hintEl.textContent =
             "Ngày " + day + " đang khóa — hoàn thành ngày trước để mở khóa.";
           return;
         }
         openPlanDay(day);
       });
     });
+  }
+  /* Ban Home cua duong 30 ngay (#pathMapHome trong .pathbox, ngay duoi nut
+     Khai trinh do): cung nguon state voi overlay, khong co phan tu goi y
+     ngay khoa. Duoc goi cuoi renderPathHome() nen moi diem doi state
+     (doi cap, danh dau xong ngay, dong bo) deu re-render Home cung luc. */
+  function renderPathMapHome(){
+    var lv = planCourseLv();
+    renderRoadInto(document.getElementById("pathMapHome"), lv, planDoneGet(lv), planDays(lv), null);
+  }
+  function renderPathMap(){
+    var lv = planCourseLv();
+    var done = planDoneGet(lv);
+    var days = planDays(lv);
+    var r = REALMS[appliedLv];
+    document.getElementById("pathTitle").textContent = "Lộ trình · " + lv;
+    document.getElementById("planSectTitle").textContent = "Lộ trình 30 ngày · " + lv;
+    document.getElementById("pathProgCard").innerHTML =
+      '<div class="pp-top"><div class="pp-name">Ngày ' + Math.min(done + 1, 30) + ' / 30<span>Lộ trình ' + lv + ' · Chặng ' + r.n + ' — ' + r.courseLbl + '</span></div>' +
+      '<div class="pp-count">' + done + '/30 ✓</div></div>' +
+      '<div class="pp-bar"><div class="pp-fill" style="transform:scaleX(' + (Math.round(done / 30 * 100) / 100) + ')"></div></div>';
+
+    renderRoadInto(document.getElementById("pathMap"), lv, done, days, document.getElementById("pathMapHint"));
   }
   function renderRoadmap(){
     var h = "";
@@ -18728,36 +18750,13 @@ function furiHTML(text){
       : (appliedLv >= 9 ? "Đã đạt cấp Tướng · cấp cao nhất" : "Đang luyện tập nâng cao sau N1")) + " · Mục tiêu thi 12/2026";
     document.getElementById("mePathLbl").textContent =
       "Lộ trình học cá nhân — đã khai " + LV_NAMES[appliedLv] + ", chặng " + r.n;
+    /* Duong 30 ngay o Home (#pathMapHome): re-render cung moi diem goi
+       renderPathHome() — doi cap, danh dau xong ngay, dong bo tien do —
+       nen Home va overlay khong bao gio lech. */
+    renderPathMapHome();
   }
   var pathOverlay = document.getElementById("pathOverlay");
   function openPath(){ renderRoadmap(); showOv(pathOverlay); }
-  /* ---------- Dong bo trang thai active (.on) cua tab Lo trinh ----------
-     Lo trinh la OVERLAY (#pathOverlay), khong phai screen, nen goTab khong
-     quan duoc .on cua nut tab "path". MutationObserver tren class cua
-     pathOverlay bat MOI duong mo/dong (nut tab, nut Home, hang Ca nhan,
-     Sora, nut X, Ap dung, Hoc ngay, bam tab khac, swipe-back) ma khong can
-     sua tung diem dong rieng le. Callback doc TRANG THAI CUOI (khong xu ly
-     tung mutation) vi bam tab Lo trinh 2 lan lien tiep gay 2 mutation
-     (dong roi mo lai) trong cung 1 task; observer chay o microtask SAU
-     handler dong bo nen luon thay trang thai cuoi (vd sau khi handler tab
-     hideOv + goTab thi active screen da la tab vua bam).
-     Khi mo: chi tab Lo trinh .on. Khi dong: .on tro ve tab cua screen dang
-     active; screen khong co nut tab (jlpt/review/chat) thi khong tab nao
-     .on — dung tien le hien tai cua goTab. */
-  function skSyncPathTab(){
-    var pathBtn = document.querySelector('.tabbtn[data-tab="path"]');
-    if(!pathBtn) return;
-    if(pathOverlay.classList.contains("open")){
-      document.querySelectorAll(".tabbtn").forEach(function(b){ b.classList.toggle("on", b === pathBtn); });
-      return;
-    }
-    var activeId = null;
-    document.querySelectorAll(".screen.active").forEach(function(s){ activeId = s.id; });
-    var activeName = null;
-    Object.keys(screens).forEach(function(k){ if(screens[k] === activeId) activeName = k; });
-    document.querySelectorAll(".tabbtn").forEach(function(b){ b.classList.toggle("on", b.dataset.tab === activeName); });
-  }
-  new MutationObserver(function(){ skSyncPathTab(); }).observe(pathOverlay, { attributes:true, attributeFilter:["class"] });
   document.querySelectorAll(".lvpick").forEach(function(b){
     b.addEventListener("click", function(){ pathLv = parseInt(b.dataset.plv, 10); renderRoadmap(); });
   });
@@ -23907,7 +23906,7 @@ function furiHTML(text){
       actions:[{label:"Mở Đấu trường", action:"duel"},{label:"Mở Xếp hạng", action:"rank"},{label:"Mở Cửa hàng", action:"shop"}] },
     { id:"chat", label:"Phòng chat dùng thế nào?",
       keywords:["phong chat","chat voi","hoi dap","nhan tin","cong dong"],
-      answer:"Vào tab “Cá nhân” → bấm “Phòng chat học viên” (hoặc ở Home, Mục học → “Phòng chat”) — nơi các bạn học hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.\n\nGõ tin ở ô dưới cùng rồi bấm nút gửi: mỗi tin tối đa 500 ký tự và giãn cách 3 giây giữa 2 lần gửi (chống spam).\n\nLưu ý: ở bản xem thử này, tin nhắn bạn gửi chỉ hiện trong phiên đang mở, chưa gửi lên máy chủ — đóng app là tin biến mất.",
+      answer:"Bấm tab “Phòng chat” ở thanh dưới cùng (hoặc tab “Cá nhân” → “Phòng chat học viên”) — nơi các bạn học hỏi đáp kanji, ngữ pháp và kinh nghiệm thi JLPT.\n\nGõ tin ở ô dưới cùng rồi bấm nút gửi: mỗi tin tối đa 500 ký tự và giãn cách 3 giây giữa 2 lần gửi (chống spam).\n\nLưu ý: ở bản xem thử này, tin nhắn bạn gửi chỉ hiện trong phiên đang mở, chưa gửi lên máy chủ — đóng app là tin biến mất.",
       actions:[{label:"Mở Phòng chat", action:"chat"}] },
     { id:"install", label:"Cài app lên màn hình chính, học offline được không?",
       keywords:["cai app","man hinh chinh","pwa","offline","khong co mang","mat mang","tai goi","cai dat app"],
