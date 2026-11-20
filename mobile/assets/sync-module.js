@@ -18,6 +18,9 @@
  * + M-10 (2026-11-20): mergePlan30 không ghi appliedLv/appliedAt khi
  * phía thắng không có giá trị (Firestore cấm undefined); syncAllIds
  * catch từng doc — 1 doc lỗi không abort cả lần đồng bộ.
+ * + mergeJlpt (2026-11-20): target null không bao giờ thắng giá trị
+ * thật (null = chưa chọn cấp mục tiêu; app không có luồng xóa target
+ * — chip chỉ đặt N5..N1); toSyncData không đóng dấu mới cho null.
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -347,10 +350,29 @@
     local = local || {}; server = server || {};
     var out = {};
     var la = local.targetAt, sa = server.targetAt;
-    if (la == null && sa == null) { out.target = local.target || server.target || null; }
-    else if (sa == null || (la != null && la >= sa)) {
-      out.target = local.target; out.targetAt = la;
-    } else { out.target = server.target; out.targetAt = sa; }
+    var lt = local.target || null, st = server.target || null;
+    // mergeJlpt (2026-11-20): target null = "chưa chọn cấp mục tiêu",
+    // KHÔNG phải hành động xóa — app không có luồng xóa target (chip
+    // chọn cấp chỉ đặt N5..N1, xem renderJlptCard; key chỉ vắng khi
+    // máy chưa từng chọn). Nên null KHÔNG BAO GIỜ thắng giá trị thật,
+    // kể cả khi đóng dấu mới hơn: máy mới từng đóng dấu now() cho null
+    // (xem toSyncData bên dưới, đã sửa) và server có thể đã bị ghi đè
+    // null từ trước — luật này tự chữa lành các doc đã bị độc. Cả 2
+    // phía đều có target thật thì vẫn LWW như cũ; cả 2 đều null thì
+    // vẫn null.
+    if (lt != null && st == null) {
+      out.target = lt; if (la != null) out.targetAt = la;
+    } else if (st != null && lt == null) {
+      out.target = st; if (sa != null) out.targetAt = sa;
+    } else if (lt == null && st == null) {
+      out.target = null;
+      var mAt = Math.max(num(la, 0), num(sa, 0));
+      if (mAt) out.targetAt = mAt;
+    } else if (la == null && sa == null) {
+      out.target = lt; // cả 2 thật, đều chưa đóng dấu: giữ local (như cũ)
+    } else if (sa == null || (la != null && la >= sa)) {
+      out.target = lt; out.targetAt = la;
+    } else { out.target = st; out.targetAt = sa; }
     // plan: cùng kỳ thi -> start sớm nhất (ngày bắt đầu thật); khác kỳ ->
     // lấy kỳ thi muộn hơn (kỳ hiện tại).
     var lp = local.plan, sp = server.plan;
@@ -742,7 +764,13 @@
       var out = { plan: clone(jl.plan || null) };
       var prevTarget = meta.target;
       out.target = jl.target || null;
-      out.targetAt = (jl.target !== prevTarget) ? t : (meta.targetAt || 0);
+      // mergeJlpt (2026-11-20): target null = chưa chọn, KHÔNG phải
+      // hành động của user — không đóng dấu mới. Trước đây máy mới meta
+      // trống nên (null !== undefined) -> true -> đóng dấu now() cho
+      // null, rồi LWW cho null thắng mục tiêu thật trên server. Giữ
+      // targetAt cũ (0 nếu chưa từng có) để null không bao giờ mang
+      // dấu mới; target thật đổi vẫn đóng dấu như cũ.
+      out.targetAt = (out.target != null && jl.target !== prevTarget) ? t : (meta.targetAt || 0);
       out.done = convert.jlptDoneToSync(jl.done || {}, meta.done || {});
       return out;
     }
