@@ -627,6 +627,14 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
 .modal h3{margin:0 0 8px; font-size:19px}
 .modal p{color:var(--muted); margin:0 0 18px; font-size:14.5px}
 .modal .row{display:flex; gap:10px; justify-content:flex-end}
+/* Overlay phiên đăng nhập 1 thiết bị (20/11/2026): z-index cao hơn mọi
+   sheet/modal (report sheet 200 là cao nhất hiện có) + Sora + tabbar. */
+.sksess-bg{position:fixed; inset:0; background:rgba(20,16,12,.6); z-index:300; display:flex; align-items:center; justify-content:center; padding:20px}
+.sksess-box{background:var(--card); border-radius:16px; padding:24px; max-width:420px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.sksess-box h3{margin:0 0 8px; font-size:19px}
+.sksess-box p{color:var(--muted); margin:0 0 12px; font-size:14.5px; line-height:1.55}
+.sksess-box p b{color:var(--ink)}
+.sksess-box .row{display:flex; gap:10px; justify-content:flex-end}
 
 /* Modal đăng nhập (Firebase Auth — chỉ Google) */
 .auth-modal{position:relative; max-width:400px}
@@ -2025,6 +2033,7 @@ body:has(.sv2-page) footer.site{padding-bottom:81px; padding-bottom:calc(81px + 
   <div class="content">
 <main id="app"></main>
 <div id="modalRoot"></div>
+<div id="skSessionRoot"></div>
 </div>
 </div>
 <button id="soraFab" type="button" aria-label="Trợ lý Sora"><img src="mobile/assets/chibi.png" alt=""></button>
@@ -10216,6 +10225,9 @@ function renderLockedPage(lv, label, targetHash){
      800ms để phiên lưu sẵn (nếu có) kịp khôi phục, tránh hiện bảng oan
      với người đã đăng nhập; chỉ mở khi vẫn còn ở trang khóa này. */
   if(!u) setTimeout(function(){
+    /* Sau kick/block (đã signOut), overlay phiên đang hiện thì không mở bảng
+       đăng nhập chồng lên — user đóng overlay rồi tự bấm Đăng nhập sau. */
+    if(skSessionOverlayVisible()) return;
     if(!webCurrentUser() && document.getElementById("lkCheck")) openAuthModalContinue(function(){ skLoadPremium(true); });
   }, 800);
   /* Kiểm tra lại Premium (trường hợp vừa kích hoạt / vừa đăng nhập):
@@ -10672,7 +10684,7 @@ function applySoraVisibility(){
    trong app. Luồng: xác nhận (showModal) → xóa dữ liệu Firestore →
    deleteUser → xóa localStorage của app → về trạng thái chưa đăng nhập.
    THỨ TỰ BẮT BUỘC — Firestore TRƯỚC deleteUser: rules chỉ cho owner xóa
-   doc kanji_progress/{uid} + subcollection sync khi còn đăng nhập; xóa Auth
+   doc kanji_progress/{uid} + subcollection sync/session khi còn đăng nhập; xóa Auth
    trước thì không còn quyền xóa dữ liệu (permission-denied, dữ liệu mồ côi).
    Hệ quả: nếu deleteUser lỗi auth/requires-recent-login thì dữ liệu
    Firestore đã xóa rồi, tài khoản còn — user đăng nhập lại rồi xóa tiếp,
@@ -10730,11 +10742,17 @@ function skDeleteAccountDo(){
   if(msg) msg.textContent = "Đang xóa tài khoản…";
   /* Dừng đồng bộ trước để lần đẩy đang chờ debounce không tạo lại doc. */
   try{ if(window.SKSync) SKSync.stopListener(); }catch(e){}
+  skSessionStop(); /* dừng heartbeat phiên — không ghi lại session sau khi xóa */
   var docRef = db.collection("kanji_progress").doc(u.uid);
   docRef.collection("sync").get().then(function(snap){
     var jobs = [];
     snap.forEach(function(d){ jobs.push(d.ref.delete()); });
     return Promise.all(jobs);
+  }).then(function(){
+    /* Phiên 1 thiết bị: xóa session/active cùng đợt (best-effort, trước
+       deleteUser để còn quyền owner; lỗi thì bỏ qua — uid đã xóa thì
+       session mồ côi vô hại). */
+    return docRef.collection("session").doc("active").delete().catch(function(){});
   }).then(function(){
     return docRef.delete();
   }).then(function(){
@@ -12240,6 +12258,257 @@ function skAuthErrorVI(err){
   };
   return map[code] || ("Chưa đăng nhập được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.");
 }
+/* ================= PHIÊN ĐĂNG NHẬP 1 THIẾT BỊ (20/11/2026) =================
+   1 tài khoản chỉ đăng nhập được 1 thiết bị cùng lúc; muốn đăng nhập thiết
+   bị khác phải đăng xuất trước. Session doc duy nhất:
+   kanji_progress/{uid}/session/active =
+   {deviceId, deviceLabel, platform: "web", loginAt, lastSeen}.
+   - Claim bằng transaction lúc onAuthStateChanged bắn user (kể cả mở app đã
+     đăng nhập sẵn): session của thiết bị khác còn fresh (<5 phút) → chặn +
+     signOut; stale → ghi đè. Lỗi khác → FAIL OPEN (cho vào, held=false;
+     heartbeat thử claim lại) để lỗi mạng không chặn đăng nhập.
+   - Heartbeat 60s + visible/focus/online cập nhật lastSeen (khi held) hoặc
+     thử claim lại (khi chưa held). Listener onSnapshot kick khi doc đổi sang
+     thiết bị khác còn fresh. Không xóa session khi đóng app — stale 5 phút
+     là đường phục hồi duy nhất (không beforeunload/pagehide).
+   - deviceId TÁI DÙNG skReportDeviceId() (key sk_device_id) — 2 tab cùng
+     browser cùng deviceId nên không kick nhau. Admin (SK_ADMIN_UIDS) miễn
+     toàn bộ. Xem ~/workspace/single-session/design/DESIGN.md. */
+var SK_SESSION_STALE_MS = 5 * 60 * 1000; /* session quá 5 phút không thấy heartbeat thì coi như đã rời */
+var skSessHeld = false;      /* true = thiết bị này đang giữ session */
+var skSessUid = null;        /* uid đang giữ/đang claim */
+var skSessClaiming = false;  /* đang chạy transaction claim */
+var skSessUnsub = null;      /* unsubscribe listener onSnapshot */
+var skSessTimer = null;      /* interval heartbeat 60s */
+var skSessKicking = false;   /* đang trong quá trình kick — heartbeat bỏ qua ghi */
+var skSessOverlay = null;    /* "block" | "kick" | null — overlay đang hiện */
+function skSessionTsMillis(v){
+  if(!v) return 0;
+  if(typeof v === "number") return v;
+  if(typeof v.toMillis === "function"){ try{ return v.toMillis(); }catch(e){ return 0; } }
+  if(typeof v.getTime === "function"){ try{ return v.getTime(); }catch(e){ return 0; } }
+  if(typeof v.seconds === "number") return v.seconds * 1000 + Math.floor((v.nanoseconds || 0) / 1e6);
+  return 0;
+}
+function skSessionFresh(ts){ return Date.now() - skSessionTsMillis(ts) < SK_SESSION_STALE_MS; }
+function skSessionDeviceLabel(){
+  var ua = ""; try{ ua = navigator.userAgent || ""; }catch(e){}
+  var plat = ""; try{ plat = navigator.platform || ""; }catch(e){}
+  var touch = 0; try{ touch = navigator.maxTouchPoints || 0; }catch(e){}
+  var os = "", browser = "";
+  if(/iPhone/i.test(ua)) os = "iPhone";
+  else if(/iPad/i.test(ua) || (/Macintosh/i.test(ua) && touch > 1)) os = "iPad";
+  else if(/Android/i.test(ua)) os = "Android";
+  else if(/Windows/i.test(ua)) os = "Windows";
+  else if(/Macintosh|Mac OS X/i.test(ua) || /Mac/i.test(plat)) os = "macOS";
+  else if(/Linux/i.test(ua)) os = "Linux";
+  else os = "Thiết bị";
+  if(os !== "iPhone" && os !== "iPad"){
+    if(/Edg\//i.test(ua)) browser = "Edge";
+    else if(/OPR\/|Opera/i.test(ua)) browser = "Opera";
+    else if(/Chrome\//i.test(ua)) browser = "Chrome";
+    else if(/Firefox\//i.test(ua)) browser = "Firefox";
+    else if(/Safari\//i.test(ua)) browser = "Safari";
+  }
+  return browser ? os + " · " + browser : os;
+}
+function skSessionFmtTime(ms){
+  if(!ms) return "—";
+  var d = new Date(ms);
+  function p(n){ return (n < 10 ? "0" : "") + n; }
+  return p(d.getHours()) + ":" + p(d.getMinutes()) + " " + p(d.getDate()) + "/" + p(d.getMonth() + 1);
+}
+function skSessionRef(uid){
+  var db = null;
+  try{ db = skDb(); }catch(e){ db = null; }
+  if(!db) return null;
+  return db.collection("kanji_progress").doc(uid).collection("session").doc("active");
+}
+function skSessionServerTs(){
+  try{
+    if(typeof firebase !== "undefined" && firebase.firestore && firebase.firestore.FieldValue)
+      return firebase.firestore.FieldValue.serverTimestamp();
+  }catch(e){}
+  return null;
+}
+function skSessionOverlayVisible(){ return !!skSessOverlay; }
+function skSessionShowOverlay(kind, deviceLabel, lastSeenMs){
+  skSessOverlay = kind;
+  /* Đóng sheet đăng nhập / Premium (cùng modalRoot) để overlay phiên là thứ
+     duy nhất user thấy; overlay có z-index cao hơn mọi sheet nên vẫn nổi
+     ngay cả khi có sheet khác mở sau. */
+  try{ closeAuthModal(); }catch(e){}
+  var root = document.getElementById("skSessionRoot");
+  if(!root) return;
+  var html;
+  if(kind === "block"){
+    html = '<div class="sksess-bg" id="skSessBg"><div class="sksess-box" role="dialog" aria-modal="true" aria-labelledby="skSessTitle">' +
+      '<h3 id="skSessTitle">Tài khoản đang đăng nhập ở thiết bị khác</h3>' +
+      '<p>Thiết bị: <b>' + esc(deviceLabel || "Thiết bị khác") + '</b> · Hoạt động gần nhất: <b>' + esc(skSessionFmtTime(lastSeenMs)) + '</b></p>' +
+      '<p>Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.</p>' +
+      '<div class="row"><button class="btn sm" id="skSessOk" type="button">Đã hiểu</button></div>' +
+      '</div></div>';
+  }else{
+    html = '<div class="sksess-bg" id="skSessBg"><div class="sksess-box" role="dialog" aria-modal="true" aria-labelledby="skSessTitle">' +
+      '<h3 id="skSessTitle">Đã đăng xuất</h3>' +
+      '<p>Tài khoản đã được đăng nhập trên thiết bị khác nên thiết bị này đã đăng xuất.</p>' +
+      '<div class="row"><button class="btn sm" id="skSessOk" type="button">Đã hiểu</button></div>' +
+      '</div></div>';
+  }
+  root.innerHTML = html;
+  var ok = document.getElementById("skSessOk");
+  if(ok) ok.addEventListener("click", skSessionCloseOverlay);
+  var bg = document.getElementById("skSessBg");
+  if(bg) bg.addEventListener("click", function(e){ if(e.target === this) skSessionCloseOverlay(); });
+}
+function skSessionCloseOverlay(){
+  skSessOverlay = null;
+  var root = document.getElementById("skSessionRoot");
+  if(root) root.innerHTML = "";
+}
+function skSessionHeartbeatStop(){
+  if(skSessTimer){ clearInterval(skSessTimer); skSessTimer = null; }
+  if(skSessUnsub){ try{ skSessUnsub(); }catch(e){} skSessUnsub = null; }
+  try{
+    document.removeEventListener("visibilitychange", skSessionOnVisible);
+    window.removeEventListener("focus", skSessionOnVisible);
+    window.removeEventListener("online", skSessionOnVisible);
+  }catch(e){}
+}
+function skSessionOnVisible(){
+  if(skSessKicking) return;
+  if(document.hidden) return; /* visibilitychange về hidden: bỏ qua */
+  skSessionHeartbeatTick();
+}
+function skSessionHeartbeatStart(){
+  if(skSessTimer) return;
+  skSessTimer = setInterval(function(){ skSessionHeartbeatTick(); }, 60000);
+  try{
+    document.addEventListener("visibilitychange", skSessionOnVisible);
+    window.addEventListener("focus", skSessionOnVisible);
+    window.addEventListener("online", skSessionOnVisible);
+  }catch(e){}
+}
+function skSessionHeartbeatTick(){
+  if(skSessKicking) return;
+  var u = null;
+  try{ u = webCurrentUser(); }catch(e){ u = null; }
+  if(!u || u.uid !== skSessUid) return;
+  if(!skSessHeld){ skSessionClaim(u.uid); return; } /* fail-open lúc đầu: thử claim lại, không ghi mù */
+  var ref = skSessionRef(u.uid);
+  if(!ref) return;
+  try{
+    var p = ref.set({lastSeen: skSessionServerTs()}, {merge: true});
+    if(p && p.catch) p.catch(function(){});
+  }catch(e){}
+}
+function skSessionListenStart(uid){
+  if(skSessUnsub) return;
+  var ref = skSessionRef(uid);
+  if(!ref || typeof ref.onSnapshot !== "function") return;
+  try{
+    skSessUnsub = ref.onSnapshot(function(snap){
+      if(!snap || !snap.exists) return; /* doc bị xóa (đăng xuất cùng thiết bị / race): bỏ qua */
+      var d = null;
+      try{ d = snap.data() || {}; }catch(e){ return; }
+      var myId = "";
+      try{ myId = skReportDeviceId(); }catch(e){}
+      if(d.deviceId && d.deviceId !== myId && skSessionFresh(d.lastSeen)) skSessionKick();
+    }, function(){ /* lỗi listener: bỏ qua, heartbeat vẫn chạy */ });
+  }catch(e){ skSessUnsub = null; }
+}
+function skSessionKick(){
+  if(skSessKicking) return;
+  skSessKicking = true;
+  skSessionHeartbeatStop();
+  skSessHeld = false;
+  skSessionShowOverlay("kick");
+  var auth = null;
+  try{ auth = skAuth(); }catch(e){}
+  if(auth){ try{ var so = auth.signOut(); if(so && so.catch) so.catch(function(){}); }catch(e){} }
+}
+function skSessionClaim(uid){
+  if(skSessClaiming) return Promise.resolve(false);
+  if(skSessHeld && skSessUid === uid) return Promise.resolve(true);
+  var ref = skSessionRef(uid);
+  if(!ref) return Promise.resolve(false); /* chưa có Firestore: fail-open, không timer */
+  var db = null;
+  try{ db = skDb(); }catch(e){ db = null; }
+  if(!db || typeof db.runTransaction !== "function") return Promise.resolve(false);
+  var myId = "";
+  try{ myId = skReportDeviceId(); }catch(e){ myId = "dev-unknown"; }
+  var label = skSessionDeviceLabel();
+  var ts = skSessionServerTs();
+  skSessClaiming = true;
+  return db.runTransaction(function(tx){
+    return tx.get(ref).then(function(snap){
+      if(snap && snap.exists){
+        var d = snap.data() || {};
+        if(d.deviceId && d.deviceId !== myId && skSessionFresh(d.lastSeen)){
+          var err = new Error("sk-session-blocked");
+          err.skBlocked = {deviceLabel: d.deviceLabel || "Thiết bị khác", lastSeen: skSessionTsMillis(d.lastSeen)};
+          throw err;
+        }
+      }
+      tx.set(ref, {deviceId: myId, deviceLabel: label, platform: "web", loginAt: ts, lastSeen: ts}, {merge: true});
+    });
+  }).then(function(){
+    skSessClaiming = false;
+    var u = null;
+    try{ u = webCurrentUser(); }catch(e){}
+    if(!u || u.uid !== uid){ skSessHeld = false; return false; } /* đã đăng xuất trong lúc claim */
+    skSessHeld = true;
+    skSessUid = uid;
+    skSessionListenStart(uid);
+    skSessionHeartbeatStart();
+    return true;
+  }).catch(function(err){
+    skSessClaiming = false;
+    if(err && err.skBlocked){
+      /* Bị chặn: hiện overlay TRƯỚC signOut để overlay tồn tại sau khi nhánh
+         null chạy xong (nhánh null không ẩn overlay này). */
+      skSessHeld = false;
+      skSessionShowOverlay("block", err.skBlocked.deviceLabel, err.skBlocked.lastSeen);
+      var auth = null;
+      try{ auth = skAuth(); }catch(e){}
+      if(auth){ try{ var so = auth.signOut(); if(so && so.catch) so.catch(function(){}); }catch(e){} }
+      return false;
+    }
+    /* Lỗi khác (mất mạng/rules): FAIL OPEN — cho vào app, heartbeat thử lại. */
+    skSessHeld = false;
+    skSessUid = uid;
+    skSessionHeartbeatStart();
+    return false;
+  });
+}
+function skSessionStart(uid){
+  skSessKicking = false;
+  if(!uid) return;
+  if(SK_ADMIN_UIDS && SK_ADMIN_UIDS.indexOf(uid) >= 0) return; /* admin miễn toàn bộ */
+  if(skSessHeld && skSessUid === uid) return;
+  if(skSessClaiming && skSessUid === uid) return;
+  if(skSessUid && skSessUid !== uid) skSessionStop(); /* đổi tài khoản không qua null: dọn phiên cũ */
+  skSessUid = uid;
+  skSessionClaim(uid);
+}
+function skSessionStop(){
+  skSessKicking = false;
+  skSessHeld = false;
+  skSessUid = null;
+  skSessionHeartbeatStop();
+}
+function skSessionDelete(uid){
+  if(!uid) return;
+  if(SK_ADMIN_UIDS && SK_ADMIN_UIDS.indexOf(uid) >= 0) return; /* admin không tạo session nên không có gì để xóa */
+  var ref = null;
+  try{ ref = skSessionRef(uid); }catch(e){ ref = null; }
+  if(!ref) return;
+  try{
+    var p = ref.delete();
+    if(p && p.catch) p.catch(function(){});
+  }catch(e){}
+}
+
 function initWebAuth(){
   var auth = skAuth();
   if(!auth){ skLogVisitOnce(); return; } /* không có Auth để biết tài khoản: ghi lượt ẩn danh */
@@ -12263,7 +12532,9 @@ function initWebAuth(){
         photoURL: user.photoURL || "",
         isAdmin: (user.email || "").toLowerCase() === SK_ADMIN_EMAIL || SK_ADMIN_UIDS.indexOf(user.uid) >= 0
       };
+      skSessionStart(user.uid); /* phiên 1 thiết bị: claim session (admin miễn, lỗi mạng fail-open) */
     }else{
+      skSessionStop(); /* phiên 1 thiết bị: dừng heartbeat + listener */
       window.SK_USER = null;
       SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
       skPremiumWatchStop();
@@ -12493,6 +12764,12 @@ function renderHeaderUser(){
   });
   document.getElementById("logoutBtn").addEventListener("click", function(){
     closeHeaderPanels();
+    /* Phiên 1 thiết bị: dừng heartbeat/listener rồi xóa session doc TRƯỚC
+       signOut (fire-and-forget) để đăng nhập ở thiết bị khác được ngay. */
+    var outUid = null;
+    try{ var ou = webCurrentUser(); outUid = ou ? ou.uid : null; }catch(e){}
+    skSessionStop();
+    skSessionDelete(outUid);
     var auth = skAuth();
     if(auth){ auth.signOut().catch(function(){}); }
     else{ window.SK_USER = null; if(window.SKSync) SKSync.clearLocalForLogout(); renderHeaderUser(); }
