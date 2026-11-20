@@ -712,6 +712,11 @@
   .mrow:last-child{border-bottom:none;}
   .mrow svg{width:21px; height:21px; color:var(--ink-2); flex:0 0 auto;}
   .mrow .chev{margin-left:auto; color:var(--ink-3);}
+  /* Lien he (2026-11-20): hang kenh la <a> nen bo gach chan; gia tri/link
+     day sang phai, chevron sat sau gia tri. */
+  .mrow.contact-row{text-decoration:none;}
+  .mrow.contact-row .cv{margin-left:auto; font-size:13px; font-weight:600; color:var(--ink-2); text-align:right; word-break:break-all; max-width:55%;}
+  .mrow.contact-row .chev{margin-left:8px;}
   .mrow.danger{color:var(--red);}
   .mrow.danger svg{color:var(--red);}
   .switch{margin-left:auto; width:48px; height:28px; border-radius:99px; background:var(--line); position:relative; flex:0 0 auto; transition:background .15s;}
@@ -3787,6 +3792,11 @@
             Giới thiệu SoraKanji
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
+          <button class="mrow" id="setContactBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            Liên hệ
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
           <button class="mrow" id="setTermsBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
             Điều khoản sử dụng
@@ -5091,6 +5101,20 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           </div>
           <p id="admGrantMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:10px 0 4px; line-height:1.5;"></p>
         </div>
+        <h2 class="secttl">Liên kết liên hệ</h2>
+        <div class="card shopcard" id="admContact" style="margin-top:0;">
+          <p style="font-size:13px;color:var(--ink-2);line-height:1.55;margin:8px 0 10px;">Link hiện ở mục “Liên hệ” trong Cài đặt. Kênh nào để trống sẽ không hiện với học viên.</p>
+          <label style="display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin:10px 0 5px;" for="admContactFb">Facebook</label>
+          <input class="adm-input" id="admContactFb" type="url" placeholder="https://www.facebook.com/…" autocomplete="off" aria-label="Link Facebook" />
+          <label style="display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin:10px 0 5px;" for="admContactTiktok">TikTok</label>
+          <input class="adm-input" id="admContactTiktok" type="url" placeholder="https://www.tiktok.com/…" autocomplete="off" aria-label="Link TikTok" />
+          <label style="display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin:10px 0 5px;" for="admContactZalo">Zalo</label>
+          <input class="adm-input" id="admContactZalo" type="url" placeholder="https://zalo.me/…" autocomplete="off" aria-label="Link Zalo" />
+          <label style="display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin:10px 0 5px;" for="admContactEmail">Email</label>
+          <input class="adm-input" id="admContactEmail" type="email" placeholder="email@example.com" autocomplete="off" aria-label="Email liên hệ" />
+          <div style="margin-top:12px;"><button class="admbtn pri" id="admContactSaveBtn" type="button">Lưu liên kết</button></div>
+          <p id="admContactMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:10px 0 4px; line-height:1.5;"></p>
+        </div>
         <div class="searchbar" style="margin-top:10px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
           <input id="admSearch" type="text" placeholder="Tìm học viên theo tên…" autocomplete="off" aria-label="Tìm học viên" />
@@ -5495,6 +5519,21 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <div class="drow"><b>Nguyên tắc</b><span class="v">Gói miễn phí gồm toàn bộ N5–N4 ở mọi mục và 1 video Shadowing đầu tiên mỗi mục; nội dung N3–N1 thuộc gói Premium. Xu chỉ mua tiện ích và đồ trang trí.</span></div>
         </div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Đây là bản xem thử giao diện điện thoại — nội dung đầy đủ nằm ở bản web chính SoraKanji.</p>
+      </div>
+    </div>
+
+    <!-- ============ LIÊN HỆ ============ -->
+    <div class="overlay front" id="contactOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeContact" aria-label="Quay lại — đóng liên hệ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Liên hệ</h2><span>Kết nối với SoraKanji</span></div>
+      </div>
+      <div class="detailbody">
+        <div class="menu" id="contactList"></div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:12px 2px 0;">Kênh liên hệ do đội ngũ SoraKanji cập nhật — kênh nào chưa có sẽ không hiện ở đây.</p>
+        <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -8830,6 +8869,134 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("setPrivacyBtn").addEventListener("click", function(){ showOv(document.getElementById("privacyOverlay")); });
   document.getElementById("setDeleteAccountBtn").addEventListener("click", skDeleteAccount);
   document.getElementById("closePrivacy").addEventListener("click", function(){ hideOv(document.getElementById("privacyOverlay")); });
+
+  /* ---------- Liên hệ (2026-11-20): kênh liên hệ do Admin nhập ----------
+     Nguồn: doc Firestore sk_config/social {facebook, tiktok, zalo, email,
+     updatedAt, updatedBy} — đọc công khai (public read), KHÔNG hardcode
+     link/email nào trong app (email hỗ trợ nongaphao@gmail.com trong Điều
+     khoản/Chính sách KHÔNG làm fallback hiển thị). Kênh chưa nhập thì ẨN
+     hẳn; cả 4 trống thì hiện "Chưa cập nhật kênh liên hệ.". Lỗi mạng/rules
+     → fail-open: hiện trạng thái trống, không crash, không chặn app. */
+  var skSocialCache = null; /* {facebook, tiktok, zalo, email} hoặc null */
+  function skContactDb(){
+    try{
+      var app = premiumFbApp();
+      return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
+    }catch(_){ return null; }
+  }
+  function skNormSocial(d){
+    d = d || {};
+    function t(v){ return (typeof v === "string") ? v.trim() : ""; }
+    return {facebook: t(d.facebook), tiktok: t(d.tiktok), zalo: t(d.zalo), email: t(d.email)};
+  }
+  function skIsHttpUrl(v){ return /^https?:\/\/[^\s\"<>]+$/i.test(v || ""); }
+  function skIsEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v || ""); }
+  /* Đọc doc sk_config/social. force=true: bỏ cache, đọc lại (khi mở trang
+     Liên hệ / mở mục Admin). Luôn resolve (fail-open), không bao giờ reject. */
+  function skLoadSocialLinks(force){
+    if(skSocialCache && !force) return Promise.resolve(skSocialCache);
+    var empty = {facebook: "", tiktok: "", zalo: "", email: ""};
+    var db = skContactDb();
+    if(!db) return Promise.resolve(skSocialCache || empty);
+    try{
+      return db.collection("sk_config").doc("social").get().then(function(snap){
+        var d = (snap && snap.exists) ? skNormSocial(snap.data()) : empty;
+        skSocialCache = d;
+        return d;
+      }).catch(function(){
+        return skSocialCache || empty;
+      });
+    }catch(_){
+      return Promise.resolve(skSocialCache || empty);
+    }
+  }
+  var SK_CONTACT_CHANNELS = [
+    {key: "facebook", label: "Facebook", icon: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/>'},
+    {key: "tiktok", label: "TikTok", icon: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'},
+    {key: "zalo", label: "Zalo", icon: '<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/>'},
+    {key: "email", label: "Email", icon: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>'}
+  ];
+  /* Vẽ danh sách kênh: chỉ vẽ kênh có giá trị HỢP LỆ (URL http(s) / email
+     đúng dạng) — dữ liệu bẩn trong doc không vẽ ra link lạ. */
+  function skRenderContactList(d){
+    var wrap = document.getElementById("contactList");
+    if(!wrap) return;
+    var html = "";
+    var n = 0;
+    SK_CONTACT_CHANNELS.forEach(function(ch){
+      var v = d ? (d[ch.key] || "") : "";
+      if(ch.key === "email"){ if(!skIsEmail(v)) return; }
+      else if(!skIsHttpUrl(v)) return;
+      n++;
+      var href = (ch.key === "email") ? ("mailto:" + v) : v;
+      var extra = (ch.key === "email") ? "" : ' target="_blank" rel="noopener"';
+      html += '<a class="mrow contact-row" data-contact-channel="' + ch.key + '" href="' + esc(href) + '"' + extra + '>'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + ch.icon + "</svg>"
+        + esc(ch.label)
+        + '<span class="cv">' + esc(v) + "</span>"
+        + '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>'
+        + "</a>";
+    });
+    if(!n){
+      html = '<p id="contactEmpty" style="font-size:14px;color:var(--ink-2);line-height:1.6;margin:12px 16px;">Chưa cập nhật kênh liên hệ.</p>';
+    }
+    wrap.innerHTML = html;
+  }
+  function openContact(){
+    var ov = document.getElementById("contactOverlay");
+    var wrap = document.getElementById("contactList");
+    if(wrap){
+      if(skSocialCache) skRenderContactList(skSocialCache);
+      else wrap.innerHTML = '<p style="font-size:14px;color:var(--ink-2);line-height:1.6;margin:12px 16px;">Đang tải…</p>';
+    }
+    showOv(ov);
+    skLoadSocialLinks(true).then(function(d){ skRenderContactList(d); });
+  }
+  /* Điền sẵn 4 ô nhập khi Admin mở Bảng điều khiển (chỉ Admin mới thấy
+     mục này — nằm trong #admMain). Lỗi đọc → để nguyên ô nhập. */
+  function admLoadContactLinks(){
+    if(!isAdminAccount) return;
+    skLoadSocialLinks(true).then(function(d){
+      function fill(id, v){ var el = document.getElementById(id); if(el) el.value = v || ""; }
+      fill("admContactFb", d.facebook);
+      fill("admContactTiktok", d.tiktok);
+      fill("admContactZalo", d.zalo);
+      fill("admContactEmail", d.email);
+    });
+  }
+  function admSaveContactLinks(){
+    var msg = document.getElementById("admContactMsg");
+    function cmsg(t){ if(msg) msg.textContent = t || ""; }
+    function val(id){ var el = document.getElementById(id); return el ? el.value.trim() : ""; }
+    var fb = val("admContactFb"), tt = val("admContactTiktok"), zl = val("admContactZalo"), em = val("admContactEmail");
+    if(fb && !skIsHttpUrl(fb)){ cmsg("Link Facebook chưa đúng — nhập URL bắt đầu bằng http:// hoặc https://, hoặc để trống."); return; }
+    if(tt && !skIsHttpUrl(tt)){ cmsg("Link TikTok chưa đúng — nhập URL bắt đầu bằng http:// hoặc https://, hoặc để trống."); return; }
+    if(zl && !skIsHttpUrl(zl)){ cmsg("Link Zalo chưa đúng — nhập URL bắt đầu bằng http:// hoặc https://, hoặc để trống."); return; }
+    if(em && !skIsEmail(em)){ cmsg("Email chưa đúng định dạng — nhập đúng dạng email, hoặc để trống."); return; }
+    var db = skContactDb();
+    if(!db){ cmsg("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại."); return; }
+    var btn = document.getElementById("admContactSaveBtn");
+    if(btn) btn.disabled = true;
+    cmsg("Đang lưu…");
+    var data = {facebook: fb, tiktok: tt, zalo: zl, email: em, updatedBy: signedInUid || ""};
+    try{ data.updatedAt = firebase.firestore.Timestamp.now(); }catch(_){ data.updatedAt = new Date(); }
+    db.collection("sk_config").doc("social").set(data, {merge: true}).then(function(){
+      if(btn) btn.disabled = false;
+      skSocialCache = {facebook: fb, tiktok: tt, zalo: zl, email: em};
+      cmsg("Đã lưu liên kết liên hệ.");
+    }).catch(function(err){
+      if(btn) btn.disabled = false;
+      cmsg((err && err.code === "permission-denied") ? "Không có quyền lưu (kiểm tra rules Firestore)." : "Lưu lỗi — thử lại nhé.");
+    });
+  }
+  (function(){
+    var scb = document.getElementById("setContactBtn");
+    if(scb) scb.addEventListener("click", openContact);
+    var ccb = document.getElementById("closeContact");
+    if(ccb) ccb.addEventListener("click", function(){ hideOv(document.getElementById("contactOverlay")); });
+    var sb = document.getElementById("admContactSaveBtn");
+    if(sb) sb.addEventListener("click", admSaveContactLinks);
+  })();
   document.getElementById("loginTermsLink").addEventListener("click", function(e){ e.preventDefault(); showOv(document.getElementById("termsOverlay")); });
   document.getElementById("loginPrivacyLink").addEventListener("click", function(e){ e.preventDefault(); showOv(document.getElementById("privacyOverlay")); });
 
@@ -19476,7 +19643,7 @@ function furiHTML(text){
   function openAdmin(){
     document.getElementById("admLock").hidden = isAdminAccount;
     document.getElementById("admMain").hidden = !isAdminAccount;
-    if(isAdminAccount) admLoadDashboard();
+    if(isAdminAccount){ admLoadDashboard(); admLoadContactLinks(); }
     showOv(adminOverlay);
   }
   document.getElementById("admSearch").addEventListener("input", function(){ admStudentsPage = 1; renderAdmin(); });
