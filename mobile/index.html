@@ -5959,6 +5959,18 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(premiumLevelOpen(lv)) return true;
     return showPremiumPrompt();
   }
+  /* Gate riêng cho ĐỀ THI theo (cấp, số đề) — 20/11: N3/N2/N1 Test 1–2
+     free, Test 3–9 cần Premium; N5/N4 mọi đề đều free. Chỉ dùng cho mục
+     Đề thi + lộ trình; các mục khác vẫn dùng premiumGateLevel theo cấp. */
+  function premiumExamOpen(lv, n){
+    if(lv === "N5" || lv === "N4") return true;
+    if(typeof n === "number" && n <= 2) return true;
+    return isPremium();
+  }
+  function premiumGateExam(lv, n){
+    if(premiumExamOpen(lv, n)) return true;
+    return showPremiumPrompt();
+  }
   /* 1 video Shadowing miễn phí ĐẦU TIÊN của MỖI thể loại (5 video = 5 tab
      ngang): thể loại theo SV_CATS (Podcast → Anime → Đời thường → JLPT →
      Karaoke), mỗi thể loại lấy video đầu tiên của chuỗi đầu tiên (thứ tự
@@ -6009,7 +6021,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
        user vừa trả tiền xong quay lại app không phải nhìn bảng "Nâng cấp"
        nữa (closePremiumPrompt đóng cả 2). */
     if(prem) closePremiumPrompt();
-    ["lvRow", "flashLvRow", "writeLvRow"].forEach(function(rowId){
+    ["flashLvRow", "writeLvRow"].forEach(function(rowId){
       document.querySelectorAll("#" + rowId + " .lv").forEach(function(b){
         var lv = b.getAttribute("data-lv") || b.getAttribute("data-flv") || b.getAttribute("data-wlv");
         if(!lv) return;
@@ -6017,6 +6029,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         b.classList.toggle("pw-locked", locked);
         b.textContent = locked ? lv + " 🔒" : lv;
       });
+    });
+    /* Hàng cấp ở trang Thi JLPT (lvRow): mọi cấp đều có Test 1–2 free nên
+       không khóa cấp nào — khóa chỉ nằm ở từng Test 3–9 trong danh sách
+       (xem renderTests). */
+    document.querySelectorAll("#lvRow .lv").forEach(function(b){
+      var lv = b.getAttribute("data-lv");
+      if(!lv) return;
+      b.classList.remove("pw-locked");
+      b.textContent = lv;
     });
     /* Đồng bộ nút đang chọn ở trang Thi JLPT với curLevel thật. */
     try{
@@ -6040,6 +6061,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(typeof rdRenderLevels === "function") rdRenderLevels();
       if(typeof tkRender === "function") tkRender();
       if(typeof dkRenderLib === "function") dkRenderLib();
+      /* Danh sách đề thi (ổ khóa Test 3–9 theo trạng thái Premium mới). */
+      if(typeof renderTests === "function") renderTests();
       /* Link bài tiếp trong trang bài đọc (kèm 🔒 nếu bài tiếp khóa). */
       if(typeof dkRenderNextLink === "function") dkRenderNextLink();
       /* Trang "Xem thêm" của Shadowing đang mở: vẽ lại theo trạng thái
@@ -8348,12 +8371,18 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           var b = document.createElement("button");
           b.className = "testrow";
           var isOpen = !!avail[i];
+          /* Khóa Premium theo (cấp, số đề): N3/N2/N1 Test 3–9 khóa, Test 1–2
+             free. Dùng class pw-locked (KHÔNG dùng "locked" — openPlanTask
+             chỉ bấm hàng không có class "locked", và hàng khóa Premium vẫn
+             phải bấm được để hiện dialog Premium). */
+          var exLocked = isOpen && !premiumExamOpen(curLevel, i);
+          if(exLocked) b.classList.add("pw-locked");
           var doneScore = best[curLevel + "-" + i];
           var badge = !isOpen ? '<span class="badge todo">Đang biên soạn</span>'
             : (doneScore != null ? '<span class="badge">Đã làm · ' + doneScore + '/180</span>' : '<span class="badge todo">Chưa làm</span>');
           b.innerHTML =
             '<span class="tnum">T' + i + '</span>' +
-            '<span><h3>Test ' + i + ' · ' + curLevel + '</h3><p>' + wN + ' câu viết + ' + lN + ' câu nghe · ' + mins + ' phút</p></span>' +
+            '<span><h3>Test ' + i + ' · ' + curLevel + (exLocked ? '<span class="pw-lock">🔒</span>' : '') + '</h3><p>' + wN + ' câu viết + ' + lN + ' câu nghe · ' + mins + ' phút</p></span>' +
             badge;
           if(!isOpen) b.classList.add("locked");
           b.addEventListener("click", function(){ if(isOpen) openExam(i); });
@@ -8369,10 +8398,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           b.className = "testrow officialrow";
           var doneScore = best["N3-official"];
           if(built){
+            /* Đề chuẩn không nằm trong Test 1–2 free — vẫn khóa Premium
+               (gate ở openOfficialExam); hiện 🔒 cho nhất quán. */
+            var offLocked = !premiumLevelOpen("N3");
+            if(offLocked) b.classList.add("pw-locked");
             var badge = doneScore != null ? '<span class="badge">Đã làm · ' + doneScore + '/180</span>' : '<span class="badge todo">Chưa làm</span>';
             b.innerHTML =
               '<span class="tnum offtnum">ĐC</span>' +
-              '<span><h3>Đề chuẩn · N3 — cấu trúc chính thức</h3><p>102 câu (74 viết + 28 nghe) · ' + mins + ' phút · nghe có mở đầu từng Mondai</p></span>' +
+              '<span><h3>Đề chuẩn · N3 — cấu trúc chính thức' + (offLocked ? '<span class="pw-lock">🔒</span>' : '') + '</h3><p>102 câu (74 viết + 28 nghe) · ' + mins + ' phút · nghe có mở đầu từng Mondai</p></span>' +
               badge;
             b.addEventListener("click", openOfficialExam);
           } else {
@@ -8389,7 +8422,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   document.querySelectorAll("#lvRow .lv").forEach(function(b){
     b.addEventListener("click", function(){
-      if(!premiumGateLevel(b.dataset.lv)) return;
+      /* Hàng cấp ở mục Đề thi không khóa nữa: mọi cấp đều có Test 1–2
+         free; khóa nằm ở từng Test (gate ở openExam). */
       document.querySelectorAll("#lvRow .lv").forEach(function(x){ x.classList.remove("on"); });
       b.classList.add("on");
       curLevel = b.dataset.lv;
@@ -8438,7 +8472,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
   }
   function openExam(testNo){
-    if(!premiumGateLevel(curLevel)) return;
+    if(!premiumGateExam(curLevel, testNo)) return;
     var qs = EX_BUILT[curLevel + "-" + testNo];
     if(!qs) return;
     examKind = "test";
@@ -8495,6 +8529,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("exStartBtn").addEventListener("click", startExam);
   }
   function startExam(){
+    /* Gate lần 2 ở điểm bắt đầu làm bài (phòng khi trạng thái Premium đổi
+       trong lúc đang xem hướng dẫn): đề chuẩn vẫn theo gate cấp N3. */
+    if(EXS.official){ if(!premiumGateLevel("N3")) return; }
+    else if(!premiumGateExam(EXS.lv, EXS.test)) return;
     EXS.state = "run";
     document.querySelector(".examfoot").style.display = "";
     document.getElementById("submitBtn").style.display = "";
@@ -18507,8 +18545,11 @@ function furiHTML(text){
   /* Mở đúng màn học của 1 nhiệm vụ trong lộ trình (đã đóng Lộ trình trước khi gọi). */
   function openPlanTask(task, lv){
     /* Lộ trình 30 ngày theo cấp mục tiêu: nhiệm vụ N3–N1 cần Premium
-       (trừ Ôn tập — mở mục đã lưu của chính học viên, không khóa). */
-    if(task.kind !== "review" && !premiumGateLevel(lv)) return;
+       (trừ Ôn tập — mở mục đã lưu của chính học viên, không khóa).
+       Riêng ngày Thi thử: gate theo (cấp, số đề) — Test 1–2 free,
+       Test 3–5 vẫn khóa (dialog Premium như bấm từ danh sách đề). */
+    if(task.kind === "exam"){ if(!premiumGateExam(lv, task.test)) return; }
+    else if(task.kind !== "review" && !premiumGateLevel(lv)) return;
     if(task.kind === "kanji") kjOpenLevel(lv);
     else if(task.kind === "vocab"){ openWords(); wvOpenLessons(lv); }
     else if(task.kind === "grammar"){ openGrammar(); grOpenLessons(lv); }
@@ -21534,8 +21575,9 @@ function furiHTML(text){
   function jlptNav(kind, lv){
     /* Link "kế hoạch hôm nay" trên thẻ đếm ngược JLPT: nội dung N3–N1
        cần Premium; Luyện nghe/Đọc hiểu chỉ mở trang chọn cấp (khóa ở
-       nút chọn cấp bên trong) nên không khóa ở đây. */
-    if((kind === "kanji" || kind === "vocab" || kind === "grammar" || kind === "exam") && !premiumGateLevel(lv)) return;
+       nút chọn cấp bên trong) và Đề thi chỉ mở danh sách đề (khóa ở
+       từng Test 3–9) nên không khóa ở đây. */
+    if((kind === "kanji" || kind === "vocab" || kind === "grammar") && !premiumGateLevel(lv)) return;
     if(kind === "kanji") kjOpenLevel(lv);
     else if(kind === "vocab"){ openWords(); wvOpenLessons(lv); }
     else if(kind === "grammar"){ openGrammar(); grOpenLessons(lv); }
