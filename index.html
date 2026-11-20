@@ -2645,7 +2645,7 @@ function renderHome(){
     '<div class="exam-grid">' +
     LEVELS.map(function(lv){
       var t = EXAM_TOTALS[lv];
-      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + "</b>" +
+      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + "</b>" +
         "<span>" + (t[0] + t[1]) + " câu · " + t[2] + " phút<br>9 đề viết + 9 đề nghe</span></a>";
     }).join("") + "</div></section>";
   $app.innerHTML = h;
@@ -5279,7 +5279,7 @@ function renderExamHome(){
     '<div class="exam-grid" style="padding:20px 0 4px">' +
     LEVELS.map(function(lv){
       var t = EXAM_TOTALS[lv];
-      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + (skLevelLocked(lv) ? " 🔒" : "") + "</b><span>" +
+      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + "</b><span>" +
         (t[0] + t[1]) + " câu · " + t[2] + " phút<br>Điểm đậu tham chiếu: " + t[3] + "/180</span></a>";
     }).join("") + "</div>" +
     '<h2 class="secttl">Luyện nghe JLPT</h2>' +
@@ -5306,15 +5306,15 @@ function renderExamLevel(lv){
   var t = EXAM_TOTALS[lv];
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/thi">Luyện thi JLPT</a> / ' + lv + "</div>" +
     "<h1>Đề thi JLPT " + lv + "</h1><p>9 đề × (" + t[0] + " câu viết + " + t[1] + " câu nghe) · thời gian " + t[2] +
-    " phút · điểm đậu tham chiếu " + t[3] + "/180. Chọn một đề để bắt đầu.</p></div>" +
+    " phút · điểm đậu tham chiếu " + t[3] + "/180. Chọn một đề để bắt đầu." + (skLevelLocked(lv) ? " Test 1–2 mở miễn phí, Test 3–9 cần Premium." : "") + "</p></div>" +
     '<div class="test-grid" style="padding:18px 0 36px">';
   for(var n = 1; n <= 9; n++){
-    h += '<a class="test-card" href="#/thi/' + lv + "/" + n + '"><b>Test ' + n + "</b><span>Đề viết " + t[0] +
+    h += '<a class="test-card" href="#/thi/' + lv + "/" + n + '"><b>Test ' + n + (skExamLocked(lv, n) ? " 🔒" : "") + "</b><span>Đề viết " + t[0] +
       " câu + Đề nghe " + t[1] + " câu</span></a>";
   }
   if(lv === "N3"){
     h += '<a class="test-card" href="#/thi/N3/0" style="grid-column:1/-1;border-color:var(--red)">' +
-      "<b>Đề chuẩn N3</b><span>Đề theo đúng cấu trúc chính thức của JLPT N3 · Đề viết " + t[0] +
+      "<b>Đề chuẩn N3" + (skExamLocked("N3", 0) ? " 🔒" : "") + "</b><span>Đề theo đúng cấu trúc chính thức của JLPT N3 · Đề viết " + t[0] +
       " câu + Đề nghe " + t[1] + " câu · " + t[2] + " phút · chấm điểm /180</span></a>";
   }
   h += "</div>";
@@ -5322,6 +5322,8 @@ function renderExamLevel(lv){
 }
 function renderExamIntro(lv, testNo){
   var rTok = skBeginRender();
+  /* Gate điểm mở đề (phòng thủ thêm ngoài skGateForHash ở route()). */
+  if(skExamLocked(lv, testNo)){ renderLockedPage(lv, "Đề thi JLPT " + lv + " — " + (testNo === 0 ? "Đề chuẩn" : "Test " + testNo), "#/thi/" + lv + "/" + testNo); return; }
   var isOff = (lv === "N3" && testNo === 0);
   var tname = isOff ? "Đề chuẩn" : "Test " + testNo;
   document.title = "JLPT " + lv + " — " + tname + " | SoraKanji";
@@ -5352,6 +5354,8 @@ function renderExamIntro(lv, testNo){
       '<button class="btn" id="startExam" style="margin-top:8px">Bắt đầu làm bài</button></div>' +
       '<p style="padding-bottom:30px"><a href="#/thi/' + lv + '">← Chọn đề khác</a></p>';
     document.getElementById("startExam").addEventListener("click", function(){
+      /* Gate điểm bắt đầu làm bài: Premium hết hạn giữa chừng vẫn chặn. */
+      if(skExamLocked(lv, testNo)){ skLockedPrompt("Đề thi JLPT " + lv + " — " + (testNo === 0 ? "Đề chuẩn" : "Test " + testNo)); return; }
       startExam(lv, testNo, w.qs.concat(l), mins, isOff ? "Đề chuẩn" : null);
       location.hash = "#/thi/" + lv + "/" + testNo + "/lam";
     });
@@ -10011,6 +10015,10 @@ var SK_PREMIUM = {loaded: false, active: false, until: null, pkg: null};
 var skLockedTarget = null; /* hash trang bị khóa — về đó sau khi Premium kích hoạt */
 function skIsPremium(){ return !!SK_PREMIUM.active; }
 function skLevelLocked(lv){ return lv !== "N5" && lv !== "N4" && !skIsPremium(); }
+/* Gate riêng cho đề thi (mở free Test 1–2 N3/N2/N1): N5/N4 không khóa;
+   Premium không khóa; N3/N2/N1 chỉ mở Test 1–2 — Test 3–9 và Đề chuẩn
+   N3 (testNo 0) vẫn khóa. Các mục khác vẫn dùng skLevelLocked(). */
+function skExamLocked(lv, n){ if(lv === "N5" || lv === "N4") return false; if(skIsPremium()) return false; n = parseInt(n, 10); return n !== 1 && n !== 2; }
 /* Chuẩn hóa field premium trong doc kanji_progress/{uid} thành
    {loaded, active, until, pkg} — dùng chung cho get() 1 lần (skLoadPremium)
    và listener onSnapshot (skPremiumWatchStart) để 2 đường đọc cùng 1 luật:
@@ -10052,7 +10060,7 @@ function skApplyPremiumState(next){
    - Lên Premium ở trang khác: gỡ ổ khóa TẠI CHỖ trên view hiện tại
      (skUnlockPremiumUI) — không route() lại để khỏi mất vị trí cuộn,
      mất trạng thái bài thi / audio / flashcard / video đang mở. Mọi cổng
-     khóa đều kiểm tra skLevelLocked() lúc bấm nên gỡ icon xong là mở được.
+     khóa đều kiểm tra skLevelLocked()/skExamLocked() lúc bấm nên gỡ icon xong là mở được.
    - Mất Premium (hết hạn): vẽ lại trang để ổ khóa hiện lại, trừ view có
      trạng thái dở (skPremiumSafeToRerender) thì giữ nguyên — cổng khóa
      lúc bấm vẫn chặn. */
@@ -10170,7 +10178,9 @@ function skCheckoutPollStart(){
 function skCheckoutPollStop(){
   if(skCheckoutPoll){ clearInterval(skCheckoutPoll); skCheckoutPoll = null; }
 }
-/* Trả về {lv, label} nếu hash đang trỏ tới nội dung N3+ đang bị khóa. */
+/* Trả về {lv, label} nếu hash đang trỏ tới nội dung N3+ đang bị khóa.
+   Ngoại lệ: đề thi gate theo (cấp, số đề) — Test 1–2 N3/N2/N1 free,
+   danh sách đề (#/thi/N3) luôn mở (xem nhánh "thi" + skExamLocked). */
 function skGateForHash(hash){
   var raw = (hash || "#/").replace(/^#/, "");
   var parts = raw.split("?");
@@ -10189,10 +10199,19 @@ function skGateForHash(hash){
     if(ent && ent.jlpt){ lv = ent.jlpt; label = "Kanji " + lv; }
   } else if(seg === "kanji" && query.lv && LEVELS.indexOf(query.lv) >= 0){
     lv = query.lv; label = "Kanji " + lv;
-  } else if((seg === "tuvung" || seg === "nguphap" || seg === "thi" || seg === "nghe" || seg === "doc") &&
+  } else if(seg === "thi" && segs[1] && LEVELS.indexOf(segs[1]) >= 0){
+    /* Đề thi gate theo (cấp, số đề): danh sách đề (không có segs[2]) luôn
+       mở; Test 1–2 N3/N2/N1 free; Test 3–9 + Đề chuẩn (0) vẫn khóa.
+       Lộ trình 30 ngày link thẳng #/thi/<lv>/<n> nên cũng đi qua đây. */
+    if(segs[2] != null && segs[2] !== ""){
+      var tn = parseInt(segs[2], 10);
+      if(skExamLocked(segs[1], tn)) return {lv: segs[1], label: "Đề thi JLPT " + segs[1] + (tn === 0 ? " — Đề chuẩn" : " — Test " + tn)};
+    }
+    return null;
+  } else if((seg === "tuvung" || seg === "nguphap" || seg === "nghe" || seg === "doc") &&
             segs[1] && LEVELS.indexOf(segs[1]) >= 0){
     lv = segs[1];
-    label = ({tuvung: "Từ vựng ", nguphap: "Ngữ pháp ", thi: "Đề thi JLPT ", nghe: "Luyện nghe ", doc: "Đọc hiểu "})[seg] + lv;
+    label = ({tuvung: "Từ vựng ", nguphap: "Ngữ pháp ", nghe: "Luyện nghe ", doc: "Đọc hiểu "})[seg] + lv;
   } else if(seg === "dokkai" && segs[1]){
     /* Đọc hiểu AI: cấp nằm trong tiền tố id bài (dk-n4-01 → N4). Thư viện
        #/dokkai không có segs[1] nên luôn mở (thẻ N3+ hiện 🔒 trong đó). */
@@ -11711,7 +11730,7 @@ function route(){
   deckTeardown();
   dkStop(); /* dừng giọng đọc Đọc hiểu AI khi chuyển trang */
   window.scrollTo(0, 0);
-  /* Paywall: nội dung N3+ chỉ mở cho Premium (xem skGateForHash). */
+  /* Paywall: nội dung N3+ chỉ mở cho Premium, trừ Test 1–2 đề thi (xem skGateForHash). */
   var gate = skGateForHash(location.hash || "#/");
   if(gate){ renderLockedPage(gate.lv, gate.label, location.hash || "#/"); return; }
   if(!seg){ renderHome(); return; }
