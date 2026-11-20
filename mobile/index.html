@@ -857,6 +857,20 @@
   #skAuthGateRetry[hidden]{display:none;} /* .sheetbtn dat display:flex nen can rule nay */
   #skAuthGateDismiss[hidden]{display:none;} /* .ghostbtn dat display:flex nen can rule nay */
   .skauthgate-card .ghostbtn{width:100%; justify-content:center; margin-top:8px;}
+  /* Single-session (20/11): overlay chan/kick — z-index:95, cao nhat file
+     (tren cong loi SDK 90, dialog Premium 81, sheet 51, tabbar 60): phu kin
+     khung #phone, chan moi thao tac duoi. Dung lai khung card cua cong SDK. */
+  .sksession{position:absolute; inset:0; z-index:95; background:rgba(10,8,6,.45);
+    display:flex; align-items:center; justify-content:center; padding:24px;}
+  .sksession[hidden]{display:none;}
+  .sksession-card{width:100%; max-width:320px; text-align:center;
+    background:var(--card); border:1px solid var(--line); border-radius:22px;
+    padding:24px 20px; box-shadow:var(--shadow);}
+  .sksession-card h3{margin:0 0 8px; font-size:17px; font-weight:800;}
+  .sksession-detail{font-size:13px; color:var(--ink-2); margin:0 0 8px; line-height:1.55;}
+  .sksession-detail[hidden]{display:none;}
+  .sksession-msg{font-size:13px; color:var(--ink-2); margin:0 0 16px; line-height:1.55;}
+  .sksession-card .sheetbtn{width:100%; justify-content:center;}
   /* Nut dong (X) cua bang dang nhap (dang nhap tuy chon 18/11): goc phai tren cua sheet. */
   .sheet-x{position:absolute; top:10px; right:12px; width:36px; height:36px; border:none; background:transparent; font-size:24px; line-height:1; color:var(--ink-2); cursor:pointer; z-index:2;}
   .skagate-spin{width:28px; height:28px; margin:0 auto 14px; border-radius:50%;
@@ -3993,6 +4007,19 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <p class="skauthgate-msg" id="skAuthGateMsg">Đang kết nối máy chủ đăng nhập, bạn đợi giây lát nhé.</p>
         <button class="sheetbtn" id="skAuthGateRetry" type="button" hidden>Thử lại</button>
         <button class="ghostbtn" id="skAuthGateDismiss" type="button" hidden>Để sau</button>
+      </div>
+    </div>
+
+    <!-- Single-session (20/11): overlay chan/kick khi tai khoan dang dang nhap
+         o thiet bi khac. z-index 95 — tren cong loi SDK (90) va moi sheet.
+         1 overlay chung 2 noi dung (chan / kick), dong bang nut + bam nen. -->
+    <div id="skSessionOverlay" class="sksession" hidden aria-hidden="true" role="alert">
+      <div class="sksession-card">
+        <img class="login-mascot" src="assets/chibi.png" alt="">
+        <h3 id="skSessionTitle">Tài khoản đang đăng nhập ở thiết bị khác</h3>
+        <p class="sksession-detail" id="skSessionDetail" hidden></p>
+        <p class="sksession-msg" id="skSessionMsg">Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.</p>
+        <button class="sheetbtn" id="skSessionOk" type="button">Đã hiểu</button>
       </div>
     </div>
 
@@ -19700,6 +19727,10 @@ function furiHTML(text){
   function doLogout(){
     var auth = skAuth();
     closeLogin();
+    /* Single-session: dừng heartbeat/listener + xóa session doc của thiết bị
+       này (fire-and-forget, song song với đồng bộ cuối — không await, không
+       kéo dài timeout 2s). Chỉ xóa khi thiết bị này đang giữ session. */
+    try{ skSessionLogout(); }catch(_){}
     function doSignOut(){
       if(auth){ auth.signOut().catch(function(){}); }
       else{ applyAuthUser(null); } /* SDK chưa nạp được: dọn phiên cục bộ */
@@ -19764,6 +19795,8 @@ function furiHTML(text){
     setMsg("Đang xóa tài khoản…");
     /* Dừng đồng bộ ngay để lần đẩy đang chờ debounce không ghi lại doc vừa xóa; lỗi thì bật lại như cũ. */
     try{ if(typeof SKSync !== "undefined") SKSync.setEnabled(false); }catch(_){}
+    /* Single-session: dừng heartbeat/listener để không ghi lại session vừa xóa. */
+    try{ skSessionStop(); }catch(_){}
     var db = skDelDb();
     var uid = user.uid;
     function skDelFail(msg){
@@ -19777,7 +19810,10 @@ function furiHTML(text){
       snap.forEach(function(d){ dels.push(d.ref.delete()); });
       return Promise.all(dels);
     }).then(function(){
-      return db.collection("kanji_progress").doc(uid).delete();
+      /* Single-session: xóa session doc cùng đợt (best-effort — xóa tài khoản
+         xong thì session mồ côi cũng vô hại nên lỗi ở đây không chặn). */
+      var sessDel = db.collection("kanji_progress").doc(uid).collection("session").doc("active").delete();
+      return Promise.all([sessDel.catch(function(){}), db.collection("kanji_progress").doc(uid).delete()]);
     }).then(function(){
       /* Xóa Auth user CUỐI CÙNG. Listener onAuthStateChanged sẽ bắn null
          → applyAuthUser thấy cờ skDeletingAccount thì dọn sạch
@@ -19827,6 +19863,289 @@ function furiHTML(text){
       fetch(SK_LOG_VISIT_URL, {method: "POST", mode: "no-cors", keepalive: true}).catch(function(){});
     }catch(_){}
   }
+  /* ================= SINGLE-SESSION: 1 tài khoản = 1 thiết bị (20/11) ================
+     User ra lệnh 20/11: một tài khoản chỉ đăng nhập được 1 thiết bị cùng lúc;
+     muốn đăng nhập thiết bị khác phải đăng xuất trước.
+     Cơ chế: 1 doc Firestore kanji_progress/{uid}/session/active = session đang
+     giữ tài khoản. Đăng nhập → claim bằng transaction (doc khác deviceId mà
+     còn fresh (<5') thì bị chặn + signOut); giữ session → heartbeat 60s +
+     listener onSnapshot (doc đổi sang deviceId khác + fresh → kick + signOut).
+     deviceId TÁI DÙNG exRepDeviceId() (key sk_device_id) — 2 tab cùng browser
+     cùng deviceId nên không kick nhau. Admin (ADMIN_UIDS) MIỄN toàn bộ.
+     Lỗi claim (mất mạng/rules) → FAIL-OPEN: cho vào app, heartbeat thử lại.
+     KHÔNG xóa session khi đóng app (đa-tab race) — stale 5' là đường phục hồi. */
+  var SK_SESSION_STALE_MS = 5*60*1000; /* session quá 5' không heartbeat coi như chết */
+  var SK_SESSION_HB_MS = 60*1000; /* heartbeat mỗi 60s */
+  var skSessUid = ""; /* uid đang giữ/đang claim session */
+  var skSessHeld = false; /* thiết bị này đang giữ session */
+  var skSessClaiming = false; /* đang có transaction claim chạy */
+  var skSessRef = null; /* DocumentReference session/active */
+  var skSessDeviceId = ""; /* deviceId của thiết bị này (đã claim) */
+  var skSessTimer = null; /* interval heartbeat */
+  var skSessUnsub = null; /* unsubscribe listener kick */
+  var skSessEvBound = false; /* đã gắn listener visibility/focus/online */
+  var skSessionKicked = false; /* vừa bị kick — nhánh null bỏ qua openLogin + reload */
+  var skSessionBlocked = false; /* vừa bị chặn — như kick */
+  function skSessionIsAdmin(uid){ try{ return !!uid && ADMIN_UIDS.indexOf(uid) >= 0; }catch(_){ return false; } }
+  /* Timestamp Firestore → ms. Nhận: Timestamp (.toMillis), number, {seconds},
+     Date, chuỗi ISO; thiếu/không nhận ra → 0 (coi như stale). */
+  function skSessionTsMillis(v){
+    if(v == null) return 0;
+    if(typeof v === "number") return v;
+    if(typeof v.toMillis === "function"){ try{ return v.toMillis(); }catch(_){ return 0; } }
+    if(typeof v.seconds === "number") return v.seconds * 1000;
+    if(v instanceof Date) return v.getTime();
+    if(typeof v === "string"){ var t = Date.parse(v); return isNaN(t) ? 0 : t; }
+    return 0;
+  }
+  function skSessionFresh(ts){ return (Date.now() - skSessionTsMillis(ts)) < SK_SESSION_STALE_MS; }
+  function skSessionServerTs(){
+    try{
+      if(typeof firebase !== "undefined" && firebase.firestore && firebase.firestore.FieldValue)
+        return firebase.firestore.FieldValue.serverTimestamp();
+    }catch(_){}
+    return new Date();
+  }
+  /* Nhãn thiết bị từ userAgent: "iPhone", "iPad", "Android · Chrome",
+     "Windows · Edge", "macOS · Safari"… — hiện trong màn hình chặn. */
+  function skSessionDeviceLabel(){
+    var ua = "";
+    try{ ua = navigator.userAgent || ""; }catch(_){}
+    var touch = 0;
+    try{ touch = navigator.maxTouchPoints || 0; }catch(_){}
+    if(/iPhone/i.test(ua)) return "iPhone";
+    if(/iPad/i.test(ua)) return "iPad";
+    if(/\bMacintosh\b/.test(ua) && touch > 1) return "iPad"; /* iPadOS 13+ giả macOS */
+    var os = "";
+    if(/Android/i.test(ua)) os = "Android";
+    else if(/Windows/i.test(ua)) os = "Windows";
+    else if(/Macintosh|Mac OS X/i.test(ua)) os = "macOS";
+    else if(/Linux/i.test(ua)) os = "Linux";
+    else { try{ os = navigator.platform || "Thiết bị"; }catch(_){ os = "Thiết bị"; } }
+    var br = "";
+    if(/Edg\//i.test(ua)) br = "Edge";
+    else if(/OPR\/|Opera/i.test(ua)) br = "Opera";
+    else if(/Chrome\//i.test(ua)) br = "Chrome";
+    else if(/Firefox\//i.test(ua)) br = "Firefox";
+    else if(/Safari\//i.test(ua)) br = "Safari";
+    return br ? (os + " · " + br) : os;
+  }
+  function skSessionFmtTime(ms){
+    if(!ms) return "không rõ";
+    var d = new Date(ms);
+    function p(n){ return (n < 10 ? "0" : "") + n; }
+    return p(d.getHours()) + ":" + p(d.getMinutes()) + " " + p(d.getDate()) + "/" + p(d.getMonth() + 1);
+  }
+  /* Claim session bằng transaction — chạy từ nhánh user của applyAuthUser
+     (điểm ghi duy nhất của phiên). Lũy đẳng theo (uid, deviceId): đã giữ thì
+     không claim lại; claim đang chạy thì không chạy chồng (listener +
+     safety-check 4s có thể gọi applyAuthUser lại). */
+  function skSessionClaim(user){
+    if(!user || !user.uid) return;
+    var uid = user.uid;
+    if(skSessionIsAdmin(uid)) return; /* Admin miễn toàn bộ */
+    if(skSessionKicked || skSessionBlocked) return;
+    if(skSessHeld && skSessUid === uid) return; /* đã giữ session này */
+    if(skSessClaiming) return;
+    var db = null;
+    try{ db = exRepDb(); }catch(_){ db = null; }
+    if(!db){
+      /* SDK/DB chưa sẵn: FAIL-OPEN — cho vào app, heartbeat thử claim lại. */
+      skSessUid = uid;
+      skSessionHeartbeatStart();
+      return;
+    }
+    var ref = db.collection("kanji_progress").doc(uid).collection("session").doc("active");
+    var myId = "dev-unknown";
+    try{ myId = exRepDeviceId() || "dev-unknown"; }catch(_){}
+    var label = skSessionDeviceLabel();
+    skSessClaiming = true;
+    skSessUid = uid;
+    skSessRef = ref;
+    try{
+      db.runTransaction(function(tx){
+        return tx.get(ref).then(function(snap){
+          if(snap && snap.exists){
+            var d = snap.data() || {};
+            if(d.deviceId && d.deviceId !== myId && skSessionFresh(d.lastSeen)){
+              var err = new Error("sk-session-blocked");
+              err.skSessionBlocked = d;
+              throw err;
+            }
+          }
+          tx.set(ref, {deviceId: myId, deviceLabel: label, platform: "mobile",
+            loginAt: skSessionServerTs(), lastSeen: skSessionServerTs()}, {merge: true});
+        });
+      }).then(function(){
+        skSessClaiming = false;
+        if(skSessionKicked || skSessionBlocked) return;
+        if(skSessUid !== uid) return; /* đã đổi tài khoản trong lúc claim */
+        skSessHeld = true;
+        skSessDeviceId = myId;
+        skSessionListenerStart(ref, myId);
+        skSessionHeartbeatStart();
+      }).catch(function(err){
+        skSessClaiming = false;
+        if(err && err.skSessionBlocked){ skSessionOnBlocked(err.skSessionBlocked); return; }
+        /* Lỗi khác (mất mạng, rules, retry hết): FAIL-OPEN — cho vào app,
+           heartbeat thử claim lại. Hệ quả chấp nhận được: lúc offline có
+           thể có 2 session song song tạm thời; mạng về thì luật thường
+           áp dụng. */
+        skSessHeld = false;
+        skSessionHeartbeatStart();
+      });
+    }catch(_){
+      /* runTransaction ném đồng bộ (DB chưa sẵn thật): fail-open như trên. */
+      skSessClaiming = false;
+      skSessHeld = false;
+      skSessionHeartbeatStart();
+    }
+  }
+  /* Listener kick — chỉ kick khi doc tồn tại + deviceId KHÁC mình + fresh.
+     Bỏ qua: doc bị xóa (đăng xuất cùng thiết bị / race), doc stale, doc của
+     chính mình (kể cả heartbeat của tab khác cùng browser — cùng deviceId). */
+  function skSessionListenerStart(ref, myId){
+    try{
+      if(skSessUnsub){ try{ skSessUnsub(); }catch(_){} skSessUnsub = null; }
+      skSessUnsub = ref.onSnapshot(function(snap){
+        try{
+          if(!snap || !snap.exists) return;
+          var d = snap.data() || {};
+          if(!d.deviceId || d.deviceId === myId) return;
+          if(!skSessionFresh(d.lastSeen)) return;
+          skSessionOnKicked(d);
+        }catch(_){}
+      });
+    }catch(_){ /* listener lỗi: fail-open, không có kick detection */ }
+  }
+  /* Heartbeat: interval 60s + visibilitychange về visible + focus + online.
+     Đã giữ session → ghi lastSeen (kèm deviceId/label để tự lành nếu doc bị
+     xóa bởi race). Chưa giữ (fail-open lúc đầu) → THỬ CLAIM LẠI bằng
+     transaction, KHÔNG ghi mù — không bao giờ ghi đè session thiết bị khác. */
+  function skSessionHeartbeatStart(){
+    if(skSessTimer) return;
+    try{ skSessTimer = setInterval(skSessionHeartbeatTick, SK_SESSION_HB_MS); }catch(_){}
+    if(!skSessEvBound){
+      skSessEvBound = true;
+      try{
+        document.addEventListener("visibilitychange", skSessionHeartbeatOnVisible);
+        window.addEventListener("focus", skSessionHeartbeatTick);
+        window.addEventListener("online", skSessionHeartbeatTick);
+      }catch(_){}
+    }
+  }
+  function skSessionHeartbeatOnVisible(){
+    try{ if(!document.hidden) skSessionHeartbeatTick(); }catch(_){}
+  }
+  function skSessionHeartbeatTick(){
+    try{
+      if(skSessionKicked || skSessionBlocked) return;
+      if(!skSessUid || !signedInUid || skSessUid !== signedInUid) return;
+      if(skSessHeld){
+        if(!skSessRef) return;
+        var p = skSessRef.set({deviceId: skSessDeviceId, deviceLabel: skSessionDeviceLabel(),
+          platform: "mobile", lastSeen: skSessionServerTs()}, {merge: true});
+        if(p && p.catch) p.catch(function(){});
+      }else{
+        if(skSessClaiming) return;
+        var auth = null, u = null;
+        try{ auth = skAuth(); u = auth ? auth.currentUser : null; }catch(_){}
+        if(u && u.uid === skSessUid) skSessionClaim(u);
+      }
+    }catch(_){}
+  }
+  /* Dừng heartbeat + listener + trạng thái giữ session. KHÔNG xóa cờ
+     kicked/blocked — nhánh null của applyAuthUser cần đọc chúng để bỏ qua
+     openLogin + reload; cờ chỉ xóa khi user đóng overlay. */
+  function skSessionStop(){
+    if(skSessTimer){ try{ clearInterval(skSessTimer); }catch(_){} skSessTimer = null; }
+    if(skSessUnsub){ try{ skSessUnsub(); }catch(_){} skSessUnsub = null; }
+    skSessHeld = false;
+    skSessUid = "";
+    skSessRef = null;
+    skSessDeviceId = "";
+    skSessClaiming = false;
+  }
+  /* Đăng xuất: dừng local + xóa session doc (fire-and-forget). CHỈ xóa khi
+     thiết bị này đang giữ session — thiết bị fail-open (chưa giữ) mà xóa mù
+     sẽ giết session của thiết bị khác. Admin không tạo session nên không xóa. */
+  function skSessionLogout(){
+    var uid = skSessUid, held = skSessHeld;
+    skSessionStop();
+    if(!held || !uid) return;
+    if(skSessionIsAdmin(uid)) return;
+    try{
+      var db = exRepDb();
+      if(!db) return;
+      var p = db.collection("kanji_progress").doc(uid).collection("session").doc("active").delete();
+      if(p && p.catch) p.catch(function(){});
+    }catch(_){}
+  }
+  function skSessionShowOverlay(kind, d){
+    var ov = document.getElementById("skSessionOverlay");
+    var title = document.getElementById("skSessionTitle");
+    var msg = document.getElementById("skSessionMsg");
+    var detail = document.getElementById("skSessionDetail");
+    if(!ov) return;
+    if(kind === "block"){
+      if(title) title.textContent = "Tài khoản đang đăng nhập ở thiết bị khác";
+      if(msg) msg.textContent = "Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.";
+      if(detail){
+        var lbl = (d && d.deviceLabel) || "Thiết bị khác";
+        detail.textContent = "Thiết bị: " + lbl + " · Hoạt động gần nhất: " + skSessionFmtTime(skSessionTsMillis(d && d.lastSeen));
+        detail.hidden = false;
+      }
+    }else{
+      if(title) title.textContent = "Đã đăng xuất khỏi thiết bị này";
+      if(msg) msg.textContent = "Tài khoản đã được đăng nhập trên thiết bị khác nên thiết bị này đã đăng xuất.";
+      if(detail) detail.hidden = true;
+    }
+    ov.hidden = false;
+    ov.setAttribute("aria-hidden", "false");
+  }
+  function skSessionHideOverlay(){
+    var ov = document.getElementById("skSessionOverlay");
+    if(ov){ ov.hidden = true; ov.setAttribute("aria-hidden", "true"); }
+    skSessionKicked = false;
+    skSessionBlocked = false;
+  }
+  /* Bị chặn lúc đăng nhập: hiện overlay TRƯỚC rồi mới signOut (signOut có
+     thể chậm — user vẫn thấy lý do ngay). Nhánh null của applyAuthUser thấy
+     cờ skSessionBlocked thì bỏ qua openLogin + reload + xóa key đồng bộ. */
+  function skSessionOnBlocked(d){
+    skSessionBlocked = true;
+    skSessionStop();
+    try{ closePremiumPrompt(); }catch(_){}
+    try{ closeLogin(); }catch(_){}
+    skSessionShowOverlay("block", d);
+    try{
+      var auth = skAuth();
+      if(auth){ var p = auth.signOut(); if(p && p.catch) p.catch(function(){}); }
+      else applyAuthUser(null);
+    }catch(_){ try{ applyAuthUser(null); }catch(__){} }
+  }
+  /* Bị kick lúc đang dùng: như chặn nhưng overlay kick. Listener đã dừng
+     trong skSessionStop nên không kick lặp. */
+  function skSessionOnKicked(d){
+    skSessionKicked = true;
+    skSessionStop();
+    try{ closePremiumPrompt(); }catch(_){}
+    try{ closeLogin(); }catch(_){}
+    skSessionShowOverlay("kick", d);
+    try{
+      var auth = skAuth();
+      if(auth){ var p = auth.signOut(); if(p && p.catch) p.catch(function(){}); }
+      else applyAuthUser(null);
+    }catch(_){ try{ applyAuthUser(null); }catch(__){} }
+  }
+  /* Nối nút overlay: nút "Đã hiểu" + bấm nền (scrim) đều đóng. */
+  (function(){
+    var skSessOk = document.getElementById("skSessionOk");
+    if(skSessOk) skSessOk.addEventListener("click", function(){ skSessionHideOverlay(); });
+    var skSessOv = document.getElementById("skSessionOverlay");
+    if(skSessOv) skSessOv.addEventListener("click", function(e){ if(e.target === skSessOv) skSessionHideOverlay(); });
+  })();
+
   /* Điểm ghi duy nhất của phiên đăng nhập: onAuthStateChanged gọi hàm này
      với user Firebase thật (hoặc null khi đăng xuất). Cập nhật email hiển
      thị, quyền Admin, window.SK_USER (cùng dạng với bản web), ảnh Google,
@@ -19851,6 +20170,9 @@ function furiHTML(text){
       /* Đồng bộ tiến độ khi đăng nhập thành công (kéo dữ liệu của tài
          khoản này về + đẩy thay đổi local chưa kịp đẩy). */
       skSyncOnLogin(user.uid);
+      /* Single-session (20/11): claim phiên 1-thiết-bị — chặn đăng nhập
+         khi tài khoản đang mở ở thiết bị khác (fail-open khi lỗi mạng). */
+      skSessionClaim(user);
       /* Phiên đã về (kể cả vừa quay lại từ Google): đóng bảng đăng nhập —
          nếu bảng từng bật lên ở lần bắn null trước đó thì tắt ngay. */
       closeLogin();
@@ -19861,6 +20183,10 @@ function furiHTML(text){
       /* Ghi nhận có phiên trước khi xóa — chỉ khi thật sự chuyển từ "đã
          đăng nhập" sang "chưa đăng nhập" mới xóa dữ liệu local + tải lại
          trang (lần bắn null lúc mở app chưa từng đăng nhập thì không xóa). */
+      /* Single-session: dừng heartbeat + listener khi phiên kết thúc
+         (đăng xuất/kick/block). Cờ kicked/blocked KHÔNG bị xóa ở đây —
+         nhánh này còn cần đọc chúng (bỏ qua openLogin + reload). */
+      skSessionStop();
       var skHadSession = !!signedInUid;
       window.SK_USER = null;
       signedInUid = "";
@@ -19872,14 +20198,19 @@ function furiHTML(text){
          email ở trình duyệt khác (skPendingEmailLink — hỏi lại email),
          hoặc đang có cổng chờ mà SDK vừa tải được (skPendingGate —
          user bấm mục khóa rồi bấm Thử lại ở cổng lỗi). */
-      if(skPendingEmailLink || (skPendingGate && skAuth())) openLogin();
+      /* Bị chặn/kick thì KHÔNG mở bảng đăng nhập — overlay chặn/kick đang
+         hiện (xem skSessionOnBlocked/skSessionOnKicked). */
+      if(!skSessionKicked && !skSessionBlocked && (skPendingEmailLink || (skPendingGate && skAuth()))) openLogin();
       avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
       renderAvatarPhoto();
       /* Dọn cache Premium + khóa lại ngay (listener của paywall cũng làm
          việc này, nhưng gọi thêm ở đây để chắc chắn cả khi listener đó
          chưa từng thấy phiên — ví dụ đổi tài khoản sau khi mở app). */
       try{ premiumCacheSave(null); premiumApplyLocks(); }catch(_){}
-      if(skHadSession){
+      /* Bị chặn/kick thì KHÔNG xóa key đồng bộ local (tiến độ chưa đẩy
+         thuộc về chính tài khoản này — đăng nhập lại sẽ đồng bộ tiếp) và
+         KHÔNG tải lại trang (overlay chặn/kick phải còn hiện cho user đọc). */
+      if(skHadSession && !skSessionKicked && !skSessionBlocked){
         /* Đăng xuất thật: xóa nhóm key đồng bộ khỏi máy để tài khoản khác
            đăng nhập sau không gộp nhầm dữ liệu (SYNC-DESIGN.md §8), rồi
            tải lại trang để biến RAM cũng về trạng thái trống (tránh dữ
