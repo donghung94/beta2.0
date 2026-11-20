@@ -18995,15 +18995,18 @@ function furiHTML(text){
         state: state, appliedLv: appliedLv,
         missions: missionsState,
         kanjiDone: KANJI.map(function(k){ return k.done ? 1 : 0; }),
-        shop: { owned: Object.keys(shopOwned), frame: shopFrame }
+        shop: { owned: Object.keys(shopOwned), frame: shopFrame, frameAt: shopFrameAt }
       }));
     }catch(_){}
-    /* 1 lần ghi sk_progress chạm 4 doc đồng bộ (ví + nhiệm vụ + kanji +
-       lộ trình) — đẩy cả 4 (debounce 2s/doc trong module). */
+    /* 1 lần ghi sk_progress chạm 5 doc đồng bộ (ví + nhiệm vụ + kanji +
+       lộ trình + shop) — đẩy cả 5 (debounce 2s/doc trong module).
+       Mua/trang bị shop đều kết thúc bằng renderWallet() -> saveProgress()
+       nên đẩy shop ở đây là đủ, không cần gọi riêng từng handler. */
     skSyncPush("wallet");
     skSyncPush("missions");
     skSyncPush("kanji");
     skSyncPush("plan30");
+    skSyncPush("shop");
   }
 
   /* ---------- Kinh tế app: EXP · Xu · Điểm đóng góp ---------- */
@@ -19013,6 +19016,7 @@ function furiHTML(text){
      (khung) hoặc data-name (vật phẩm khác). */
   var shopOwned = {}; /* khóa món -> true */
   var shopFrame = null; /* khung đang đeo: "fr-leaf"... hoặc null */
+  var shopFrameAt = 0; /* ms lúc đeo khung hiện tại (LWW cho đồng bộ shop, M-11) */
   /* Đọc lại dữ liệu đã lưu trên máy (EXP, ví, nhiệm vụ, lộ trình, kanji đã thuộc) */
   (function loadProgress(){
     try{
@@ -19044,6 +19048,8 @@ function furiHTML(text){
           if(typeof k === "string" && validShopKeys[k]) shopOwned[k] = true;
         });
         if(typeof d.shop.frame === "string" && validShopKeys[d.shop.frame] && shopOwned[d.shop.frame]) shopFrame = d.shop.frame;
+        if(typeof d.shop.frameAt === "number") shopFrameAt = d.shop.frameAt;
+        if(!shopFrame) shopFrameAt = 0;
       }
       renderPathHome(); /* thẻ lộ trình ở Home theo đúng cấp đã lưu */
       renderPathMap(); /* sơ đồ lộ trình 30 ngày theo đúng cấp đã lưu */
@@ -19349,6 +19355,7 @@ function furiHTML(text){
     var f = b.dataset.equip;
     if(!shopOwned[f]) return;
     shopFrame = f;
+    shopFrameAt = Date.now();
     applyFrame(f);
     shopMsg("Đã đeo «" + (b.dataset.equipName || f) + "» lên avatar.");
     renderShopEffects();
@@ -19376,6 +19383,7 @@ function furiHTML(text){
         shopOwned[shopKeyOf(btn)] = true;
         if(btn.dataset.frame){
           shopFrame = btn.dataset.frame;
+          shopFrameAt = Date.now();
           applyFrame(btn.dataset.frame);
           shopMsg("Đã đeo «" + btn.dataset.name + "» lên avatar — xem ở tab Cá nhân và Xếp hạng.");
         } else if(btn.dataset.name === SHOP_WIND){
@@ -21758,6 +21766,13 @@ function furiHTML(text){
  * {mine, removed}, API markVideoRemoved — sao chép pattern savedWords)
  * + createdAt (2026-11-18): syncAll tạo doc cha kanji_progress/{uid} kèm
  * createdAt = serverTimestamp nếu chưa có (xem ensureParentDoc).
+ * + doc shop (2026-11-20, M-11): {owned: [key...], frame, frameAt} —
+ * union owned, frame LWW theo frameAt (chỉ mobile có shop; web bỏ qua
+ * doc này vì adapter web trả undefined). Reconcile W7-3 cùng đợt:
+ * settings thêm field `explain` (đã có ở bản nhúng mobile từ trước).
+ * + M-10 (2026-11-20): mergePlan30 không ghi appliedLv/appliedAt khi
+ * phía thắng không có giá trị (Firestore cấm undefined); syncAllIds
+ * catch từng doc — 1 doc lỗi không abort cả lần đồng bộ.
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -21795,7 +21810,8 @@ function furiHTML(text){
   var QUIZ_CAP = 10, KANJI_CAP = 12;
 
   var FIXED_DOCS = ["wallet", "missions", "kanji", "grammar", "plan30", "jlpt",
-                    "examBest", "videos", "settings", "avatar", "savedWords"];
+                    "examBest", "videos", "settings", "avatar", "savedWords",
+                    "shop"];
   var VOCAB_PREFIX = "vocab_";
 
   var LS_DEVICE = "sk_device_id";       // id thiết bị (local-only)
@@ -22059,11 +22075,26 @@ function furiHTML(text){
                               num(server.done && server.done[lv], 0));
     });
     // appliedLv: LWW theo appliedAt; phía không có thì giữ phía còn lại.
+    // M-10: phía thắng KHÔNG có appliedLv (vd máy mới omit ở lần sync
+    // đầu khi vẫn là mặc định) thì lấy phía còn lại nếu có; cả 2 đều
+    // không có thì BỎ key — không ghi undefined (Firestore cấm giá trị
+    // undefined, set() sẽ ném và abort cả lần đồng bộ). Omit chứ không
+    // default null như mergeJlpt: appliedLv vắng đã có nghĩa riêng
+    // (adapter mobile cố tình omit), và toSyncData cũng chỉ ghi key
+    // này khi có giá trị thật — omit giữ nhất quán cả 2 đầu.
     var la = local.appliedAt, sa = server.appliedAt;
-    if (la == null && sa == null) { out.appliedLv = local.appliedLv; }
-    else if (sa == null || (la != null && la >= sa)) {
-      out.appliedLv = local.appliedLv; out.appliedAt = la;
-    } else { out.appliedLv = server.appliedLv; out.appliedAt = sa; }
+    var winLv, winAt;
+    if (sa == null || (la != null && la >= sa)) {
+      winLv = local.appliedLv; winAt = la; // local thắng (kể cả hòa)
+      if (winLv === undefined) { winLv = server.appliedLv; winAt = sa; }
+    } else {
+      winLv = server.appliedLv; winAt = sa;
+      if (winLv === undefined) { winLv = local.appliedLv; winAt = la; }
+    }
+    if (winLv !== undefined) {
+      out.appliedLv = winLv;
+      if (winAt != null) out.appliedAt = winAt;
+    }
     return out;
   }
 
@@ -22147,6 +22178,24 @@ function furiHTML(text){
     return out;
   }
 
+  /* shop (M-11, chỉ mobile có — web không có shop nên adapter web bỏ
+   * qua doc này): union owned theo khóa (mua rồi không mất), frame LWW
+   * theo frameAt (lần đeo gần nhất thắng). frame phải thuộc owned, nếu
+   * không thì null (chưa đeo). Không có tombstone: vật phẩm không gỡ được. */
+  function mergeShop(local, server) {
+    local = local || {}; server = server || {};
+    var owned = {};
+    (local.owned || []).concat(server.owned || []).forEach(function (k) {
+      if (typeof k === "string" && k) owned[k] = true;
+    });
+    var la = num(local.frameAt, 0), sa = num(server.frameAt, 0);
+    var frame, frameAt;
+    if (sa > la) { frame = server.frame; frameAt = sa; }
+    else { frame = local.frame; frameAt = la; }
+    if (typeof frame !== "string" || !frame || !owned[frame]) { frame = null; frameAt = 0; }
+    return { owned: Object.keys(owned), frame: frame, frameAt: frameAt };
+  }
+
   /* savedWords: union theo khóa word|reading, LWW từng entry theo u,
    * fav = OR, tombstone removed (ms) mới hơn u thì entry bị loại. */
   function savedWordKey(w, r) { return (w || "") + "|" + (r || ""); }
@@ -22201,6 +22250,7 @@ function furiHTML(text){
     examBest: mergeMaxMap,
     videos: mergeVideos,
     settings: mergeSettings,
+    shop: mergeShop,
     avatar: null, // LWW cả doc — xử lý riêng ở syncDoc (so updatedAt)
     savedWords: mergeSavedWords
   };
@@ -22416,6 +22466,7 @@ function furiHTML(text){
    *   missions: {date, rotKind, done, quizProg:number, kanjiProg:number, days}
    *   kanji:    mảng bit [0/1...] theo thứ tự KANJI
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
+ *   shop:     {owned: [key...], frame, frameAt} (mobile only; web không có shop)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
    *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
@@ -22458,6 +22509,14 @@ function furiHTML(text){
         po.appliedAt = (p.appliedLv !== meta.appliedLv) ? t : (meta.appliedAt || 0);
       }
       return po;
+    }
+    if (docId === "shop") {
+      var sh = localRaw || {};
+      return {
+        owned: (sh.owned || []).filter(function (k) { return typeof k === "string" && k; }),
+        frame: (typeof sh.frame === "string" && sh.frame) ? sh.frame : null,
+        frameAt: num(sh.frameAt, 0)
+      };
     }
     if (docId === "settings") {
       var s = localRaw || {};
@@ -22505,9 +22564,27 @@ function furiHTML(text){
     }
     if (docId === "plan30") {
       var p = syncData || {};
+      // M-10 (phòng thủ sâu): server thiếu appliedLv thì không tạo key
+      // undefined trong payload local — payload này tuy không đi thẳng
+      // tới Firestore (adapter + toSyncData đều đã guard), giữ sạch
+      // vẫn hơn là để undefined lang thang trong local/meta.
+      var pLocal = { done: clone(p.done || {}) };
+      var pMeta = { appliedAt: p.appliedAt || 0 };
+      if (p.appliedLv !== undefined) {
+        pLocal.appliedLv = p.appliedLv;
+        pMeta.appliedLv = p.appliedLv;
+      }
+      return { local: pLocal, meta: pMeta };
+    }
+    if (docId === "shop") {
+      var s2 = syncData || {};
       return {
-        local: { appliedLv: p.appliedLv, done: clone(p.done || {}) },
-        meta: { appliedLv: p.appliedLv, appliedAt: p.appliedAt || 0 }
+        local: {
+          owned: (s2.owned || []).filter(function (k) { return typeof k === "string" && k; }),
+          frame: (typeof s2.frame === "string" && s2.frame) ? s2.frame : null,
+          frameAt: num(s2.frameAt, 0)
+        },
+        meta: {}
       };
     }
     if (docId === "settings") {
@@ -22703,6 +22780,7 @@ function furiHTML(text){
       else if (docId === "examBest") merged = mergeMaxMap(localSync, serverData);
       else if (docId === "videos") merged = mergeVideos(localSync, serverData);
       else if (docId === "settings") merged = mergeSettings(localSync, serverData);
+      else if (docId === "shop") merged = mergeShop(localSync, serverData);
       else return Promise.resolve("unsupported");
       var serverChanged = !same(merged, serverData);
       var localChanged = !same(merged, localSync);
@@ -22913,16 +22991,29 @@ function furiHTML(text){
 
   function syncAllIds(uid, ids) {
     // Thứ tự: đẩy ví -> missions (clawback sửa ví) -> các doc còn lại -> kéo ví.
+    // M-10: mỗi bước có catch riêng — 1 doc lỗi chỉ log rồi tiếp tục,
+    // không abort các doc còn lại + pullWallet (trước đây 1 lỗi ở
+    // plan30 làm mất cả jlpt/examBest/videos/settings/avatar/savedWords
+    // + pullWallet). Bọc cả 2 đầu ví: lỗi đẩy ví không chặn các doc
+    // khác, lỗi kéo ví không làm hỏng lần đồng bộ đã xong.
+    function guarded(fn, label) {
+      return function () {
+        return Promise.resolve().then(fn).catch(function (err) {
+          log("Đồng bộ lỗi (" + label + "): " + ((err && err.message) || err));
+          return "error";
+        });
+      };
+    }
     var chain = Promise.resolve();
-    chain = chain.then(function () { return pushWallet(uid, false); });
-    chain = chain.then(function () { return syncMissions(uid); });
+    chain = chain.then(guarded(function () { return pushWallet(uid, false); }, "wallet-push"));
+    chain = chain.then(guarded(function () { return syncMissions(uid); }, "missions"));
     ids.forEach(function (id) {
       if (id === "wallet" || id === "missions") return;
-      if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
-      else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
-      else { chain = chain.then(function () { return syncOne(uid, id); }); }
+      if (id === "savedWords") { chain = chain.then(guarded(function () { return syncSavedWords(uid); }, id)); }
+      else if (id === "videos") { chain = chain.then(guarded(function () { return syncVideos(uid); }, id)); }
+      else { chain = chain.then(guarded(function () { return syncOne(uid, id); }, id)); }
     });
-    chain = chain.then(function () { return pullWallet(uid); });
+    chain = chain.then(guarded(function () { return pullWallet(uid); }, "wallet-pull"));
     return chain;
   }
 
@@ -23172,7 +23263,7 @@ function furiHTML(text){
       missions: mergeMissions, plan30: mergePlan30, jlpt: mergeJlpt,
       kanji: MERGES.kanji, grammar: MERGES.grammar,
       maxMap: mergeMaxMap, videos: mergeVideos, settings: mergeSettings,
-      savedWords: mergeSavedWords, vocab: mergeVocab,
+      shop: mergeShop, savedWords: mergeSavedWords, vocab: mergeVocab,
       stamped: mergeStamped, counterMap: mergeCounterMap, counterTotal: counterTotal
     },
     _stampDiff: stampDiff,
@@ -23415,7 +23506,7 @@ function furiHTML(text){
   var skSyncAdapter = {
     readLocal: function (docId) {
       if (docId === "wallet" || docId === "missions" ||
-          docId === "kanji" || docId === "plan30") {
+          docId === "kanji" || docId === "plan30" || docId === "shop") {
         var d = skSyncReadProgress();
         if (docId === "wallet") {
           if (!d || !d.state) return null;
@@ -23453,6 +23544,15 @@ function furiHTML(text){
             out.appliedLv = d.appliedLv;
           }
           return out;
+        }
+        if (docId === "shop") {
+          if (!d || !d.shop || typeof d.shop !== "object") return null;
+          return {
+            owned: Array.isArray(d.shop.owned)
+              ? d.shop.owned.filter(function (k) { return typeof k === "string"; }) : [],
+            frame: (typeof d.shop.frame === "string") ? d.shop.frame : null,
+            frameAt: (typeof d.shop.frameAt === "number") ? d.shop.frameAt : 0
+          };
         }
       }
       if (docId === "jlpt") {
@@ -23545,6 +23645,25 @@ function furiHTML(text){
           saveProgress(); // lưu appliedLv
           try { renderPathHome(); } catch (_) {}
           try { renderPathMap(); } catch (_) {}
+          return;
+        }
+        if (docId === "shop") {
+          if (payload) {
+            // Cùng luật với loadProgress: chỉ giữ khóa còn bán trong shop,
+            // khung phải là món đã mua (món đã gỡ khỏi shop tự rơi ra).
+            var validKeys = {};
+            document.querySelectorAll("[data-buy]").forEach(function (b) { validKeys[shopKeyOf(b)] = true; });
+            shopOwned = {};
+            (payload.owned || []).forEach(function (k) {
+              if (typeof k === "string" && validKeys[k]) shopOwned[k] = true;
+            });
+            shopFrame = (typeof payload.frame === "string" && validKeys[payload.frame] && shopOwned[payload.frame])
+              ? payload.frame : null;
+            shopFrameAt = (typeof payload.frameAt === "number") ? payload.frameAt : 0;
+            if (!shopFrame) shopFrameAt = 0;
+          }
+          saveProgress(); // ghi lại sk_progress.shop (skSyncApplying chặn bắn ngược)
+          try { renderShopEffects(); } catch (_) {}
           return;
         }
         if (docId === "jlpt") {
