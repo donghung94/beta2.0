@@ -11,6 +11,13 @@
  * {mine, removed}, API markVideoRemoved — sao chép pattern savedWords)
  * + createdAt (2026-11-18): syncAll tạo doc cha kanji_progress/{uid} kèm
  * createdAt = serverTimestamp nếu chưa có (xem ensureParentDoc).
+ * + doc shop (2026-11-20, M-11): {owned: [key...], frame, frameAt} —
+ * union owned, frame LWW theo frameAt (chỉ mobile có shop; web bỏ qua
+ * doc này vì adapter web trả undefined). Reconcile W7-3 cùng đợt:
+ * settings thêm field `explain` (đã có ở bản nhúng mobile từ trước).
+ * + M-10 (2026-11-20): mergePlan30 không ghi appliedLv/appliedAt khi
+ * phía thắng không có giá trị (Firestore cấm undefined); syncAllIds
+ * catch từng doc — 1 doc lỗi không abort cả lần đồng bộ.
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -48,7 +55,8 @@
   var QUIZ_CAP = 10, KANJI_CAP = 12;
 
   var FIXED_DOCS = ["wallet", "missions", "kanji", "grammar", "plan30", "jlpt",
-                    "examBest", "videos", "settings", "avatar", "savedWords"];
+                    "examBest", "videos", "settings", "avatar", "savedWords",
+                    "shop"];
   var VOCAB_PREFIX = "vocab_";
 
   var LS_DEVICE = "sk_device_id";       // id thiết bị (local-only)
@@ -312,11 +320,26 @@
                               num(server.done && server.done[lv], 0));
     });
     // appliedLv: LWW theo appliedAt; phía không có thì giữ phía còn lại.
+    // M-10: phía thắng KHÔNG có appliedLv (vd máy mới omit ở lần sync
+    // đầu khi vẫn là mặc định) thì lấy phía còn lại nếu có; cả 2 đều
+    // không có thì BỎ key — không ghi undefined (Firestore cấm giá trị
+    // undefined, set() sẽ ném và abort cả lần đồng bộ). Omit chứ không
+    // default null như mergeJlpt: appliedLv vắng đã có nghĩa riêng
+    // (adapter mobile cố tình omit), và toSyncData cũng chỉ ghi key
+    // này khi có giá trị thật — omit giữ nhất quán cả 2 đầu.
     var la = local.appliedAt, sa = server.appliedAt;
-    if (la == null && sa == null) { out.appliedLv = local.appliedLv; }
-    else if (sa == null || (la != null && la >= sa)) {
-      out.appliedLv = local.appliedLv; out.appliedAt = la;
-    } else { out.appliedLv = server.appliedLv; out.appliedAt = sa; }
+    var winLv, winAt;
+    if (sa == null || (la != null && la >= sa)) {
+      winLv = local.appliedLv; winAt = la; // local thắng (kể cả hòa)
+      if (winLv === undefined) { winLv = server.appliedLv; winAt = sa; }
+    } else {
+      winLv = server.appliedLv; winAt = sa;
+      if (winLv === undefined) { winLv = local.appliedLv; winAt = la; }
+    }
+    if (winLv !== undefined) {
+      out.appliedLv = winLv;
+      if (winAt != null) out.appliedAt = winAt;
+    }
     return out;
   }
 
@@ -389,7 +412,7 @@
   function mergeSettings(local, server) {
     local = local || {}; server = server || {};
     var out = {}, fieldAt = {}, f;
-    ["sound", "remind", "recog", "sora"].forEach(function (f) {
+    ["sound", "remind", "recog", "sora", "explain"].forEach(function (f) {
       var la = num(local.fieldAt && local.fieldAt[f], 0);
       var sa = num(server.fieldAt && server.fieldAt[f], 0);
       if (sa > la) { out[f] = server[f]; fieldAt[f] = sa; }
@@ -398,6 +421,24 @@
     });
     out.fieldAt = fieldAt;
     return out;
+  }
+
+  /* shop (M-11, chỉ mobile có — web không có shop nên adapter web bỏ
+   * qua doc này): union owned theo khóa (mua rồi không mất), frame LWW
+   * theo frameAt (lần đeo gần nhất thắng). frame phải thuộc owned, nếu
+   * không thì null (chưa đeo). Không có tombstone: vật phẩm không gỡ được. */
+  function mergeShop(local, server) {
+    local = local || {}; server = server || {};
+    var owned = {};
+    (local.owned || []).concat(server.owned || []).forEach(function (k) {
+      if (typeof k === "string" && k) owned[k] = true;
+    });
+    var la = num(local.frameAt, 0), sa = num(server.frameAt, 0);
+    var frame, frameAt;
+    if (sa > la) { frame = server.frame; frameAt = sa; }
+    else { frame = local.frame; frameAt = la; }
+    if (typeof frame !== "string" || !frame || !owned[frame]) { frame = null; frameAt = 0; }
+    return { owned: Object.keys(owned), frame: frame, frameAt: frameAt };
   }
 
   /* savedWords: union theo khóa word|reading, LWW từng entry theo u,
@@ -454,6 +495,7 @@
     examBest: mergeMaxMap,
     videos: mergeVideos,
     settings: mergeSettings,
+    shop: mergeShop,
     avatar: null, // LWW cả doc — xử lý riêng ở syncDoc (so updatedAt)
     savedWords: mergeSavedWords
   };
@@ -669,6 +711,7 @@
    *   missions: {date, rotKind, done, quizProg:number, kanjiProg:number, days}
    *   kanji:    mảng bit [0/1...] theo thứ tự KANJI
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
+ *   shop:     {owned: [key...], frame, frameAt} (mobile only; web không có shop)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
    *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
@@ -712,10 +755,18 @@
       }
       return po;
     }
+    if (docId === "shop") {
+      var sh = localRaw || {};
+      return {
+        owned: (sh.owned || []).filter(function (k) { return typeof k === "string" && k; }),
+        frame: (typeof sh.frame === "string" && sh.frame) ? sh.frame : null,
+        frameAt: num(sh.frameAt, 0)
+      };
+    }
     if (docId === "settings") {
       var s = localRaw || {};
       var so = { fieldAt: {} };
-      ["sound", "remind", "recog", "sora"].forEach(function (f) {
+      ["sound", "remind", "recog", "sora", "explain"].forEach(function (f) {
         so[f] = s[f];
         so.fieldAt[f] = (s[f] !== (meta.values && meta.values[f])) ? t
           : (meta.fieldAt && meta.fieldAt[f]) || 0;
@@ -758,16 +809,34 @@
     }
     if (docId === "plan30") {
       var p = syncData || {};
+      // M-10 (phòng thủ sâu): server thiếu appliedLv thì không tạo key
+      // undefined trong payload local — payload này tuy không đi thẳng
+      // tới Firestore (adapter + toSyncData đều đã guard), giữ sạch
+      // vẫn hơn là để undefined lang thang trong local/meta.
+      var pLocal = { done: clone(p.done || {}) };
+      var pMeta = { appliedAt: p.appliedAt || 0 };
+      if (p.appliedLv !== undefined) {
+        pLocal.appliedLv = p.appliedLv;
+        pMeta.appliedLv = p.appliedLv;
+      }
+      return { local: pLocal, meta: pMeta };
+    }
+    if (docId === "shop") {
+      var s2 = syncData || {};
       return {
-        local: { appliedLv: p.appliedLv, done: clone(p.done || {}) },
-        meta: { appliedLv: p.appliedLv, appliedAt: p.appliedAt || 0 }
+        local: {
+          owned: (s2.owned || []).filter(function (k) { return typeof k === "string" && k; }),
+          frame: (typeof s2.frame === "string" && s2.frame) ? s2.frame : null,
+          frameAt: num(s2.frameAt, 0)
+        },
+        meta: {}
       };
     }
     if (docId === "settings") {
       var s = syncData || {};
       return {
-        local: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora },
-        meta: { values: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora },
+        local: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora, explain: s.explain },
+        meta: { values: { sound: s.sound, remind: s.remind, recog: s.recog, sora: s.sora, explain: s.explain },
                 fieldAt: clone(s.fieldAt || {}) }
       };
     }
@@ -956,6 +1025,7 @@
       else if (docId === "examBest") merged = mergeMaxMap(localSync, serverData);
       else if (docId === "videos") merged = mergeVideos(localSync, serverData);
       else if (docId === "settings") merged = mergeSettings(localSync, serverData);
+      else if (docId === "shop") merged = mergeShop(localSync, serverData);
       else return Promise.resolve("unsupported");
       var serverChanged = !same(merged, serverData);
       var localChanged = !same(merged, localSync);
@@ -1166,16 +1236,29 @@
 
   function syncAllIds(uid, ids) {
     // Thứ tự: đẩy ví -> missions (clawback sửa ví) -> các doc còn lại -> kéo ví.
+    // M-10: mỗi bước có catch riêng — 1 doc lỗi chỉ log rồi tiếp tục,
+    // không abort các doc còn lại + pullWallet (trước đây 1 lỗi ở
+    // plan30 làm mất cả jlpt/examBest/videos/settings/avatar/savedWords
+    // + pullWallet). Bọc cả 2 đầu ví: lỗi đẩy ví không chặn các doc
+    // khác, lỗi kéo ví không làm hỏng lần đồng bộ đã xong.
+    function guarded(fn, label) {
+      return function () {
+        return Promise.resolve().then(fn).catch(function (err) {
+          log("Đồng bộ lỗi (" + label + "): " + ((err && err.message) || err));
+          return "error";
+        });
+      };
+    }
     var chain = Promise.resolve();
-    chain = chain.then(function () { return pushWallet(uid, false); });
-    chain = chain.then(function () { return syncMissions(uid); });
+    chain = chain.then(guarded(function () { return pushWallet(uid, false); }, "wallet-push"));
+    chain = chain.then(guarded(function () { return syncMissions(uid); }, "missions"));
     ids.forEach(function (id) {
       if (id === "wallet" || id === "missions") return;
-      if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
-      else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
-      else { chain = chain.then(function () { return syncOne(uid, id); }); }
+      if (id === "savedWords") { chain = chain.then(guarded(function () { return syncSavedWords(uid); }, id)); }
+      else if (id === "videos") { chain = chain.then(guarded(function () { return syncVideos(uid); }, id)); }
+      else { chain = chain.then(guarded(function () { return syncOne(uid, id); }, id)); }
     });
-    chain = chain.then(function () { return pullWallet(uid); });
+    chain = chain.then(guarded(function () { return pullWallet(uid); }, "wallet-pull"));
     return chain;
   }
 
@@ -1425,7 +1508,7 @@
       missions: mergeMissions, plan30: mergePlan30, jlpt: mergeJlpt,
       kanji: MERGES.kanji, grammar: MERGES.grammar,
       maxMap: mergeMaxMap, videos: mergeVideos, settings: mergeSettings,
-      savedWords: mergeSavedWords, vocab: mergeVocab,
+      shop: mergeShop, savedWords: mergeSavedWords, vocab: mergeVocab,
       stamped: mergeStamped, counterMap: mergeCounterMap, counterTotal: counterTotal
     },
     _stampDiff: stampDiff,
