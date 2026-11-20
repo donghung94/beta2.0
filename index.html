@@ -6081,6 +6081,21 @@ function svuShowMsg(txt, isErr){
   m.textContent = txt || "";
   m.className = "svu-msg" + (txt ? " show" : "") + (isErr ? " err" : "");
 }
+
+/* M-05 (20/11/2026): loi bot-check/captions tu backend chua tieng Nhat tho
+   (ly do YouTube tra ve, vd "ログインして bot ではないことを確認してください")
+   + chi tiet ky thuat "[thử: ANDROID=FETCH_FAIL, ...]" — hien thong bao
+   tieng Viet than thien thay vi hien thi nguyen van. Cac loi khac (link sai,
+   video khong co phu de, loi may chu...) giu nguyen thong bao cua chung.
+   Luu y: client khong phan biet duoc bot-check voi video that su da bi xoa
+   (cung ma not-found, cung dinh dang "[thử: ...]") nen ca nhom deu dung
+   thong bao chung nay. */
+var SVU_BOTCHECK_MSG = "Tạm thời không tạo được bài từ video này. Bạn thử lại sau hoặc học video có sẵn nhé.";
+function svuFriendlyErr(msg){
+  if(!msg) return "";
+  if(/LOGIN_REQUIRED|FETCH_FAIL|bot ではない|\[thử:|\b402\b|Gemini lỗi|không phát được \(|Không gọi được YouTube|YouTube trả về HTTP|[\u3040-\u30ff\u4e00-\u9fff]/.test(msg)) return SVU_BOTCHECK_MSG;
+  return msg;
+}
 /* HTML hop dan link — W1 dat vao tab "Video toi tao" (dung markup mobile). */
 function svuBoxHTML(){
   return '<div class="svu-box">' +
@@ -6228,7 +6243,7 @@ function svuCreate(){
        khong phai message tieng Viet backend gui — bao ro chua san sang */
     var backendMsg = /[àáảãạăắằẳẵặâấầẩẫậđèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÈÉẺẼẸÊẾỀỂỄỆÌÍỈĨỊÒÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÙÚỦŨỤƯỨỪỬỮỰỲÝỶỸỴ]/.test(msg);
     if(code === "not-found" && !backendMsg) svuShowMsg(SVU_NOT_READY, true);
-    else if(msg) svuShowMsg(msg, true);
+    else if(msg) svuShowMsg(svuFriendlyErr(msg), true);
     else svuShowMsg("Lỗi máy chủ khi xử lý video. Thử lại sau ít phút.", true);
   }).then(function(){
     svuBusy = false;
@@ -6255,7 +6270,7 @@ function svuOpenMine(id){
     svuOpenVideo(id);
   }).catch(function(err){
     var msg = (err && err.message) || "Không mở được bài này. Thử dán lại link của video.";
-    svuShowMsg(msg, true);
+    svuShowMsg(svuFriendlyErr(msg), true);
   });
 }
 /* W3-SVU:END */
