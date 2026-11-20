@@ -20838,9 +20838,12 @@ function furiHTML(text){
     }catch(_){ /* listener lỗi: fail-open, không có kick detection */ }
   }
   /* Heartbeat: interval 60s + visibilitychange về visible + focus + online.
-     Đã giữ session → ghi lastSeen (kèm deviceId/label để tự lành nếu doc bị
-     xóa bởi race). Chưa giữ (fail-open lúc đầu) → THỬ CLAIM LẠI bằng
-     transaction, KHÔNG ghi mù — không bao giờ ghi đè session thiết bị khác. */
+     Đã giữ session → CHỈ ghi lastSeen, KHÔNG ghi deviceId/label/platform —
+     heartbeat không bao giờ khẳng định lại deviceId ngoài transaction claim
+     (M-08: thiết bị stale quay lại online mà ghi deviceId của mình sẽ cướp
+     lại session hợp lệ của thiết bị khác). Chưa giữ (fail-open lúc đầu) →
+     THỬ CLAIM LẠI bằng transaction, KHÔNG ghi mù — không bao giờ ghi đè
+     session thiết bị khác. */
   function skSessionHeartbeatStart(){
     if(skSessTimer) return;
     try{ skSessTimer = setInterval(skSessionHeartbeatTick, SK_SESSION_HB_MS); }catch(_){}
@@ -20862,8 +20865,7 @@ function furiHTML(text){
       if(!skSessUid || !signedInUid || skSessUid !== signedInUid) return;
       if(skSessHeld){
         if(!skSessRef) return;
-        var p = skSessRef.set({deviceId: skSessDeviceId, deviceLabel: skSessionDeviceLabel(),
-          platform: "mobile", lastSeen: skSessionServerTs()}, {merge: true});
+        var p = skSessRef.set({lastSeen: skSessionServerTs()}, {merge: true});
         if(p && p.catch) p.catch(function(){});
       }else{
         if(skSessClaiming) return;
