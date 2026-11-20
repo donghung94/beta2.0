@@ -6121,11 +6121,32 @@ function svuExtractId(input){
    2026-11-13). Giao thuc y het SDK: POST {"data": {...}} -> {"result": {...}}
    hoac {"error": {...}}. */
 var SVU_FN_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/makeLessonFromVideo";
+/* M-13-client (21/11/2026): backend makeLessonFromVideo da gate auth/Premium
+   (M-13) — goi khong kem ID token bi tra 401 voi MOI user. Lay token qua
+   firebase.auth().currentUser.getIdToken() truoc moi fetch va gan header
+   Authorization: Bearer <token>. Chua dang nhap (currentUser null, firebase/
+   auth khong co, hoac getIdToken() that bai): KHONG goi fetch — mo bang dang
+   nhap san co (openAuthModal) roi reject ma "svu/login-required"; 2 catch o
+   svuCreate / svuOpenMine nhan ma nay thi xoa thong bao dang tai va bo qua
+   (khong hien them loi). Contract tra ve giu nguyen: {data} / throw
+   {code, message}. */
 function svuFetchFn(payload){
-  return fetch(SVU_FN_URL, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({data: payload})
+  var fu = null;
+  try{ fu = (typeof firebase !== "undefined" && firebase.auth) ? firebase.auth().currentUser : null; }catch(e){ fu = null; }
+  if(!fu || typeof fu.getIdToken !== "function"){
+    if(typeof openAuthModal === "function") openAuthModal();
+    return Promise.reject({code: "svu/login-required", message: ""});
+  }
+  return fu.getIdToken().catch(function(){
+    /* Token het han / khong lay duoc — coi nhu chua dang nhap. */
+    if(typeof openAuthModal === "function") openAuthModal();
+    throw {code: "svu/login-required", message: ""};
+  }).then(function(tok){
+    return fetch(SVU_FN_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json", "Authorization": "Bearer " + tok},
+      body: JSON.stringify({data: payload})
+    });
   }).then(function(r){
     return r.json().then(function(j){
       if(j && j.result) return {data: j.result};
@@ -6307,6 +6328,9 @@ function svuCreate(){
     svuShowMsg("", false);
     svuOpenVideo(d.id);
   }).catch(function(err){
+    /* M-13-client: chua dang nhap — bang dang nhap da mo trong svuFetchFn, xoa
+       thong bao "Dang tao bai..." va khong hien them loi. */
+    if(err && err.code === "svu/login-required"){ svuShowMsg("", false); return; }
     var code = String((err && err.code) || "").replace(/^functions\//, "");
     var msg = (err && err.message) || "";
     /* Function chua deploy: SDK tra not-found kem message tieng Anh cua SDK,
@@ -6339,6 +6363,9 @@ function svuOpenMine(id){
     svuShowMsg("", false);
     svuOpenVideo(id);
   }).catch(function(err){
+    /* M-13-client: chua dang nhap — bang dang nhap da mo trong svuFetchFn, xoa
+       thong bao "Dang mo bai..." va khong hien them loi. */
+    if(err && err.code === "svu/login-required"){ svuShowMsg("", false); return; }
     var msg = (err && err.message) || "Không mở được bài này. Thử dán lại link của video.";
     svuShowMsg(svuFriendlyErr(msg), true);
   });
