@@ -87,12 +87,12 @@
   }
   .hint{
     font-size:13px; color:#6d6a61; text-align:center; max-width:412px; line-height:1.55; margin:0; padding:0 8px;
+    display:none; /* m-39: changelog "Bản xem thử…" đã stale — ẩn ở mọi cỡ màn hình (trước đây rule ẩn chỉ nằm trong @media ≤480px nên desktop/tablet vẫn thấy) */
   }
   @media (prefers-color-scheme: dark){ .hint{color:#9a978d;} }
   @media (max-width:480px){
     body{padding:0;}
     .phone{width:100%; height:100dvh; min-height:0; border-radius:0; border:none; box-shadow:none;}
-    .hint{display:none;}
   }
 
   /* status bar */
@@ -3533,7 +3533,7 @@
             <button class="lv" data-flv="N2">N2</button>
             <button class="lv" data-flv="N1">N1</button>
           </div>
-          <p class="wcount" id="flashLvInfo">N5 · 118 chữ — bấm 1 bài để mở bộ flashcard của bài đó</p>
+          <p class="wcount" id="flashLvInfo">N5 · 126 chữ — bấm 1 bài để mở bộ flashcard của bài đó</p>
           <div id="flashLessons"></div>
         </div>
         <div id="flashDeckWrap" hidden>
@@ -4116,7 +4116,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="pwdlg-x" id="pwDialogClose" type="button" aria-label="Đóng">×</button>
         <img class="pwdlg-img" src="assets/chibi.png" alt="">
         <h3>Tính năng Premium</h3>
-        <p>Bài học này là tính năng dành cho tài khoản Premium.</p>
+        <p id="pwDialogMsg">Bài học này là tính năng dành cho tài khoản Premium.</p>
         <div class="pwdlg-btns">
           <button class="pwdlg-later" id="pwDialogLater" type="button">Để sau</button>
           <button class="pwdlg-plans" id="pwDialogPlans" type="button">Xem các gói nâng cấp</button>
@@ -4284,7 +4284,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <button class="lv" data-wlv="N2">N2</button>
             <button class="lv" data-wlv="N1">N1</button>
           </div>
-          <p class="wcount" id="writeCount">N5 · 118 chữ — bấm 1 chữ để luyện ở khung bên dưới</p>
+          <p class="wcount" id="writeCount">N5 · 126 chữ — bấm 1 chữ để luyện ở khung bên dưới</p>
           <div class="writegrid jp" id="writeGrid"></div>
           <div class="wframehead"><b>Khung luyện</b><span id="writeFrameInfo"></span></div>
         </div>
@@ -4662,7 +4662,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="detailbody">
         <div class="sv-videowrap sv2-videowrap" id="sv2VideoWrap">
           <button class="sv-facade" type="button" id="sv2Facade" aria-label="Phát video Easy N5 Japanese Podcast của kênh OkkeiJapanese">
-            <img src="assets/sv2-facade-swiss.jpg" alt="Ảnh xem trước video Easy N5 Japanese Podcast: người dẫn chương trình của kênh OkkeiJapanese">
+            <!-- m-20: bỏ <img> tĩnh sv2-facade-swiss.jpg (404 mỗi lần load) — facade thật do JS dựng theo từng bài (d.facadeImg), không có ảnh thì chỉ hiện nút phát -->
             <span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
           </button>
         </div>
@@ -4947,7 +4947,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <div class="balstrip">
           <div class="stat"><b id="dTuvi">1.240</b><span>EXP</span></div>
           <div class="stat"><b id="dLinh">320</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-linh"></use></svg>XU</span></div>
-          <div class="stat"><b id="dCong">145</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>ĐIỂM ĐIỂM ĐÓNG GÓP</span></div>
+          <div class="stat"><b id="dCong">145</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>ĐIỂM ĐÓNG GÓP</span></div>
         </div>
         <div class="card" style="margin-top:12px;">
           <div class="lesson-head"><h3>Mùa đấu tuần này</h3><span>HẠNG 18 TUẦN NÀY</span></div>
@@ -4955,6 +4955,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <button class="cta" id="duelRandom" style="margin-top:12px;">Ghép đối thủ ngẫu nhiên</button>
           <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:10px 0 0;">Còn <b style="color:var(--ink);" id="dLeftTxt">3</b> lượt đấu hôm nay. Đối thủ ngẫu nhiên cùng cấp độ đã hoàn thành lượt đấu của họ — điểm của họ được ẩn cho đến khi bạn đấu xong.</p>
           <button class="ghostbtn" id="duelBuyLeft" style="margin-top:10px; width:100%; justify-content:center;" hidden><svg class="curic" viewBox="0 0 48 48" style="width:17px;height:17px;" aria-hidden="true"><use href="#ic-linh"></use></svg>Mua thêm 1 lượt · 30 Xu</button>
+          <p id="duelMsg" style="font-size:12.5px;color:var(--red);line-height:1.55;margin:8px 0 0;"></p>
         </div>
         <h2 class="secttl">Lời thách đấu đang chờ</h2>
         <div class="opprow">
@@ -5015,7 +5016,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="detailbody">
         <div class="balstrip" style="grid-template-columns:1fr 1fr;">
           <div class="stat"><b id="sLinh">320</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-linh"></use></svg>XU</span></div>
-          <div class="stat"><b id="sCong">145</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>ĐIỂM ĐIỂM ĐÓNG GÓP</span></div>
+          <div class="stat"><b id="sCong">145</b><span><svg class="curic" viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-cong"></use></svg>ĐIỂM ĐÓNG GÓP</span></div>
         </div>
         <p id="shopMsg" style="font-size:13px; color:var(--amber); font-weight:700; min-height:20px; margin:10px 2px 0; line-height:1.5;"></p>
         <p id="shopBoostLine" class="sk-boostline" hidden></p>
@@ -5228,7 +5229,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <p id="admFootNote" style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Số liệu thật từ Firestore: tổng học viên chỉ đếm tài khoản đã có dữ liệu học/Premium (tài khoản mới đăng ký chưa học gì thì chưa có dữ liệu để đếm). Danh sách 10 học viên/trang, mới nhất lên đầu (học viên chưa có ngày tạo xếp cuối); hiện tối đa 1.000 học viên và 100 đơn mới nhất.</p>
         <h2 class="secttl">Thư góp ý</h2>
         <div class="card shopcard" id="admInbox" style="margin-top:0;"></div>
-        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Góp ý do học viên gửi từ khung góp ý trong màn flashcard (theo từng từ) và mục “Bình luận góp ý sửa lỗi” ở cuối trang danh sách từ — lưu trên máy này kèm từ/bài liên quan và thời gian gửi, mới nhất xếp trên cùng.</p>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Góp ý do học viên gửi từ khung góp ý trong màn flashcard (theo từng từ) và mục “Bình luận góp ý sửa lỗi” ở cuối trang danh sách từ — lưu trên máy chủ kèm từ/bài liên quan và thời gian gửi, mới nhất xếp trên cùng, tối đa 50 góp ý.</p>
         <h2 class="secttl">Báo lỗi câu hỏi</h2>
         <div class="card shopcard" id="admReports" style="margin-top:0;"></div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Báo lỗi do học viên gửi từ nút “Báo lỗi” ở mỗi câu hỏi đề thi (trong lúc làm bài và màn xem lại) — mới nhất xếp trên cùng, tối đa 50 báo cáo.</p>
@@ -5857,11 +5858,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       else window.localStorage.removeItem(SK_PREMIUM_KEY);
     }catch(_){}
   }
-  /* until có thể là: null (trọn đời), số mili-giây, chuỗi ISO, hoặc
+  /* until có thể là: null (trọn đời), số (giây nếu < 1e12,
+     mili-giây nếu không — m-43: thống nhất với web), chuỗi ISO, hoặc
      Timestamp của Firestore ({seconds} hoặc .toMillis()). */
   function premiumUntilMs(until){
     if(until == null) return null;
-    if(typeof until === "number") return until;
+    if(typeof until === "number") return until < 1e12 ? until * 1000 : until;
     if(typeof until === "string"){ var t = Date.parse(until); return isNaN(t) ? 0 : t; }
     if(until && typeof until.toMillis === "function"){ try{ return until.toMillis(); }catch(_){ return 0; } }
     if(until && typeof until.seconds === "number") return until.seconds * 1000;
@@ -5889,6 +5891,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     function finish(){
       if(done) return;
       done = true;
+      /* m-29: bị chặn/kick trong lúc chờ đọc Premium thì KHÔNG hiện bảng
+         Premium (kể cả đường dự phòng 3s) — overlay chặn/kick đang hiện. */
+      if(skSessionBlocked || skSessionKicked) return;
       if(skPendingBuyPkg){
         /* Vừa đăng nhập để mua gói: nối tiếp ý định mua (skStartCheckout
            tự kiểm tra Premium — đã Premium thì chỉ hiện thông báo, không
@@ -5904,7 +5909,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     try{ premiumRefresh(finish); }catch(_){ finish(); }
   }
   /* Mở dialog Premium căn giữa; trả về false để handler dừng lại. */
-  function showPremiumPrompt(){
+  /* m-31: hộp khóa với message cụ thể (mirror web skLockedPrompt) — dùng cho
+     gate giới hạn video tự tạo: báo rõ "xóa video đã tạo để tạo mới" thay vì
+     upsell chung chung. showPremiumPrompt(msg) đặt lại text mặc định khi
+     không có msg riêng. */
+  var PW_DIALOG_DEFAULT = "Bài học này là tính năng dành cho tài khoản Premium.";
+  var SV_MINE_LIMIT_BODY = "Gói miễn phí tạo được 1 video shadowing từ link YouTube — bạn đã có video tự tạo rồi. Xóa video đã tạo rồi tạo video mới, hoặc nâng cấp Premium để tạo không giới hạn.";
+  function skLockedPrompt(label, body){
+    showPremiumPrompt(body || null);
+  }
+  function showPremiumPrompt(msg){
     if(!signedInUid){
       /* Chưa đăng nhập: mở bảng đăng nhập trước (đăng nhập xong đánh giá
          lại cổng — xem skPendingGate). SDK chưa tải được thì hiện trạng
@@ -5917,6 +5931,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var dg = document.getElementById("pwDialog");
     var sc = document.getElementById("pwDialogScrim");
     if(!dg) return false;
+    var pm = document.getElementById("pwDialogMsg");
+    if(pm) pm.textContent = msg || PW_DIALOG_DEFAULT;
     dg.classList.add("open");
     dg.setAttribute("aria-hidden", "false");
     if(sc) sc.classList.add("open");
@@ -6108,7 +6124,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function premiumTsToMs(v){
     if(v == null) return null;
-    if(typeof v === "number" || typeof v === "string") return v;
+    if(typeof v === "number") return v < 1e12 ? v * 1000 : v; /* m-43: số < 1e12 = giây */
+    if(typeof v === "string") return v;
     if(typeof v.toMillis === "function"){ try{ return v.toMillis(); }catch(_){ return null; } }
     if(typeof v.seconds === "number") return v.seconds * 1000;
     return null;
@@ -6272,8 +6289,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function skFmtVND(n){ return Number(n).toLocaleString("vi-VN") + "đ"; }
   function skTransferMemo(code){ return "SEVQR " + code; }
   function skVietQR(amount, memo){
-    return "https://img.vietqr.io/image/ICB-108888811513-compact2.png?amount=" + amount +
-      "&addInfo=" + encodeURIComponent(memo) + "&accountName=DONG%20THANH%20HUNG";
+    return "https://img.vietqr.io/image/ICB-" + SK_VTB_ACC + "-compact2.png?amount=" + amount +
+      "&addInfo=" + encodeURIComponent(memo) + "&accountName=" + encodeURIComponent(SK_VTB_NAME);
   }
   /* true khi chạy trong app bọc Capacitor (iOS/Android) — KHÔNG phải PWA
      web. An toàn khi window.Capacitor vắng mặt: typeof + kiểm tra hàm
@@ -10604,6 +10621,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     drawGhost.textContent = trace && k ? k.ch : "";
     drawGhost.classList.toggle("on", !!(trace && k));
     document.getElementById("writePick").hidden = !write;
+    var dsBtn = document.getElementById("drawSearch");
+    if(dsBtn){ dsBtn.hidden = sheet; dsBtn.disabled = sheet; /* m-08: kính lúp chết ở chế độ sheet (handler return sớm) — ẩn + disable khi mở Phiếu luyện viết */ }
     document.getElementById("drawTip").hidden = write;
     document.getElementById("drawTitle").textContent = sheet ? "Phiếu luyện viết" : (write ? "Luyện viết" : (trace ? ("Luyện viết · " + k.ch) : "Vẽ kanji"));
     document.getElementById("drawSub").textContent = sheet
@@ -12688,7 +12707,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(exp) exp.classList.remove("show");
   }
   /* ----- Bấm từng từ trong phụ đề để tra từ điển (có sẵn, không cần AI) -----
-     Từ điển dict-ja-vi.json: 10.689 từ từ dữ liệu từ vựng của app (N5–N1 +
+     Từ điển dict-ja-vi.json: 10.707 từ từ dữ liệu từ vựng của app (N5–N1 +
      chuyên ngành + số đếm + trợ từ/từ chỉ thị/tên nước bổ sung), tra cứu
      offline sau lần tải đầu. Cụm phụ đề là cụm furigana chứ chưa phải từ
      (vd "をしました"), nên khi bấm: quét tìm từ dài nhất trong cụm, dạng
@@ -12981,6 +13000,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     sv2ExpIdx = i; sv2ExpMode = "word";
     var title = document.getElementById("sv2ExpTitle");
     var txt = document.getElementById("sv2ExpText");
+    if(!title || !txt) return; /* m-22: user chuyển trang khi từ điển đang load — bong bóng đã bị gỡ, không tra nữa */
     var word = res.found ? res.w : res.span;
     /* Đọc từ đã khớp trong câu (vd 分かりました); chưa tìm thấy thì đọc cụm đã bấm.
        Cách đọc hiện theo từ điển (dạng gốc); chưa có từ thì hiện cách đọc của cụm. */
@@ -13019,6 +13039,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("sv2ExpText").textContent = "Đang tra từ điển…";
     sv2ExpOpen(i);
     svDictLoad().then(function(){
+      if(!SV2_SUBS[i]) return; /* m-22: đã chuyển bài/trang trong lúc tra — bỏ kết quả */
       sv2ShowWord(i, svDictLookupAt(SV2_SUBS[i].ja, offset, seg.b, seg.r));
     }).catch(function(){
       sv2ShowWord(i, {found: false, span: seg.b, surf: seg.b, reading: seg.r || "", dictFail: true});
@@ -13700,7 +13721,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     /* Gate tạo bài: chưa Premium chỉ được tạo tối đa 1 video đang có. Dán
        lại link của video đã tạo thì mở luôn bài đó (nhánh trên), không tính
        là tạo mới nên không bị gate. */
-    if(!isPremium() && svMineLoad().length >= 1){ showPremiumPrompt(); return; }
+    if(!isPremium() && svMineLoad().length >= 1){ skLockedPrompt("Video tự tạo thứ 2", SV_MINE_LIMIT_BODY); return; }
     var fn = svuGetFn();
     if(!fn){ svuShowMsg(SVU_NOT_READY, true); return; }
     svuBusy = true;
@@ -14879,12 +14900,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      của cấp đó (không còn tầng danh sách bài). Dữ liệu là tài nguyên chữ
      của app trong assets/kanji-data.js (window.KANJI_DB, nạp lười qua
      ensureKanjiDB): lọc theo trường jlpt của từng chữ, giữ đúng thứ tự
-     của file dữ liệu — N5 118 chữ (đầu: 一) · N4 206 (đầu: 不) · N3 284
-     (đầu: 政) · N2 272 (đầu: 党) · N1 1.258 (đầu: 亜), tổng 2.138 chữ.
+     của file dữ liệu — N5 126 chữ (đầu: 一) · N4 235 (đầu: 不) · N3 429
+     (đầu: 政) · N2 273 (đầu: 党) · N1 1.075 (đầu: 亜), tổng 2.138 chữ.
      Bấm 1 chữ mở trang chi tiết chữ to (kanjiOverlay — dữ liệu chi tiết
      vẫn lấy từ chính KANJI_DB, kèm khung ảnh mẹo nhớ N5 nếu có).
      kjSeen là tiến độ đã mở xem trong phiên này, khóa theo từng chữ Hán
-     — mẫu số tiến độ là tổng số chữ của cấp (118/206/284/272/1258). ---------- */
+     — mẫu số tiến độ là tổng số chữ của cấp (126/235/429/273/1075). ---------- */
   var KJ_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
   var kjOverlay = document.getElementById("kjOverlay");
   var kjGridOverlay = document.getElementById("kjGridOverlay");
@@ -15028,7 +15049,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var wvView = "hub"; /* "hub" | "lessons" | "words" */
   var wvPools = null;      /* {N5:[{word,reading,hanViet,meaning}…], …} */
   var wvLessonsCache = {}; /* lv -> [{name, topic, words}] */
-  var wvSeen = {};         /* "N5|0|word|reading" -> 1: từ đã bấm xem trong phiên — tiến độ từng bài JLPT */
+  var wvSeen = {};         /* "N5|0|word|reading" -> 1: từ đã bấm xem — tiến độ từng bài JLPT */
+  /* m-15: tiến độ "Đã xem n/N" trước đây chỉ nằm trong RAM (reload là mất)
+     — lưu localStorage "sk_wv_seen", nạp lại khi mở app. */
+  function wvSeenLoad(){ try{ var m = JSON.parse(window.localStorage.getItem("sk_wv_seen") || "{}"); if(m && typeof m === "object") wvSeen = m; }catch(_){} }
+  function wvSeenSave(){ try{ window.localStorage.setItem("sk_wv_seen", JSON.stringify(wvSeen)); }catch(_){} }
+  function wvSeenMark(lv, idx, word, reading){ wvSeen[lv + "|" + idx + "|" + word + "|" + reading] = 1; wvSeenSave(); }
+  wvSeenLoad();
   var wvCtx = null;        /* {lv, idx} của bài JLPT đang mở ở màn danh sách từ (null khi xem từ chuyên ngành) */
   var wvDeckSrc = null;    /* {title, words} của bài JLPT đang mở — nguồn cho bộ flashcard riêng của bài */
   var wvSpecKey = null;    /* key ngành chuyên ngành đang mở ở màn danh sách từ (null khi xem bài JLPT) */
@@ -15253,9 +15280,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
          chia sẵn thành 24 NHÓM ôn luyện theo trường lesson (nhóm 1–13:
          201 từ, nhóm 14–24: 200 từ), ghi nhãn “Nhóm” trung thực, không
          mạo danh bài giáo trình. Mỗi từ mang sẵn trường img (hình minh
-         họa) — cả 4.813 từ đều có hình (3 từ từng bị pipeline từ chối
-         vẽ trực diện đã có hình cảnh thay thế: 崖っぷち nhóm 3, 巧言
-         nhóm 7, 半裸 nhóm 23).
+         họa) — 4.266/4.813 từ có hình; 547 từ N1 thay thế đợt 19/11
+         chưa có hình (theo thiết kế đợt đó — từ không có img thì hiện
+         không ảnh, không bịa ảnh). 3 từ từng bị pipeline từ chối vẽ
+         trực diện đã có hình cảnh thay thế: 崖っぷち nhóm 3, 巧言 nhóm 7,
+         半裸 nhóm 23.
          Chưa nạp dữ liệu thì trả rỗng và KHÔNG cache, chờ ensureN1Data
          gọi lại (như nhánh Minna ở trên). */
       var rows = wvN1Words();
@@ -15409,14 +15438,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
           '<span class="ww jp' + longCls + '">' + esc(v.word) + '</span><span class="wm"><b class="jp">' + esc(v.reading) + '</b>' + (v.hanViet ? esc(v.hanViet) + ' · ' : '') + esc(v.meaning) + '</span><span class="wv-spk">' + WV_SPK_SVG + '</span>' +
           '<span class="wv-save' + (isWordSaved(v.word, v.reading) ? ' on' : '') + '" data-savekey="1" role="button" aria-label="Lưu từ để ôn tập" title="Lưu để ôn tập">' + WV_SAVE_SVG + '</span></span>';
         var hearWord = function(){
-          if(wvCtx) wvSeen[wvCtx.lv + "|" + wvCtx.idx + "|" + v.word + "|" + v.reading] = 1;
+          if(wvCtx) wvSeenMark(wvCtx.lv, wvCtx.idx, v.word, v.reading);
           speakJP(v.reading || v.word, 0.85);
         };
         /* Bấm vào thẻ từ (vùng chữ / cách đọc / nghĩa) → mở flashcard của
            đúng bài đang xem, bắt đầu ngay tại thẻ của từ vừa bấm. Nút loa
            và nút bookmark có stopPropagation riêng nên không mở thẻ. */
         var openThisCard = function(){
-          if(wvCtx) wvSeen[wvCtx.lv + "|" + wvCtx.idx + "|" + v.word + "|" + v.reading] = 1;
+          if(wvCtx) wvSeenMark(wvCtx.lv, wvCtx.idx, v.word, v.reading);
           wvSavedMode = false;
           openWvFlash(wi);
         };
@@ -15517,9 +15546,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      localStorage “sk_saved_words”; từ đã lưu hiện ở mục Ôn tập trong tab
      Cá nhân — bấm vào từ để nghe lại, bấm dấu trang để bỏ lưu, hoặc ôn
      cả danh sách đã lưu bằng flashcard.
-     Góp ý sửa lỗi ở cuối trang danh sách từ lưu vào localStorage
-     “sk_feedback” kèm tên bài đang mở + thời gian gửi; Admin xem lại
-     trong mục Thư góp ý của trang Quản trị. Không có dữ liệu mẫu nào —
+     Góp ý sửa lỗi ở cuối trang danh sách từ gửi lên Firestore collection
+     “sk_feedback” kèm tên bài đang mở + thời gian gửi (mất mạng thì lưu
+     bản sao dự phòng vào localStorage cùng key); Admin xem lại trong mục
+     Thư góp ý của trang Quản trị. Không có dữ liệu mẫu nào —
      cả hai danh sách đều bắt đầu trống. */
   var WV_SAVE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
   var wvPageTitle = "";    /* tên trang từ đang mở — gắn vào từ đã lưu + góp ý */
@@ -15545,9 +15575,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     a.push(entry); savedWordsStore(a); return true;
   }
   /* Câu ví dụ của 1 từ: data Minna để dạng lồng [[câu Nhật, dịch Việt]],
-     data chuyên ngành để dạng phẳng [câu Nhật, dịch Việt] — bóc 1 lớp
-     mảng nếu phần tử đầu vẫn là mảng. Từ chưa có câu ví dụ thì trả null
-     và không hiện gì (không bịa câu). */
+     data chuyên ngành (chỉ 4/1.056 từ có câu ví dụ) để dạng phẳng
+     [câu Nhật, dịch Việt] — bóc 1 lớp mảng nếu phần tử đầu vẫn là mảng.
+     Từ chưa có câu ví dụ thì trả null và không hiện gì (không bịa câu). */
   function wvExPair(v){
     var e = v && v.ex;
     if(!e) return null;
@@ -15687,15 +15717,46 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   });
   /* ---------- Góp ý sửa lỗi (khung trong màn flashcard + cuối trang danh sách từ) ---------- */
   var SK_FB_KEY = "sk_feedback";
+  /* fbLoad chỉ còn đọc các góp ý CHƯA gửi được lên máy chủ (mất mạng /
+     chưa kết nối Firebase) — fbSaveLocal lưu chúng vào localStorage cùng
+     key cũ để không mất góp ý; Thư góp ý ở Quản trị hiện riêng các mục
+     này ở cuối danh sách, đánh dấu "chỉ lưu trên máy này". */
   function fbLoad(){
     try{ var a = JSON.parse(window.localStorage.getItem(SK_FB_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(_){ return []; }
   }
-  /* Mọi góp ý (khung trong flashcard lẫn mục cuối trang) đều qua hàm này:
-     cùng kho sk_feedback, ctx cho biết bài — và từ, nếu gửi từ khung của từ */
-  function fbSave(text, ctx){
+  function fbDb(){
+    try{
+      var app = premiumFbApp();
+      return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
+    }catch(_){ return null; }
+  }
+  function fbSaveLocal(text, ctx){
     var a = fbLoad();
     a.push({ text:text, ctx:ctx || "", time:new Date().toISOString() });
     try{ window.localStorage.setItem(SK_FB_KEY, JSON.stringify(a)); }catch(_){}
+  }
+  /* Mọi góp ý (khung trong flashcard lẫn mục cuối trang) đều qua hàm này:
+     ghi Firestore collection sk_feedback (public create-only theo rules,
+     ẩn danh được — cùng pattern sk_reports), ctx cho biết bài — và từ, nếu
+     gửi từ khung của từ. Ghi lỗi (mất mạng / chưa kết nối Firebase) thì
+     lưu bản sao dự phòng vào localStorage để không mất góp ý. done(ok)
+     gọi khi biết kết quả: ok=true đã ghi Firestore, ok=false chỉ lưu local. */
+  function fbSave(text, ctx, done){
+    var db = fbDb();
+    if(!db){ fbSaveLocal(text, ctx); if(done) done(false); return; }
+    var doc = {
+      text: text, ctx: ctx || "",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      uid: (typeof signedInUid === "string" && signedInUid) ? signedInUid : null,
+      email: (typeof signedInEmail === "string" && signedInEmail) ? signedInEmail : null,
+      deviceId: exRepDeviceId()
+    };
+    db.collection("sk_feedback").add(doc).then(function(){
+      if(done) done(true);
+    }).catch(function(){
+      fbSaveLocal(text, ctx);
+      if(done) done(false);
+    });
   }
   document.getElementById("wvFbSend").addEventListener("click", function(){
     var ta = document.getElementById("wvFbText");
@@ -15706,30 +15767,68 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       msg.style.color = "var(--red)";
       return;
     }
-    fbSave(t, wvPageTitle || "");
-    ta.value = "";
-    msg.textContent = "Đã ghi nhận — cảm ơn bạn! Góp ý đã lưu kèm bài đang mở để đội biên soạn kiểm tra lại.";
-    msg.style.color = "var(--good)";
+    var btn = document.getElementById("wvFbSend");
+    if(btn) btn.disabled = true; /* chặn gửi trùng khi đang ghi Firestore */
+    fbSave(t, wvPageTitle || "", function(ok){
+      if(btn) btn.disabled = false;
+      ta.value = "";
+      if(ok){
+        msg.textContent = "Đã ghi nhận — cảm ơn bạn! Góp ý đã lưu kèm bài đang mở để đội biên soạn kiểm tra lại.";
+        msg.style.color = "var(--good)";
+      }else{
+        msg.textContent = "Đã lưu góp ý trên máy này — kiểm tra mạng rồi gửi lại sau nhé (góp ý chưa tới đội biên soạn).";
+        msg.style.color = "var(--red)";
+      }
+    });
   });
-  /* Thư góp ý trong trang Quản trị (chỉ Admin mở được trang đó) */
+  /* Thư góp ý trong trang Quản trị (chỉ Admin mở được trang đó): đọc từ
+     Firestore sk_feedback (admLoadFeedback tải, mới nhất trước, tối đa
+     50) + các góp ý chỉ lưu trên máy này (gửi lỗi mạng — fbLoad) hiện
+     riêng ở cuối, đánh dấu rõ để admin biết chúng chưa lên máy chủ. */
   function renderAdminInbox(){
     var box = document.getElementById("admInbox");
     if(!box) return;
-    var a = fbLoad().slice().reverse(); /* mới nhất lên đầu */
     box.innerHTML = "";
-    if(!a.length){
+    if(!admFeedbackLoaded && !admFeedbackErr){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải góp ý…</p>';
+      return;
+    }
+    if(admFeedbackErr){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admFeedbackErr) + '</p>';
+      return;
+    }
+    var local = fbLoad().slice().reverse(); /* mới nhất lên đầu */
+    if(!admFeedback.length && !local.length){
       box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Chưa có góp ý nào. Góp ý học viên gửi từ màn flashcard và cuối trang danh sách từ sẽ hiện tại đây.</p>';
       return;
     }
-    a.forEach(function(f){
+    admFeedback.forEach(function(f){
       var when = "";
-      try{ when = new Date(f.time).toLocaleString("vi-VN"); }catch(_){}
+      try{ when = f.createdAtMs ? new Date(f.createdAtMs).toLocaleString("vi-VN") : ""; }catch(_){}
+      var who = (f.email ? esc(f.email) : (f.uid ? "UID " + esc(admShortUid(f.uid)) : "Ẩn danh")) +
+        (f.deviceId ? " · " + esc(f.deviceId) : "");
       var d = document.createElement("div");
       d.className = "fb-item";
       d.innerHTML = '<p class="fb-t">' + esc(f.text) + '</p>' +
-        '<p class="fb-m">' + (f.ctx ? esc(f.ctx) + ' · ' : '') + esc(when) + '</p>';
+        '<p class="fb-m">' + (f.ctx ? esc(f.ctx) + ' · ' : '') + esc(when) + '</p>' +
+        '<p class="fb-m">' + who + '</p>';
       box.appendChild(d);
     });
+    if(local.length){
+      var h = document.createElement("p");
+      h.setAttribute("style", "font-size:13.5px; color:var(--ink-2); margin:12px 0 6px; line-height:1.55; font-weight:700;");
+      h.textContent = "Chỉ lưu trên máy này (chưa gửi được lên máy chủ):";
+      box.appendChild(h);
+      local.forEach(function(f){
+        var when = "";
+        try{ when = new Date(f.time).toLocaleString("vi-VN"); }catch(_){}
+        var d = document.createElement("div");
+        d.className = "fb-item";
+        d.innerHTML = '<p class="fb-t">' + esc(f.text) + '</p>' +
+          '<p class="fb-m">' + (f.ctx ? esc(f.ctx) + ' · ' : '') + esc(when) + '</p>';
+        box.appendChild(d);
+      });
+    }
   }
 
   /* ---------- Flashcard từ vựng của riêng một bài / một ngành ----------
@@ -15940,9 +16039,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       return;
     }
     var lesson = (wvDeckSrc && wvDeckSrc.title) || wvPageTitle || "";
-    fbSave(t, lesson + " · Từ: " + v.word + (v.reading ? " (" + v.reading + ")" : ""));
-    if(inp) inp.value = "";
-    if(msg){ msg.textContent = "Đã ghi nhận góp ý cho từ này — cảm ơn bạn!"; msg.style.color = "var(--good)"; }
+    var btn = document.getElementById("wvFFbSend");
+    if(btn) btn.disabled = true; /* chặn gửi trùng khi đang ghi Firestore */
+    fbSave(t, lesson + " · Từ: " + v.word + (v.reading ? " (" + v.reading + ")" : ""), function(ok){
+      if(btn) btn.disabled = false;
+      if(inp) inp.value = "";
+      if(msg){
+        if(ok){ msg.textContent = "Đã ghi nhận góp ý cho từ này — cảm ơn bạn!"; msg.style.color = "var(--good)"; }
+        else{ msg.textContent = "Đã lưu góp ý trên máy này — kiểm tra mạng rồi gửi lại sau nhé."; msg.style.color = "var(--red)"; }
+      }
+    });
   }
   document.getElementById("wvFFbSend").addEventListener("click", wvFFbDoSend);
   document.getElementById("wvFFbIn").addEventListener("keydown", function(ev){
@@ -17798,7 +17904,7 @@ function furiHTML(text){
     if(!grQuiz) { box.innerHTML = ""; return; }
     var qz = grQuiz;
     if(qz.idx >= qz.qs.length){
-      box.innerHTML = '<p class="grscore">Xong 10 câu — đúng ' + qz.score + ' / ' + qz.qs.length + ' câu.</p>' +
+      box.innerHTML = '<p class="grscore">Xong ' + qz.qs.length + ' câu — đúng ' + qz.score + ' / ' + qz.qs.length + ' câu.</p>' +
         '<button class="ghostbtn" id="grQuizRetry" style="min-height:48px;">Làm lại dạng này</button>';
       document.getElementById("grQuizRetry").addEventListener("click", function(){ grStartQuiz(qz.type); });
       return;
@@ -18493,12 +18599,12 @@ function furiHTML(text){
      Số liệu từng cấp đếm từ data thật của app (kanji-data.js · vocab-minna.js +
      vocab-n1.js · grammar-data.js · listening-n*.js · reading-*.js):
      kanji N5 126 · N4 235 · N3 429 · N2 273 · N1 1075;
-     từ vựng N5 1.205 (Bài 1–25) · N4 1.347 (Bài 26–50) · N3 881 · N2 2.284 · N1 4.813;
-     ngữ pháp N5 84 · N4 74 · N3/N2/N1 72; nghe N5 24 · N4 28 · N3 28 · N2 32 · N1 37;
+     từ vựng N5 1.209 (Bài 1–25) · N4 1.346 (Bài 26–50) · N3 881 · N2 2.284 · N1 4.813;
+     ngữ pháp N5 84 · N4 75 · N3/N2/N1 72; nghe N5 24 · N4 28 · N3 28 · N2 32 · N1 37;
      đọc hiểu N5/N4 30 bài · N3 40 · N2/N1 50. */
   var PLAN_TOTALS = {
-    N5: { kanji:126,  vocab:1205, vocabFrom:1,  vocabTo:25, grammar:84, listen:24, read:30 },
-    N4: { kanji:235,  vocab:1347, vocabFrom:26, vocabTo:50, grammar:74, listen:28, read:30 },
+    N5: { kanji:126,  vocab:1209, vocabFrom:1,  vocabTo:25, grammar:84, listen:24, read:30 },
+    N4: { kanji:235,  vocab:1346, vocabFrom:26, vocabTo:50, grammar:75, listen:28, read:30 },
     N3: { kanji:429,  vocab:881,  vocabFrom:0,  vocabTo:0,  grammar:72, listen:28, read:40 },
     N2: { kanji:273,  vocab:2284, vocabFrom:0,  vocabTo:0,  grammar:72, listen:32, read:50 },
     N1: { kanji:1075, vocab:4813, vocabFrom:0,  vocabTo:0,  grammar:72, listen:37, read:50 }
@@ -19156,7 +19262,7 @@ function furiHTML(text){
     var rnd = document.getElementById("duelRandom");
     if(rnd) rnd.disabled = noLeft;
     var buy = document.getElementById("duelBuyLeft");
-    if(buy){ buy.hidden = !noLeft; buy.disabled = state.linh < 30; }
+    if(buy){ buy.hidden = !noLeft; buy.disabled = false; /* m-01: nút luôn bấm được — thiếu Xu thì bấm vào báo rõ còn thiếu bao nhiêu (mẫu cửa hàng) */ }
   }
 
   /* ---------- Đấu trường (đấu lệch giờ) ---------- */
@@ -19312,15 +19418,23 @@ function furiHTML(text){
     startMatch(OPP_RANDOM[Math.floor(Math.random() * OPP_RANDOM.length)], null);
   });
   document.getElementById("duelBuyLeft").addEventListener("click", function(){
-    if(state.linh < 30) return;
+    var dm = document.getElementById("duelMsg");
+    if(state.linh < 30){ if(dm) dm.textContent = "Bạn cần 30 Xu (đang có " + state.linh + ")"; return; }
     state.linh -= 30; state.duelLeft++;
+    if(dm) dm.textContent = "";
     renderWallet();
   });
   document.getElementById("drAgain").addEventListener("click", function(){
     startMatch(OPP_RANDOM[Math.floor(Math.random() * OPP_RANDOM.length)], null);
   });
   document.getElementById("drBack").addEventListener("click", showDuelHome);
-  document.getElementById("closeDuel").addEventListener("click", function(){ stopDTimer(); hideOv(duelOverlay); });
+  document.getElementById("closeDuel").addEventListener("click", function(){
+    /* m-06: đang đấu dở mà rời thì mất lượt này (lượt đã trừ lúc startMatch)
+       — hỏi trước, chỉ đóng khi user đồng ý; ở màn hình chính/kết quả thì
+       đóng thẳng vì không mất gì. */
+    if(duelPlay && !duelPlay.hidden && !confirm("Rời đấu trường sẽ mất lượt này?")) return;
+    stopDTimer(); hideOv(duelOverlay);
+  });
 
   /* ---------- Cửa hàng ---------- */
   var shopOverlay = document.getElementById("shopOverlay");
@@ -19592,7 +19706,7 @@ function furiHTML(text){
     [ ["bot-04", "Nghe N3 Part 3 mình hay miss câu cuối quá, đoạn cuối nói nhanh mà đáp án cứ na ná nhau."],
       ["bot-07", "Mình hay nghe 2 lần nè: lần 1 nắm ý chính với từ khóa, lần 2 nghe lại rồi mới chốt đáp án. Từ ngày làm vậy đỡ miss hẳn luôn."],
       ["bot-04", "Hay đó, cảm ơn Ánh nha. Tối nay mình thử cách này luôn."] ],
-    [ ["bot-09", "Khoe nhẹ: mình vừa đủ streak 14 ngày làm nhiệm vụ liên tục, thăng cấp Binh nhất rồi nè!"],
+    [ ["bot-09", "Khoe nhẹ: mình vừa đủ streak 14 ngày làm nhiệm vụ liên tục, thăng cấp Binh nhì rồi nè!"],
       ["bot-08", "Chúc mừng Linh nha! Mình mới giữ được 9 ngày, đang cố không để đứt chuỗi đây."],
       ["bot-06", "Streak là vũ khí mạnh nhất đó, giữ được nhịp là lên cấp nhanh lắm. Đừng để đứt ngày nào nha hai bạn."] ],
     [ ["bot-10", "Ai có mẹo nhớ từ vựng N4 không? Mình học trước quên sau hoài, hơi nản."],
@@ -19823,6 +19937,7 @@ function furiHTML(text){
     admLoadTotalUsers(db);
     admLoadVisits(db);
     admLoadReports(db);
+    admLoadFeedback(db);
     Promise.all([
       db.collection("kanji_progress").limit(1000).get(),
       db.collection("sk_orders").orderBy("createdAt", "desc").limit(100).get()
@@ -19899,6 +20014,32 @@ function furiHTML(text){
         ? "Tài khoản này chưa được cấp quyền đọc báo lỗi (kiểm tra rules Firestore)."
         : "Không tải được báo lỗi — kiểm tra mạng rồi mở lại trang nhé.";
       renderAdminReports();
+    });
+  }
+  var admFeedback = []; /* góp ý sửa lỗi từ sk_feedback, mới nhất trước */
+  var admFeedbackLoaded = false;
+  var admFeedbackErr = "";
+  function admLoadFeedback(db){
+    admFeedbackLoaded = false;
+    admFeedbackErr = "";
+    renderAdminInbox();
+    db.collection("sk_feedback").orderBy("createdAt", "desc").limit(50).get().then(function(snap){
+      admFeedback = [];
+      snap.forEach(function(doc){
+        var d = doc.data() || {};
+        admFeedback.push({
+          text: d.text || "", ctx: d.ctx || "",
+          createdAtMs: premiumTsToMs(d.createdAt),
+          uid: d.uid || "", email: d.email || "", deviceId: d.deviceId || ""
+        });
+      });
+      admFeedbackLoaded = true;
+      renderAdminInbox();
+    }).catch(function(err){
+      admFeedbackErr = (err && err.code === "permission-denied")
+        ? "Tài khoản này chưa được cấp quyền đọc góp ý (kiểm tra rules Firestore)."
+        : "Không tải được góp ý — kiểm tra mạng rồi mở lại trang nhé.";
+      renderAdminInbox();
     });
   }
   function admRepPart(p){ return p === "listening" ? "Nghe" : "Viết"; }
@@ -20482,19 +20623,19 @@ function furiHTML(text){
     }catch(e){ return null; }
   }
   /* Dịch lỗi Firebase sang tiếng Việt — chép từ bản web (skAuthErrorVI),
-     thêm mã của luồng redirect. */
+     thêm mã của luồng redirect.
+     m-26: app chỉ có link email + Google/Apple, không có mật khẩu/đăng ký —
+     các mã mật khẩu đã bỏ, user-not-found/invalid-credential viết lại cho
+     đúng luồng (không nhắc đăng ký/mật khẩu). */
   function skAuthErrorVI(err){
     var code = (err && err.code) || "";
     var map = {
       "auth/invalid-email": "Email chưa đúng định dạng — bạn kiểm tra lại email nhé.",
       "auth/missing-email": "Bạn chưa nhập email.",
-      "auth/missing-password": "Bạn chưa nhập mật khẩu.",
-      "auth/user-not-found": "Chưa có tài khoản nào với email này — bạn bấm Đăng ký để tạo tài khoản mới nhé.",
-      "auth/wrong-password": "Mật khẩu chưa đúng — bạn thử lại nhé.",
-      "auth/invalid-credential": "Email hoặc mật khẩu chưa đúng — bạn thử lại nhé.",
-      "auth/invalid-login-credentials": "Email hoặc mật khẩu chưa đúng — bạn thử lại nhé.",
-      "auth/email-already-in-use": "Email này đã được đăng ký rồi — bạn chuyển sang Đăng nhập nhé.",
-      "auth/weak-password": "Mật khẩu quá ngắn — cần ít nhất 6 ký tự.",
+      "auth/user-not-found": "Chưa có tài khoản nào với email này — bạn nhập email để nhận link đăng nhập nhé.",
+      "auth/invalid-credential": "Đăng nhập chưa hoàn tất — bạn thử lại nhé.",
+      "auth/invalid-login-credentials": "Đăng nhập chưa hoàn tất — bạn thử lại nhé.",
+      "auth/email-already-in-use": "Email này đã gắn với một tài khoản khác — bạn thử đăng nhập bằng cách khác nhé.",
       "auth/too-many-requests": "Bạn đã thử quá nhiều lần — đợi ít phút rồi thử lại nhé.",
       "auth/network-request-failed": "Không kết nối được mạng — kiểm tra kết nối rồi thử lại.",
       "auth/popup-closed-by-user": "Bạn đã đóng cửa sổ đăng nhập Google trước khi hoàn tất.",
@@ -20516,7 +20657,7 @@ function furiHTML(text){
   var loginEmailLinkBtn = document.getElementById("loginEmailLink");
   var loginMsgEl = document.getElementById("loginMsg");
   var loginOkEl = document.getElementById("loginOk");
-  var skRedirectErr = ""; /* lỗi từ getRedirectResult (nếu có) — hiện khi mở bảng */
+  var skRedirectErr = ""; /* lỗi từ getRedirectResult (nếu có) — chỉ hiện ngay lúc redirect trả về khi bảng đang mở, không lưu để hiện ở lần mở bảng sau (m-27) */
   var skEmailLinkErr = ""; /* lỗi hoàn tất link email lúc mở app (bảng chưa mở) — hiện khi mở bảng */
   var skPendingEmailLink = ""; /* URL link đăng nhập qua email đang chờ hoàn tất (mở link ở trình duyệt khác, chưa tìm thấy email đã lưu) */
   var SK_EMAIL_LINK_KEY = "sk_email_link_email"; /* email đã gửi link — lưu local để hoàn tất đăng nhập trên cùng trình duyệt */
@@ -20571,7 +20712,10 @@ function furiHTML(text){
         loginMsg("Nhập lại email bạn đã dùng để nhận link đăng nhập nhé.");
         if(loginEmailInput) loginEmailInput.focus();
       }else if(skEmailLinkErr){ loginMsg(skEmailLinkErr); skEmailLinkErr = ""; }
-      else if(skRedirectErr){ loginMsg(skRedirectErr); skRedirectErr = ""; }
+      /* m-27: KHÔNG hiện lỗi redirect đã lưu ở đây nữa — app đã chuyển sang
+         popup sign-in, lỗi cũ hiện khi mở bảng gây hiểu lầm; lỗi redirect
+         thật (nếu có) đã hiện ngay lúc getRedirectResult trả về khi bảng
+         đang mở (xem khối initMobileAuth). */
     }
     loginSheet.classList.add("open");
     loginSheet.setAttribute("aria-hidden", "false");
@@ -20897,21 +21041,22 @@ function furiHTML(text){
   /* Claim session bằng transaction — chạy từ nhánh user của applyAuthUser
      (điểm ghi duy nhất của phiên). Lũy đẳng theo (uid, deviceId): đã giữ thì
      không claim lại; claim đang chạy thì không chạy chồng (listener +
-     safety-check 4s có thể gọi applyAuthUser lại). */
+     safety-check 4s có thể gọi applyAuthUser lại). Trả về promise (resolve
+     khi claim xong — applyAuthUser chờ để nối tiếp cổng chờ, xem m-29). */
   function skSessionClaim(user){
-    if(!user || !user.uid) return;
+    if(!user || !user.uid) return Promise.resolve();
     var uid = user.uid;
-    if(skSessionIsAdmin(uid)) return; /* Admin miễn toàn bộ */
-    if(skSessionKicked || skSessionBlocked) return;
-    if(skSessHeld && skSessUid === uid) return; /* đã giữ session này */
-    if(skSessClaiming) return;
+    if(skSessionIsAdmin(uid)) return Promise.resolve(); /* Admin miễn toàn bộ */
+    if(skSessionKicked || skSessionBlocked) return Promise.resolve();
+    if(skSessHeld && skSessUid === uid) return Promise.resolve(); /* đã giữ session này */
+    if(skSessClaiming) return Promise.resolve();
     var db = null;
     try{ db = exRepDb(); }catch(_){ db = null; }
     if(!db){
       /* SDK/DB chưa sẵn: FAIL-OPEN — cho vào app, heartbeat thử claim lại. */
       skSessUid = uid;
       skSessionHeartbeatStart();
-      return;
+      return Promise.resolve();
     }
     var ref = db.collection("kanji_progress").doc(uid).collection("session").doc("active");
     var myId = "dev-unknown";
@@ -20921,7 +21066,7 @@ function furiHTML(text){
     skSessUid = uid;
     skSessRef = ref;
     try{
-      db.runTransaction(function(tx){
+      return db.runTransaction(function(tx){
         return tx.get(ref).then(function(snap){
           if(snap && snap.exists){
             var d = snap.data() || {};
@@ -20957,6 +21102,7 @@ function furiHTML(text){
       skSessClaiming = false;
       skSessHeld = false;
       skSessionHeartbeatStart();
+      return Promise.resolve();
     }
   }
   /* Listener kick — chỉ kick khi doc tồn tại + deviceId KHÁC mình + fresh.
@@ -21028,17 +21174,31 @@ function furiHTML(text){
   }
   /* Đăng xuất: dừng local + xóa session doc (fire-and-forget). CHỈ xóa khi
      thiết bị này đang giữ session — thiết bị fail-open (chưa giữ) mà xóa mù
-     sẽ giết session của thiết bị khác. Admin không tạo session nên không xóa. */
+     sẽ giết session của thiết bị khác. Admin không tạo session nên không xóa.
+     m-28: xác minh deviceId trên server trước khi xóa (cờ held trong RAM có
+     thể đã stale sau khi thiết bị khác claim). */
   function skSessionLogout(){
-    var uid = skSessUid, held = skSessHeld;
+    var uid = skSessUid, held = skSessHeld, myId = skSessDeviceId;
     skSessionStop();
-    if(!held || !uid) return;
+    if(!held || !uid || !myId) return;
     if(skSessionIsAdmin(uid)) return;
     try{
       var db = exRepDb();
       if(!db) return;
-      var p = db.collection("kanji_progress").doc(uid).collection("session").doc("active").delete();
-      if(p && p.catch) p.catch(function(){});
+      var ref = db.collection("kanji_progress").doc(uid).collection("session").doc("active");
+      /* m-28: chỉ xóa khi doc vẫn thuộc thiết bị này — cờ held trong RAM có
+         thể đã stale (thiết bị khác đã claim trong lúc máy này offline, xem
+         M-08); xóa mù sẽ giết session hợp lệ của thiết bị đang giữ. Đọc thất
+         bại (mất mạng) thì thôi — doc tự stale sau 5 phút. */
+      var g = ref.get();
+      if(g && g.then) g.then(function(snap){
+        try{
+          if(snap && snap.exists && (snap.data() || {}).deviceId === myId){
+            var p = ref.delete();
+            if(p && p.catch) p.catch(function(){});
+          }
+        }catch(_){}
+      }).catch(function(){});
     }catch(_){}
   }
   function skSessionShowOverlay(kind, d){
@@ -21075,6 +21235,9 @@ function furiHTML(text){
   function skSessionOnBlocked(d){
     skSessionBlocked = true;
     skSessionStop();
+    /* m-35: dừng listener đồng bộ TRƯỚC khi signOut — commit đang chờ
+       debounce mà bắn sau khi token mất sẽ gây 403 noise (không mất dữ liệu). */
+    try{ if(typeof SKSync !== "undefined" && SKSync.stopListener) SKSync.stopListener(); }catch(_){}
     try{ closePremiumPrompt(); }catch(_){}
     try{ closeLogin(); }catch(_){}
     skSessionShowOverlay("block", d);
@@ -21089,6 +21252,9 @@ function furiHTML(text){
   function skSessionOnKicked(d){
     skSessionKicked = true;
     skSessionStop();
+    /* m-35: dừng listener đồng bộ TRƯỚC khi signOut — commit đang chờ
+       debounce mà bắn sau khi token mất sẽ gây 403 noise (không mất dữ liệu). */
+    try{ if(typeof SKSync !== "undefined" && SKSync.stopListener) SKSync.stopListener(); }catch(_){}
     try{ closePremiumPrompt(); }catch(_){}
     try{ closeLogin(); }catch(_){}
     skSessionShowOverlay("kick", d);
@@ -21132,13 +21298,23 @@ function furiHTML(text){
       skSyncOnLogin(user.uid);
       /* Single-session (20/11): claim phiên 1-thiết-bị — chặn đăng nhập
          khi tài khoản đang mở ở thiết bị khác (fail-open khi lỗi mạng). */
-      skSessionClaim(user);
+      var skClaimP = null;
+      try{ skClaimP = skSessionClaim(user); }catch(_){ skClaimP = null; }
       /* Phiên đã về (kể cả vừa quay lại từ Google): đóng bảng đăng nhập —
          nếu bảng từng bật lên ở lần bắn null trước đó thì tắt ngay. */
       closeLogin();
       /* Đăng nhập xong: nếu trước đó user bấm mục khóa khi chưa đăng nhập
-         thì đánh giá lại cổng (chưa Premium → hiện bảng Premium). */
-      skResumePendingGate();
+         thì đánh giá lại cổng (chưa Premium → hiện bảng Premium).
+         m-29: chỉ đánh giá lại SAU khi claim session xong — đánh giá ngay
+         thì bảng Premium nháy lên trước overlay chặn khi tài khoản đang mở
+         ở thiết bị khác. Dự phòng 5s nếu claim treo (finish() tự chặn khi
+         bị block/kick nên đường dự phòng vẫn an toàn). */
+      if(skClaimP && typeof skClaimP.then === "function"){
+        var skResumed = false;
+        var skDoResume = function(){ if(skResumed) return; skResumed = true; skResumePendingGate(); };
+        skClaimP.then(skDoResume, skDoResume);
+        setTimeout(skDoResume, 5000);
+      }else skResumePendingGate();
     }else{
       /* Ghi nhận có phiên trước khi xóa — chỉ khi thật sự chuyển từ "đã
          đăng nhập" sang "chưa đăng nhập" mới xóa dữ liệu local + tải lại
@@ -24304,7 +24480,17 @@ function furiHTML(text){
     setTimeout(function(){
       hideTyping();
       answering = false;
-      if(t) addMsg(t.answer, "bot", t.actions);
+      if(t){
+        var ans = t.answer;
+        /* m-32: câu trả lời cách mua theo ngữ cảnh — mobile web/PWA đã mua
+           trực tiếp trong app bằng VietQR (20/11), chỉ app bọc native mới
+           phải mua qua trình duyệt (chưa có IAP). */
+        if(t.id === "premium" && typeof skIsNativeApp === "function" && !skIsNativeApp()){
+          ans = ans.replace("Cách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND.",
+            "Cách mua: mua trực tiếp trong app — mở tab Cài đặt → Nâng cấp Premium, chọn gói rồi chuyển khoản qua mã VietQR hiện trong app.");
+        }
+        addMsg(ans, "bot", t.actions);
+      }
       else addMsg(FALLBACK.answer, "bot", FALLBACK.actions);
     }, 550);
   }
