@@ -10751,6 +10751,16 @@ function skDeleteAccountDo(){
     showModal("Không xóa được tài khoản", "Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết — bạn đăng nhập lại rồi thử xóa lại nhé.", "Đã hiểu", "Đóng", function(){});
     return;
   }
+  /* M-09 (20/11): kiểm tra độ mới của phiên TRƯỚC mọi thao tác xóa —
+     fu.delete() ném auth/requires-recent-login khi phiên cũ, nhưng lúc đó
+     tiến độ đã xóa xong thì không lấy lại được. Mirror mobile
+     skDeleteAccount (4 phút). */
+  var lastSignIn = 0;
+  try{ lastSignIn = Date.parse((fu.metadata && fu.metadata.lastSignInTime) || "") || 0; }catch(_){}
+  if(!lastSignIn || (Date.now() - lastSignIn) > 4*60*1000){
+    showModal("Không xóa được tài khoản", "Vì lý do bảo mật, bạn cần đăng nhập lại rồi thử xóa lại nhé — đăng xuất ở menu tài khoản, đăng nhập lại rồi quay lại Cài đặt.", "Đã hiểu", "Đóng", function(){});
+    return;
+  }
   if(!db){
     showModal("Không xóa được tài khoản", "Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại nhé.", "Đã hiểu", "Đóng", function(){});
     return;
@@ -10787,6 +10797,11 @@ function skDeleteAccountDo(){
     showModal("Đã xóa tài khoản", "Tài khoản của bạn đã được xóa vĩnh viễn cùng tiến độ học và dữ liệu đã lưu. Cảm ơn bạn đã học cùng SoraKanji.", "Đã hiểu", "Đóng", function(){ location.hash = "#/"; });
   }).catch(function(err){
     skDeletingAccount = false;
+    /* Xóa thất bại (vd phiên quá hạn giữa lúc kiểm tra và delete()):
+       bật lại listener đồng bộ đã dừng ở đầu flow — mirror mobile
+       skDelFail (SKSync.setEnabled). Tài khoản vẫn còn nên đồng bộ
+       tiếp tục như cũ. */
+    try{ if(window.SKSync) SKSync.startListener(); }catch(e){}
     if(btn) btn.disabled = false;
     if(msg) msg.textContent = "";
     showModal("Không xóa được tài khoản", skDeleteAccountErrorVI(err), "Đã hiểu", "Đóng", function(){});
