@@ -1953,6 +1953,27 @@
     padding:5px 10px; border-radius:999px; letter-spacing:.02em;
   }
   .realmchip i{width:7px; height:7px; border-radius:50%; background:#F5D98A; display:block;}
+  /* ---------- Icon liên hệ ở banner Home (2026-11-20) ----------
+     Hàng bọc pill cấp bậc + icon liên hệ: mang margin-top:8px thay pill
+     (pill trong hàng margin-top:0) nên khi không có icon, banner nhìn y hệt
+     trước khi patch. flex-wrap: 390px đủ 2 icon cùng hàng với pill, icon
+     thừa xuống hàng 2 trong chiprow; 320px icon xuống dưới pill. */
+  .hero-chiprow{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:8px;}
+  .hero-chiprow .realmchip{margin-top:0;}
+  /* Container icon là 1 flex item của chiprow: flex:1 1 0 + min-width:0 để
+     nó ở lại cùng hàng với pill rồi tự wrap icon bên trong (2 icon cùng
+     hàng với pill, icon thừa xuống hàng 2). PHẢI là basis 0: flex-basis
+     auto (114px nội dung) khiến trình duyệt ngắt dòng TRƯỚC khi shrink,
+     cả cụm nhảy xuống dưới pill (harness lần 1+2 FAIL H1.3 đúng lỗi này). */
+  .hero-contact{display:none; align-items:center; gap:6px; flex-wrap:wrap; flex:1 1 0; min-width:0;}
+  .hero-contact.has-icons{display:inline-flex;}
+  .hero-contact a{display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(42,33,24,.18); flex:0 0 auto; text-decoration:none;}
+  .hero-contact a svg{width:15px; height:15px; display:block;}
+  .hero-contact a[data-hero-channel="facebook"]{color:#1877F2;}
+  .hero-contact a[data-hero-channel="tiktok"]{color:#111111;}
+  .hero-contact a[data-hero-channel="zalo"]{background:#0068FF; color:#fff;}
+  .hero-contact a[data-hero-channel="zalo"] .hz{font-size:13px; font-weight:900; line-height:1; font-family:inherit;}
+  .hero-contact a[data-hero-channel="email"]{color:#D93025;}
 
   /* ---------- Nhiệm vụ hôm nay (hiện đại) — khuôn cuộn gọn ---------- */
   .missions{
@@ -3290,7 +3311,7 @@
             <div class="brandmini"><span class="brandmark jp">空</span> SoraKanji <small>· Bầu trời Kanji</small></div>
             <h1>Chào buổi tối, bạn học</h1>
             <p id="heroSub">Hôm nay luyện tập tiếp N4 nhé</p>
-            <span class="realmchip" id="heroRealmChip"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 2</span>
+            <div class="hero-chiprow"><span class="realmchip" id="heroRealmChip"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 2</span><span class="hero-contact" id="heroContactIcons" style="display:none"></span></div>
           </div>
           <img class="herologo" src="assets/logo.png" alt="Logo SoraKanji — chữ 空漢 màu xanh dương nằm dọc bên trái, bé chibi áo đen đeo kiếm đứng bên phải chỉ tay vào chữ" width="96" height="96" />
         </div>
@@ -8942,6 +8963,36 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     wrap.innerHTML = html;
   }
+  /* Icon liên hệ nhỏ sau pill cấp bậc ở banner Home (2026-11-20).
+     Cùng luật với skRenderContactList: chỉ vẽ kênh HỢP LỆ (URL http(s)
+     / email đúng dạng); cả 4 trống thì container ẩn hẳn, banner giữ
+     nguyên. Zalo vẽ chữ Z trắng trên nền xanh #0068FF (theo yêu cầu),
+     3 kênh còn lại dùng lại path SVG feather-style của SK_CONTACT_CHANNELS.
+     Idempotent: gọi lại chỉ vẽ đè. */
+  function skRenderHeroContactIcons(d){
+    var wrap = document.getElementById("heroContactIcons");
+    if(!wrap) return;
+    var html = "";
+    var n = 0;
+    SK_CONTACT_CHANNELS.forEach(function(ch){
+      var v = d ? (d[ch.key] || "") : "";
+      if(ch.key === "email"){ if(!skIsEmail(v)) return; }
+      else if(!skIsHttpUrl(v)) return;
+      n++;
+      var href = (ch.key === "email") ? ("mailto:" + v) : v;
+      var extra = (ch.key === "email") ? "" : ' target="_blank" rel="noopener"';
+      var glyph;
+      if(ch.key === "zalo"){
+        glyph = '<span class="hz" aria-hidden="true">Z</span>';
+      } else {
+        glyph = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ch.icon + '</svg>';
+      }
+      html += '<a data-hero-channel="' + ch.key + '" href="' + esc(href) + '"' + extra + ' aria-label="' + esc(ch.label) + '">' + glyph + '</a>';
+    });
+    wrap.innerHTML = html;
+    wrap.classList.toggle("has-icons", n > 0);
+    wrap.style.display = n > 0 ? "" : "none";
+  }
   function openContact(){
     var ov = document.getElementById("contactOverlay");
     var wrap = document.getElementById("contactList");
@@ -8983,6 +9034,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     db.collection("sk_config").doc("social").set(data, {merge: true}).then(function(){
       if(btn) btn.disabled = false;
       skSocialCache = {facebook: fb, tiktok: tt, zalo: zl, email: em};
+      skRenderHeroContactIcons(skSocialCache);
       cmsg("Đã lưu liên kết liên hệ.");
     }).catch(function(err){
       if(btn) btn.disabled = false;
@@ -8997,6 +9049,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var sb = document.getElementById("admContactSaveBtn");
     if(sb) sb.addEventListener("click", admSaveContactLinks);
   })();
+  /* Icon liên hệ ở banner Home: tải 1 lần lúc mở app (force=false →
+     dùng cache, không đọc Firestore thừa mỗi lần về Home). */
+  skLoadSocialLinks(false).then(skRenderHeroContactIcons);
   document.getElementById("loginTermsLink").addEventListener("click", function(e){ e.preventDefault(); showOv(document.getElementById("termsOverlay")); });
   document.getElementById("loginPrivacyLink").addEventListener("click", function(e){ e.preventDefault(); showOv(document.getElementById("privacyOverlay")); });
 
@@ -18102,6 +18157,9 @@ function furiHTML(text){
       : "Lộ trình 30 ngày của khóa <b>" + plv + "</b>: mỗi tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử. Hôm nay là <b>Ngày " + (pdone + 1) + "</b> — bấm vào để xem nhiệm vụ.";
     /* Chip cấp bậc theo EXP (không theo cấp đã khai) — renderRank() vẽ. */
     renderRank();
+    /* Icon liên hệ sau pill cấp bậc (cache — không đọc Firestore thừa;
+       cũng là đường retry nếu lần tải ở boot gặp lỗi). */
+    skLoadSocialLinks(false).then(skRenderHeroContactIcons);
     document.getElementById("heroSub").textContent = r.course.indexOf("N") === 0
       ? "Hôm nay luyện tập tiếp " + r.course + " nhé"
       : (appliedLv >= 9 ? "Hôm nay luyện tập giữ vững đỉnh phong nhé" : "Hôm nay luyện tập nâng cao sau N1 nhé");
