@@ -25,6 +25,16 @@
  * EXP của Vật phẩm Tăng Tốc, gộp max-wins (hết hạn muộn hơn thắng;
  * 0/vắng = không có boost). App cộng EXP qua addExp() nên boost áp
  * cho cả nhiệm vụ lẫn đấu trường.
+ * + M-14b (2026-11-21): sổ granted ghi thêm amt = số EXP thực nhận
+ * (đã nhân x2 nếu đang boost); clawback nhiệm vụ trùng trừ min(2 amt)
+ * thay vì thưởng gốc — nhiệm vụ hoàn thành ở 2 máy chỉ tính 1 lần, ở
+ * mức boost nếu 1 trong 2 lần nhận đang boost. Mục cũ không có amt
+ * thì dùng thưởng gốc (tương thích ngược).
+ * + M-14a (2026-11-21): doc shop thêm bought/used — bộ đếm mua/dùng
+ * đơn điệu theo món, gộp max từng khóa; sở hữu hiệu dụng = bought >
+ * used. Chống hồi sinh Tăng Tốc đã dùng khi gộp với máy cũ (union
+ * owned cũ hồi lại vật phẩm). Doc cũ không có bộ đếm: khóa trong
+ * owned coi như bought = 1. expBoostUntil vẫn max-wins như M-14.
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -109,6 +119,21 @@
   function clone(o) { return o == null ? o : JSON.parse(JSON.stringify(o)); }
   function same(a, b) { return JSON.stringify(a || null) === JSON.stringify(b || null); }
   function num(x, dflt) { return (typeof x === "number" && isFinite(x)) ? x : dflt; }
+
+  /* M-14a: làm sạch map đếm {khóa món: số lần} — chỉ giữ khóa chuỗi,
+   * giá trị số nguyên >= 0 (làm tròn xuống, bỏ 0 vì 0 = chưa từng);
+   * khóa sắp xếp để JSON.stringify ổn định khi same() so sánh doc
+   * (tránh đẩy thừa do thứ tự khóa). Không phải object -> {}. */
+  function countMap(o) {
+    var out = {};
+    if (!o || typeof o !== "object") return out;
+    Object.keys(o).sort().forEach(function (k) {
+      var v = o[k];
+      if (typeof k === "string" && k && typeof v === "number" && isFinite(v) && v > 0)
+        out[k] = Math.floor(v);
+    });
+    return out;
+  }
 
   function lsGet(key) {
     try { return window.localStorage.getItem(key); } catch (_) { return null; }
@@ -251,7 +276,17 @@
   /* missions: local/server ở định dạng ĐỒNG BỘ (quizProg/kanjiProg dạng
    * {byDevice: {dev: {n, at}}}). Trả về {data, duplicateGrants}.
    * duplicateGrants: [{mission, amount}] — 2 máy cùng nhận thưởng 1 nhiệm vụ
-   * trong ngày, cần trừ lại 1 lần (xem syncMissions). */
+   * trong ngày, cần trừ lại 1 lần (xem syncMissions). M-14b: amount =
+   * min(EXP thực nhận 2 máy) — tổng đã nhận a+b, muốn giữ lại max(a,b)
+   * (mức boost nếu 1 trong 2 đang boost) nên trừ (a+b)-max(a,b)=min(a,b).
+   * Mục granted cũ không có amt thì dùng thưởng gốc (xem grantedAmt). */
+  /* EXP thực nhận của 1 mục sổ granted (M-14b). Mục cũ (trước M-14b) không
+   * có amt — hoặc amt không phải số dương — thì dùng thưởng gốc của nhiệm
+   * vụ, đúng luật cũ (không đoán boost khi không có dữ kiện). */
+  function grantedAmt(g, mk) {
+    var a = num(g && g.amt, 0);
+    return (a > 0) ? a : (MISSION_REWARDS[mk] || 0);
+  }
   function mergeMissions(local, server, nowMs) {
     local = local || null; server = server || null;
     if (!local) return { data: clone(server), duplicateGrants: [] };
@@ -277,7 +312,7 @@
         var sg = server.granted && server.granted[mk];
         if (lg && sg) {
           out.granted[mk] = (num(sg.at, 0) > num(lg.at, 0)) ? sg : lg;
-          if (lg.by !== sg.by) dups.push({ mission: mk, amount: MISSION_REWARDS[mk] || 0 });
+          if (lg.by !== sg.by) dups.push({ mission: mk, amount: Math.min(grantedAmt(lg, mk), grantedAmt(sg, mk)) });
         } else if (lg || sg) {
           out.granted[mk] = lg || sg;
         }
@@ -450,24 +485,42 @@
   }
 
   /* shop (M-11, chỉ mobile có — web không có shop nên adapter web bỏ
-   * qua doc này): union owned theo khóa (mua rồi không mất), frame LWW
-   * theo frameAt (lần đeo gần nhất thắng). frame phải thuộc owned, nếu
-   * không thì null (chưa đeo). Không có tombstone: vật phẩm không gỡ được.
+   * qua doc này): frame LWW theo frameAt (lần đeo gần nhất thắng).
+   * frame phải thuộc owned, nếu không thì null (chưa đeo).
    * M-14: expBoostUntil (mốc hết hạn x2 EXP của Vật phẩm Tăng Tốc) gộp
-   * max-wins — hết hạn muộn hơn thắng; 0/vắng = không có boost. */
+   * max-wins — hết hạn muộn hơn thắng; 0/vắng = không có boost.
+   * M-14a: bought/used là bộ đếm đơn điệu theo món, gộp max từng khóa;
+   * sở hữu hiệu dụng = bought > used. Mua tăng bought, Dùng tăng used
+   * (không bao giờ chỉ xóa khỏi owned) nên máy cũ còn giữ vật phẩm
+   * đã dùng cũng không hồi sinh nó. Doc cũ không có bộ đếm: khóa còn
+   * trong owned được coi như bought = 1 (đã mua, chưa dùng). */
   function mergeShop(local, server) {
     local = local || {}; server = server || {};
-    var owned = {};
-    (local.owned || []).concat(server.owned || []).forEach(function (k) {
-      if (typeof k === "string" && k) owned[k] = true;
+    var bought = countMap(local.bought), used = countMap(local.used);
+    var sb = countMap(server.bought), su = countMap(server.used);
+    var k;
+    for (k in sb) if (!bought[k] || sb[k] > bought[k]) bought[k] = sb[k];
+    for (k in su) if (!used[k] || su[k] > used[k]) used[k] = su[k];
+    /* Doc cũ (trước M-14a) không có bộ đếm: khóa còn trong owned nghĩa
+     * là đã mua và chưa dùng -> bought ít nhất 1. */
+    (local.owned || []).concat(server.owned || []).forEach(function (kk) {
+      if (typeof kk === "string" && kk && !bought[kk]) bought[kk] = 1;
     });
+    /* Sở hữu hiệu dụng = đã mua nhiều hơn đã dùng; sắp xếp để JSON
+     * ổn định khi same() so sánh doc. */
+    var owned = Object.keys(bought).sort().filter(function (kk) {
+      return bought[kk] > (used[kk] || 0);
+    });
+    var ownedSet = {};
+    owned.forEach(function (kk) { ownedSet[kk] = true; });
     var la = num(local.frameAt, 0), sa = num(server.frameAt, 0);
     var frame, frameAt;
     if (sa > la) { frame = server.frame; frameAt = sa; }
     else { frame = local.frame; frameAt = la; }
-    if (typeof frame !== "string" || !frame || !owned[frame]) { frame = null; frameAt = 0; }
-    return { owned: Object.keys(owned), frame: frame, frameAt: frameAt,
-             expBoostUntil: Math.max(num(local.expBoostUntil, 0), num(server.expBoostUntil, 0)) };
+    if (typeof frame !== "string" || !frame || !ownedSet[frame]) { frame = null; frameAt = 0; }
+    return { owned: owned, frame: frame, frameAt: frameAt,
+             expBoostUntil: Math.max(num(local.expBoostUntil, 0), num(server.expBoostUntil, 0)),
+             bought: countMap(bought), used: countMap(used) };
   }
 
   /* savedWords: union theo khóa word|reading, LWW từng entry theo u,
@@ -740,7 +793,8 @@
    *   missions: {date, rotKind, done, quizProg:number, kanjiProg:number, days}
    *   kanji:    mảng bit [0/1...] theo thứ tự KANJI
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
- *   shop:     {owned: [key...], frame, frameAt, expBoostUntil} (mobile only; web không có shop)
+ *   shop:     {owned: [key...], frame, frameAt, expBoostUntil,
+ *             bought: {key: n}, used: {key: n}} (mobile only; web không có shop)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
    *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
@@ -796,7 +850,9 @@
         owned: (sh.owned || []).filter(function (k) { return typeof k === "string" && k; }),
         frame: (typeof sh.frame === "string" && sh.frame) ? sh.frame : null,
         frameAt: num(sh.frameAt, 0),
-        expBoostUntil: num(sh.expBoostUntil, 0)
+        expBoostUntil: num(sh.expBoostUntil, 0),
+        bought: countMap(sh.bought),
+        used: countMap(sh.used)
       };
     }
     if (docId === "settings") {
@@ -864,7 +920,9 @@
           owned: (s2.owned || []).filter(function (k) { return typeof k === "string" && k; }),
           frame: (typeof s2.frame === "string" && s2.frame) ? s2.frame : null,
           frameAt: num(s2.frameAt, 0),
-          expBoostUntil: num(s2.expBoostUntil, 0)
+          expBoostUntil: num(s2.expBoostUntil, 0),
+          bought: countMap(s2.bought),
+          used: countMap(s2.used)
         },
         meta: {}
       };
@@ -1481,11 +1539,19 @@
     schedulePush("videos");
   }
 
-  /* App gọi khi hoàn thành 1 nhiệm vụ (ghi sổ nhận thưởng để chống nhận 2 lần). */
-  function grantMission(mission) {
+  /* App gọi khi hoàn thành 1 nhiệm vụ (ghi sổ nhận thưởng để chống nhận 2 lần).
+   * amount = số EXP thực nhận (đã nhân x2 nếu đang boost — M-14b) để
+   * clawback trừ đúng khi 2 máy cùng nhận. Không có amount (bản app cũ)
+   * thì ghi như cũ, không có amt — merge dùng thưởng gốc. */
+  function grantMission(mission, amount) {
     var meta = metaGet("missions") || {};
     meta.granted = meta.granted || {};
-    if (!meta.granted[mission]) meta.granted[mission] = { by: getDeviceId(), at: now() };
+    if (!meta.granted[mission]) {
+      var e = { by: getDeviceId(), at: now() };
+      var a = num(amount, 0);
+      if (a > 0) e.amt = a;
+      meta.granted[mission] = e;
+    }
     metaSet("missions", meta);
     schedulePush("missions");
   }
