@@ -666,7 +666,7 @@ html[data-theme="toi"] .dlg-line .sp{color:var(--red)}
 .modal h3{margin:0 0 8px; font-size:19px}
 .modal p{color:var(--muted); margin:0 0 18px; font-size:14.5px}
 .modal .row{display:flex; gap:10px; justify-content:flex-end}
-/* Overlay phiên đăng nhập 1 thiết bị (20/11/2026): z-index cao hơn mọi
+/* Overlay phiên đăng nhập 2 thiết bị (21/11/2026): z-index cao hơn mọi
    sheet/modal (report sheet 200 là cao nhất hiện có) + Sora + tabbar. */
 .sksess-bg{position:fixed; inset:0; background:rgba(20,16,12,.6); z-index:300; display:flex; align-items:center; justify-content:center; padding:20px}
 .sksess-box{background:var(--card); border-radius:16px; padding:24px; max-width:420px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.35)}
@@ -11339,10 +11339,15 @@ function skDeleteAccountDo(){
     snap.forEach(function(d){ jobs.push(d.ref.delete()); });
     return Promise.all(jobs);
   }).then(function(){
-    /* Phiên 1 thiết bị: xóa session/active cùng đợt (best-effort, trước
-       deleteUser để còn quyền owner; lỗi thì bỏ qua — uid đã xóa thì
-       session mồ côi vô hại). */
-    return docRef.collection("session").doc("active").delete().catch(function(){});
+    /* Phiên 2 thiết bị: xóa mọi doc sessions/{deviceId} + doc legacy
+       session/active cùng đợt (best-effort, trước deleteUser để còn
+       quyền owner; lỗi thì bỏ qua — uid đã xóa thì session mồ côi vô hại). */
+    return docRef.collection("sessions").get().then(function(ss){
+      var del = [];
+      ss.forEach(function(d){ del.push(d.ref.delete()); });
+      del.push(docRef.collection("session").doc("active").delete().catch(function(){}));
+      return Promise.all(del);
+    }).catch(function(){});
   }).then(function(){
     return docRef.delete();
   }).then(function(){
@@ -12891,23 +12896,31 @@ function skAuthErrorVI(err){
   };
   return map[code] || ("Chưa đăng nhập được" + (code ? " (" + code + ")" : "") + " — bạn thử lại nhé.");
 }
-/* ================= PHIÊN ĐĂNG NHẬP 1 THIẾT BỊ (20/11/2026) =================
-   1 tài khoản chỉ đăng nhập được 1 thiết bị cùng lúc; muốn đăng nhập thiết
-   bị khác phải đăng xuất trước. Session doc duy nhất:
-   kanji_progress/{uid}/session/active =
+/* ================= PHIÊN ĐĂNG NHẬP TỐI ĐA 2 THIẾT BỊ (21/11/2026) =================
+   1 tài khoản đăng nhập tối đa 2 thiết bị CÙNG LÚC; thiết bị thứ 3 bị chặn
+   cho tới khi 1 trong 2 thiết bị kia đăng xuất (hoặc stale >5 phút).
+   Mỗi thiết bị 1 doc: kanji_progress/{uid}/sessions/{deviceId} =
    {deviceId, deviceLabel, platform: "web", loginAt, lastSeen}.
    - Claim bằng transaction lúc onAuthStateChanged bắn user (kể cả mở app đã
-     đăng nhập sẵn): session của thiết bị khác còn fresh (<5 phút) → chặn +
-     signOut; stale → ghi đè. Lỗi khác → FAIL OPEN (cho vào, held=false;
-     heartbeat thử claim lại) để lỗi mạng không chặn đăng nhập.
-   - Heartbeat 60s + visible/focus/online cập nhật lastSeen (khi held) hoặc
-     thử claim lại (khi chưa held). Listener onSnapshot kick khi doc đổi sang
-     thiết bị khác còn fresh. Không xóa session khi đóng app — stale 5 phút
-     là đường phục hồi duy nhất (không beforeunload/pagehide).
+     đăng nhập sẵn): đếm doc FRESH (<5 phút). Thiết bị này đã có doc → resume
+     (không đếm 2 lần, chỉ làm mới lastSeen). fresh < 2 → ghi doc của mình +
+     xóa doc stale + xóa doc legacy session/active (migration, best-effort;
+     delete doc không tồn tại là no-op). fresh >= 2 mà không có doc của
+     mình → chặn + signOut, overlay liệt kê cả 2 thiết bị. Lỗi khác →
+     FAIL OPEN (cho vào, held=false; heartbeat thử claim lại) để lỗi mạng
+     không chặn đăng nhập.
+   - Heartbeat 60s + visible/focus/online cập nhật lastSeen (khi held VÀ doc
+     còn tồn tại) hoặc thử claim lại (khi chưa held). Heartbeat KHÔNG BAO GIỜ
+     viết lại doc đã bị xóa (không hồi sinh doc sau kick) — khi doc mất thì
+     chạy re-check thay vì ghi.
+   - Listener onSnapshot trên doc của mình: doc bị XÓA → kiểm tra lại: còn
+     session fresh khác thì kick (overlay + signOut); không còn thì claim lại
+     bình thường. Doc còn tồn tại (kể cả stale) → resume, không kick.
    - deviceId TÁI DÙNG skReportDeviceId() (key sk_device_id) — 2 tab cùng
      browser cùng deviceId nên không kick nhau. Admin (SK_ADMIN_UIDS) miễn
-     toàn bộ. Xem ~/workspace/single-session/design/DESIGN.md. */
+     toàn bộ. */
 var SK_SESSION_STALE_MS = 5 * 60 * 1000; /* session quá 5 phút không thấy heartbeat thì coi như đã rời */
+var SK_SESSION_MAX_DEVICES = 2; /* số thiết bị online cùng lúc tối đa */
 var skSessHeld = false;      /* true = thiết bị này đang giữ session */
 var skSessUid = null;        /* uid đang giữ/đang claim */
 var skSessClaiming = false;  /* đang chạy transaction claim */
@@ -12915,6 +12928,8 @@ var skSessUnsub = null;      /* unsubscribe listener onSnapshot */
 var skSessTimer = null;      /* interval heartbeat 60s */
 var skSessKicking = false;   /* đang trong quá trình kick — heartbeat bỏ qua ghi */
 var skSessOverlay = null;    /* "block" | "kick" | null — overlay đang hiện */
+var skSessOwnExists = false; /* doc sessions/{myId} còn tồn tại (listener cập nhật) */
+var skSessRechecking = false; /* đang chạy re-check sau delete event */
 function skSessionTsMillis(v){
   if(!v) return 0;
   if(typeof v === "number") return v;
@@ -12951,7 +12966,21 @@ function skSessionFmtTime(ms){
   function p(n){ return (n < 10 ? "0" : "") + n; }
   return p(d.getHours()) + ":" + p(d.getMinutes()) + " " + p(d.getDate()) + "/" + p(d.getMonth() + 1);
 }
-function skSessionRef(uid){
+function skSessionColl(uid){
+  var db = null;
+  try{ db = skDb(); }catch(e){ db = null; }
+  if(!db) return null;
+  return db.collection("kanji_progress").doc(uid).collection("sessions");
+}
+function skSessionRef(uid, deviceId){
+  var coll = skSessionColl(uid);
+  if(!coll) return null;
+  var id = deviceId;
+  if(!id){ try{ id = skReportDeviceId(); }catch(e){ id = null; } }
+  if(!id) return null;
+  return coll.doc(id);
+}
+function skSessionLegacyRef(uid){
   var db = null;
   try{ db = skDb(); }catch(e){ db = null; }
   if(!db) return null;
@@ -12965,7 +12994,7 @@ function skSessionServerTs(){
   return null;
 }
 function skSessionOverlayVisible(){ return !!skSessOverlay; }
-function skSessionShowOverlay(kind, deviceLabel, lastSeenMs){
+function skSessionShowOverlay(kind, devices, lastSeenMs){
   skSessOverlay = kind;
   /* Đóng sheet đăng nhập / Premium (cùng modalRoot) để overlay phiên là thứ
      duy nhất user thấy; overlay có z-index cao hơn mọi sheet nên vẫn nổi
@@ -12975,10 +13004,19 @@ function skSessionShowOverlay(kind, deviceLabel, lastSeenMs){
   if(!root) return;
   var html;
   if(kind === "block"){
+    /* Block chỉ xảy ra khi đã đủ 2 thiết bị fresh khác → devices luôn là
+       mảng 2 phần tử {deviceLabel, lastSeen}. Nhánh string giữ lại để gọi
+       cũ (1 thiết bị) không vỡ. */
+    var devs = Array.isArray(devices) ? devices : [];
+    if(!devs.length && typeof devices === "string") devs = [{deviceLabel: devices, lastSeen: lastSeenMs}];
+    var list = "";
+    for(var i = 0; i < devs.length; i++){
+      list += '<p>Thiết bị: <b>' + esc(devs[i].deviceLabel || "Thiết bị khác") + '</b> · Hoạt động gần nhất: <b>' + esc(skSessionFmtTime(devs[i].lastSeen)) + '</b></p>';
+    }
     html = '<div class="sksess-bg" id="skSessBg"><div class="sksess-box" role="dialog" aria-modal="true" aria-labelledby="skSessTitle">' +
-      '<h3 id="skSessTitle">Tài khoản đang đăng nhập ở thiết bị khác</h3>' +
-      '<p>Thiết bị: <b>' + esc(deviceLabel || "Thiết bị khác") + '</b> · Hoạt động gần nhất: <b>' + esc(skSessionFmtTime(lastSeenMs)) + '</b></p>' +
-      '<p>Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.</p>' +
+      '<h3 id="skSessTitle">Tài khoản đang đăng nhập ở 2 thiết bị khác</h3>' +
+      list +
+      '<p>Vui lòng đăng xuất trên một trong 2 thiết bị đó trước khi đăng nhập ở đây.</p>' +
       '<div class="row"><button class="btn sm" id="skSessOk" type="button">Đã hiểu</button></div>' +
       '</div></div>';
   }else{
@@ -13028,6 +13066,7 @@ function skSessionHeartbeatTick(){
   try{ u = webCurrentUser(); }catch(e){ u = null; }
   if(!u || u.uid !== skSessUid) return;
   if(!skSessHeld){ skSessionClaim(u.uid); return; } /* fail-open lúc đầu: thử claim lại, không ghi mù */
+  if(!skSessOwnExists){ skSessionRecheck(u.uid); return; } /* doc đã bị xóa: kiểm tra lại, KHÔNG ghi lại */
   var ref = skSessionRef(u.uid);
   if(!ref) return;
   try{
@@ -13041,14 +13080,61 @@ function skSessionListenStart(uid){
   if(!ref || typeof ref.onSnapshot !== "function") return;
   try{
     skSessUnsub = ref.onSnapshot(function(snap){
-      if(!snap || !snap.exists) return; /* doc bị xóa (đăng xuất cùng thiết bị / race): bỏ qua */
-      var d = null;
-      try{ d = snap.data() || {}; }catch(e){ return; }
-      var myId = "";
-      try{ myId = skReportDeviceId(); }catch(e){}
-      if(d.deviceId && d.deviceId !== myId && skSessionFresh(d.lastSeen)) skSessionKick();
+      if(!snap || !snap.exists){
+        /* Doc của mình bị xóa (đăng xuất ở nơi khác / race): KHÔNG kick mù —
+           kiểm tra lại xem còn session fresh khác không. */
+        skSessOwnExists = false;
+        skSessionRecheck(uid);
+        return;
+      }
+      skSessOwnExists = true;
+      /* Doc còn tồn tại (kể cả stale) → resume, không kick. */
     }, function(){ /* lỗi listener: bỏ qua, heartbeat vẫn chạy */ });
   }catch(e){ skSessUnsub = null; }
+}
+function skSessionRecheck(uid){
+  if(skSessKicking || skSessRechecking) return;
+  if(!uid || uid !== skSessUid) return;
+  var coll = skSessionColl(uid);
+  if(!coll || typeof coll.get !== "function") return;
+  var myId = "";
+  try{ myId = skReportDeviceId(); }catch(e){}
+  skSessRechecking = true;
+  var done = function(){ skSessRechecking = false; };
+  var p = null;
+  try{ p = coll.get(); }catch(e){ done(); return; }
+  if(!p || !p.then){ done(); return; }
+  p.then(function(qsnap){
+    done();
+    if(skSessKicking) return;
+    var u = null;
+    try{ u = webCurrentUser(); }catch(e){}
+    if(!u || u.uid !== uid) return;
+    var otherFresh = false;
+    var ownExists = false;
+    try{
+      qsnap.forEach(function(d){
+        var data = null;
+        try{ data = d.data() || {}; }catch(e){ return; }
+        if(d.id === myId || data.deviceId === myId){ ownExists = true; return; }
+        if(skSessionFresh(data.lastSeen)) otherFresh = true;
+      });
+    }catch(e){}
+    if(ownExists){
+      /* Doc của mình vẫn còn (delete event là race / doc được tạo lại):
+         resume, không kick. */
+      skSessOwnExists = true;
+      return;
+    }
+    if(otherFresh){
+      /* Còn session fresh khác → thiết bị này bị đá ra: kick. */
+      skSessionKick();
+      return;
+    }
+    /* Không còn session nào khác: claim lại bình thường. */
+    skSessHeld = false;
+    skSessionClaim(uid);
+  }).catch(function(){ done(); /* lỗi mạng: fail-open, heartbeat thử lại */ });
 }
 function skSessionKick(){
   if(skSessKicking) return;
@@ -13063,27 +13149,40 @@ function skSessionKick(){
 function skSessionClaim(uid){
   if(skSessClaiming) return Promise.resolve(false);
   if(skSessHeld && skSessUid === uid) return Promise.resolve(true);
-  var ref = skSessionRef(uid);
-  if(!ref) return Promise.resolve(false); /* chưa có Firestore: fail-open, không timer */
+  var coll = skSessionColl(uid);
+  if(!coll) return Promise.resolve(false); /* chưa có Firestore: fail-open, không timer */
   var db = null;
   try{ db = skDb(); }catch(e){ db = null; }
   if(!db || typeof db.runTransaction !== "function") return Promise.resolve(false);
   var myId = "";
   try{ myId = skReportDeviceId(); }catch(e){ myId = "dev-unknown"; }
+  var myRef = coll.doc(myId);
+  var legacyRef = skSessionLegacyRef(uid);
   var label = skSessionDeviceLabel();
   var ts = skSessionServerTs();
   skSessClaiming = true;
   return db.runTransaction(function(tx){
-    return tx.get(ref).then(function(snap){
-      if(snap && snap.exists){
-        var d = snap.data() || {};
-        if(d.deviceId && d.deviceId !== myId && skSessionFresh(d.lastSeen)){
-          var err = new Error("sk-session-blocked");
-          err.skBlocked = {deviceLabel: d.deviceLabel || "Thiết bị khác", lastSeen: skSessionTsMillis(d.lastSeen)};
-          throw err;
-        }
+    return tx.get(coll).then(function(qsnap){
+      var fresh = []; /* session fresh của thiết bị khác */
+      var ownExists = false;
+      var staleRefs = [];
+      qsnap.forEach(function(d){
+        var data = null;
+        try{ data = d.data() || {}; }catch(e){ return; }
+        var id = data.deviceId || d.id;
+        if(id === myId){ ownExists = true; return; } /* doc của mình: không đếm 2 lần */
+        if(skSessionFresh(data.lastSeen)) fresh.push({deviceLabel: data.deviceLabel || "Thiết bị khác", lastSeen: skSessionTsMillis(data.lastSeen)});
+        else staleRefs.push(d.ref);
+      });
+      if(!ownExists && fresh.length >= SK_SESSION_MAX_DEVICES){
+        var err = new Error("sk-session-blocked");
+        err.skBlocked = fresh;
+        throw err;
       }
-      tx.set(ref, {deviceId: myId, deviceLabel: label, platform: "web", loginAt: ts, lastSeen: ts}, {merge: true});
+      /* Ghi doc của mình + dọn doc stale + xóa doc legacy (migration 1 lần). */
+      tx.set(myRef, {deviceId: myId, deviceLabel: label, platform: "web", loginAt: ts, lastSeen: ts}, {merge: true});
+      for(var i = 0; i < staleRefs.length; i++) tx.delete(staleRefs[i]);
+      if(legacyRef) tx.delete(legacyRef);
     });
   }).then(function(){
     skSessClaiming = false;
@@ -13092,6 +13191,7 @@ function skSessionClaim(uid){
     if(!u || u.uid !== uid){ skSessHeld = false; return false; } /* đã đăng xuất trong lúc claim */
     skSessHeld = true;
     skSessUid = uid;
+    skSessOwnExists = true; /* vừa ghi doc trong transaction */
     skSessionListenStart(uid);
     skSessionHeartbeatStart();
     return true;
@@ -13101,7 +13201,7 @@ function skSessionClaim(uid){
       /* Bị chặn: hiện overlay TRƯỚC signOut để overlay tồn tại sau khi nhánh
          null chạy xong (nhánh null không ẩn overlay này). */
       skSessHeld = false;
-      skSessionShowOverlay("block", err.skBlocked.deviceLabel, err.skBlocked.lastSeen);
+      skSessionShowOverlay("block", err.skBlocked);
       var auth = null;
       try{ auth = skAuth(); }catch(e){}
       if(auth){ try{ var so = auth.signOut(); if(so && so.catch) so.catch(function(){}); }catch(e){} }
@@ -13128,20 +13228,23 @@ function skSessionStop(){
   skSessKicking = false;
   skSessHeld = false;
   skSessUid = null;
+  skSessOwnExists = false;
+  skSessRechecking = false;
   skSessionHeartbeatStop();
 }
 function skSessionDelete(uid){
   if(!uid) return;
   if(SK_ADMIN_UIDS && SK_ADMIN_UIDS.indexOf(uid) >= 0) return; /* admin không tạo session nên không có gì để xóa */
-  var ref = null;
-  try{ ref = skSessionRef(uid); }catch(e){ ref = null; }
-  if(!ref) return;
-  /* Chỉ xóa khi doc còn là của thiết bị này (m-28): đọc doc + đối chiếu
-     deviceId trước khi xóa — thiết bị stale trong cửa sổ race M-08 không
-     được xóa session của thiết bị đang giữ thật. Đọc lỗi (mất mạng) thì
-     bỏ qua — session sẽ stale sau 5 phút. */
   var myId = null;
   try{ myId = skReportDeviceId(); }catch(e){ myId = null; }
+  if(!myId) return;
+  var ref = null;
+  try{ ref = skSessionRef(uid, myId); }catch(e){ ref = null; }
+  if(!ref) return;
+  /* Chỉ xóa doc của chính thiết bị này (m-28): đọc doc + đối chiếu
+     deviceId trước khi xóa — thiết bị stale trong cửa sổ race M-08 không
+     được xóa session của thiết bị khác. Đọc lỗi (mất mạng) thì bỏ qua —
+     session sẽ stale sau 5 phút. */
   try{
     var p = ref.get();
     if(!p || !p.then) return;
@@ -13149,7 +13252,7 @@ function skSessionDelete(uid){
       if(!snap || !snap.exists) return;
       var d = null;
       try{ d = snap.data() || {}; }catch(e){ d = {}; }
-      if(myId && d.deviceId && d.deviceId !== myId) return;
+      if(d.deviceId && d.deviceId !== myId) return;
       var dp = ref.delete();
       if(dp && dp.catch) dp.catch(function(){});
     }).catch(function(){});
@@ -13179,9 +13282,9 @@ function initWebAuth(){
         photoURL: user.photoURL || "",
         isAdmin: (user.email || "").toLowerCase() === SK_ADMIN_EMAIL || SK_ADMIN_UIDS.indexOf(user.uid) >= 0
       };
-      skSessionStart(user.uid); /* phiên 1 thiết bị: claim session (admin miễn, lỗi mạng fail-open) */
+      skSessionStart(user.uid); /* phiên 2 thiết bị: claim session (admin miễn, lỗi mạng fail-open) */
     }else{
-      skSessionStop(); /* phiên 1 thiết bị: dừng heartbeat + listener */
+      skSessionStop(); /* phiên 2 thiết bị: dừng heartbeat + listener */
       window.SK_USER = null;
       SK_PREMIUM = {loaded: true, active: false, until: null, pkg: null};
       skPremiumWatchStop();
@@ -13411,8 +13514,9 @@ function renderHeaderUser(){
   });
   document.getElementById("logoutBtn").addEventListener("click", function(){
     closeHeaderPanels();
-    /* Phiên 1 thiết bị: dừng heartbeat/listener rồi xóa session doc TRƯỚC
-       signOut (fire-and-forget) để đăng nhập ở thiết bị khác được ngay. */
+    /* Phiên 2 thiết bị: dừng heartbeat/listener rồi xóa session doc CỦA
+       THIẾT BỊ NÀY trước signOut (fire-and-forget) để đăng nhập ở thiết
+       bị khác được ngay. */
     var outUid = null;
     try{ var ou = webCurrentUser(); outUid = ou ? ou.uid : null; }catch(e){}
     skSessionStop();
