@@ -6093,6 +6093,16 @@ function skSetExplainOn(on){
 }
 /* id thiết bị: dùng chung sk_device_id của SKSync (sync-module.js nạp sẵn);
    dự phòng tự tạo + lưu localStorage nếu module chưa nạp. */
+/* W21-7: id RAM du phong khi localStorage loi — MOI LAN LOAD 1 id ngau
+   nhien rieng, CACHE trong bien module de moi lan goi trong cung 1 lan
+   load (session claim, heartbeat, report) tra CUNG id. Truoc day catch
+   tra chuoi dev-unknown dung chung cho moi may loi localStorage nen cac may
+   do de len cung 1 session doc. Duong thuong (localStorage OK) khong doi. */
+var skRamDeviceIdCache = null;
+function skRamDeviceId(){
+  if(!skRamDeviceIdCache) skRamDeviceIdCache = "ram-" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  return skRamDeviceIdCache;
+}
 function skReportDeviceId(){
   try{
     if(window.SKSync && typeof SKSync.getDeviceId === "function") return SKSync.getDeviceId();
@@ -6104,7 +6114,7 @@ function skReportDeviceId(){
       localStorage.setItem("sk_device_id", id);
     }
     return id;
-  }catch(e){ return "dev-unknown"; }
+  }catch(e){ return skRamDeviceId(); }
 }
 function skReportStrip(html){
   var d = document.createElement("div");
@@ -6209,6 +6219,27 @@ function skReportCheckLimit(){
   if(log.length >= 20) return {ok: false, reason: "Bạn đã gửi 20 báo cáo trong 24 giờ qua — thử lại vào ngày mai nhé."};
   return {ok: true, log: log};
 }
+/* Gui bao loi/gop y qua Cloud Function submitInbox (m-51, 21/11): client
+   khong ghi truc tiep sk_reports/sk_feedback nua — function kiem tra
+   payload + throttle phia server. Gui doc NGUYEN nhu cu (ke ca
+   createdAt + uid — server tu strip uid va tu dong createdAt).
+   Fetch cors mac dinh (backend CO CORS cho origin app — KHONG dung
+   no-cors). Tra Promise cung hinh dang .add(): resolve khi {ok:true},
+   reject khi throttle (200 {ok:false})/400/loi mang de nhanh
+   .then/.catch cu chay nhu truoc. */
+var SK_INBOX_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/submitInbox";
+function skSubmitInbox(kind, doc){
+  return fetch(SK_INBOX_URL, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({kind: kind, doc: doc})
+  }).then(function(r){
+    if(!r.ok) throw new Error("submitInbox HTTP " + r.status);
+    return r.json();
+  }).then(function(j){
+    if(!j || !j.ok) throw new Error((j && j.error) || "submitInbox failed");
+  });
+}
 function skReportSend(){
   var errEl = document.getElementById("skrepErr");
   var msgEl = document.getElementById("skrepMsg");
@@ -6224,12 +6255,7 @@ function skReportSend(){
   }
   var qi = SK_REP.qi;
   if(!EX || !EX.qs[qi]){ if(errEl) errEl.textContent = "Không xác định được câu hỏi — đóng khung rồi thử lại nhé."; return; }
-  var db = null;
-  try{ db = skDb(); }catch(e){ db = null; }
-  if(!db){
-    if(errEl) errEl.textContent = "Chưa kết nối được máy chủ — bạn thử lại sau nhé.";
-    return;
-  }
+  /* m-51: ghi qua submitInbox (fetch) — khong can Firestore client nua. */
   var q = EX.qs[qi];
   var u = null;
   try{ u = skAuthUser(); }catch(e){ u = null; }
@@ -6248,7 +6274,7 @@ function skReportSend(){
   var sendBtn = document.getElementById("skrepSend");
   if(sendBtn) sendBtn.disabled = true;
   if(errEl) errEl.textContent = "";
-  db.collection("sk_reports").add(doc).then(function(){
+  skSubmitInbox("report", doc).then(function(){
     var log = skReportLogRead();
     log.push(Date.now());
     skReportLogWrite(log);
@@ -13220,7 +13246,7 @@ function skSessionClaim(uid){
   try{ db = skDb(); }catch(e){ db = null; }
   if(!db || typeof db.runTransaction !== "function") return Promise.resolve(false);
   var myId = "";
-  try{ myId = skReportDeviceId(); }catch(e){ myId = "dev-unknown"; }
+  try{ myId = skReportDeviceId() || skRamDeviceId(); }catch(e){ myId = skRamDeviceId(); }
   var myRef = coll.doc(myId);
   var legacyRef = skSessionLegacyRef(uid);
   var label = skSessionDeviceLabel();
