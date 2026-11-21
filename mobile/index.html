@@ -5108,6 +5108,11 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="pathbtn" id="pathChangeBtn" style="margin-left:auto;" aria-label="Đổi cấp đang học — mở phần chọn cấp">⇄ Đổi</button>
       </div>
       <div class="detailbody">
+        <h2 class="secttl" id="planSectTitle">Lộ trình 30 ngày</h2>
+        <div class="pathprog" id="pathProgCard"></div>
+        <div class="pathmap" id="pathMap"></div>
+        <p class="pmap-hint" id="pathMapHint">Bấm vào ngày đang học (hoặc ngày đã xong) để xem chi tiết nhiệm vụ và học ngay.</p>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:10px 2px 0;">Mỗi tuần đi đủ 7 ngày theo nhịp <b style="color:var(--ink);">Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử</b>, lặp lại 4 tuần; ngày 29 tổng ôn, ngày 30 thi thử tổng kết. Học xong ngày nào thì bấm <b style="color:var(--ink);">Đánh dấu đã xong</b> ở ngày đó để mở khóa ngày tiếp theo.</p>
         <h2 class="secttl" style="margin-top:2px;">Bạn đã đạt trình độ nào?</h2>
         <p style="font-size:13px; color:var(--ink-2); line-height:1.55; margin:0 2px 12px;">Chọn cấp JLPT bạn <b style="color:var(--ink);">đã đạt được</b> (khai một lần sau khi đăng ký, đổi lại lúc nào cũng được). App bỏ qua phần bạn đã biết và soạn lộ trình bắt đầu từ cấp độ tương ứng — chính tuyến vẫn là thang Tân binh → Tướng đã chốt của SoraKanji.</p>
         <div class="lvgrid" id="lvGrid">
@@ -5121,11 +5126,6 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <p id="pathSummary" style="font-size:13.5px; font-weight:700; color:var(--amber); margin:12px 2px 0; line-height:1.5; min-height:20px;"></p>
         <h2 class="secttl">Chính tuyến của bạn</h2>
         <div id="pathRoadmap"></div>
-        <h2 class="secttl" id="planSectTitle">Lộ trình 30 ngày</h2>
-        <div class="pathprog" id="pathProgCard"></div>
-        <div class="pathmap" id="pathMap"></div>
-        <p class="pmap-hint" id="pathMapHint">Bấm vào ngày đang học (hoặc ngày đã xong) để xem chi tiết nhiệm vụ và học ngay.</p>
-        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:10px 2px 0;">Mỗi tuần đi đủ 7 ngày theo nhịp <b style="color:var(--ink);">Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử</b>, lặp lại 4 tuần; ngày 29 tổng ôn, ngày 30 thi thử tổng kết. Học xong ngày nào thì bấm <b style="color:var(--ink);">Đánh dấu đã xong</b> ở ngày đó để mở khóa ngày tiếp theo.</p>
         <button class="cta" id="pathApply" style="margin-top:14px;">Lưu lộ trình này</button>
       </div>
     </div>
@@ -13042,6 +13042,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function sv2WordTap(i, k){
     var segs = sv2Segs[i] ? sv2Segs[i].segs : null;
     if(!segs || !segs[k]) return;
+    /* m-22: bong bóng giải thích đã bị gỡ (chuyển trang/bài) trước khi bấm —
+       bỏ qua luôn, không throw ở textContent bên dưới. */
+    var _sv2T = document.getElementById("sv2ExpTitle");
+    var _sv2X = document.getElementById("sv2ExpText");
+    if(!_sv2T || !_sv2X) return;
     var seg = segs[k];
     /* Vị trí ký tự của cụm trong câu (các cụm ghép lại thành câu gốc) */
     var offset = 0;
@@ -15035,8 +15040,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      N5/N4/N3/N2: từ vựng theo ĐÚNG bài Minna no Nihongo — dữ liệu ở
      assets/vocab-minna.js (window.VOCAB_MINNA = { N5:[…], N4:[…], N3:[…], N2:[…] },
      mỗi mục {word, reading, meaning, hanViet, lesson}); nhóm bài theo
-     trường lesson: N5 = Sơ cấp 1, Bài 1–25 (1.205 từ), N4 = Sơ cấp 2,
-     Bài 26–50 (1.347 từ), N3 = Chūkyū 1, Bài 1–12 (881 từ),
+     trường lesson: N5 = Sơ cấp 1, Bài 1–25 (1.209 từ), N4 = Sơ cấp 2,
+     Bài 26–50 (1.346 từ), N3 = Chūkyū 1, Bài 1–12 (881 từ),
      N2 = Chūkyū 2, Bài 13–24 (2.284 từ),
      số từ mỗi bài dài ngắn theo đúng giáo trình, gồm cả từ thuần kana.
      N1: không theo bài Minna — dữ liệu ở assets/vocab-n1.js
@@ -15620,7 +15625,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* Furigana cho câu ví dụ TỪ VỰNG (quy tắc user chốt): chỉ từ N5 + N4
      hiện furigana nhỏ trên Hán tự; N3/N2/N1 để chữ Hán trần. Gắn lúc
      render bằng cơ chế furiHTML sẵn có của app, quyết theo CẤP CỦA TỪNG
-     TỪ (wvWordLv) — N5 và N4 đều đã đủ data câu ví dụ (N4 đủ 1.347 từ ×
+     TỪ (wvWordLv) — N5 và N4 đều đã đủ data câu ví dụ (N4 đủ 1.346 từ ×
      5 câu), nên cả flashcard của bài đang mở lẫn deck ôn tập / từ đã lưu
      đều hiện furigana đúng theo cấp của từ đó. */
   var WV_EX_FURI_LEVELS = { N5:1, N4:1 };
@@ -19114,10 +19119,11 @@ function furiHTML(text){
     if(missionsState.done[key]){ renderMissions(); return; }
     missionsState.done[key] = true;
     missionsState.days[missionsState.date] = 1;
-    addExp(missionReward(key)); /* M-14: x2 khi boost Tăng Tốc đang kích hoạt */
+    var expGranted = addExp(missionReward(key)); /* M-14: x2 khi boost Tăng Tốc đang kích hoạt */
     /* Ghi sổ nhận thưởng để chống nhận 2 lần khi 2 máy cùng hoàn thành
-       nhiệm vụ này trong ngày (SYNC-DESIGN.md §5). */
-    if(typeof SKSync !== "undefined") SKSync.grantMission(key);
+       nhiệm vụ này trong ngày (SYNC-DESIGN.md §5). Ghi kèm số EXP thực
+       nhận (M-14b) để clawback trừ đúng khi 1 trong 2 máy đang boost. */
+    if(typeof SKSync !== "undefined") SKSync.grantMission(key, expGranted);
     renderMissions();
     renderWallet();
   }
@@ -19168,7 +19174,7 @@ function furiHTML(text){
         state: state, appliedLv: appliedLv,
         missions: missionsState,
         kanjiDone: KANJI.map(function(k){ return k.done ? 1 : 0; }),
-        shop: { owned: Object.keys(shopOwned), frame: shopFrame, frameAt: shopFrameAt, expBoostUntil: shopBoostUntil }
+        shop: { owned: Object.keys(shopOwned), frame: shopFrame, frameAt: shopFrameAt, expBoostUntil: shopBoostUntil, bought: shopBought, used: shopUsed }
       }));
     }catch(_){}
     /* 1 lần ghi sk_progress chạm 5 doc đồng bộ (ví + nhiệm vụ + kanji +
@@ -19195,6 +19201,12 @@ function furiHTML(text){
      doc shop; hết hạn thì expBoostActive() tự sai, không cần dọn dẹp. */
   var BOOST_MS = 3600000; /* 1 giờ */
   var shopBoostUntil = 0;
+  /* M-14a: bộ đếm mua/dùng theo món (chống hồi sinh Tăng Tốc khi đồng
+     bộ với máy cũ) — đơn điệu, chỉ tăng. bought: số lần mua; used: số
+     lần dùng. Sở hữu hiệu dụng = bought > used (xem mergeShop trong
+     module). Lưu trong sk_progress.shop để đồng bộ theo doc shop. */
+  var shopBought = {}; /* khóa món -> số lần mua */
+  var shopUsed = {}; /* khóa món -> số lần dùng */
   /* Đọc lại dữ liệu đã lưu trên máy (EXP, ví, nhiệm vụ, lộ trình, kanji đã thuộc) */
   (function loadProgress(){
     try{
@@ -19228,6 +19240,15 @@ function furiHTML(text){
         if(typeof d.shop.frame === "string" && validShopKeys[d.shop.frame] && shopOwned[d.shop.frame]) shopFrame = d.shop.frame;
         if(typeof d.shop.frameAt === "number") shopFrameAt = d.shop.frameAt;
         if(typeof d.shop.expBoostUntil === "number") shopBoostUntil = d.shop.expBoostUntil;
+        /* M-14a: khôi phục bộ đếm mua/dùng; dữ liệu cũ (chưa có bộ
+           đếm) coi món đang sở hữu là đã mua 1 lần, chưa dùng. Món có
+           bought <= used thì không sở hữu (bảo vệ khi dữ liệu lệch). */
+        if(d.shop.bought && typeof d.shop.bought === "object") shopBought = d.shop.bought;
+        if(d.shop.used && typeof d.shop.used === "object") shopUsed = d.shop.used;
+        Object.keys(shopOwned).forEach(function(k){
+          if(!(k in shopBought)) shopBought[k] = 1;
+          if((shopBought[k] || 0) <= (shopUsed[k] || 0)) delete shopOwned[k];
+        });
         if(!shopFrame) shopFrameAt = 0;
       }
       renderPathHome(); /* thẻ lộ trình ở Home theo đúng cấp đã lưu */
@@ -19505,6 +19526,10 @@ function furiHTML(text){
       return;
     }
     delete shopOwned[SHOP_BOOST];
+    /* M-14a: tăng bộ đếm dùng (không bao giờ chỉ xóa khỏi owned) — máy
+       cũ còn giữ vật phẩm sẽ không hồi sinh nó khi đồng bộ (mergeShop
+       gộp max, sở hữu hiệu dụng = bought > used). */
+    shopUsed[SHOP_BOOST] = (shopUsed[SHOP_BOOST] || 0) + 1;
     /* Dùng thêm trong lúc đang boost thì gia hạn: đặt lại 1 giờ từ lúc dùng. */
     shopBoostUntil = Date.now() + BOOST_MS;
     shopMsg("Đã dùng «Vật phẩm Tăng Tốc» — EXP nhân đôi trong 1 giờ, hết lúc " + fmtClock(shopBoostUntil) + ".");
@@ -19649,6 +19674,8 @@ function furiHTML(text){
         shopMsg("Đã thêm 1 lượt Đấu trường hôm nay. Xu còn " + fmtN(state.linh) + ".");
       } else {
         shopOwned[shopKeyOf(btn)] = true;
+        /* M-14a: tăng bộ đếm mua (đơn điệu) để đồng bộ đa thiết bị gộp đúng. */
+        shopBought[shopKeyOf(btn)] = (shopBought[shopKeyOf(btn)] || 0) + 1;
         if(btn.dataset.frame){
           shopFrame = btn.dataset.frame;
           shopFrameAt = Date.now();
@@ -22121,6 +22148,16 @@ function furiHTML(text){
  * EXP của Vật phẩm Tăng Tốc, gộp max-wins (hết hạn muộn hơn thắng;
  * 0/vắng = không có boost). App cộng EXP qua addExp() nên boost áp
  * cho cả nhiệm vụ lẫn đấu trường.
+ * + M-14b (2026-11-21): sổ granted ghi thêm amt = số EXP thực nhận
+ * (đã nhân x2 nếu đang boost); clawback nhiệm vụ trùng trừ min(2 amt)
+ * thay vì thưởng gốc — nhiệm vụ hoàn thành ở 2 máy chỉ tính 1 lần, ở
+ * mức boost nếu 1 trong 2 lần nhận đang boost. Mục cũ không có amt
+ * thì dùng thưởng gốc (tương thích ngược).
+ * + M-14a (2026-11-21): doc shop thêm bought/used — bộ đếm mua/dùng
+ * đơn điệu theo món, gộp max từng khóa; sở hữu hiệu dụng = bought >
+ * used. Chống hồi sinh Tăng Tốc đã dùng khi gộp với máy cũ (union
+ * owned cũ hồi lại vật phẩm). Doc cũ không có bộ đếm: khóa trong
+ * owned coi như bought = 1. expBoostUntil vẫn max-wins như M-14.
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -22205,6 +22242,21 @@ function furiHTML(text){
   function clone(o) { return o == null ? o : JSON.parse(JSON.stringify(o)); }
   function same(a, b) { return JSON.stringify(a || null) === JSON.stringify(b || null); }
   function num(x, dflt) { return (typeof x === "number" && isFinite(x)) ? x : dflt; }
+
+  /* M-14a: làm sạch map đếm {khóa món: số lần} — chỉ giữ khóa chuỗi,
+   * giá trị số nguyên >= 0 (làm tròn xuống, bỏ 0 vì 0 = chưa từng);
+   * khóa sắp xếp để JSON.stringify ổn định khi same() so sánh doc
+   * (tránh đẩy thừa do thứ tự khóa). Không phải object -> {}. */
+  function countMap(o) {
+    var out = {};
+    if (!o || typeof o !== "object") return out;
+    Object.keys(o).sort().forEach(function (k) {
+      var v = o[k];
+      if (typeof k === "string" && k && typeof v === "number" && isFinite(v) && v > 0)
+        out[k] = Math.floor(v);
+    });
+    return out;
+  }
 
   function lsGet(key) {
     try { return window.localStorage.getItem(key); } catch (_) { return null; }
@@ -22347,7 +22399,17 @@ function furiHTML(text){
   /* missions: local/server ở định dạng ĐỒNG BỘ (quizProg/kanjiProg dạng
    * {byDevice: {dev: {n, at}}}). Trả về {data, duplicateGrants}.
    * duplicateGrants: [{mission, amount}] — 2 máy cùng nhận thưởng 1 nhiệm vụ
-   * trong ngày, cần trừ lại 1 lần (xem syncMissions). */
+   * trong ngày, cần trừ lại 1 lần (xem syncMissions). M-14b: amount =
+   * min(EXP thực nhận 2 máy) — tổng đã nhận a+b, muốn giữ lại max(a,b)
+   * (mức boost nếu 1 trong 2 đang boost) nên trừ (a+b)-max(a,b)=min(a,b).
+   * Mục granted cũ không có amt thì dùng thưởng gốc (xem grantedAmt). */
+  /* EXP thực nhận của 1 mục sổ granted (M-14b). Mục cũ (trước M-14b) không
+   * có amt — hoặc amt không phải số dương — thì dùng thưởng gốc của nhiệm
+   * vụ, đúng luật cũ (không đoán boost khi không có dữ kiện). */
+  function grantedAmt(g, mk) {
+    var a = num(g && g.amt, 0);
+    return (a > 0) ? a : (MISSION_REWARDS[mk] || 0);
+  }
   function mergeMissions(local, server, nowMs) {
     local = local || null; server = server || null;
     if (!local) return { data: clone(server), duplicateGrants: [] };
@@ -22373,7 +22435,7 @@ function furiHTML(text){
         var sg = server.granted && server.granted[mk];
         if (lg && sg) {
           out.granted[mk] = (num(sg.at, 0) > num(lg.at, 0)) ? sg : lg;
-          if (lg.by !== sg.by) dups.push({ mission: mk, amount: MISSION_REWARDS[mk] || 0 });
+          if (lg.by !== sg.by) dups.push({ mission: mk, amount: Math.min(grantedAmt(lg, mk), grantedAmt(sg, mk)) });
         } else if (lg || sg) {
           out.granted[mk] = lg || sg;
         }
@@ -22546,24 +22608,42 @@ function furiHTML(text){
   }
 
   /* shop (M-11, chỉ mobile có — web không có shop nên adapter web bỏ
-   * qua doc này): union owned theo khóa (mua rồi không mất), frame LWW
-   * theo frameAt (lần đeo gần nhất thắng). frame phải thuộc owned, nếu
-   * không thì null (chưa đeo). Không có tombstone: vật phẩm không gỡ được.
+   * qua doc này): frame LWW theo frameAt (lần đeo gần nhất thắng).
+   * frame phải thuộc owned, nếu không thì null (chưa đeo).
    * M-14: expBoostUntil (mốc hết hạn x2 EXP của Vật phẩm Tăng Tốc) gộp
-   * max-wins — hết hạn muộn hơn thắng; 0/vắng = không có boost. */
+   * max-wins — hết hạn muộn hơn thắng; 0/vắng = không có boost.
+   * M-14a: bought/used là bộ đếm đơn điệu theo món, gộp max từng khóa;
+   * sở hữu hiệu dụng = bought > used. Mua tăng bought, Dùng tăng used
+   * (không bao giờ chỉ xóa khỏi owned) nên máy cũ còn giữ vật phẩm
+   * đã dùng cũng không hồi sinh nó. Doc cũ không có bộ đếm: khóa còn
+   * trong owned được coi như bought = 1 (đã mua, chưa dùng). */
   function mergeShop(local, server) {
     local = local || {}; server = server || {};
-    var owned = {};
-    (local.owned || []).concat(server.owned || []).forEach(function (k) {
-      if (typeof k === "string" && k) owned[k] = true;
+    var bought = countMap(local.bought), used = countMap(local.used);
+    var sb = countMap(server.bought), su = countMap(server.used);
+    var k;
+    for (k in sb) if (!bought[k] || sb[k] > bought[k]) bought[k] = sb[k];
+    for (k in su) if (!used[k] || su[k] > used[k]) used[k] = su[k];
+    /* Doc cũ (trước M-14a) không có bộ đếm: khóa còn trong owned nghĩa
+     * là đã mua và chưa dùng -> bought ít nhất 1. */
+    (local.owned || []).concat(server.owned || []).forEach(function (kk) {
+      if (typeof kk === "string" && kk && !bought[kk]) bought[kk] = 1;
     });
+    /* Sở hữu hiệu dụng = đã mua nhiều hơn đã dùng; sắp xếp để JSON
+     * ổn định khi same() so sánh doc. */
+    var owned = Object.keys(bought).sort().filter(function (kk) {
+      return bought[kk] > (used[kk] || 0);
+    });
+    var ownedSet = {};
+    owned.forEach(function (kk) { ownedSet[kk] = true; });
     var la = num(local.frameAt, 0), sa = num(server.frameAt, 0);
     var frame, frameAt;
     if (sa > la) { frame = server.frame; frameAt = sa; }
     else { frame = local.frame; frameAt = la; }
-    if (typeof frame !== "string" || !frame || !owned[frame]) { frame = null; frameAt = 0; }
-    return { owned: Object.keys(owned), frame: frame, frameAt: frameAt,
-             expBoostUntil: Math.max(num(local.expBoostUntil, 0), num(server.expBoostUntil, 0)) };
+    if (typeof frame !== "string" || !frame || !ownedSet[frame]) { frame = null; frameAt = 0; }
+    return { owned: owned, frame: frame, frameAt: frameAt,
+             expBoostUntil: Math.max(num(local.expBoostUntil, 0), num(server.expBoostUntil, 0)),
+             bought: countMap(bought), used: countMap(used) };
   }
 
   /* savedWords: union theo khóa word|reading, LWW từng entry theo u,
@@ -22836,7 +22916,8 @@ function furiHTML(text){
    *   missions: {date, rotKind, done, quizProg:number, kanjiProg:number, days}
    *   kanji:    mảng bit [0/1...] theo thứ tự KANJI
    *   plan30:   {appliedLv, done:{N5..N1}} (web không có appliedLv)
- *   shop:     {owned: [key...], frame, frameAt, expBoostUntil} (mobile only; web không có shop)
+ *   shop:     {owned: [key...], frame, frameAt, expBoostUntil,
+ *             bought: {key: n}, used: {key: n}} (mobile only; web không có shop)
    *   jlpt:     {target, plan:{exam,start}, done:{ngày:{mục:1}}}
    *   examBest: {"N5-1": điểm}
    *   videos:   {mine:[{id,title,dur,lines,createdAt}]} (tombstone
@@ -22892,7 +22973,9 @@ function furiHTML(text){
         owned: (sh.owned || []).filter(function (k) { return typeof k === "string" && k; }),
         frame: (typeof sh.frame === "string" && sh.frame) ? sh.frame : null,
         frameAt: num(sh.frameAt, 0),
-        expBoostUntil: num(sh.expBoostUntil, 0)
+        expBoostUntil: num(sh.expBoostUntil, 0),
+        bought: countMap(sh.bought),
+        used: countMap(sh.used)
       };
     }
     if (docId === "settings") {
@@ -22960,7 +23043,9 @@ function furiHTML(text){
           owned: (s2.owned || []).filter(function (k) { return typeof k === "string" && k; }),
           frame: (typeof s2.frame === "string" && s2.frame) ? s2.frame : null,
           frameAt: num(s2.frameAt, 0),
-          expBoostUntil: num(s2.expBoostUntil, 0)
+          expBoostUntil: num(s2.expBoostUntil, 0),
+          bought: countMap(s2.bought),
+          used: countMap(s2.used)
         },
         meta: {}
       };
@@ -23577,11 +23662,19 @@ function furiHTML(text){
     schedulePush("videos");
   }
 
-  /* App gọi khi hoàn thành 1 nhiệm vụ (ghi sổ nhận thưởng để chống nhận 2 lần). */
-  function grantMission(mission) {
+  /* App gọi khi hoàn thành 1 nhiệm vụ (ghi sổ nhận thưởng để chống nhận 2 lần).
+   * amount = số EXP thực nhận (đã nhân x2 nếu đang boost — M-14b) để
+   * clawback trừ đúng khi 2 máy cùng nhận. Không có amount (bản app cũ)
+   * thì ghi như cũ, không có amt — merge dùng thưởng gốc. */
+  function grantMission(mission, amount) {
     var meta = metaGet("missions") || {};
     meta.granted = meta.granted || {};
-    if (!meta.granted[mission]) meta.granted[mission] = { by: getDeviceId(), at: now() };
+    if (!meta.granted[mission]) {
+      var e = { by: getDeviceId(), at: now() };
+      var a = num(amount, 0);
+      if (a > 0) e.amt = a;
+      meta.granted[mission] = e;
+    }
     metaSet("missions", meta);
     schedulePush("missions");
   }
@@ -23879,6 +23972,21 @@ function furiHTML(text){
     try { if (typeof dkRenderVocab === "function") dkRenderVocab(); } catch (_) {}
   }
 
+  /* M-14a: làm sạch map đếm {khóa món: số lần} — chỉ giữ khóa chuỗi,
+   * giá trị số nguyên >= 0 (làm tròn xuống, bỏ 0 vì 0 = chưa từng);
+   * khóa sắp xếp để JSON.stringify ổn định. (Bản sao của countMap
+   * trong module — adapter là IIFE riêng, không thấy helper đó.) */
+  function shopCountMap(o) {
+    var out = {};
+    if (!o || typeof o !== "object") return out;
+    Object.keys(o).sort().forEach(function (k) {
+      var v = o[k];
+      if (typeof k === "string" && k && typeof v === "number" && isFinite(v) && v > 0)
+        out[k] = Math.floor(v);
+    });
+    return out;
+  }
+
   /* ---------- adapter ---------- */
 
   var skSyncAdapter = {
@@ -23930,7 +24038,11 @@ function furiHTML(text){
               ? d.shop.owned.filter(function (k) { return typeof k === "string"; }) : [],
             frame: (typeof d.shop.frame === "string") ? d.shop.frame : null,
             frameAt: (typeof d.shop.frameAt === "number") ? d.shop.frameAt : 0,
-            expBoostUntil: (typeof d.shop.expBoostUntil === "number") ? d.shop.expBoostUntil : 0
+            expBoostUntil: (typeof d.shop.expBoostUntil === "number") ? d.shop.expBoostUntil : 0,
+            /* M-14a: bộ đếm mua/dùng theo món (đã làm sạch + sao chép
+               để toSyncData không đụng vào bản localStorage). */
+            bought: shopCountMap(d.shop.bought),
+            used: shopCountMap(d.shop.used)
           };
         }
       }
@@ -24041,6 +24153,16 @@ function furiHTML(text){
             shopFrameAt = (typeof payload.frameAt === "number") ? payload.frameAt : 0;
             /* M-14: mốc hết hạn x2 EXP đi theo doc shop (max-wins ở mergeShop). */
             shopBoostUntil = (typeof payload.expBoostUntil === "number") ? payload.expBoostUntil : 0;
+            /* M-14a: bộ đếm mua/dùng đi theo doc shop (gộp max ở
+               mergeShop). Payload cũ (không có bộ đếm): món đang sở hữu
+               coi như mua 1 lần. Món có bought <= used thì không sở hữu. */
+            shopBought = shopCountMap(payload.bought);
+            shopUsed = shopCountMap(payload.used);
+            Object.keys(shopOwned).forEach(function (k) {
+              if (!(k in shopBought)) shopBought[k] = 1;
+              if ((shopBought[k] || 0) <= (shopUsed[k] || 0)) delete shopOwned[k];
+            });
+            if (shopFrame && !shopOwned[shopFrame]) { shopFrame = null; shopFrameAt = 0; }
             if (!shopFrame) shopFrameAt = 0;
           }
           saveProgress(); // ghi lại sk_progress.shop (skSyncApplying chặn bắn ngược)
