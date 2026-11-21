@@ -22323,6 +22323,24 @@ function furiHTML(text){
  * used. Chống hồi sinh Tăng Tốc đã dùng khi gộp với máy cũ (union
  * owned cũ hồi lại vật phẩm). Doc cũ không có bộ đếm: khóa trong
  * owned coi như bought = 1. expBoostUntil vẫn max-wins như M-14.
+ * + M-18 (2026-11-21): pushWallet dùng baseline làm mốc kể cả khi
+ * firstSync (trước đây luôn dùng SYNC_SEED nên retry sau 1 lần ghi
+ * lỗi giữa migration cộng lại delta vào ví server); ensureMigrated
+ * thêm per-doc catch kiểu M-10 ở cả 2 nhánh — 1 doc lỗi không abort
+ * migration, doc lỗi được lần syncAll sau gộp bù.
+ * + M-19 (2026-11-21): duelLeft tách khỏi mô hình delta — ví server
+ * lưu {date, left} (ngày local, cùng quy ước dayKeyOf() của app);
+ * trong ngày vẫn delta như cũ, sang ngày mới thì máy đầu tiên chốt
+ * giá trị tuyệt đối, máy sau chỉ trừ lượt đã dùng/mua thêm kể từ lúc
+ * reset 3 lượt (2 máy cùng reset không còn 3+3=6). Doc cũ lưu số
+ * thuần vẫn đọc được (coi như ngày ""). Định dạng local (adapter)
+ * giữ nguyên số thuần — app không đổi gì.
+ * + M-20 (2026-11-21): clawback nhiệm vụ nguyên tử — syncMissions
+ * chạy đọc missions + ghi marker clawback + điều chỉnh ví trong 1
+ * transaction (đọc lại doc tươi trong transaction nên 2 lần chạy
+ * chồng chỉ 1 lần trừ); thêm reentrancy guard để syncMissions không
+ * chạy chồng trên cùng 1 máy (lần gọi sau nhận chung promise của
+ * lần đang chạy).
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -22356,6 +22374,9 @@ function furiHTML(text){
   // cả hằng này.
   var SYNC_SEED = { tuvi: 0, linh: 50, cong: 0, duelLeft: 3, wins: 0, losses: 0 };
   var WALLET_FIELDS = ["tuvi", "linh", "cong", "duelLeft", "wins", "losses"];
+  // M-19: các field ví đi theo mô hình delta. duelLeft KHÔNG nằm đây —
+  // nó reset theo ngày nên sync riêng dạng {date, left} (xem pushWallet).
+  var WALLET_NUM_FIELDS = ["tuvi", "linh", "cong", "wins", "losses"];
 
   var MISSION_KEYS = ["kanji", "quiz", "review", "exam", "rot"];
   var MISSION_REWARDS = { kanji: 40, quiz: 30, review: 35, exam: 60, rot: 30 };
@@ -22368,6 +22389,7 @@ function furiHTML(text){
 
   var LS_DEVICE = "sk_device_id";       // id thiết bị (local-only)
   var LS_BASELINE = "sk_sync_baseline"; // mốc ví lúc đồng bộ lần cuối
+  var LS_BASELINE_DUEL = "sk_sync_baseline_duel"; // M-19: mốc lượt đấu {date, left}
   var LS_MIGRATED = "sk_sync_migrated"; // đã đồng bộ lần đầu chưa
   var LS_SEEN = "sk_sync_seen";         // docId -> updatedAt đã thấy
   var LS_META = "sk_sync_meta_";        // + docId: bản đóng dấu lần cuối
@@ -22385,6 +22407,7 @@ function furiHTML(text){
     "sk_grammar_learned", "sk_sync_uid", "sk_sync_wu",
     "sk_sync_words", "sk_sync_saved_keys",
     "sk_sync_baseline", "sk_sync_migrated", "sk_sync_seen",
+    "sk_sync_baseline_duel", // M-19: mốc lượt đấu (đi kèm sk_sync_baseline)
     "sk_parentdoc"
     // sk_vocab_prog_* (web): xóa bằng cách quét prefix, xem clearLocalForLogout
     // sk_sync_meta_*: xóa bằng cách quét prefix
@@ -22399,6 +22422,7 @@ function furiHTML(text){
   var pushTimers = {};     // docId -> timeout
   var unsubListener = null;
   var syncingAll = false;
+  var missionsInFlight = null; // M-20: promise của lần syncMissions đang chạy (chống chạy chồng)
   var enabled = true; // công tắc đồng bộ (Cài đặt mobile: settings.sync)
   var parentEnsureTried = {}; // uid -> true: đã thử tạo doc cha trong lần tải trang này
 
@@ -22439,6 +22463,18 @@ function furiHTML(text){
     catch (_) { return dflt; }
   }
   function lsSetJSON(key, obj) { lsSet(key, JSON.stringify(obj)); }
+
+  /* M-10: bọc 1 bước đồng bộ — lỗi chỉ log rồi tiếp tục (trả "error"),
+   * không abort cả chuỗi. Dùng chung cho syncAllIds + ensureMigrated
+   * (M-18: cả 2 nhánh migration cũng catch từng doc). */
+  function guarded(fn, label) {
+    return function () {
+      return Promise.resolve().then(fn).catch(function (err) {
+        log("Đồng bộ lỗi (" + label + "): " + ((err && err.message) || err));
+        return "error";
+      });
+    };
+  }
 
   function getDeviceId() {
     if (deviceId) return deviceId;
@@ -23262,9 +23298,18 @@ function furiHTML(text){
   }
 
   /* ---------------- wallet: delta qua transaction ----------------
-   * Đẩy: delta = local - baseline (lần đầu: local - SEED). Đọc server trong
-   * transaction rồi ghi server + delta (nguyên tử, an toàn khi 2 máy ghi
-   * cùng lúc). Kéo: lấy server làm local mới, baseline = server. */
+   * Đẩy: delta = local - baseline (lần đầu chưa có baseline: local - SEED).
+   * Đọc server trong transaction rồi ghi server + delta (nguyên tử, an
+   * toàn khi 2 máy ghi cùng lúc). Kéo: lấy server làm local mới,
+   * baseline = server.
+   * M-19: duelLeft KHÔNG đi theo mô hình delta — nó reset 3 lượt mỗi
+   * ngày nên delta coi reset như "kiếm được" (2 máy cùng reset -> 6
+   * lượt). Ví server lưu duelLeft dạng {date, left} (ngày local, cùng
+   * quy ước dayKeyOf() của app — ngày missions.date của máy, fallback
+   * ngày hôm nay). Trong cùng 1 ngày vẫn delta như cũ; sang ngày mới
+   * thì máy đầu tiên chốt giá trị tuyệt đối, máy sau chỉ cộng/trừ phần
+   * đã dùng/mua thêm kể từ lúc reset 3 lượt. Định dạng local (adapter)
+   * vẫn là số thuần — app không đổi gì. */
   function walletLocal() {
     var w = cfg.adapter.readLocal("wallet");
     if (w === undefined) return undefined;
@@ -23276,20 +23321,83 @@ function furiHTML(text){
   function baselineGet() { return lsGetJSON(LS_BASELINE, null); }
   function baselineSet(b) { lsSetJSON(LS_BASELINE, b); }
 
+  /* Ngày local dạng YYYY-MM-DD (giờ máy — cùng quy ước dayKeyOf() của
+   * app mobile; KHÔNG dùng toISOString vì đó là ngày UTC). */
+  function todayStr() {
+    var d = new Date();
+    function p(n) { return (n < 10 ? "0" : "") + n; }
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
+
+  /* Ngày mà lượt đấu local đang thuộc về = ngày missions của máy
+   * (ensureMissionDay đặt lại missions.date và duelLeft = 3 cùng lúc,
+   * nên missions.date chính là ngày reset gần nhất). App mở xuyên nửa
+   * đêm chưa rollover thì missions.date vẫn là hôm qua — duelLeft lúc
+   * đó là số thừa hôm qua, không được coi là của hôm nay. Không đọc
+   * được missions (máy mới) thì dùng ngày hôm nay. */
+  function duelDayLocal() {
+    var today = todayStr();
+    try {
+      var m = cfg.adapter.readLocal("missions");
+      var d = m && m.date;
+      if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= today) return d;
+    } catch (_) {}
+    return today;
+  }
+
+  /* Chuẩn hoá duelLeft trên server về {date, left}. Doc cũ (trước M-19)
+   * lưu số thuần -> {date: "", left: n} (không rõ ngày = cũ nhất, mọi
+   * giá trị có ngày đều mới hơn nó). Chỉ chặn dưới 0 — KHÔNG chặn trên
+   * 3 vì shop bán thêm lượt (duelLeft++ không giới hạn). */
+  function normalizeDuel(v) {
+    if (v && typeof v === "object") {
+      return { date: (typeof v.date === "string") ? v.date : "",
+               left: Math.max(0, num(v.left, SYNC_SEED.duelLeft)) };
+    }
+    return { date: "", left: Math.max(0, num(v, SYNC_SEED.duelLeft)) };
+  }
+
+  /* Mốc lượt đấu lúc đồng bộ lần cuối — LUÔN là {ngày local của máy,
+   * lượt đấu local sau lần đồng bộ đó} (xem pushWallet/pullWallet).
+   * Máy cũ chưa có key này thì lấy số trong baseline ví (ngày ""). */
+  function duelBaselineGet() {
+    var b = lsGetJSON(LS_BASELINE_DUEL, null);
+    if (b) return normalizeDuel(b);
+    var w = baselineGet();
+    if (w) return { date: "", left: Math.max(0, num(w.duelLeft, SYNC_SEED.duelLeft)) };
+    return { date: "", left: SYNC_SEED.duelLeft };
+  }
+  function duelBaselineSet(s) { lsSetJSON(LS_BASELINE_DUEL, { date: s.date, left: s.left }); }
+
+  /* Sao chép duelLeft trên server nguyên trạng qua lần ghi ví không
+   * liên quan lượt đấu (clawback...): KHÔNG chạy qua num() vì giá trị
+   * mới là object {date, left} — num() sẽ phá nó thành số 3. */
+  function copyDuel(next, cur) {
+    if (cur && cur.duelLeft !== undefined) next.duelLeft = cur.duelLeft;
+  }
+
   function pushWallet(uid, firstSync) {
     var local = walletLocal();
     if (local === undefined) return Promise.resolve(false);
     var base = baselineGet();
     var deltas = {}, hasDelta = false;
-    WALLET_FIELDS.forEach(function (f) {
-      var ref = firstSync ? SYNC_SEED[f] : (base ? num(base[f], SYNC_SEED[f]) : SYNC_SEED[f]);
+    WALLET_NUM_FIELDS.forEach(function (f) {
+      // M-18: baseline đã tồn tại thì dùng nó làm mốc kể cả khi
+      // firstSync — lần thử migration trước đã push + set baseline
+      // rồi thì retry không được cộng lại (local - SEED).
+      var ref = base ? num(base[f], SYNC_SEED[f]) : SYNC_SEED[f];
       var d = num(local[f], SYNC_SEED[f]) - ref;
       deltas[f] = d;
       if (d !== 0) hasDelta = true;
     });
+    // M-19: trạng thái lượt đấu local (ngày + số lượt còn lại).
+    var day = duelDayLocal();
+    var localDuel = { date: day, left: Math.max(0, num(local.duelLeft, SYNC_SEED.duelLeft)) };
+    var baseDuel = duelBaselineGet();
+    var duelChanged = (baseDuel.date !== day) || (localDuel.left !== baseDuel.left);
     // Không có delta (local == baseline) thì khỏi ghi — lần đầu
     // (firstSync) vẫn ghi để tạo doc server khi chưa có.
-    if (!hasDelta && !firstSync) return Promise.resolve(false);
+    if (!hasDelta && !duelChanged && !firstSync) return Promise.resolve(false);
     var ref = coll(uid).doc("wallet");
     return cfg.db.runTransaction(function (tx) {
       return tx.get(ref).then(function (snap) {
@@ -23297,19 +23405,53 @@ function furiHTML(text){
         var next = {};
         if (!cur) {
           // Server chưa có: local là bản duy nhất (kể cả lần đầu).
-          WALLET_FIELDS.forEach(function (f) { next[f] = num(local[f], SYNC_SEED[f]); });
+          WALLET_NUM_FIELDS.forEach(function (f) { next[f] = num(local[f], SYNC_SEED[f]); });
+          next.duelLeft = { date: localDuel.date, left: localDuel.left };
         } else {
-          WALLET_FIELDS.forEach(function (f) {
+          WALLET_NUM_FIELDS.forEach(function (f) {
             next[f] = num(cur[f], SYNC_SEED[f]) + deltas[f];
           });
+          var serverDuel = normalizeDuel(cur.duelLeft);
+          if (serverDuel.date < day) {
+            // Server còn ngày cũ hơn ngày local: máy này chốt trạng
+            // thái lượt đấu của ngày hiện tại (reset 3 lượt hay đã
+            // dùng/mua thêm đều nằm trong localDuel.left).
+            next.duelLeft = { date: day, left: localDuel.left };
+          } else if (serverDuel.date === day) {
+            var left;
+            if (baseDuel.date === day) {
+              // Đã đồng bộ trong ngày: delta lượt đấu trong ngày.
+              left = serverDuel.left + (localDuel.left - baseDuel.left);
+            } else {
+              // Lần đầu đồng bộ trong ngày: trừ số lượt đã dùng (cộng
+              // số lượt đã mua) kể từ lúc reset 3 lượt vào trạng thái
+              // hôm nay của server — KHÔNG cộng cả 3 lượt reset (đó
+              // là lỗi M-19: 2 máy cùng reset thành 6).
+              left = serverDuel.left + (localDuel.left - SYNC_SEED.duelLeft);
+            }
+            next.duelLeft = { date: day, left: Math.max(0, left) };
+          } else if (baseDuel.date === day) {
+            // Server ở ngày mới hơn ngày local (máy này chưa rollover
+            // nhưng máy khác đã sang ngày mới): thay đổi kể từ lần
+            // đồng bộ gần nhất trong ngày local chỉ có thể là dùng/mua
+            // lượt thật (reset luôn đi kèm đổi ngày) nên delta an toàn.
+            next.duelLeft = { date: serverDuel.date,
+              left: Math.max(0, serverDuel.left + (localDuel.left - baseDuel.left)) };
+          } else {
+            // Server ở ngày mới hơn mà máy này chưa đồng bộ lần nào
+            // trong ngày local: ngày local đã qua, không đụng vào
+            // lượt đấu của ngày mới trên server.
+            copyDuel(next, cur);
+          }
         }
         tx.set(ref, wrap(next));
         return next;
       });
     }).then(function (next) {
       baselineSet(clone(local));
+      duelBaselineSet(localDuel);
       markSeen("wallet", now());
-      return hasDelta;
+      return hasDelta || duelChanged;
     });
   }
 
@@ -23319,10 +23461,24 @@ function furiHTML(text){
     return readServerDoc(uid, "wallet").then(function (env) {
       if (!env || !env.data) return false;
       var server = {};
-      WALLET_FIELDS.forEach(function (f) { server[f] = num(env.data[f], SYNC_SEED[f]); });
-      if (same(server, local)) { baselineSet(clone(server)); return false; }
+      WALLET_NUM_FIELDS.forEach(function (f) { server[f] = num(env.data[f], SYNC_SEED[f]); });
+      var day = duelDayLocal();
+      var serverDuel = normalizeDuel(env.data.duelLeft);
+      // M-19: chỉ kéo duelLeft khi server đang ở ngày hôm nay trở đi
+      // (ngày mới hơn = lệch đồng hồ máy khác, vẫn là trạng thái mới
+      // nhất). Server còn ngày cũ thì giữ lượt đấu local — app đã
+      // reset 3 lượt lúc sang ngày, kéo số cũ về sẽ cướp lượt.
+      var duelCurrent = serverDuel.date >= todayStr();
+      server.duelLeft = duelCurrent ? serverDuel.left : num(local.duelLeft, SYNC_SEED.duelLeft);
+      var newDuelBaseline = { date: day, left: server.duelLeft };
+      if (same(server, local)) {
+        baselineSet(clone(server));
+        duelBaselineSet(newDuelBaseline);
+        return false;
+      }
       cfg.adapter.writeLocal("wallet", clone(server));
       baselineSet(clone(server));
+      duelBaselineSet(newDuelBaseline);
       markSeen("wallet", env.updatedAt || 0);
       if (cfg.adapter.onMerged) cfg.adapter.onMerged("wallet");
       return true;
@@ -23330,16 +23486,21 @@ function furiHTML(text){
   }
 
   /* Điều chỉnh ví 1 lần (dùng cho clawback thưởng nhiệm vụ trùng): trừ cả
-   * server lẫn local + baseline cùng 1 lượng để không lệch nhau. */
+   * server lẫn local + baseline cùng 1 lượng để không lệch nhau.
+   * M-19: duelLeft sao chép nguyên trạng (object {date, left}), không
+   * chạy qua num(). M-20: syncMissions không còn gọi hàm này (clawback
+   * chạy trong transaction chung với missions) — giữ lại cho code khác
+   * dùng sau này. */
   function adjustWallet(uid, adj) {
     var ref = coll(uid).doc("wallet");
     return cfg.db.runTransaction(function (tx) {
       return tx.get(ref).then(function (snap) {
         if (!snap || !snap.exists) return null;
         var cur = snap.data().data || {}, next = {};
-        WALLET_FIELDS.forEach(function (f) {
+        WALLET_NUM_FIELDS.forEach(function (f) {
           next[f] = num(cur[f], SYNC_SEED[f]) + num(adj[f], 0);
         });
+        copyDuel(next, cur);
         tx.set(ref, wrap(next));
         return next;
       });
@@ -23433,7 +23594,21 @@ function furiHTML(text){
 
   /* ---------------- missions (có clawback) ---------------- */
 
+  /* M-20: reentrancy guard — listener (startListener) gọi pushDoc trực
+   * tiếp có thể chồng lên syncMissions của syncAll/schedulePush. Lần
+   * gọi sau nhận chung promise của lần đang chạy thay vì chạy 1 lần
+   * gộp/clawback thứ 2 trên cùng 1 máy. */
   function syncMissions(uid) {
+    if (missionsInFlight) return missionsInFlight;
+    missionsInFlight = syncMissionsRun(uid).then(function (r) {
+      missionsInFlight = null; return r;
+    }, function (err) {
+      missionsInFlight = null; throw err;
+    });
+    return missionsInFlight;
+  }
+
+  function syncMissionsRun(uid) {
     var localRaw = cfg.adapter.readLocal("missions");
     if (localRaw === undefined) return Promise.resolve("skip");
     var meta = metaGet("missions") || {};
@@ -23468,24 +23643,69 @@ function furiHTML(text){
         if (cfg.adapter.onMerged) cfg.adapter.onMerged("missions");
         return "pulled";
       }
-      var r = mergeMissions(localSync, serverData, now());
-      var merged = r.data;
-      var dups = r.duplicateGrants;
-      var serverChanged = !same(merged, serverData);
-      var localChanged = !same(merged, localSync);
-      var p = Promise.resolve();
-      if (dups.length) {
-        // Trừ lại 1 lần thưởng cho mỗi nhiệm vụ bị nhận trùng.
-        var adj = { tuvi: 0 };
-        dups.forEach(function (d) {
-          adj.tuvi -= (d.amount || 0);
-          merged.clawback[d.mission] = true;
+      // M-20: gộp + clawback NGUYÊN TỬ trong 1 transaction — đọc lại
+      // doc missions TƯƠI trong transaction (không dùng bản đọc ngoài),
+      // gộp lại, trừ ví và ghi marker clawback cùng 1 lần commit. Ghi
+      // lỗi -> cả ví lẫn marker đều không đổi, lần sau phát hiện lại
+      // và chỉ trừ 1 lần. 2 máy chạy chồng: transaction sau đọc được
+      // marker của transaction trước (Firestore retry khi conflict)
+      // nên mergeMissions lọc trùng đã trừ, không trừ lần 2.
+      var missionsRef = coll(uid).doc("missions");
+      var walletRef = coll(uid).doc("wallet");
+      return cfg.db.runTransaction(function (tx) {
+        return tx.get(missionsRef).then(function (msnap) {
+          var fresh = (msnap && msnap.exists) ? (msnap.data().data || null) : null;
+          var r = fresh ? mergeMissions(localSync, fresh, now())
+                        : { data: clone(localSync), duplicateGrants: [] };
+          var merged = r.data;
+          var dups = r.duplicateGrants;
+          var serverChanged = !same(merged, fresh);
+          if (!dups.length && !serverChanged) {
+            return { merged: merged, serverChanged: false, adj: null };
+          }
+          var adj = null;
+          if (dups.length) {
+            // Trừ lại 1 lần thưởng cho mỗi nhiệm vụ bị nhận trùng.
+            adj = { tuvi: 0 };
+            dups.forEach(function (d) {
+              adj.tuvi -= (d.amount || 0);
+              merged.clawback[d.mission] = true;
+            });
+            serverChanged = true;
+          }
+          if (!adj) {
+            tx.set(missionsRef, wrap(merged));
+            return { merged: merged, serverChanged: serverChanged, adj: null };
+          }
+          return tx.get(walletRef).then(function (wsnap) {
+            if (wsnap && wsnap.exists) {
+              var cur = wsnap.data().data || {}, next = {};
+              WALLET_NUM_FIELDS.forEach(function (f) {
+                next[f] = num(cur[f], SYNC_SEED[f]) + num(adj[f], 0);
+              });
+              copyDuel(next, cur); // M-19: giữ nguyên {date, left}
+              tx.set(walletRef, wrap(next));
+            } else {
+              adj = null; // không có ví server thì không trừ local (như adjustWallet cũ)
+            }
+            tx.set(missionsRef, wrap(merged));
+            return { merged: merged, serverChanged: serverChanged, adj: adj };
+          });
         });
-        serverChanged = true;
-        p = p.then(function () { return adjustWallet(uid, adj); });
-      }
-      if (serverChanged) p = p.then(function () { return writeServerDoc(uid, "missions", merged); });
-      return p.then(function () {
+      }).then(function (res) {
+        var merged = res.merged;
+        var serverChanged = res.serverChanged;
+        var localChanged = !same(merged, localSync);
+        // Clawback đã commit trên server -> trừ local + baseline cùng
+        // 1 lượng để không lệch (như adjustWallet cũ).
+        if (res.adj) {
+          var localW = walletLocal();
+          if (localW !== undefined) {
+            WALLET_FIELDS.forEach(function (f) { localW[f] = num(localW[f], 0) + num(res.adj[f], 0); });
+            cfg.adapter.writeLocal("wallet", localW);
+            baselineSet(clone(localW));
+          }
+        }
         if (serverChanged) markSeen("missions", now()); else markSeen("missions", serverAt);
         var applied = convert.missionsFromSync(merged, meta);
         // Lưu granted/clawback vào meta (không ghi xuống localStorage app).
@@ -23626,14 +23846,7 @@ function furiHTML(text){
     // plan30 làm mất cả jlpt/examBest/videos/settings/avatar/savedWords
     // + pullWallet). Bọc cả 2 đầu ví: lỗi đẩy ví không chặn các doc
     // khác, lỗi kéo ví không làm hỏng lần đồng bộ đã xong.
-    function guarded(fn, label) {
-      return function () {
-        return Promise.resolve().then(fn).catch(function (err) {
-          log("Đồng bộ lỗi (" + label + "): " + ((err && err.message) || err));
-          return "error";
-        });
-      };
-    }
+    // (guarded: hàm dùng chung ở mục tiện ích.)
     var chain = Promise.resolve();
     chain = chain.then(guarded(function () { return pushWallet(uid, false); }, "wallet-push"));
     chain = chain.then(guarded(function () { return syncMissions(uid); }, "missions"));
@@ -23654,9 +23867,11 @@ function furiHTML(text){
         // Server trống: đẩy toàn bộ local lên (ví: server = local).
         return pushWallet(uid, true).then(function () {
           var chain = Promise.resolve();
+          // M-18: catch từng doc (kiểu M-10) — 1 doc lỗi không abort
+          // migration; doc lỗi được lần syncAll sau gộp bù.
           FIXED_DOCS.forEach(function (id) {
             if (id === "wallet") return;
-            chain = chain.then(function () {
+            chain = chain.then(guarded(function () {
               var raw = cfg.adapter.readLocal(id);
               if (raw === undefined || raw == null) return;
               if (id === "missions") {
@@ -23683,12 +23898,12 @@ function furiHTML(text){
               return writeServerDoc(uid, id, data).then(function () {
                 metaSet(id, fromSyncData(id, data, meta2).meta);
               });
-            });
+            }, id));
           });
           var vocabKeys = [];
           try { vocabKeys = cfg.adapter.listVocabKeys() || []; } catch (_) {}
           vocabKeys.forEach(function (k) {
-            chain = chain.then(function () {
+            chain = chain.then(guarded(function () {
               var id = VOCAB_PREFIX + k;
               var raw = cfg.adapter.readLocal(id);
               if (raw === undefined || raw == null) return;
@@ -23696,24 +23911,26 @@ function furiHTML(text){
               return writeServerDoc(uid, id, vData).then(function () {
                 metaSet(id, clone(vData)); // A14: lưu meta như syncOne
               });
-            });
+            }, VOCAB_PREFIX + k));
           });
           return chain;
         }).then(function () { lsSet(LS_MIGRATED, "1"); return true; });
       }
-      // Server đã có: gộp lần đầu (ví dùng công thức local - SEED).
+      // Server đã có: gộp lần đầu (ví dùng công thức local - SEED,
+      // hoặc local - baseline nếu lần thử trước đã push — M-18).
       return pushWallet(uid, true).then(function () {
         return allDocIds(uid);
       }).then(function (allIds) {
+        // M-18: catch từng doc (kiểu M-10) như nhánh trên.
         var chain = Promise.resolve();
-        chain = chain.then(function () { return syncMissions(uid); });
+        chain = chain.then(guarded(function () { return syncMissions(uid); }, "missions"));
         allIds.forEach(function (id) {
           if (id === "wallet" || id === "missions") return;
-          if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
-          else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
-          else { chain = chain.then(function () { return syncOne(uid, id); }); }
+          if (id === "savedWords") { chain = chain.then(guarded(function () { return syncSavedWords(uid); }, id)); }
+          else if (id === "videos") { chain = chain.then(guarded(function () { return syncVideos(uid); }, id)); }
+          else { chain = chain.then(guarded(function () { return syncOne(uid, id); }, id)); }
         });
-        return chain.then(function () { return pullWallet(uid); });
+        return chain.then(guarded(function () { return pullWallet(uid); }, "wallet-pull"));
       }).then(function () { lsSet(LS_MIGRATED, "1"); return true; });
     });
   }
