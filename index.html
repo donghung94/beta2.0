@@ -2139,10 +2139,14 @@ html[data-theme="toi"] body{background-image:
 }
 </style>
 <style id="sk-home-sidebar">
-/* ================= Sidebar Home (PC) — CHỈ trang Home, màn hình rộng ≥1024px =================
-   Bố cục sidebar trái cho trang chủ bản web (user duyệt mockup 21/11/2026, lệnh áp 22:57).
-   Cơ chế: route() gỡ class sk-home-sidebar, renderHome() gắn lại — các trang phụ không bao
-   giờ có class này nên giữ nguyên 100% bố cục cũ (header cố định + #vNav).
+/* ================= Sidebar trái (PC) — MỌI TRANG, màn hình rộng ≥1024px =================
+   Bố cục sidebar trái cho bản web (user duyệt mockup 21/11/2026, lệnh áp 22:57;
+   đính chính 23:25 cùng ngày: sidebar dùng chung mọi trang, chỉ NỘI DUNG trong
+   trang phụ giữ nguyên — không phải chỉ Home có sidebar).
+   Cơ chế: controller gắn class sk-home-sidebar VĨNH VIỄN lúc khởi động (tên class
+   giữ nguyên từ đợt Home-only để khỏi đổi ~35 selector); CSS @media ≥1024px quyết
+   định hiển thị, màn hẹp vẫn bố cục cũ. route()/renderHome() chỉ gắn-gỡ class
+   sk-is-home (đánh dấu đang ở Home — ô tìm topbar chỉ hiện ở Home).
    Trạng thái sidebar (lưu localStorage):
      sk-sb-collapsed — thu còn thanh icon 72px (nút "Thu gọn" dưới sidebar)
      sk-sb-hidden — ẩn hẳn sidebar (nút kiểu ChatGPT ở góc trái topbar; nút LUÔN hiện
@@ -2150,7 +2154,7 @@ html[data-theme="toi"] body{background-image:
    Mặc định (không có class / màn hình <1024px): sidebar + topbar ẩn hẳn. */
 #skSidebar, #skHomeTopbar{ display:none; }
 @media (min-width:1024px){
-  /* --- Khung bố cục khi ở Home --- */
+  /* --- Khung bố cục khi sidebar bật (mọi trang, ≥1024px) --- */
   body.sk-home-sidebar header.site{ display:none; }
   body.sk-home-sidebar #vNav{ display:none; }
   body.sk-home-sidebar .shell{ padding-top:0; }
@@ -2257,6 +2261,133 @@ html[data-theme="toi"] body{background-image:
   #skHomeTopbar #skNotifSlot{ flex:none; display:flex; align-items:center; }
 }
 </style>
+<style id="sk-home-redesign">
+/* ================= Nội dung Home PC theo BẢNG XEM TRƯỚC (user chốt 23:55 21/11) =================
+   - Home: lời chào tên thật → hàng 2 cột (Đếm ngược JLPT + chọn cấp | Nhiệm vụ
+     hôm nay n/5 thật từ doc sync missions) → thẻ đỏ Học tiếp (nhiệm vụ ngày hiện
+     tại của lộ trình 30 ngày, suy ra từ planDoneGet + nhịp tuần) → Lộ trình 30 ngày
+     dạng lưới 10 cột → lưới 12 thẻ Mục học (link thật, KHÔNG thanh tiến độ vì app
+     không có số liệu thật từng mục) → phía dưới giữ lại Tìm kiếm + Vẽ Kanji +
+     Cài App + Khám phá Kanji (lưới thật).
+     Mọi số liệu đều từ logic/state thật; không hardcode số minh họa của bản xem
+     trước (danh sách số cấm xem REPORT.md — không liệt kê trong file này).
+   - Sidebar dùng chung MỌI trang + nút ẩn hẳn kiểu ChatGPT + theme thật (5 nền,
+     lưu localStorage) giữ nguyên từ các đợt trước — bản xem trước KHÔNG có 2 cái
+     này nên không port đè.
+   - Topbar: ô tìm chỉ hiện ở Home (body.sk-is-home); trang phụ ẩn ô tìm, giữ nút
+     ChatGPT + 5 chấm nền + chuông.
+   - Chân sidebar: hàng nút app/mạng xã hội (di chuyển node thật từ header) + nút
+     Đăng xuất (bấm hộ nút thật trong header); topbar có nút Đăng nhập dự phòng khi
+     sidebar đang ẩn hẳn. */
+.skh-home{ max-width:1060px; margin:0 auto; padding:22px 0 40px; }
+/* Lời chào đầu Home (kiểu bảng xem trước) */
+.skp-greet{ padding:6px 2px 0; }
+.skp-greet h2{ font-size:24px; font-weight:800; margin:0 0 4px; }
+.skp-greet p{ margin:0; color:var(--muted); font-size:14px; font-weight:600; }
+/* Hàng 2 cột: đếm ngược + nhiệm vụ */
+.skp-row{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; }
+.skp-row .skh-card{ margin-top:0; }
+/* Đếm ngược JLPT trong thẻ trái */
+.skp-count-top{ display:flex; align-items:center; gap:18px; margin-bottom:14px; }
+.skp-days{ text-align:center; line-height:1; flex:none; }
+.skp-days b{ font-size:44px; font-weight:900; color:var(--red); display:block; }
+.skp-days span{ font-size:13px; font-weight:700; color:var(--muted); }
+.skp-count-top h3{ margin:0 0 4px; font-size:18px; }
+.skp-count-top p{ margin:0; font-size:14px; color:var(--muted); font-weight:600; }
+/* Nhiệm vụ hôm nay (thẻ phải) — chỉ HIỂN THỊ trạng thái thật, không chấm công ở web */
+.skp-mcount{ float:right; background:var(--red-soft); color:var(--red); border-radius:999px; padding:3px 12px; font-size:14px; }
+.skp-mrow{ display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--line); }
+.skp-mrow:first-of-type{ border-top:0; }
+.skp-mcheck{ width:26px; height:26px; flex:none; border-radius:50%; border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--muted); }
+.skp-mrow.done .skp-mcheck{ background:var(--red); border-color:var(--red); color:#fff; }
+.skp-mmain{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.skp-mmain b{ font-size:14.5px; }
+.skp-mmain span{ font-size:12.5px; color:var(--muted); }
+.skp-mrew{ text-align:right; flex:none; color:var(--red); }
+.skp-mrew b{ font-size:14px; display:block; }
+.skp-mrew span{ font-size:11px; font-weight:700; }
+.skp-mstate{ flex:none; font-size:12px; font-weight:700; color:var(--muted); min-width:64px; text-align:right; }
+.skp-mstate.done{ color:var(--red); }
+.skp-mstate.doing{ color:#d96a08; }
+.skp-mnote{ margin:12px 0 0; font-size:13px; color:var(--muted); }
+/* Thẻ đỏ Học tiếp (nhiệm vụ ngày hiện tại của lộ trình 30 ngày) */
+.skp-resume{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; background:linear-gradient(120deg,#c0272d,#e05257); color:#fff; border-radius:18px; padding:22px 26px; box-shadow:var(--shadow); margin-top:20px; }
+.skp-resume h3{ margin:0 0 4px; font-size:19px; color:#fff; }
+.skp-resume p{ margin:0; font-size:14px; opacity:.94; }
+.skp-resume .skp-cta{ margin-left:auto; background:#fff; color:var(--red-dark); font-weight:800; font-size:15px; padding:11px 22px; border-radius:999px; white-space:nowrap; text-decoration:none; }
+/* Lưới lộ trình 30 ngày (10 cột như bảng xem trước) */
+.skp-plangrid{ display:grid; grid-template-columns:repeat(10,1fr); gap:8px; margin-top:4px; }
+.skp-day{ aspect-ratio:1; border-radius:12px; border:1.5px solid var(--line); background:var(--card); color:var(--ink); font-size:15px; font-weight:800; cursor:pointer; padding:0; }
+.skp-day.done{ background:var(--red); border-color:var(--red); color:#fff; }
+.skp-day.cur{ border-color:var(--red); color:var(--red); box-shadow:0 0 0 2px var(--red-soft); }
+.skp-day.lock{ color:var(--muted); background:var(--bg); cursor:default; opacity:.7; }
+/* Thẻ nội dung Home */
+.skh-card{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  box-shadow:var(--shadow); padding:22px 24px; margin-top:20px;
+}
+.skh-card h2{ font-size:19px; font-weight:800; margin:0 0 14px; }
+/* Chip cấp độ dạng ô (giữ class .pill + data-lv để bindHome nhận diện) */
+.skh-card #lvPills .pill{
+  border-radius:14px; padding:12px 10px; flex:1 1 110px; max-width:150px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  font-size:15px; line-height:1.25; text-align:center;
+}
+.skh-card #lvPills .pill b{ font-size:17px; }
+.skh-card #lvPills .pill small{ font-weight:600; font-size:12px; opacity:.85; }
+.skh-card #lvPills .pill.on{ background:var(--red); border-color:var(--red); color:#fff; }
+/* Lộ trình: thanh tiến độ + khối kế hoạch (cdCard làm phẳng trong thẻ) */
+.skh-road{ display:flex; align-items:center; gap:14px; margin:2px 0 16px; font-size:15px; }
+.skh-road > span{ flex:none; }
+.skh-bar{ flex:1; min-width:60px; height:10px; background:var(--line); border-radius:999px; overflow:hidden; }
+.skh-bar i{ display:block; height:100%; background:linear-gradient(90deg,#c0272d,#e05257); border-radius:999px; }
+.skh-pct{ color:var(--red); font-size:16px; flex:none; }
+.skh-card .cd-card{ background:transparent; border:0; box-shadow:none; padding:0; }
+/* Lưới 12 thẻ mục học (không thanh tiến độ — app không có số liệu thật từng mục) */
+.skh-sect{ font-size:19px; font-weight:800; margin:26px 0 0; }
+.skh-tiles{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+.skh-tile{
+  display:flex; flex-direction:column; gap:4px; align-items:flex-start;
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  padding:18px 20px; box-shadow:var(--shadow); color:var(--ink); text-decoration:none;
+}
+.skh-tile:hover{ border-color:var(--red); }
+.skh-tic{ font-size:26px; line-height:1; }
+.skh-tile b{ font-size:16.5px; }
+.skh-tile small{ font-size:13.5px; color:var(--muted); font-weight:600; }
+@media (max-width:760px){
+  .skh-tiles{ grid-template-columns:repeat(2,1fr); }
+  .skp-row{ grid-template-columns:1fr; }
+  .skp-plangrid{ grid-template-columns:repeat(6,1fr); }
+  .skp-mstate{ display:none; }
+}
+@media (max-width:480px){ .skh-tiles{ grid-template-columns:1fr; } }
+/* Ô tìm topbar: CHỈ hiện ở Home (Enter ở Home chuyển tới #/kanji?q=... để tìm) */
+@media (min-width:1024px){
+  body.sk-home-sidebar #skHomeTopbar .sk-search{ display:none; }
+  body.sk-home-sidebar.sk-is-home #skHomeTopbar .sk-search{ display:flex; }
+}
+/* Hàng nút app/mạng xã hội ở chân sidebar (node thật di chuyển từ header) */
+.sk-apps{ display:flex; gap:8px; padding:10px 12px 0; flex-wrap:wrap; }
+.sk-apps:empty{ display:none; }
+.sk-apps .hdr-app{ font-size:0; gap:0; padding:6px 8px; }
+body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-apps{ display:none; }
+/* Nút Đăng nhập dự phòng trên topbar (hiện khi chưa đăng nhập + sidebar ẩn hẳn) */
+.sk-toplogin{
+  border:1.5px solid var(--red); color:var(--red); background:#fff;
+  border-radius:999px; padding:7px 16px; font-weight:800; font-size:13.5px; white-space:nowrap;
+}
+.sk-toplogin:hover{ background:var(--red); color:#fff; }
+/* Nút Đăng xuất dưới thẻ người dùng trong sidebar */
+.sk-logout{
+  display:flex; align-items:center; gap:8px; width:100%; margin-top:8px;
+  background:none; border:1px solid var(--line); border-radius:10px;
+  padding:8px 10px; color:var(--muted); font-weight:700; font-size:13px; cursor:pointer;
+}
+.sk-logout:hover{ color:var(--red); border-color:var(--red); }
+body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-logout .lbl{ display:none; }
+body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-logout{ justify-content:center; }
+</style>
 </head>
 <body>
 <header class="site">
@@ -2295,8 +2426,9 @@ html[data-theme="toi"] body{background-image:
     <span class="sk-bn"><b>Sora<i>Kanji</i></b><small>Bầu trời Kanji cho người Việt</small></span>
   </a>
   <nav class="sk-nav" id="skNav">
+    <a href="#/" data-nav="home" class="active"><span class="vi">🏠</span><span class="lbl">Trang chủ</span></a>
     <div class="sk-grp">Học</div>
-    <a href="#/" data-nav="kanji" class="active"><span class="vi">🏯</span><span class="lbl">Sora Kanji</span></a>
+    <a href="#/kanji" data-nav="kanji"><span class="vi">🏯</span><span class="lbl">Sora Kanji</span></a>
     <a href="#/tuvung" data-nav="tango"><span class="vi">👑</span><span class="lbl">Từ vựng</span></a>
     <a href="#/nguphap" data-nav="bunpo"><span class="vi">文</span><span class="lbl">Ngữ pháp</span></a>
     <a href="#/thi" data-nav="jlpt"><span class="vi">試</span><span class="lbl">Luyện JLPT</span></a>
@@ -2312,11 +2444,13 @@ html[data-theme="toi"] body{background-image:
   </nav>
   <div class="sk-foot">
     <div class="sk-user" id="skSbUser"></div>
+      <div class="sk-apps" id="skSbApps"></div>
     <button class="sk-collapse" id="skSbCollapse" type="button">« <span class="lbl">Thu gọn</span></button>
   </div>
 </aside>
 <aside class="vnav" id="vNav" aria-label="Menu chính">
-  <a href="#/" data-nav="kanji"><span class="vi">🏯</span><span>Sora Kanji</span></a>
+  <a href="#/" data-nav="home"><span class="vi">🏠</span><span>Trang chủ</span></a>
+  <a href="#/kanji" data-nav="kanji"><span class="vi">🏯</span><span>Sora Kanji</span></a>
   <a href="#/tuvung" data-nav="tango"><span class="vi">👑</span><span>Từ vựng</span></a>
   <a href="#/nguphap" data-nav="bunpo"><span class="vi">文</span><span>Ngữ pháp</span></a>
   <a href="#/thi" data-nav="jlpt"><span class="vi">試</span><span>Luyện JLPT</span></a>
@@ -2341,6 +2475,7 @@ html[data-theme="toi"] body{background-image:
     <button type="button" data-sk-theme="matcha" style="background:#f2f5ec" title="Matcha" aria-label="Nền Matcha"></button>
     <button type="button" data-sk-theme="xanh" style="background:#eef2f7" title="Xanh dương" aria-label="Nền Xanh dương"></button>
   </div>
+  <button class="sk-toplogin" id="skTopLogin" type="button" hidden>Đăng nhập</button>
   <div id="skNotifSlot"></div>
 </div>
 <main id="app"></main>
@@ -2878,10 +3013,165 @@ function kanjiCell(e){
 /* ================= TRANG CHỦ ================= */
 var homeState = {lv: "N5", shown: 110, target: "N5", kcInit: false};
 
+
+/* ===== Home bảng xem trước: dữ liệu thật (không hardcode số minh họa) =====
+   - Lời chào: tên từ webCurrentUser()/rankMeData() (cùng cách lấy của thẻ user
+     sidebar); khách -> "bạn".
+   - Nhiệm vụ hôm nay: CHỈ ĐỌC doc sync missions (kanji_progress/{uid}/sync/missions,
+     envelope {v:1, data,...}) — cùng dữ liệu bản mobile dùng; web không chấm công,
+     không ghi gì. done{kanji,quiz,review,exam,rot} + quizProg/kanjiProg (map đếm
+     theo máy, cộng dồn, cap 10/12 — cùng công thức counterTotal của module sync).
+     Khách -> 0/5 + gợi ý đăng nhập; lỗi đọc -> "—/5" + ghi chú (không bịa 0/5).
+   - Học tiếp + lưới lộ trình: nhiệm vụ ngày hiện tại (done+1) của lộ trình 30 ngày,
+     suy ra từ planDoneGet + nhịp tuần của buildPlan30 (Kanji/Từ vựng/Ngữ pháp/Nghe/
+     Đọc hiểu/Ôn tập/Thi thử; ngày 29 Tổng ôn, ngày 30 Thi thử tổng kết). Tiêu đề
+     Kanji/Đọc hiểu tính khoảng thật từ dữ liệu đã tải (kanjiByLevel/readKinds tĩnh);
+     Từ vựng/Ngữ pháp/Nghe cần file lazy (không tải thêm ở Home) nên chỉ ghi tên kỹ
+     năng + tuần — vẫn đúng, không bịa khoảng. */
+function skpDayKey(d){
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+var SKP_MISSION_KEYS = ["kanji", "quiz", "review", "exam", "rot"];
+/* Định nghĩa 4 nhiệm vụ cố định — y hệt bản mobile (tên + mô tả + thưởng EXP).
+   Tên nhiệm vụ Kanji chỉ lấy phần ổn định "Luyện tập Kanji" (bản mobile còn gắn
+   thêm "Bài 12 Gia đình" là nhãn tĩnh cũ, không copy theo). */
+var SKP_MISSION_DEFS = {
+  kanji: {title: "Luyện tập Kanji", sub: "Học 12 chữ Kanji", reward: 40},
+  quiz: {title: "Huấn luyện — Quiz nhanh", sub: "Trả lời đúng 10 câu", reward: 30},
+  review: {title: "Ôn thẻ đến hạn", sub: "Ôn thẻ sắp quên", reward: 35},
+  exam: {title: "Diễn tập — Thi thử", sub: "Làm 1 đề Test JLPT đầy đủ", reward: 60}
+};
+/* Nhiệm vụ luân phiên (rot): loại theo ngày — cùng công thức + thứ tự ROT_ORDER
+   của bản mobile nên web tính ra đúng loại của hôm nay mà không cần server. */
+var SKP_ROT_ORDER = ["listen", "read", "vocab", "grammar", "shadow"];
+var SKP_ROT_DEFS = {
+  listen: {title: "Trinh sát — Luyện nghe", sub: "Nghe và trả lời 1 hội thoại ở mục Luyện nghe"},
+  read: {title: "Giải mã — Đọc hiểu", sub: "Đọc và trả lời hết câu hỏi của 1 bài đọc"},
+  vocab: {title: "Trang bị — Từ vựng", sub: "Học hết bộ flashcard của 1 bài từ vựng"},
+  grammar: {title: "Chiến thuật — Ngữ pháp", sub: "Mở 1 mẫu ngữ pháp và bấm “Đã học”"},
+  shadow: {title: "Liên lạc — Shadowing", sub: "Ghi âm nhắc lại 1 câu mẫu shadowing"}
+};
+function skpRotKindFor(d){
+  var idx = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+  return SKP_ROT_ORDER[((idx % SKP_ROT_ORDER.length) + SKP_ROT_ORDER.length) % SKP_ROT_ORDER.length];
+}
+/* Cộng dồn map đếm theo máy, cap như counterTotal() của module sync. */
+function skpCounterTotal(cm, cap){
+  var bd = (cm && cm.byDevice) || {}, sum = 0, k;
+  for(k in bd) if(Object.prototype.hasOwnProperty.call(bd, k)) sum += Number((bd[k] && bd[k].n) || 0);
+  return Math.max(0, Math.min(cap, sum));
+}
+/* Nhiệm vụ của 1 ngày trong lộ trình 30 ngày — khớp buildPlan30 (cùng nhịp tuần,
+   cùng href; tiêu đề Kanji/Đọc hiểu tính khoảng thật, các kỹ năng khác ghi tuần). */
+var SKP_RHYTHM = ["kanji", "vocab", "grammar", "listen", "read", "review", "exam"];
+function skpDayInfo(lv, d){
+  if(d === 29) return {day: 29, skill: "review", title: "Tổng ôn", href: "#/tuvung/" + lv};
+  if(d === 30) return {day: 30, skill: "exam", title: "Thi thử tổng kết (Test 5)", href: "#/thi/" + lv + "/5"};
+  var w = Math.floor((d - 1) / 7), slot = (d - 1) % 7, skill = SKP_RHYTHM[slot];
+  if(skill === "kanji"){
+    var kTot = 0;
+    try{ kTot = (kanjiByLevel()[lv] || []).length; }catch(e){ kTot = 0; }
+    if(kTot > 0){
+      var r = planQuarters(kTot)[w];
+      return {day: d, skill: skill, title: "Kanji " + r[0] + "–" + r[1], href: "#/kanji"};
+    }
+    return {day: d, skill: skill, title: "Kanji · Tuần " + (w + 1), href: "#/kanji"};
+  }
+  if(skill === "read"){
+    var rTot = readKinds(lv).length * 10, rr = planQuarters(rTot)[w];
+    return {day: d, skill: skill, title: "Đọc hiểu " + rr[0] + "–" + rr[1], href: "#/doc/" + lv};
+  }
+  if(skill === "vocab") return {day: d, skill: skill, title: "Từ vựng · Tuần " + (w + 1), href: "#/tuvung/" + lv};
+  if(skill === "grammar") return {day: d, skill: skill, title: "Ngữ pháp · Tuần " + (w + 1), href: "#/nguphap/" + lv};
+  if(skill === "listen") return {day: d, skill: skill, title: "Nghe · Tuần " + (w + 1), href: "#/nghe/" + lv};
+  if(skill === "review") return {day: d, skill: skill, title: "Ôn tập tuần " + (w + 1), href: "#/tuvung/" + lv};
+  return {day: d, skill: "exam", title: "Thi thử Test " + (w + 1), href: "#/thi/" + lv + "/" + (w + 1)};
+}
+/* Tên hiển thị cho lời chào — cùng cách lấy của thẻ user sidebar. */
+function skpGreetName(){
+  var u = null;
+  try{ u = (typeof webCurrentUser === "function") ? webCurrentUser() : null; }catch(e){ u = null; }
+  if(!u) return "bạn";
+  var m = null;
+  try{ m = (typeof rankMeData === "function") ? rankMeData() : null; }catch(e){ m = null; }
+  return (m && m.name) || u.name || u.email || "bạn";
+}
+function skpRefreshGreet(){
+  var el = document.getElementById("skpGreetName");
+  if(el) el.textContent = skpGreetName();
+}
+/* Vẽ thẻ Nhiệm vụ hôm nay từ payload doc missions (đã bóc envelope) + trạng thái.
+   status: "ok" (đọc được doc, kể cả doc chưa có -> 0/5) | "guest" | "error".
+   Hàm global để probe harness gọi trực tiếp với dữ liệu giả lập (không có
+   Firebase thật trong harness). */
+function skpRenderMissions(payload, status){
+  var countEl = document.getElementById("skpMissionCount");
+  var rowsEl = document.getElementById("skpMissionRows");
+  var noteEl = document.getElementById("skpMissionNote");
+  if(!countEl || !rowsEl) return;
+  var today = skpDayKey(new Date());
+  var done = {}, qProg = 0, kProg = 0, fresh = false;
+  if(status === "ok" && payload && payload.date === today){
+    fresh = true;
+    done = payload.done || {};
+    qProg = skpCounterTotal(payload.quizProg, 10);
+    kProg = skpCounterTotal(payload.kanjiProg, 12);
+  }
+  var n = 0;
+  SKP_MISSION_KEYS.forEach(function(k){ if(done[k]) n++; });
+  if(status === "error"){
+    countEl.textContent = "—/5";
+    if(noteEl) noteEl.textContent = "Chưa tải được nhiệm vụ — kiểm tra mạng rồi mở lại Trang chủ.";
+  } else if(status === "guest"){
+    countEl.textContent = "0/5";
+    if(noteEl) noteEl.textContent = "Đăng nhập để xem nhiệm vụ của bạn — nhiệm vụ hoàn thành trên app di động.";
+  } else {
+    countEl.textContent = n + "/5";
+    if(noteEl) noteEl.textContent = fresh
+      ? "Hoàn thành trên app di động để nhận EXP."
+      : "Chưa có nhiệm vụ hôm nay — mở app di động để bắt đầu ngày mới.";
+  }
+  var rotKind = skpRotKindFor(new Date());
+  var rows = SKP_MISSION_KEYS.map(function(k){
+    var def = k === "rot"
+      ? {title: SKP_ROT_DEFS[rotKind].title, sub: SKP_ROT_DEFS[rotKind].sub, reward: 30}
+      : SKP_MISSION_DEFS[k];
+    var isDone = !!done[k];
+    var sub = def.sub, state = "Chưa làm";
+    if(isDone){ state = "Đã xong ✓"; }
+    else if(k === "quiz" && qProg > 0){ sub = "Đã đúng " + qProg + "/10"; state = "Đang làm"; }
+    else if(k === "kanji" && kProg > 0){ sub = "Đã xong " + kProg + "/12"; state = "Đang làm"; }
+    return '<div class="skp-mrow' + (isDone ? " done" : "") + '"><span class="skp-mcheck">' + (isDone ? "✓" : "○") + '</span>' +
+      '<span class="skp-mmain"><b>' + esc(def.title) + '</b><span>' + esc(sub) + '</span></span>' +
+      '<span class="skp-mrew"><b>+' + def.reward + '</b><span>EXP</span></span>' +
+      '<span class="skp-mstate' + (isDone ? " done" : (state === "Đang làm" ? " doing" : "")) + '">' + state + '</span></div>';
+  }).join("");
+  rowsEl.innerHTML = rows;
+}
+/* Tải trạng thái nhiệm vụ: CHỈ ĐỌC 1 lần doc sync missions của chính tài khoản
+   (rules cho phép chủ tài khoản đọc). Không listener, không ghi gì. */
+function skpLoadMissions(){
+  var box = document.getElementById("skpMissions");
+  if(!box) return;
+  var u = null;
+  try{ u = (typeof webCurrentUser === "function") ? webCurrentUser() : null; }catch(e){ u = null; }
+  if(!u || !u.uid){ skpRenderMissions(null, "guest"); return; }
+  var db = null;
+  try{ db = (typeof skDb === "function") ? skDb() : null; }catch(e){ db = null; }
+  if(!db){ skpRenderMissions(null, "error"); return; }
+  try{
+    db.collection("kanji_progress").doc(u.uid).collection("sync").doc("missions").get().then(function(snap){
+      var env = (snap && snap.exists) ? snap.data() : null;
+      var payload = (env && env.data) ? env.data : null;
+      skpRenderMissions(payload, "ok");
+    }, function(){ skpRenderMissions(null, "error"); });
+  }catch(e){ skpRenderMissions(null, "error"); }
+}
+
 function renderHome(){
   var rTok = skBeginRender();
-  /* Sidebar Home (PC): chỉ trang Home dùng bố cục sidebar (màn hình rộng ≥1024px). */
-  document.body.classList.add("sk-home-sidebar");
+  /* Đánh dấu đang ở Home (topbar hiện ô tìm kiếm; sidebar ở mọi trang). */
+  document.body.classList.add("sk-is-home");
   /* Trạng thái cấp cũ còn sót (vd: vừa đăng xuất khi đang xem N4) thì về N5. */
   if(skLevelLocked(homeState.lv)){ homeState.lv = "N5"; homeState.shown = 110; }
   document.title = "SoraKanji — Bầu trời Kanji cho người Việt";
@@ -2892,82 +3182,87 @@ function renderHome(){
   /* <h1> duy nhất của trang chủ (m-02): ẩn khỏi layout như nhãn vNav ở
      mobile nhưng vẫn có cho SEO + trình đọc màn hình. */
   h += '<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">SoraKanji — Bầu trời Kanji cho người Việt</h1>';
-  h += '<div class="home-cols"><div>'; /* ===== CỘT TRÁI ===== */
-  /* Banner đếm ngược JLPT */
-  h += '<div class="jlpt-banner"><div class="jb-row"><div>' +
-    '<h2>Đếm ngược JLPT</h2>' +
-    '<p>Kỳ thi <b>' + fmtDate(examD) + '</b> — lộ trình ôn theo cấp mục tiêu của bạn</p>' +
-    '<div style="display:flex;align-items:baseline;gap:8px;margin-top:8px"><span class="jb-days">' + D + '</span><span style="font-weight:700">ngày nữa</span></div>' +
-    '<div style="margin-top:12px"><a class="jb-btn" href="#/thi" style="text-decoration:none;display:inline-block">Vào lộ trình ôn →</a></div>' +
-    '</div><img class="jb-mascot" src="mobile/assets/chibi.png" alt=""></div></div>';
-  h += '<div class="cd-card" id="cdCard" style="margin-top:16px">' + cdCardHTML() + "</div>";
+  /* Số liệu thật cho khối Lộ trình (cùng công thức trang #/canhan). */
+  var planLv = ["N5", "N4", "N3", "N2", "N1", "N1"][declaredLvW] || "N5";
+  var planDone = planDoneGet(planLv);
+  var planPct = Math.round(planDone / 30 * 100);
+  var totalKanji = LEVELS.reduce(function(n, lv){ return n + (byLv[lv] ? byLv[lv].length : 0); }, 0);
+  var resumeDay = planDone >= 30 ? null : skpDayInfo(planLv, planDone + 1);
+  var curDayNum = planDone >= 30 ? 30 : planDone + 1;
+  function skhTile(href, ic, name, sub){
+    return '<a class="skh-tile" href="' + href + '"><span class="skh-tic">' + ic + '</span><b>' + name + '</b><small>' + sub + '</small></a>';
+  }
+  var wd = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+  var nowD = new Date();
+  var dateLine = wd[nowD.getDay()] + ", ngày " + nowD.getDate() + " tháng " + (nowD.getMonth() + 1) + " năm " + nowD.getFullYear();
+  h += '<div class="skh-home">';
+  /* 1. Lời chào (tên thật từ state app; khách -> "bạn") */
+  h += '<div class="skp-greet"><h2>Chào <span id="skpGreetName">' + esc(skpGreetName()) + '</span>, học tiếp thôi!</h2><p>' + dateLine + '</p></div>';
+  /* 2. Hàng 2 cột: Đếm ngược JLPT | Nhiệm vụ hôm nay */
+  h += '<div class="skp-row">';
+  h += '<section class="skh-card"><h2>⏳ Đếm ngược JLPT</h2>' +
+    '<div class="skp-count-top"><div class="skp-days"><b>' + D + '</b><span>ngày nữa</span></div>' +
+    '<div><h3>Kỳ thi ' + fmtDate(examD) + '</h3><p>Mục tiêu của bạn: <b>' + homeState.target + '</b></p></div></div>' +
+    '<div class="cd-card" id="cdCard">' + cdCardHTML() + '</div></section>';
+  /* Nhiệm vụ hôm nay: khung chờ, bindHome gọi skpLoadMissions() điền số thật
+     (khách -> 0/5 ngay; đã đăng nhập -> đọc doc sync missions). */
+  h += '<section class="skh-card skp-missions" id="skpMissions"><h2>🎯 Nhiệm vụ hôm nay <span class="skp-mcount" id="skpMissionCount">…</span></h2>' +
+    '<div id="skpMissionRows"></div>' +
+    '<p class="skp-mnote" id="skpMissionNote">Đang tải…</p></section>';
+  h += '</div>';
+  /* 3. Thẻ đỏ Học tiếp — nhiệm vụ ngày hiện tại của lộ trình 30 ngày (thật) */
+  if(resumeDay){
+    h += '<div class="skp-resume"><div><h3>Học tiếp: ' + esc(resumeDay.title) + '</h3>' +
+      '<p>Lộ trình 30 ngày ' + planLv + ' · Ngày ' + resumeDay.day + '/30 · ' + PLAN_SKILL_NAMES[resumeDay.skill] + '</p></div>' +
+      '<a class="skp-cta" href="' + resumeDay.href + '">Học ngay →</a></div>';
+  } else {
+    h += '<div class="skp-resume"><div><h3>Bạn đã hoàn thành lộ trình 30 ngày ' + planLv + '!</h3>' +
+      '<p>Xem lại toàn bộ lộ trình hoặc khai cấp cao hơn để học tiếp.</p></div>' +
+      '<a class="skp-cta" href="#/canhan">Xem lộ trình →</a></div>';
+  }
+  /* 4. Lộ trình 30 ngày dạng lưới 10 cột (như bảng xem trước) */
+  h += '<section class="skh-card"><h2>🗺️ Lộ trình 30 ngày</h2>' +
+    '<div class="skh-road"><span>' + (planDone >= 30 ? "Đã hoàn thành lộ trình" : "Ngày <b>" + curDayNum + "/30</b> · " + planLv) + '</span><div class="skh-bar"><i style="width:' + planPct + '%"></i></div><b class="skh-pct">' + planPct + '%</b></div>' +
+    '<div class="skp-plangrid" id="skpPlanGrid">' +
+    (function(){
+      var cells = "";
+      for(var d = 1; d <= 30; d++){
+        var st = d <= planDone ? "done" : (d === curDayNum ? "cur" : "lock");
+        var info = skpDayInfo(planLv, d);
+        var label = "Ngày " + d + " · " + PLAN_SKILL_NAMES[info.skill] + " — " + info.title + (st === "done" ? " (Đã xong)" : st === "cur" ? " (Đang học)" : " (Chưa mở)");
+        cells += '<button type="button" class="skp-day ' + st + '" data-pday="' + (d - 1) + '" data-pst="' + st + '"' +
+          (st === "cur" ? ' data-href="' + info.href + '"' : "") + ' title="' + esc(label) + '" aria-label="' + esc(label) + '">' +
+          (st === "done" ? "✓" : d) + "</button>";
+      }
+      return cells;
+    })() +
+    '</div>' +
+    '<p style="margin:12px 0 0"><a href="#/canhan" style="font-weight:700">Xem lộ trình 30 ngày →</a></p></section>';
+  /* 5. Mục học — 12 thẻ link thật, KHÔNG thanh tiến độ (app không có số liệu thật từng mục).
+     Đấu trường: web không có route đấu trường — thẻ dẫn tới #/xephang (theo FAQ của app:
+     đấu trường là tính năng app di động). Tokutei: web không có trang thi Tokutei —
+     thẻ dẫn tới #/tuvung/cn (từ vựng chuyên ngành 14 ngành Tokutei). Ôn tập: số từ
+     đã lưu thật từ countSavedWords(). */
+  h += '<h2 class="skh-sect">Mục học</h2><div class="skh-tiles">' +
+    skhTile("#/kanji", "🏯", "Chữ Hán", totalKanji.toLocaleString("vi-VN") + " chữ · theo cấp JLPT") +
+    skhTile("#/tuvung", "👑", "Từ vựng", "10.605 từ · Minna no Nihongo") +
+    skhTile("#/nguphap", "文", "Ngữ pháp", "375 mẫu câu · N5–N1") +
+    skhTile("#/doc", "📖", "Đọc hiểu", "200 bài đọc · N5–N1") +
+    skhTile("#/nghe", "🎧", "Luyện nghe", "149 hội thoại · N5–N1") +
+    skhTile("#/shadowing", "🎙️", "Shadowing", "190 bài video · karaoke") +
+    skhTile("#/thi", "試", "Đề thi JLPT", "45 đề thi thử · đủ 5 cấp") +
+    skhTile("#/tuvung/cn", "🏗️", "Tokutei", "1.056 từ · 14 ngành") +
+    skhTile("#/xephang", "⚔️", "Đấu trường", "Xem hạng đấu · Đấu trên app di động") +
+    skhTile("#/xephang", "🏆", "Xếp hạng", "Bảng xếp hạng EXP") +
+    skhTile("#/daluu", "🔖", "Ôn tập", countSavedWords().toLocaleString("vi-VN") + " từ đã lưu") +
+    skhTile("#/congdong", "👥", "Cộng đồng", "Cộng đồng học viên") +
+    '</div>';
+  /* 6. Cài App (Tìm kiếm / Vẽ / lưới Kanji đã chuyển sang mục Kanji #/kanji). */
   h += '<button class="app-pill" id="appPill" type="button">📱 Cài App SoraKanji</button>';
-  /* Tìm kiếm Kanji */
-  h += '<h2 class="blk-title">Tìm kiếm Kanji</h2>' +
-    '<div class="search-row"><input id="kSearch" type="text" autocomplete="off" placeholder="Nhập từ khóa, tra cứu kanji, nghĩa, âm on/kun…">' +
-    '<button class="search-round" id="kSearchBtn" type="button" aria-label="Tìm kiếm">🔍</button></div>' +
-    '<div class="sres" id="kResults"></div>' +
-    '<p class="hint">Gõ một chữ Hán để mở ngay trang chi tiết, hoặc tra theo âm Hán Việt (vd: HỌC), nghĩa (vd: ăn), âm On/Kun.</p>';
-  /* Vẽ Kanji */
-  h += '<h2 class="blk-title">✎ Hoặc vẽ Kanji</h2>' +
-    '<div class="draw-wrap"><div class="draw-box"><canvas id="drawCanvas" width="264" height="264"></canvas></div>' +
-    '<div class="draw-side"><div class="draw-btns">' +
-    '<button class="b-clear" id="kcClear" type="button">Xóa</button>' +
-    '<button class="b-rec" id="kcRec" type="button">Nhận diện</button>' +
-    '<button class="b-re" id="kcRec2" type="button">Nhận diện lại</button></div>' +
-    '<div class="cands" id="kcCands"><span class="hint" style="margin:0">Ứng viên tự hiện ở đây khi bạn vẽ — bấm vào một chữ để xem chi tiết.</span></div>' +
-    "</div></div>";
-  /* Hàng số liệu */
-  h += '<div class="stat-row">' +
-    statMini("#ffe9d6", "var(--red-dark)", "漢", "2.138", "Kanji") +
-    statMini("#e3f1fd", "var(--blue-dark)", "語", "10.605", "Từ vựng") +
-    statMini("#e6f7ec", "var(--green)", "文", "375", "Ngữ pháp") +
-    statMini("#fdeef3", "#c2437e", "読", "200", "Bài đọc") +
-    "</div>";
-  h += "</div><div>"; /* ===== CỘT PHẢI ===== */
-  h += '<h2 class="blk-title" style="margin-top:0">Khám phá Kanji theo trình độ</h2>' +
-    '<div class="lv-row" id="lvPills">' +
-    LEVELS.map(function(lv){
-      return '<button class="pill' + (lv === homeState.lv ? " on" : "") + '" data-lv="' + lv + '">' + lv + (skLevelLocked(lv) ? " 🔒" : "") + "</button>";
-    }).join("") +
-    '<button class="pill' + (homeState.lv === "ALL" ? " on" : "") + '" data-lv="ALL">Tất cả' + (skIsPremium() ? "" : " 🔒") + "</button>" +
-    '<button class="rad-btn" id="radBtn" type="button">214 Bộ thủ</button></div>' +
-    '<div class="kg-title" id="kgTitle"></div>' +
-    '<div class="kscroll"><div class="kgrid wide" id="kGrid"></div></div>' +
-    '<div class="more-row"><button class="btn ghost" id="kMore"></button></div>';
-  h += "</div></div>";
-  /* Lộ trình học (flowchart) */
-  h += '<section class="blk"><div class="sec-head"><div><h2>Lộ trình học SoraKanji</h2>' +
-    '<p>Từ chữ Hán đầu tiên tới phòng thi JLPT — đi theo đúng thứ tự này.</p></div></div>' +
-    '<div class="flow">' +
-    '<a class="fnode" href="#/kanji">Sora Kanji</a><span class="farr">→</span>' +
-    '<a class="fnode" href="#/kanji">2.138 Kanji</a><span class="farr">→</span>' +
-    '<a class="fnode" href="#/tuvung">Sora Tango</a><span class="farr">→</span>' +
-    '<a class="fnode" href="#/nguphap">Sora Bunpo</a><span class="farr">→</span>' +
-    '<a class="fnode" href="#/nghe">Luyện nghe</a><span class="farr">→</span>' +
-    '<a class="fnode" href="#/doc">Đọc hiểu</a><span class="farr">→</span>' +
-    '<a class="fnode" href="#/thi">Sora JLPT</a></div></section>';
-  /* Thẻ giới thiệu */
-  h += '<section class="blk"><div class="sec-head"><div><h2>Các mục học</h2></div></div><div class="feat-grid">' +
-    featCard("#/thi", "試", "Sora JLPT", "Phòng thi đủ 5 cấp × Test 1–9: phần viết (N5 67 · N4 70 · N3 74 · N2 75 · N1 71 câu) + phần nghe, bấm giờ, chấm /180, xem lại từng câu có giải thích.", "Vào phòng thi") +
-    featCard("#/nguphap", "文", "Sora Bunpo", "375 mẫu ngữ pháp JLPT kèm cấu trúc, giải nghĩa, ví dụ có dịch và lưu ý dễ nhầm.", "Học ngữ pháp") +
-    featCard("#/tuvung", "語", "Sora Tango", "Từ vựng Minna no Nihongo N5–N2 kèm hình minh họa và flashcard, cộng 1.056 từ chuyên ngành Tokutei.", "Học từ vựng") +
-    featCard("#/trongam", "♪", "Trọng âm", "47 từ mẫu trọng âm chuẩn Tokyo có vẽ đường cao độ từng âm tiết, kèm các cặp từ đồng âm khác nhau ở trọng âm như 橋・箸・端.", "Học trọng âm") +
-    featCard("#/nghe", "聞", "Luyện nghe", "149 hội thoại có file nghe, transcript Nhật – Việt và câu hỏi kiểm tra theo từng cấp.", "Luyện nghe ngay") +
-    featCard("#/doc", "読", "Đọc hiểu", "200 bài đọc tự biên soạn đúng chuẩn từng cấp: bài ngắn, bài vừa, bài dài, tìm thông tin, hiểu ý chính.", "Đọc bài đầu tiên") +
-    "</div></section>";
-  /* Luyện thi */
-  h += '<section class="blk" style="padding-bottom:10px"><div class="sec-head"><div><h2>Luyện thi JLPT</h2>' +
-    '<p>Kỳ thi gần nhất: <b>' + fmtDate(examD) + '</b> — còn <b>' + D + ' ngày</b>. Mỗi cấp có đủ Test 1–9.</p></div></div>' +
-    '<div class="exam-grid">' +
-    LEVELS.map(function(lv){
-      var t = EXAM_TOTALS[lv];
-      return '<a class="exam-lv" href="#/thi/' + lv + '"><b>' + lv + "</b>" +
-        "<span>" + (t[0] + t[1]) + " câu · " + t[2] + " phút<br>9 đề viết + 9 đề nghe</span></a>";
-    }).join("") + "</div></section>";
+
+  h += '</div>';
   $app.innerHTML = h;
   bindHome();
-  renderKGrid();
 }
 function statMini(bg, color, glyph, num, label){
   return '<div class="stat-mini"><span class="ic jp" style="background:' + bg + ';color:' + color + '">' + glyph + '</span><span><b style="color:' + color + '">' + num + '</b><span>' + label + "</span></span></div>";
@@ -2979,7 +3274,7 @@ function featCard(href, glyph, title, desc, cta){
 }
 
 function cdCardHTML(){
-  var D = daysToJlpt(), examD = nextJlpt();
+  var D = daysToJlpt();
   var lv = homeState.target, T = LV_TOTALS[lv];
   var p1 = Math.max(1, Math.ceil(D * 0.6)), p2 = Math.max(1, Math.ceil(D * 0.25)), p3 = Math.max(0, D - p1 - p2);
   var phase = D <= p3 ? 3 : (D <= p3 + p2 ? 2 : 1);
@@ -2988,9 +3283,9 @@ function cdCardHTML(){
   if(T.kanji) today.push("<b>" + per(T.kanji) + ' kanji</b> <a href="#/kanji">mở lưới ' + lv + "</a>");
   if(T.vocab) today.push("<b>" + per(T.vocab) + ' từ</b> <a href="#/tuvung/' + lv + '">học từ vựng ' + lv + "</a>");
   if(T.grammar) today.push("<b>" + per(T.grammar) + ' mẫu</b> <a href="#/nguphap/' + lv + '">học ngữ pháp ' + lv + "</a>");
-  return '<div class="cd-top"><h2>Đếm ngược JLPT</h2><span class="cd-date">Kỳ thi ' + fmtDate(examD) + "</span></div>" +
-    '<div class="cd-big"><b>' + D + '</b><span>ngày nữa tới<br>kỳ thi JLPT</span></div>' +
-    '<div class="cd-lv"><span style="align-self:center;font-size:13px;color:var(--muted);font-weight:700">Cấp mục tiêu:</span>' +
+  /* Đếm ngược (tiêu đề + số ngày lớn) đã chuyển lên banner Home mới — hàm này
+     chỉ còn phần kế hoạch: chọn cấp mục tiêu + 3 giai đoạn + "Hôm nay nên học". */
+  return '<div class="cd-lv"><span style="align-self:center;font-size:13px;color:var(--muted);font-weight:700">Cấp mục tiêu:</span>' +
     LEVELS.map(function(l){ return '<button data-tlv="' + l + '"' + (l === lv ? ' class="on"' : "") + ">" + l + "</button>"; }).join("") + "</div>" +
     '<div class="cd-phases">' +
     cdPh(1, "Học mới", p1 + " ngày · 60%", phase) +
@@ -3038,46 +3333,41 @@ function bindHome(){
     homeState.target = b.getAttribute("data-tlv");
     cd.innerHTML = cdCardHTML();
   });
-  /* tab cấp kanji */
-  document.getElementById("lvPills").addEventListener("click", function(e){
-    var b = e.target.closest ? e.target.closest("[data-lv]") : null;
-    if(!b) return;
-    var lv = b.getAttribute("data-lv");
-    if(skLevelLocked(lv)){ skLockedPrompt(lv === "ALL" ? "Tất cả các cấp" : "Kanji " + lv); return; }
-    homeState.lv = lv; homeState.shown = 110;
-    this.querySelectorAll(".pill").forEach(function(p){ p.classList.toggle("on", p.getAttribute("data-lv") === homeState.lv); });
-    renderKGrid();
-  });
-  document.getElementById("kMore").addEventListener("click", function(){
-    homeState.shown += 110; renderKGrid();
-  });
-  /* tìm kiếm */
-  var inp = document.getElementById("kSearch"), res = document.getElementById("kResults");
-  function doSearch(){
-    var q = inp.value.trim();
-    if(!q){ res.innerHTML = ""; return; }
-    res.innerHTML = searchKanji(q).map(function(e){
-      return '<a class="kchip" href="#/kanji/' + encodeURIComponent(e.kanji) + '">' +
-        '<span class="kc jp">' + esc(e.kanji) + '</span><span class="kh">' + esc(e.hanViet || "") +
-        '</span><span class="km">' + esc(e.meaning || "") + "</span></a>";
-    }).join("") || '<span class="hint" style="margin:0">Không tìm thấy chữ nào khớp. Thử âm Hán Việt (vd: HỌC) hoặc nghĩa (vd: ăn).</span>';
-  }
+  /* Tab cấp / lưới Kanji đã chuyển sang mục Kanji (#/kanji) — xem renderKanjiPage. */
   var pillBox = document.getElementById("appPill");
   if(pillBox) pillBox.addEventListener("click", function(){
     location.hash = "#/caidat";
   });
-  var rad = document.getElementById("radBtn");
-  if(rad) rad.addEventListener("click", function(){
-    if(skLevelLocked("ALL")){ skLockedPrompt("Tất cả các cấp"); return; }
-    homeState.lv = "ALL"; homeState.shown = 110;
-    document.querySelectorAll("#lvPills .pill").forEach(function(p){ p.classList.toggle("on", p.getAttribute("data-lv") === "ALL"); });
-    renderKGrid();
-    var t = document.getElementById("kgTitle"); if(t) t.scrollIntoView({behavior:"smooth", block:"center"});
+  /* Nhiệm vụ hôm nay: tải trạng thái hoàn thành thật từ doc sync missions. */
+  skpLoadMissions();
+  /* Lưới lộ trình 30 ngày: ngày đang học -> tới thẳng nhiệm vụ của ngày đó;
+     ngày đã xong -> về trang Cá nhân xem lộ trình; ngày chưa mở -> không làm gì. */
+  var pg = document.getElementById("skpPlanGrid");
+  if(pg) pg.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-pday]") : null;
+    if(!b) return;
+    var st = b.getAttribute("data-pst");
+    if(st === "lock") return;
+    if(st === "cur"){ location.hash = b.getAttribute("data-href") || "#/canhan"; return; }
+    location.hash = "#/canhan";
   });
-  inp.addEventListener("input", doSearch);
-  inp.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doSearch(); } });
-  document.getElementById("kSearchBtn").addEventListener("click", doSearch);
-  initDraw();
+  /* Đăng nhập/đăng xuất ngay trên Home: auth listener của app không vẽ lại Home
+     nên kiểm tra 2s/lần (cùng nhịp với thẻ user ở sidebar) để cập nhật lời chào
+     + nhiệm vụ khi tài khoản đổi; tự dọn khi rời Home. */
+  try{ if(window.skpAuthTimer) clearInterval(window.skpAuthTimer); }catch(e){}
+  var skpLastUid = "";
+  try{ var _u0 = webCurrentUser(); skpLastUid = (_u0 && _u0.uid) || ""; }catch(e){}
+  window.skpAuthTimer = setInterval(function(){
+    if(!document.body.classList.contains("sk-is-home")){
+      try{ clearInterval(window.skpAuthTimer); }catch(e){}
+      window.skpAuthTimer = null;
+      return;
+    }
+    var u = null;
+    try{ u = webCurrentUser(); }catch(e){}
+    var uid = (u && u.uid) || "";
+    if(uid !== skpLastUid){ skpLastUid = uid; skpRefreshGreet(); skpLoadMissions(); }
+  }, 2000);
 }
 
 function searchKanji(q){
@@ -3526,7 +3816,7 @@ function chipsHTML(arr){
 <script>
 /* ================= TRANG KANJI (lưới theo cấp) ================= */
 var kanjiPageState = {lv: "N5", shown: 120};
-function renderKanjiPage(lv){
+function renderKanjiPage(lv, q){
   var rTok = skBeginRender();
   document.body.classList.remove("plain");
   if(lv && LEVELS.indexOf(lv) >= 0){ kanjiPageState.lv = lv; kanjiPageState.shown = 120; }
@@ -3534,20 +3824,35 @@ function renderKanjiPage(lv){
   if(skLevelLocked(kanjiPageState.lv)){ kanjiPageState.lv = "N5"; kanjiPageState.shown = 120; }
   document.title = "Kanji " + kanjiPageState.lv + " — Tra cứu Kanji | SoraKanji";
   var byLv = kanjiByLevel();
+  /* Bố cục 2 cột như bản cũ: trái Tìm kiếm + Vẽ, phải lưới theo cấp. */
   $app.innerHTML =
     '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Kanji</div>' +
     "<h1>Kanji theo trình độ JLPT</h1>" +
     "<p>2.138 chữ Hán từ N5 tới N1. Bấm vào một chữ để xem chiết tự, thứ tự nét viết, âm đọc, mẹo nhớ và từ vựng liên quan.</p></div>" +
-    '<div class="card" style="margin:18px 0 22px"><div class="searchbox">' +
-    '<input id="kpSearch" type="text" autocomplete="off" placeholder="Tìm theo chữ Hán, Hán Việt, nghĩa hoặc âm đọc…">' +
-    '<button class="btn" id="kpSearchBtn">Tìm</button></div><div class="sres" id="kpResults"></div></div>' +
+    '<div class="home-cols"><div>' +
+    '<section class="skh-card"><h2>🔍 Tìm kiếm Kanji</h2>' +
+    '<div class="search-row"><input id="kSearch" type="text" autocomplete="off" placeholder="Nhập từ khóa, tra cứu kanji, nghĩa, âm on/kun…">' +
+    '<button class="search-round" id="kSearchBtn" type="button" aria-label="Tìm kiếm">🔍</button></div>' +
+    '<div class="sres" id="kResults"></div>' +
+    '<p class="hint">Gõ một chữ Hán để mở ngay trang chi tiết, hoặc tra theo âm Hán Việt (vd: HỌC), nghĩa (vd: ăn), âm On/Kun.</p></section>' +
+    '<section class="skh-card"><h2>✎ Hoặc vẽ Kanji</h2>' +
+    '<div class="draw-wrap"><div class="draw-box"><canvas id="drawCanvas" width="264" height="264"></canvas></div>' +
+    '<div class="draw-side"><div class="draw-btns">' +
+    '<button class="b-clear" id="kcClear" type="button">Xóa</button>' +
+    '<button class="b-rec" id="kcRec" type="button">Nhận diện</button>' +
+    '<button class="b-re" id="kcRec2" type="button">Nhận diện lại</button></div>' +
+    '<div class="cands" id="kcCands"><span class="hint" style="margin:0">Ứng viên tự hiện ở đây khi bạn vẽ — bấm vào một chữ để xem chi tiết.</span></div>' +
+    "</div></div></section>" +
+    '</div><div>' +
+    '<section class="skh-card"><h2>Khám phá Kanji theo trình độ</h2>' +
     '<div class="pills" id="kpPills">' +
     LEVELS.map(function(l){
       return '<button class="pill' + (l === kanjiPageState.lv ? " on" : "") + '" data-lv="' + l + '">' + l + (skLevelLocked(l) ? " 🔒" : "") +
         "<small>" + byLv[l].length + " chữ</small></button>";
     }).join("") + "</div>" +
     '<div class="kgrid" id="kpGrid" style="padding-bottom:6px"></div>' +
-    '<div class="more-row" style="padding-bottom:34px"><button class="btn ghost" id="kpMore"></button></div>';
+    '<div class="more-row" style="padding-bottom:34px"><button class="btn ghost" id="kpMore"></button></div></section>' +
+    '</div></div>';
   function draw(){
     var list = byLv[kanjiPageState.lv];
     document.getElementById("kpGrid").innerHTML = list.slice(0, kanjiPageState.shown).map(kanjiCell).join("");
@@ -3568,7 +3873,7 @@ function renderKanjiPage(lv){
     draw();
   });
   document.getElementById("kpMore").addEventListener("click", function(){ kanjiPageState.shown += 120; draw(); });
-  var inp = document.getElementById("kpSearch"), res = document.getElementById("kpResults");
+  var inp = document.getElementById("kSearch"), res = document.getElementById("kResults");
   function doSearch(){
     var q = inp.value.trim();
     if(!q){ res.innerHTML = ""; return; }
@@ -3576,10 +3881,14 @@ function renderKanjiPage(lv){
       return '<a class="kchip" href="#/kanji/' + encodeURIComponent(e.kanji) + '">' +
         '<span class="kc jp">' + esc(e.kanji) + '</span><span class="kh">' + esc(e.hanViet || "") +
         '</span><span class="km">' + esc(e.meaning || "") + "</span></a>";
-    }).join("") || '<span class="hint" style="margin:0">Không tìm thấy chữ nào khớp.</span>';
+    }).join("") || '<span class="hint" style="margin:0">Không tìm thấy chữ nào khớp. Thử âm Hán Việt (vd: HỌC) hoặc nghĩa (vd: ăn).</span>';
   }
   inp.addEventListener("input", doSearch);
-  document.getElementById("kpSearchBtn").addEventListener("click", doSearch);
+  inp.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); doSearch(); } });
+  document.getElementById("kSearchBtn").addEventListener("click", doSearch);
+  initDraw();
+  /* Từ khóa theo link (?q=...): điền vào ô tìm rồi chạy tìm kiếm ngay. */
+  if(q){ inp.value = q; doSearch(); }
 }
 
 /* ================= TỪ VỰNG ================= */
@@ -12506,7 +12815,7 @@ function renderAdminDashboard(){
 }
 
 /* ================= ROUTER ================= */
-var NAV_MAP = {"": "kanji", kanji: "kanji", tuvung: "tango", nguphap: "bunpo", thi: "jlpt", shadowing: "shadowing",
+var NAV_MAP = {"": "home", kanji: "kanji", tuvung: "tango", nguphap: "bunpo", thi: "jlpt", shadowing: "shadowing",
   canhan: "canhan", daluu: "daluu", trondoi: "trondoi", trongam: "bunpo",
   xephang: "xephang", congdong: "congdong", nangcap: "nangcap", caidat: "caidat"};
 /* Trang bai video shadowing (#/nghe/video/...) van sang muc Shadowing o vNav;
@@ -12527,7 +12836,7 @@ function setNav(seg){
 /* Đồng bộ lại tab đang chọn theo đúng hash hiện tại — chạy cả khi route() bị
    lớp chặn trùng bỏ qua, để vùng xám luôn nằm ở mục của trang đang mở.
    Các trang không có tab riêng trong cột dọc (nghe, doc, chuyenam…) thì
-   không tab nào sáng; tab Sora Kanji chỉ sáng ở trang chủ / mục Kanji. */
+   không tab nào sáng; tab Trang chủ sáng ở trang chủ, tab Sora Kanji sáng ở mục Kanji. */
 function syncNavToHash(){
   var raw = (location.hash || "#/").replace(/^#/, "");
   var parts = raw.split("?")[0].split("/").filter(Boolean);
@@ -12536,8 +12845,9 @@ function syncNavToHash(){
 var _skLastRouted = null; /* hash mà route() xử lý gần nhất — cho lớp điều hướng dự phòng bên dưới */
 function route(){
   _skLastRouted = location.hash || "#/";
-  /* Sidebar Home (PC): mặc định tắt ở mọi route — renderHome() bật lại. */
-  document.body.classList.remove("sk-home-sidebar");
+  /* Sidebar PC (mọi trang): class sk-home-sidebar gắn vĩnh viễn ở controller;
+     chỉ gỡ class sk-is-home (đánh dấu đang ở Home — topbar chỉ hiện ô tìm ở Home). */
+  document.body.classList.remove("sk-is-home");
   /* Modal (showModal) sống ngoài #app nên không tự mất khi chuyển trang —
      dọn ở đây để modal cũ không phủ lên trang mới (m-21). */
   var _mr = document.getElementById("modalRoot");
@@ -12571,7 +12881,7 @@ function route(){
   if(!seg){ renderHome(); return; }
   if(seg === "kanji"){
     if(segs[1]) renderKanjiDetail(segs[1]);
-    else renderKanjiPage(query.lv);
+    else renderKanjiPage(query.lv, query.q);
     return;
   }
   if(seg === "tuvung"){
@@ -14377,9 +14687,10 @@ function initSkSync(){
 })();
 </script>
 <script>
-/* ================= Sidebar Home (PC) — điều khiển =================
-   Chỉ chạy trên trang Home bản web, màn hình rộng (CSS @media ≥1024px quyết định
-   hiển thị; JS chỉ điều khiển trạng thái + dữ liệu, không tự quyết hiển thị).
+/* ================= Sidebar trái (PC) — điều khiển =================
+   Chạy trên MỌI trang bản web, màn hình rộng (user đính chính 23:25 21/11: sidebar
+   dùng chung mọi trang; CSS @media ≥1024px quyết định hiển thị; JS chỉ điều khiển
+   trạng thái + dữ liệu, không tự quyết hiển thị).
    - Nút "Thu gọn" dưới sidebar: mở rộng 240px ↔ thanh icon 72px.
    - Nút kiểu ChatGPT ở góc trái topbar: ẩn hẳn sidebar ↔ mở lại. Nút NÀY nằm
      trong topbar (ngoài sidebar) nên LUÔN hiện để mở lại được — không giấu nút mở.
@@ -14387,8 +14698,9 @@ function initSkSync(){
    Móc vào hệ thống thật của app (không tự chế):
    - Theme: chấm nền bấm hộ đúng nút [data-theme-opt] trong header (đang ẩn) để
      chạy đúng handler paint+save của app.
-   - Tìm kiếm: ô topbar ghi vào #kSearch thật của Home + phát sự kiện input để
-     chạy đúng doSearch (kết quả hiện ở #kResults thật).
+   - Tìm kiếm: ô topbar ghi vào #kSearch thật của mục Kanji + phát sự kiện input
+     để chạy đúng doSearch (kết quả hiện ở #kResults thật); ở Home bấm Enter thì
+     chuyển tới #/kanji?q=... để tìm ở đó.
    - Chuông: DI CHUYỂN nút chuông thật (#notifBtn + panel + badge) vào topbar khi
      ở Home màn hình rộng, trả lại header khi rời Home / thu hẹp màn hình —
      listener giữ nguyên vì di chuyển đúng node DOM.
@@ -14402,8 +14714,8 @@ function initSkSync(){
   function lsSet(k, v){ try{ window.localStorage.setItem(k, v); }catch(e){} }
   function $(id){ return document.getElementById(id); }
   function isWide(){ try{ return window.matchMedia("(min-width:1024px)").matches; }catch(e){ return window.innerWidth >= 1024; } }
-  function isHome(){ return document.body.classList.contains("sk-home-sidebar"); }
-  function onHomeWide(){ return isHome() && isWide(); }
+  function isHome(){ return document.body.classList.contains("sk-is-home"); }
+  function onSidebarWide(){ return isWide(); }
   function escHtml(x){ return String(x == null ? "" : x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 
   /* --- Trạng thái thu gọn / ẩn hẳn --- */
@@ -14451,7 +14763,7 @@ function initSkSync(){
     }catch(e){}
   }
 
-  /* --- Tìm kiếm topbar → ô tìm Kanji thật của Home --- */
+  /* --- Tìm kiếm topbar → ô tìm Kanji thật của mục Kanji --- */
   var searchTimer = null;
   var mirroredInp = null;
   function homeSearchEls(){ return { inp: $("kSearch"), res: $("kResults") }; }
@@ -14484,11 +14796,16 @@ function initSkSync(){
       }, 350);
     });
     top.addEventListener("keydown", function(e){
-      if(e.key === "Enter"){ e.preventDefault(); topbarSearch(top.value, true); }
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      if(homeSearchEls().inp){ topbarSearch(top.value, true); return; }
+      /* Đang ở Home (không có #kSearch): sang mục Kanji kèm từ khóa để tìm ở đó. */
+      var q = top.value.trim();
+      location.hash = "#/kanji" + (q ? "?q=" + encodeURIComponent(q) : "");
     });
   }
-  function mirrorHomeSearch(){
-    /* Gõ ở ô tìm Home thì ô topbar đồng bộ theo. Mỗi lần renderHome tạo
+  function mirrorKanjiSearch(){
+    /* Gõ ở ô tìm Kanji thì ô topbar đồng bộ theo. Mỗi lần renderKanjiPage tạo
        #kSearch mới nên gắn lại ở đây; chỉ gắn 1 lần cho mỗi element. */
     var h = homeSearchEls();
     if(!h.inp || mirroredInp === h.inp) return;
@@ -14499,7 +14816,7 @@ function initSkSync(){
     });
   }
 
-  /* --- Chuông: di chuyển nút chuông thật vào topbar khi ở Home màn hình rộng --- */
+  /* --- Chuông: di chuyển nút chuông thật vào topbar khi sidebar bật (màn hình rộng) --- */
   var notifMoved = false, notifHome = null, notifNext = null;
   function syncNotif(){
     var btn = $("notifBtn");
@@ -14507,7 +14824,7 @@ function initSkSync(){
     if(!wrap) return;
     if(notifHome === null){ notifHome = wrap.parentNode; notifNext = wrap.nextSibling; }
     var slot = $("skNotifSlot");
-    if(onHomeWide()){
+    if(onSidebarWide()){
       if(!notifMoved && slot){ slot.appendChild(wrap); notifMoved = true; }
     } else if(notifMoved && notifHome){
       notifHome.insertBefore(wrap, notifNext);
@@ -14522,6 +14839,10 @@ function initSkSync(){
     var html = "";
     var u = null;
     try{ u = (typeof webCurrentUser === "function") ? webCurrentUser() : null; }catch(e){ u = null; }
+    /* Nut Dang nhap tren topbar an/hien theo dung trang thai nay — goi o day
+       (focus/interval/mutation deu chay refreshUserCard) de cap nhat ngay khi
+       dang nhap/dang xuat, khong cho doi route. */
+    refreshTopbarLogin();
     if(!u){
       html = '<button class="sk-login" id="skSbLogin" type="button"><span class="ic">👤</span><span class="lbl">Đăng nhập</span></button>';
     } else {
@@ -14541,7 +14862,8 @@ function initSkSync(){
       }
       html = '<a class="sk-user-link" href="#/canhan">' + av +
         '<span class="meta"><b>' + escHtml(name) + '</b>' +
-        (sub ? '<small>' + escHtml(sub) + '</small>' : '') + '</span></a>';
+        (sub ? '<small>' + escHtml(sub) + '</small>' : '') + '</span></a>' +
+        '<button class="sk-logout" id="skSbLogout" type="button"><span class="ic">⏻</span><span class="lbl">Đăng xuất</span></button>';
     }
     if(html === lastUserHTML) return;
     lastUserHTML = html;
@@ -14549,6 +14871,28 @@ function initSkSync(){
     var lb = $("skSbLogin");
     if(lb) lb.addEventListener("click", function(){
       if(typeof openAuthModal === "function") openAuthModal();
+    });
+    var lo = $("skSbLogout");
+    if(lo) lo.addEventListener("click", function(){
+      /* Bấm hộ nút Đăng xuất thật trong header (đang ẩn) để chạy đúng luồng
+         dừng session + signOut của app. Nếu nút thật chưa có (header chưa kịp
+         vẽ lại sau khi đăng nhập), vẽ lại header rồi bấm — vẫn đúng luồng thật.
+         Chỉ khi không còn cách nào mới signOut trực tiếp (dự phòng). */
+      var real = document.getElementById("logoutBtn");
+      if(!real && typeof renderHeaderUser === "function"){
+        try{ renderHeaderUser(); }catch(e){}
+        real = document.getElementById("logoutBtn");
+      }
+      if(real){ real.click(); return; }
+      try{ if(typeof skSessionStop === "function") skSessionStop(); }catch(e){}
+      var auth = null;
+      try{ auth = (typeof skAuth === "function") ? skAuth() : null; }catch(e){}
+      if(auth){ auth.signOut().catch(function(){}); }
+      else{
+        window.SK_USER = null;
+        try{ if(window.SKSync) SKSync.clearLocalForLogout(); }catch(e){}
+        try{ if(typeof renderHeaderUser === "function") renderHeaderUser(); }catch(e){}
+      }
     });
   }
 
@@ -14576,24 +14920,71 @@ function initSkSync(){
     }catch(e){ seg = ""; }
     var key = "";
     try{ key = (typeof NAV_MAP !== "undefined" && NAV_MAP) ? (NAV_MAP[seg] || "") : ""; }catch(e){ key = ""; }
-    if(!key) key = (seg === "" ? "kanji" : seg);
+    if(!key) key = (seg === "" ? "home" : seg);
     var links = document.querySelectorAll("#skNav a[data-nav]");
     for(var i = 0; i < links.length; i++){
       links[i].classList.toggle("active", links[i].getAttribute("data-nav") === key);
     }
   }
 
+
+  /* --- Nút app + mạng xã hội: di chuyển 4 mục thật trong header vào chân sidebar
+       khi sidebar bật (màn hình rộng), trả lại header khi thu hẹp — listener giữ
+       nguyên vì di chuyển đúng node DOM. Trả theo thứ tự NGƯỢC để nextSibling
+       vẫn đúng vị trí gốc. --- */
+  var appsMoved = false, appsRec = null;
+  function syncHeaderApps(){
+    var ids = ["socialTiktok", "socialFacebook", "appAndroidBtn", "appIosBtn"];
+    if(appsRec === null){
+      appsRec = [];
+      for(var i = 0; i < ids.length; i++){
+        var el = $(ids[i]);
+        appsRec.push(el ? {el: el, home: el.parentNode, next: el.nextSibling} : null);
+      }
+    }
+    var slot = $("skSbApps");
+    if(onSidebarWide()){
+      if(!appsMoved && slot){
+        for(var j = 0; j < appsRec.length; j++){
+          if(appsRec[j]) slot.appendChild(appsRec[j].el);
+        }
+        appsMoved = true;
+      }
+    } else if(appsMoved){
+      for(var k = appsRec.length - 1; k >= 0; k--){
+        var r = appsRec[k];
+        if(!r || !r.home) continue;
+        try{ r.home.insertBefore(r.el, r.next); }catch(e){ r.home.appendChild(r.el); }
+      }
+      appsMoved = false;
+    }
+  }
+
+  /* --- Nút Đăng nhập trên topbar: chỉ hiện khi CHƯA đăng nhập, để khi sidebar
+       đang ẩn hẳn (không thấy thẻ user) vẫn có chỗ đăng nhập trên desktop. --- */
+  function refreshTopbarLogin(){
+    var tl = $("skTopLogin"); if(!tl) return;
+    var loggedIn = false;
+    try{ loggedIn = !!(typeof webCurrentUser === "function" && webCurrentUser()); }catch(e){}
+    tl.hidden = loggedIn;
+  }
+
   /* --- Đồng bộ tổng (gọi khi đổi route / đổi cỡ màn hình / khởi động) --- */
   function sync(){
     syncNotif();
+    syncHeaderApps();
+    refreshTopbarLogin();
     refreshUserCard();
     refreshSaleTag();
-    mirrorHomeSearch();
+    mirrorKanjiSearch();
     paintDots();
     syncActiveNav();
   }
 
   function init(){
+    /* Sidebar dùng chung MỌI trang (user đính chính 23:25 21/11) — gắn class
+       vĩnh viễn ở đây; CSS @media ≥1024px quyết định hiển thị, màn hẹp vẫn cũ. */
+    document.body.classList.add("sk-home-sidebar");
     applyState();
     wireThemeDots();
     wireSearch();
@@ -14609,8 +15000,14 @@ function initSkSync(){
       lsSet(LS_HID, h ? "1" : "0");
       updateToggleBtn();
     });
-    /* route()/renderHome() gắn-gỡ class sk-home-sidebar trên body — theo dõi để
-       đồng bộ chuông/thẻ người dùng/tìm kiếm mỗi lần đổi trang. */
+    var tl = $("skTopLogin");
+    if(tl) tl.addEventListener("click", function(){
+      if(typeof openAuthModal === "function") openAuthModal();
+    });
+    /* Đổi route (hashchange — kể cả trang phụ ↔ trang phụ, khi class body không
+       đổi) hoặc gắn-gỡ class sk-is-home — đồng bộ chuông/thẻ user/tìm kiếm/mục
+       đang chọn mỗi lần đổi trang. */
+    window.addEventListener("hashchange", sync);
     try{
       new MutationObserver(function(muts){
         for(var i = 0; i < muts.length; i++){
