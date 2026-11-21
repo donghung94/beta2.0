@@ -5108,11 +5108,6 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="pathbtn" id="pathChangeBtn" style="margin-left:auto;" aria-label="Đổi cấp đang học — mở phần chọn cấp">⇄ Đổi</button>
       </div>
       <div class="detailbody">
-        <h2 class="secttl" id="planSectTitle">Lộ trình 30 ngày</h2>
-        <div class="pathprog" id="pathProgCard"></div>
-        <div class="pathmap" id="pathMap"></div>
-        <p class="pmap-hint" id="pathMapHint">Bấm vào ngày đang học (hoặc ngày đã xong) để xem chi tiết nhiệm vụ và học ngay.</p>
-        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:10px 2px 0;">Mỗi tuần đi đủ 7 ngày theo nhịp <b style="color:var(--ink);">Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử</b>, lặp lại 4 tuần; ngày 29 tổng ôn, ngày 30 thi thử tổng kết. Học xong ngày nào thì bấm <b style="color:var(--ink);">Đánh dấu đã xong</b> ở ngày đó để mở khóa ngày tiếp theo.</p>
         <h2 class="secttl" style="margin-top:2px;">Bạn đã đạt trình độ nào?</h2>
         <p style="font-size:13px; color:var(--ink-2); line-height:1.55; margin:0 2px 12px;">Chọn cấp JLPT bạn <b style="color:var(--ink);">đã đạt được</b> (khai một lần sau khi đăng ký, đổi lại lúc nào cũng được). App bỏ qua phần bạn đã biết và soạn lộ trình bắt đầu từ cấp độ tương ứng — chính tuyến vẫn là thang Tân binh → Tướng đã chốt của SoraKanji.</p>
         <div class="lvgrid" id="lvGrid">
@@ -5124,6 +5119,11 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <button class="lvpick" data-plv="5"><b>N1</b><span>Đã xong N1 · nâng cao</span></button>
         </div>
         <p id="pathSummary" style="font-size:13.5px; font-weight:700; color:var(--amber); margin:12px 2px 0; line-height:1.5; min-height:20px;"></p>
+        <h2 class="secttl" id="planSectTitle">Lộ trình 30 ngày</h2>
+        <div class="pathprog" id="pathProgCard"></div>
+        <div class="pathmap" id="pathMap"></div>
+        <p class="pmap-hint" id="pathMapHint">Bấm vào ngày đang học (hoặc ngày đã xong) để xem chi tiết nhiệm vụ và học ngay.</p>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:10px 2px 0;">Mỗi tuần đi đủ 7 ngày theo nhịp <b style="color:var(--ink);">Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử</b>, lặp lại 4 tuần; ngày 29 tổng ôn, ngày 30 thi thử tổng kết. Học xong ngày nào thì bấm <b style="color:var(--ink);">Đánh dấu đã xong</b> ở ngày đó để mở khóa ngày tiếp theo.</p>
         <h2 class="secttl">Chính tuyến của bạn</h2>
         <div id="pathRoadmap"></div>
         <button class="cta" id="pathApply" style="margin-top:14px;">Lưu lộ trình này</button>
@@ -10900,11 +10900,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("kanaHira").addEventListener("click", function(){ setKanaMode(0); });
   document.getElementById("kanaKata").addEventListener("click", function(){ setKanaMode(1); });
   function kanaFlashDeck(){
+    /* say = chữ kana để TTS đọc tiếng Nhật: reading là romaji ("a", "ka")
+       nên trình phát đọc say trước (say || reading || word); mặt sau thẻ
+       vẫn hiện romaji như cũ. */
     var words = [];
     [KANA, KANA_D, KANA_Y].forEach(function(rows){
       rows.forEach(function(c){
         if(!c) return;
-        words.push({word:c[kanaMode], reading:c[2], hanViet:"", meaning:"", ex:null, img:null, lv:null, from:""});
+        words.push({word:c[kanaMode], reading:c[2], say:c[kanaMode], hanViet:"", meaning:"", ex:null, img:null, lv:null, from:""});
       });
     });
     return words;
@@ -15954,10 +15957,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("wvFlashCount").hidden = done;
     document.getElementById("wvFlashDone").hidden = !done;
     /* Hết bài thì ẩn cả nút thêm vào ôn tập + ô câu ví dụ + khung góp ý (không còn “từ đang hiện”) */
+    /* m-A1: deck kana không lưu vào Ôn tập (thẻ chỉ có chữ + romaji,
+       nghĩa trống) và không có câu ví dụ — ẩn nút lưu vàng + panel
+       ví dụ khi đang ở deck kana, kể cả khi chưa học hết bài. */
     var fAddWrap = document.getElementById("wvFAddWrap");
-    if(fAddWrap) fAddWrap.style.display = done ? "none" : "";
+    if(fAddWrap) fAddWrap.style.display = (done || kanaDeck) ? "none" : "";
     var fExPanel = document.getElementById("wvFEx");
-    if(fExPanel) fExPanel.style.display = done ? "none" : "";
+    if(fExPanel) fExPanel.style.display = (done || kanaDeck) ? "none" : "";
     var fFbPanel = document.getElementById("wvFFb");
     if(fFbPanel) fFbPanel.style.display = done ? "none" : "";
     if(done){
@@ -15988,6 +15994,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       '<div class="fmean">' + esc(v.meaning) + '</div>';
     var svBtn = document.getElementById("wvFlashSave");
     if(svBtn){
+      /* m-A1: nút lưu ở header là cùng 1 hành động lưu thẻ — ẩn luôn
+         khi deck kana (chỉ ẩn #wvFAddWrap thì chưa đủ). */
+      svBtn.style.display = kanaDeck ? "none" : "";
       var svOn = isWordSaved(v.word, v.reading);
       svBtn.classList.toggle("on", svOn);
       var svTx = document.getElementById("wvFlashSaveTx");
@@ -16024,7 +16033,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("wvFlashSpeak").addEventListener("click", function(ev){
     ev.stopPropagation();
     if(apOn) return; /* đang tự động phát: máy đang đọc theo lịch */
-    if(wvFIdx < wvDeck.length) speakJP(wvDeck[wvFIdx].reading || wvDeck[wvFIdx].word, 0.85);
+    if(wvFIdx < wvDeck.length) speakJP(wvDeck[wvFIdx].say || wvDeck[wvFIdx].reading || wvDeck[wvFIdx].word, 0.85);
   });
   document.getElementById("wvFlashOk").addEventListener("click", function(){ nextWvFlash(true); });
   document.getElementById("wvFlashNo").addEventListener("click", function(){ nextWvFlash(false); });
@@ -16183,7 +16192,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function apSpeakOnce(gen, done){
     var v = wvDeck[wvFIdx];
-    var text = v ? (v.reading || v.word) : "";
+    var text = v ? (v.say || v.reading || v.word) : "";
     var fired = false;
     function fin(){
       if(fired) return;
@@ -18642,8 +18651,11 @@ function furiHTML(text){
   var PLAN_GLYPHS = { kanji:"漢", vocab:"語", grammar:"文", listen:"聞", read:"読", review:"復", exam:"試" };
   var planDoneMem = {}; /* dự phòng khi localStorage không dùng được */
 
+  function planCourseLvFor(lvIdx){
+    return ["N5", "N4", "N3", "N2", "N1", "N1"][lvIdx] || "N5";
+  }
   function planCourseLv(){
-    return ["N5", "N4", "N3", "N2", "N1", "N1"][appliedLv] || "N5";
+    return planCourseLvFor(appliedLv);
   }
   function planDoneGet(lv){
     var n = planDoneMem[lv];
@@ -18773,14 +18785,18 @@ function furiHTML(text){
     }
   }
   var planSheetDay = 0; /* ngày đang mở trong panel chi tiết */
+  var planSheetLv = null; /* cấp của ngày đang mở trong panel: pathLv khi mở từ
+     overlay Lộ trình, appliedLv khi mở từ bản đồ Home — để nút Học ngay /
+     Đánh dấu đã xong dùng đúng cấp, không chạm tiến độ cấp khác */
   function closePlanSheet(){
     document.getElementById("planScrim").classList.remove("open");
     var sh = document.getElementById("planSheet");
     sh.classList.remove("open");
     sh.setAttribute("aria-hidden", "true");
   }
-  function openPlanDay(d){
-    var lv = planCourseLv();
+  function openPlanDay(d, lv){
+    lv = lv || planCourseLv();
+    planSheetLv = lv;
     var done = planDoneGet(lv);
     var task = planDays(lv)[d - 1];
     if(!task) return;
@@ -18850,13 +18866,13 @@ function furiHTML(text){
     el.querySelectorAll(".pnode").forEach(function(b){
       b.addEventListener("click", function(){
         var day = parseInt(b.getAttribute("data-pday"), 10);
-        var curDone = planDoneGet(planCourseLv());
+        var curDone = planDoneGet(lv);
         if(day > curDone + 1){
           if(hintEl) hintEl.textContent =
             "Ngày " + day + " đang khóa — hoàn thành ngày trước để mở khóa.";
           return;
         }
-        openPlanDay(day);
+        openPlanDay(day, lv);
       });
     });
   }
@@ -18869,10 +18885,13 @@ function furiHTML(text){
     renderRoadInto(document.getElementById("pathMapHome"), lv, planDoneGet(lv), planDays(lv), null);
   }
   function renderPathMap(){
-    var lv = planCourseLv();
+    /* Overlay chạy theo cấp ĐANG CHỌN ở bảng khai (pathLv) — bấm cấp nào
+       lộ trình dưới đổi ngay sang cấp đó, không chờ bấm Lưu. Home
+       (renderPathMapHome) vẫn theo cấp ĐÃ LƯU (appliedLv). */
+    var lv = planCourseLvFor(pathLv);
     var done = planDoneGet(lv);
     var days = planDays(lv);
-    var r = REALMS[appliedLv];
+    var r = REALMS[pathLv];
     document.getElementById("pathTitle").textContent = "Lộ trình · " + lv;
     document.getElementById("planSectTitle").textContent = "Lộ trình 30 ngày · " + lv;
     document.getElementById("pathProgCard").innerHTML =
@@ -18961,7 +18980,7 @@ function furiHTML(text){
   document.getElementById("planSheetClose").addEventListener("click", closePlanSheet);
   document.getElementById("planScrim").addEventListener("click", closePlanSheet);
   document.getElementById("planSheetGo").addEventListener("click", function(){
-    var lv = planCourseLv();
+    var lv = planSheetLv || planCourseLv();
     var task = planDays(lv)[planSheetDay - 1];
     closePlanSheet();
     if(!task) return;
@@ -18969,7 +18988,7 @@ function furiHTML(text){
     openPlanTask(task, lv);
   });
   document.getElementById("planSheetDone").addEventListener("click", function(){
-    var lv = planCourseLv();
+    var lv = planSheetLv || planCourseLv();
     var done = planDoneGet(lv);
     if(planSheetDay !== done + 1) return; /* chỉ ngày đang học mới đánh dấu xong được */
     planDoneSet(lv, done + 1);
@@ -19189,7 +19208,10 @@ function furiHTML(text){
   }
 
   /* ---------- Kinh tế app: EXP · Xu · Điểm đóng góp ---------- */
-  var state = { tuvi:1240, linh:320, cong:145, duelLeft:3, wins:3, losses:1 };
+  /* Seed ví tài khoản mới (USER QUYẾT 21/11 14:10): EXP 0 (Tân binh),
+     Xu 50 (quà tặng), điểm đóng góp 0, thắng/thua 0 — duelLeft giữ 3
+     (hạn mức đấu/ngày). Chỉ áp khi chưa có dữ liệu lưu. */
+  var state = { tuvi:0, linh:50, cong:0, duelLeft:3, wins:0, losses:0 };
   /* Cửa hàng (Lỗi 1): vật phẩm đã mua + khung đang đeo — lưu vào sk_progress
      (trường shop) cùng ví, khôi phục ở loadProgress. Khóa món = data-frame
      (khung) hoặc data-name (vật phẩm khác). */
@@ -22273,10 +22295,12 @@ function furiHTML(text){
 
   /* ---------------- cấu hình ---------------- */
 
-  // Số dư gốc khi cài app lần đầu (hồ sơ mẫu trong code hiện tại).
-  // Đồng bộ lần đầu dùng (local - SEED) làm hoạt động ròng của máy đó.
-  // Nếu app đổi số dư khởi đầu thì PHẢI đổi cả hằng này.
-  var SYNC_SEED = { tuvi: 1240, linh: 320, cong: 145, duelLeft: 3, wins: 3, losses: 1 };
+  // Số dư gốc khi cài app lần đầu (USER QUYẾT 21/11 14:10: EXP 0,
+  // Xu 50 quà tặng, điểm đóng góp 0, thắng/thua 0; duelLeft giữ 3 —
+  // hạn mức đấu/ngày). Đồng bộ lần đầu dùng (local - SEED) làm hoạt
+  // động ròng của máy đó. Nếu app đổi số dư khởi đầu thì PHẢI đổi
+  // cả hằng này.
+  var SYNC_SEED = { tuvi: 0, linh: 50, cong: 0, duelLeft: 3, wins: 0, losses: 0 };
   var WALLET_FIELDS = ["tuvi", "linh", "cong", "duelLeft", "wins", "losses"];
 
   var MISSION_KEYS = ["kanji", "quiz", "review", "exam", "rot"];
