@@ -12682,11 +12682,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      lật lên trên câu. Đang phát mà câu hiện tại đổi thì bong bóng bám theo */
   function sv2ShowExp(i){
     if(!SV2_SUBS[i] || !SV2_SUBS[i].exp){ sv2HideExp(); return; }
-    sv2ExpIdx = i; sv2ExpMode = "sent";
+    /* K-9 (mirror guard m-22 ở sv2WordTap): bong bóng giải thích đã bị gỡ
+       (rời trang/bài) trước khi tick chạy — bỏ qua luôn, không throw ở
+       textContent/parentNode bên dưới. */
     var exp = document.getElementById("sv2Exp");
-    document.getElementById("sv2ExpTitle").textContent = "GIẢI THÍCH · CÂU " + (i + 1);
-    document.getElementById("sv2ExpText").textContent = SV2_SUBS[i].exp;
+    var _sv2T = document.getElementById("sv2ExpTitle");
+    var _sv2X = document.getElementById("sv2ExpText");
     var box = document.getElementById("sv2Subs");
+    if(!exp || !_sv2T || !_sv2X || !box) return;
+    sv2ExpIdx = i; sv2ExpMode = "sent";
+    _sv2T.textContent = "GIẢI THÍCH · CÂU " + (i + 1);
+    _sv2X.textContent = SV2_SUBS[i].exp;
     if(exp.parentNode !== box) box.appendChild(exp);
     exp.classList.add("show");
     sv2PlaceExp();
@@ -20713,6 +20719,8 @@ function furiHTML(text){
       "auth/network-request-failed": "Không kết nối được mạng — kiểm tra kết nối rồi thử lại.",
       "auth/popup-closed-by-user": "Bạn đã đóng cửa sổ đăng nhập Google trước khi hoàn tất.",
       "auth/cancelled-popup-request": "Cửa sổ đăng nhập Google đang mở rồi — bạn hoàn tất ở cửa sổ đó nhé.",
+      "auth/operation-not-supported-in-this-environment": "Trình duyệt này chưa hỗ trợ cách đăng nhập này — bạn thử trình duyệt khác nhé.",
+      "auth/popup-blocked": "Trình duyệt đã chặn cửa sổ đăng nhập — bạn cho phép cửa sổ bật lên rồi thử lại nhé.",
       "auth/redirect-operation-pending": "Đang chờ kết quả đăng nhập Google — bạn đợi giây lát rồi thử lại nhé.",
       "auth/unauthorized-domain": "Trang này chưa được cấp phép đăng nhập Google — bạn thử trên sorakanji.com sau khi app được đẩy lên nhé.",
       "auth/operation-not-allowed": "Cách đăng nhập này chưa được bật — bạn thử cách khác nhé.",
@@ -20903,26 +20911,55 @@ function furiHTML(text){
     var auth = skAuth();
     closeLogin();
     /* Two-session: dừng heartbeat/listener + xóa doc sessions/{deviceId}
-       của thiết bị này (fire-and-forget, song song với đồng bộ cuối — không
-       await, không kéo dài timeout 2s). Chỉ xóa khi thiết bị này đang giữ
-       session; doc của thiết bị khác không bị đụng tới. */
-    try{ skSessionLogout(); }catch(_){}
+       của thiết bị này. W21-2-mobile: signOut phải chờ xóa doc xong —
+       delete gửi sau khi token mất sẽ bị rules từ chối và doc ở lại tới
+       5 phút, chặn máy thứ 3 đăng nhập. Promise của skSessionLogout luôn
+       resolve (fail-open) nên đăng xuất không bao giờ kẹt; timeout 2s
+       của đồng bộ cuối vẫn giới hạn tổng thời gian chờ. Chỉ xóa khi thiết
+       bị này đang giữ session; doc của thiết bị khác không bị đụng tới. */
+    var skSessLogoutP = null;
+    try{ skSessLogoutP = skSessionLogout(); }catch(_){ skSessLogoutP = null; }
     function doSignOut(){
       if(auth){ auth.signOut().catch(function(){}); }
       else{ applyAuthUser(null); } /* SDK chưa nạp được: dọn phiên cục bộ */
     }
     /* Đồng bộ lần cuối trước khi đăng xuất (tối đa 2 giây) để không mất
-       thay đổi chưa kịp đẩy — xong (hoặc hết giờ) thì đăng xuất như cũ. */
+       thay đổi chưa kịp đẩy — xong (hoặc hết giờ) thì đăng xuất như cũ.
+       W21-2-mobile: signOut chỉ chạy khi CẢ đồng bộ cuối VÀ xóa doc
+       session đều xong (hoặc hết 2s). */
     if(auth && typeof SKSync !== "undefined"){
       var skLogoutDone = false;
       var skLogoutTimer = setTimeout(function(){
         if(!skLogoutDone){ skLogoutDone = true; doSignOut(); }
       }, 2000);
+      var skLogoutFinish = function(){
+        if(!skLogoutDone){ skLogoutDone = true; clearTimeout(skLogoutTimer); doSignOut(); }
+      };
       try{
-        SKSync.syncAll().then(function(){
-          if(!skLogoutDone){ skLogoutDone = true; clearTimeout(skLogoutTimer); doSignOut(); }
-        });
-      }catch(_){ clearTimeout(skLogoutTimer); doSignOut(); }
+        var skLogoutWaits = [SKSync.syncAll()];
+        if(skSessLogoutP && typeof skSessLogoutP.then === "function") skLogoutWaits.push(skSessLogoutP);
+        /* Chờ cả hai settle (kể cả khi một bên reject) rồi mới signOut;
+           timeout 2s vẫn là giới hạn trên. */
+        Promise.all(skLogoutWaits.map(function(p){
+          return Promise.resolve(p).then(function(){}, function(){});
+        })).then(skLogoutFinish);
+      }catch(_){
+        /* syncAll ném đồng bộ: vẫn chờ xóa doc session xong (timeout 2s
+           vẫn chạy) rồi mới signOut. */
+        if(skSessLogoutP && typeof skSessLogoutP.then === "function") skSessLogoutP.then(skLogoutFinish, skLogoutFinish);
+        else skLogoutFinish();
+      }
+    }else if(skSessLogoutP && typeof skSessLogoutP.then === "function"){
+      /* Không có SKSync (SDK chưa nạp): vẫn chờ xóa doc xong rồi mới
+         signOut, tối đa 2s — promise luôn resolve nên không kẹt. */
+      var skLogoutDone2 = false;
+      var skLogoutTimer2 = setTimeout(function(){
+        if(!skLogoutDone2){ skLogoutDone2 = true; doSignOut(); }
+      }, 2000);
+      var skLogoutFinish2 = function(){
+        if(!skLogoutDone2){ skLogoutDone2 = true; clearTimeout(skLogoutTimer2); doSignOut(); }
+      };
+      skSessLogoutP.then(skLogoutFinish2, skLogoutFinish2);
     }else{ doSignOut(); }
   }
   /* ---------- Xóa tài khoản (Apple bắt buộc, Guideline 5.1.1) ----------
@@ -21302,8 +21339,18 @@ function furiHTML(text){
         if(!skSessRef) return;
         /* Doc đã bị xóa → re-check thay vì ghi (KHÔNG hồi sinh doc đã xóa). */
         if(!skSessDocExists){ skSessionRecheck(); return; }
-        var p = skSessRef.set({lastSeen: skSessionServerTs()}, {merge: true});
-        if(p && p.catch) p.catch(function(){});
+        /* M-RES (21/11): heartbeat KHONG BAO GIO duoc tao doc — dung update()
+           thay cho set(..., {merge:true}): update() fail NOT_FOUND khi doc da
+           bi xoa (vd claim cua may khac xoa doc stale trong luc may nay
+           offline, snapshot xoa chua toi kip) -> chay re-check nhu nhanh
+           doc-mat hien co. set() se hoi sinh doc va pha gioi han 2 may. */
+        var p = skSessRef.update({lastSeen: skSessionServerTs()});
+        if(p && p.catch) p.catch(function(err){
+          /* Chi NOT_FOUND moi la doc-mat: danh dau mat + re-check (kick neu
+             con may khac fresh, khong con ai thi claim lai). Loi khac (mat
+             mang...) bo qua nhu cu — tick sau thu lai. */
+          if(err && err.code === "not-found"){ skSessDocExists = false; skSessionRecheck(); }
+        });
       }else{
         if(skSessClaiming) return;
         var auth = null, u = null;
@@ -21326,34 +21373,41 @@ function furiHTML(text){
     skSessClaiming = false;
   }
   /* Đăng xuất: dừng local + xóa doc sessions/{deviceId} CỦA MÌNH
-     (fire-and-forget). CHỈ xóa khi thiết bị này đang giữ session — thiết bị
+     (trả Promise — doLogout chờ xóa xong mới signOut, xem W21-2-mobile).
+     CHỈ xóa khi thiết bị này đang giữ session — thiết bị
      fail-open (chưa giữ) mà xóa mù sẽ giết session của thiết bị khác. Doc
      của thiết bị khác KHÔNG bị đụng tới. Admin không tạo session nên không xóa.
      m-28: xác minh deviceId trên server trước khi xóa (cờ held trong RAM có
      thể đã stale sau khi thiết bị khác claim). */
+  /* Tra ve Promise resolve khi xoa doc xong (hoac khi khong co gi de xoa /
+     loi — LUON resolve, khong bao gio reject, de dang xuat khong ket).
+     doLogout cho promise nay truoc khi signOut (W21-2-mobile): delete gui
+     sau khi token mat se bi rules tu choi va doc o lai toi 5 phut. */
   function skSessionLogout(){
     var uid = skSessUid, held = skSessHeld, myId = skSessDeviceId;
     skSessionStop();
-    if(!held || !uid || !myId) return;
-    if(skSessionIsAdmin(uid)) return;
+    if(!held || !uid || !myId) return Promise.resolve();
+    if(skSessionIsAdmin(uid)) return Promise.resolve();
     try{
       var db = exRepDb();
-      if(!db) return;
+      if(!db) return Promise.resolve();
       var ref = db.collection("kanji_progress").doc(uid).collection("sessions").doc(myId);
       /* m-28: chỉ xóa khi doc vẫn thuộc thiết bị này — cờ held trong RAM có
          thể đã stale (thiết bị khác đã claim trong lúc máy này offline, xem
          M-08); xóa mù sẽ giết session hợp lệ của thiết bị đang giữ. Đọc thất
          bại (mất mạng) thì thôi — doc tự stale sau 5 phút. */
       var g = ref.get();
-      if(g && g.then) g.then(function(snap){
+      if(g && g.then) return g.then(function(snap){
         try{
           if(snap && snap.exists && (snap.data() || {}).deviceId === myId){
-            var p = ref.delete();
-            if(p && p.catch) p.catch(function(){});
+            /* Tra promise cua delete de caller cho xoa xong moi signOut. */
+            return ref.delete();
           }
         }catch(_){}
-      }).catch(function(){});
-    }catch(_){}
+        return null;
+      }).catch(function(){ return null; });
+      return Promise.resolve();
+    }catch(_){ return Promise.resolve(); }
   }
   function skSessionShowOverlay(kind, d){
     var ov = document.getElementById("skSessionOverlay");
