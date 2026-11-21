@@ -2138,6 +2138,125 @@ html[data-theme="toi"] body{background-image:
   .wbadges{display:none}
 }
 </style>
+<style id="sk-home-sidebar">
+/* ================= Sidebar Home (PC) — CHỈ trang Home, màn hình rộng ≥1024px =================
+   Bố cục sidebar trái cho trang chủ bản web (user duyệt mockup 21/11/2026, lệnh áp 22:57).
+   Cơ chế: route() gỡ class sk-home-sidebar, renderHome() gắn lại — các trang phụ không bao
+   giờ có class này nên giữ nguyên 100% bố cục cũ (header cố định + #vNav).
+   Trạng thái sidebar (lưu localStorage):
+     sk-sb-collapsed — thu còn thanh icon 72px (nút "Thu gọn" dưới sidebar)
+     sk-sb-hidden — ẩn hẳn sidebar (nút kiểu ChatGPT ở góc trái topbar; nút LUÔN hiện
+       trong topbar để mở lại được — KHÔNG giấu nút mở).
+   Mặc định (không có class / màn hình <1024px): sidebar + topbar ẩn hẳn. */
+#skSidebar, #skHomeTopbar{ display:none; }
+@media (min-width:1024px){
+  /* --- Khung bố cục khi ở Home --- */
+  body.sk-home-sidebar header.site{ display:none; }
+  body.sk-home-sidebar #vNav{ display:none; }
+  body.sk-home-sidebar .shell{ padding-top:0; }
+  body.sk-home-sidebar .content{ margin-left:240px; }
+  body.sk-home-sidebar footer.site{ margin-left:240px; }
+  body.sk-home-sidebar #skSidebar{ display:flex; }
+  body.sk-home-sidebar #skHomeTopbar{ display:flex; }
+  body.sk-home-sidebar #kResults{ scroll-margin-top:72px; }
+  /* Thu gọn: thanh icon 72px */
+  body.sk-home-sidebar.sk-sb-collapsed .content{ margin-left:72px; }
+  body.sk-home-sidebar.sk-sb-collapsed footer.site{ margin-left:72px; }
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar{ width:72px; }
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-bn,
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-grp,
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-nav .lbl,
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-tag,
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-user .meta,
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-login .lbl,
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-collapse .lbl{ display:none; }
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-brand{ justify-content:center; padding:16px 0 12px; }
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-nav a{ justify-content:center; padding:11px 0; }
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-user-link{ justify-content:center; background:none; padding:4px; }
+  body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-collapse{ font-size:16px; }
+  /* Ẩn hẳn: sidebar biến mất, nội dung giãn full chiều rộng (nút toggle vẫn ở topbar) */
+  body.sk-home-sidebar.sk-sb-hidden #skSidebar{ display:none; }
+  body.sk-home-sidebar.sk-sb-hidden .content{ margin-left:0; }
+  body.sk-home-sidebar.sk-sb-hidden footer.site{ margin-left:0; }
+  /* --- Sidebar --- */
+  #skSidebar{
+    position:fixed; top:0; left:0; bottom:0; width:240px; z-index:80;
+    flex-direction:column; background:var(--card); border-right:1px solid var(--line);
+  }
+  #skSidebar .sk-brand{
+    display:flex; align-items:center; gap:10px; padding:16px 18px 14px;
+    border-bottom:1px solid var(--line); color:var(--ink); text-decoration:none; flex:none;
+  }
+  #skSidebar .sk-brand img{ width:38px; height:38px; border-radius:10px; object-fit:cover; border:1px solid var(--line); flex:none; }
+  #skSidebar .sk-brand b{ font-size:19px; font-weight:800; color:var(--ink); line-height:1.15; }
+  #skSidebar .sk-brand b i{ font-style:normal; color:var(--red); }
+  #skSidebar .sk-brand small{ display:block; font-size:11px; color:var(--muted); font-weight:500; }
+  #skSidebar .sk-nav{ flex:1; overflow-y:auto; padding:12px 10px; }
+  #skSidebar .sk-grp{ font-size:11px; letter-spacing:.08em; color:var(--muted); padding:12px 12px 6px; text-transform:uppercase; font-weight:700; }
+  #skSidebar .sk-nav a{
+    display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px;
+    color:var(--ink); text-decoration:none; font-weight:500; font-size:15px;
+  }
+  #skSidebar .sk-nav a:hover{ background:var(--bg); text-decoration:none; }
+  #skSidebar .sk-nav a .vi{ width:24px; text-align:center; font-size:17px; flex:none; font-family:"Noto Sans JP",sans-serif; }
+  #skSidebar .sk-nav a.active{ background:var(--red-soft); color:var(--red); font-weight:700; }
+  #skSidebar .sk-nav a.hot{ color:var(--red); }
+  #skSidebar .sk-tag{ margin-left:auto; background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; flex:none; }
+  #skSidebar .sk-foot{ border-top:1px solid var(--line); padding:12px; flex:none; }
+  #skSidebar .sk-user-link{
+    display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px;
+    background:var(--bg); color:var(--ink); text-decoration:none;
+  }
+  #skSidebar .sk-user-link:hover{ text-decoration:none; }
+  #skSidebar .sk-user .av{
+    width:34px; height:34px; border-radius:50%; background:var(--red); color:#fff;
+    font-weight:700; font-size:15px; display:flex; align-items:center; justify-content:center;
+    overflow:hidden; flex:none;
+  }
+  #skSidebar .sk-user .av img{ width:100%; height:100%; object-fit:cover; }
+  #skSidebar .sk-user .meta b{ font-size:14px; display:block; line-height:1.3; }
+  #skSidebar .sk-user .meta small{ font-size:12px; color:var(--red); font-weight:600; display:block; line-height:1.3; }
+  #skSidebar .sk-login{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    padding:9px; border:1.5px solid var(--line-strong); background:var(--card); color:var(--ink);
+    border-radius:10px; font:inherit; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  #skSidebar .sk-collapse{
+    margin-top:10px; width:100%; padding:8px; border:1px solid var(--line); background:var(--card);
+    border-radius:10px; color:var(--muted); cursor:pointer; font:inherit; font-size:13px;
+  }
+  #skSidebar .sk-collapse:hover{ color:var(--ink); border-color:var(--line-strong); }
+  /* --- Topbar gọn (thay header ở Home) --- */
+  #skHomeTopbar{
+    position:sticky; top:0; z-index:60; align-items:center; gap:12px;
+    padding:11px 26px; background:var(--bg); border-bottom:1px solid var(--line);
+  }
+  #skHomeTopbar .sk-toggle{
+    width:34px; height:34px; flex:none; padding:0; border-radius:9px;
+    border:1.5px solid var(--line-strong); background:var(--card); color:var(--ink);
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  #skHomeTopbar .sk-toggle:hover{ border-color:var(--red); color:var(--red); }
+  #skHomeTopbar .sk-search{
+    flex:1; max-width:420px; display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--line-strong); border-radius:24px; padding:7px 16px;
+  }
+  #skHomeTopbar .sk-search:focus-within{ border-color:var(--red); }
+  #skHomeTopbar .sk-search input{
+    flex:1; min-width:0; border:0; outline:0; background:none; color:var(--ink);
+    font:inherit; font-size:14px;
+  }
+  #skHomeTopbar .sk-search input::placeholder{ color:var(--muted); }
+  #skHomeTopbar .sk-spacer{ flex:1; }
+  #skHomeTopbar .sk-dots{ display:flex; gap:6px; flex:none; }
+  #skHomeTopbar .sk-dots button{
+    width:22px; height:22px; border-radius:50%; border:2px solid var(--card);
+    box-shadow:0 0 0 1px #ccc; cursor:pointer; padding:0;
+  }
+  #skHomeTopbar .sk-dots button.on{ box-shadow:0 0 0 2px var(--red); }
+  #skHomeTopbar #skNotifSlot{ flex:none; display:flex; align-items:center; }
+}
+</style>
 </head>
 <body>
 <header class="site">
@@ -2170,6 +2289,32 @@ html[data-theme="toi"] body{background-image:
     </div>
   </div>
 </header>
+<aside id="skSidebar" aria-label="Menu chính (trang chủ)">
+  <a class="sk-brand" href="#/">
+    <img src="mobile/assets/logo.png" alt="Logo SoraKanji">
+    <span class="sk-bn"><b>Sora<i>Kanji</i></b><small>Bầu trời Kanji cho người Việt</small></span>
+  </a>
+  <nav class="sk-nav" id="skNav">
+    <div class="sk-grp">Học</div>
+    <a href="#/" data-nav="kanji" class="active"><span class="vi">🏯</span><span class="lbl">Sora Kanji</span></a>
+    <a href="#/tuvung" data-nav="tango"><span class="vi">👑</span><span class="lbl">Từ vựng</span></a>
+    <a href="#/nguphap" data-nav="bunpo"><span class="vi">文</span><span class="lbl">Ngữ pháp</span></a>
+    <a href="#/thi" data-nav="jlpt"><span class="vi">試</span><span class="lbl">Luyện JLPT</span></a>
+    <a href="#/shadowing" data-nav="shadowing"><span class="vi">🎙️</span><span class="lbl">Shadowing</span></a>
+    <div class="sk-grp">Cá nhân</div>
+    <a href="#/canhan" data-nav="canhan"><span class="vi">👤</span><span class="lbl">Lộ trình cá nhân</span></a>
+    <a href="#/daluu" data-nav="daluu"><span class="vi">🔖</span><span class="lbl">Mục đã lưu</span></a>
+    <a href="#/xephang" data-nav="xephang"><span class="vi">🏆</span><span class="lbl">Xếp hạng</span></a>
+    <a href="#/congdong" data-nav="congdong"><span class="vi">👥</span><span class="lbl">Cộng đồng</span></a>
+    <div class="sk-grp">Khác</div>
+    <a href="#/trondoi" data-nav="trondoi" class="hot"><span class="vi">💎</span><span class="lbl">Nâng Premium</span><span class="sk-tag" id="skSaleTag" hidden></span></a>
+    <a href="#/caidat" data-nav="caidat"><span class="vi">⚙️</span><span class="lbl">Cài đặt</span></a>
+  </nav>
+  <div class="sk-foot">
+    <div class="sk-user" id="skSbUser"></div>
+    <button class="sk-collapse" id="skSbCollapse" type="button">« <span class="lbl">Thu gọn</span></button>
+  </div>
+</aside>
 <aside class="vnav" id="vNav" aria-label="Menu chính">
   <a href="#/" data-nav="kanji"><span class="vi">🏯</span><span>Sora Kanji</span></a>
   <a href="#/tuvung" data-nav="tango"><span class="vi">👑</span><span>Từ vựng</span></a>
@@ -2185,6 +2330,19 @@ html[data-theme="toi"] body{background-image:
 </aside>
 <div class="shell">
   <div class="content">
+<div id="skHomeTopbar">
+  <button class="sk-toggle" id="skSbToggle" type="button" aria-label="Ẩn/hiện thanh bên trái" aria-pressed="false" title="Ẩn thanh bên trái"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9.5" y1="4" x2="9.5" y2="20"/></svg></button>
+  <div class="sk-search"><span aria-hidden="true">🔍</span><input id="skSbSearch" type="text" autocomplete="off" placeholder="Nhập từ khóa, tra cứu kanji, nghĩa, âm on/kun…" aria-label="Tìm kiếm Kanji"></div>
+  <div class="sk-spacer"></div>
+  <div class="sk-dots" id="skThemeDots">
+    <button type="button" data-sk-theme="sang" style="background:#f7f5f1" title="Sáng" aria-label="Nền Sáng"></button>
+    <button type="button" data-sk-theme="toi" style="background:#14161b" title="Tối" aria-label="Nền Tối"></button>
+    <button type="button" data-sk-theme="sakura" style="background:#fdf2f4" title="Sakura" aria-label="Nền Sakura"></button>
+    <button type="button" data-sk-theme="matcha" style="background:#f2f5ec" title="Matcha" aria-label="Nền Matcha"></button>
+    <button type="button" data-sk-theme="xanh" style="background:#eef2f7" title="Xanh dương" aria-label="Nền Xanh dương"></button>
+  </div>
+  <div id="skNotifSlot"></div>
+</div>
 <main id="app"></main>
 <div id="modalRoot"></div>
 <div id="skSessionRoot"></div>
@@ -2722,6 +2880,8 @@ var homeState = {lv: "N5", shown: 110, target: "N5", kcInit: false};
 
 function renderHome(){
   var rTok = skBeginRender();
+  /* Sidebar Home (PC): chỉ trang Home dùng bố cục sidebar (màn hình rộng ≥1024px). */
+  document.body.classList.add("sk-home-sidebar");
   /* Trạng thái cấp cũ còn sót (vd: vừa đăng xuất khi đang xem N4) thì về N5. */
   if(skLevelLocked(homeState.lv)){ homeState.lv = "N5"; homeState.shown = 110; }
   document.title = "SoraKanji — Bầu trời Kanji cho người Việt";
@@ -12376,6 +12536,8 @@ function syncNavToHash(){
 var _skLastRouted = null; /* hash mà route() xử lý gần nhất — cho lớp điều hướng dự phòng bên dưới */
 function route(){
   _skLastRouted = location.hash || "#/";
+  /* Sidebar Home (PC): mặc định tắt ở mọi route — renderHome() bật lại. */
+  document.body.classList.remove("sk-home-sidebar");
   /* Modal (showModal) sống ngoài #app nên không tự mất khi chuyển trang —
      dọn ở đây để modal cũ không phủ lên trang mới (m-21). */
   var _mr = document.getElementById("modalRoot");
@@ -14212,6 +14374,271 @@ function initSkSync(){
   initWebAuth();
   initSora();
   route();
+})();
+</script>
+<script>
+/* ================= Sidebar Home (PC) — điều khiển =================
+   Chỉ chạy trên trang Home bản web, màn hình rộng (CSS @media ≥1024px quyết định
+   hiển thị; JS chỉ điều khiển trạng thái + dữ liệu, không tự quyết hiển thị).
+   - Nút "Thu gọn" dưới sidebar: mở rộng 240px ↔ thanh icon 72px.
+   - Nút kiểu ChatGPT ở góc trái topbar: ẩn hẳn sidebar ↔ mở lại. Nút NÀY nằm
+     trong topbar (ngoài sidebar) nên LUÔN hiện để mở lại được — không giấu nút mở.
+   Trạng thái lưu localStorage: sk_sidebar_collapsed / sk_sidebar_hidden.
+   Móc vào hệ thống thật của app (không tự chế):
+   - Theme: chấm nền bấm hộ đúng nút [data-theme-opt] trong header (đang ẩn) để
+     chạy đúng handler paint+save của app.
+   - Tìm kiếm: ô topbar ghi vào #kSearch thật của Home + phát sự kiện input để
+     chạy đúng doSearch (kết quả hiện ở #kResults thật).
+   - Chuông: DI CHUYỂN nút chuông thật (#notifBtn + panel + badge) vào topbar khi
+     ở Home màn hình rộng, trả lại header khi rời Home / thu hẹp màn hình —
+     listener giữ nguyên vì di chuyển đúng node DOM.
+   - Thẻ người dùng: rankMeData()/webCurrentUser(); chưa đăng nhập thì hiện nút
+     Đăng nhập gọi openAuthModal(). Không hardcode tên/số liệu. */
+(function(){
+  "use strict";
+  var LS_COL = "sk_sidebar_collapsed";
+  var LS_HID = "sk_sidebar_hidden";
+  function lsGet(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k, v){ try{ window.localStorage.setItem(k, v); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function isWide(){ try{ return window.matchMedia("(min-width:1024px)").matches; }catch(e){ return window.innerWidth >= 1024; } }
+  function isHome(){ return document.body.classList.contains("sk-home-sidebar"); }
+  function onHomeWide(){ return isHome() && isWide(); }
+  function escHtml(x){ return String(x == null ? "" : x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+  /* --- Trạng thái thu gọn / ẩn hẳn --- */
+  function updateCollapseBtn(){
+    var b = $("skSbCollapse"); if(!b) return;
+    var c = document.body.classList.contains("sk-sb-collapsed");
+    b.innerHTML = c ? "»" : "« <span class=\"lbl\">Thu gọn</span>";
+    b.setAttribute("aria-label", c ? "Mở rộng thanh bên" : "Thu gọn thanh bên");
+  }
+  function updateToggleBtn(){
+    var b = $("skSbToggle"); if(!b) return;
+    var h = document.body.classList.contains("sk-sb-hidden");
+    b.setAttribute("aria-pressed", h ? "true" : "false");
+    b.setAttribute("title", h ? "Mở thanh bên trái" : "Ẩn thanh bên trái");
+  }
+  function applyState(){
+    document.body.classList.toggle("sk-sb-collapsed", lsGet(LS_COL) === "1");
+    document.body.classList.toggle("sk-sb-hidden", lsGet(LS_HID) === "1");
+    updateCollapseBtn();
+    updateToggleBtn();
+  }
+
+  /* --- Chấm chọn nền: bấm hộ nút theme thật --- */
+  function paintDots(){
+    var cur = "sang";
+    try{ cur = document.documentElement.getAttribute("data-theme") || "sang"; }catch(e){}
+    var dots = document.querySelectorAll("#skThemeDots [data-sk-theme]");
+    for(var i = 0; i < dots.length; i++){
+      dots[i].classList.toggle("on", dots[i].getAttribute("data-sk-theme") === cur);
+    }
+  }
+  function wireThemeDots(){
+    var dots = document.querySelectorAll("#skThemeDots [data-sk-theme]");
+    for(var i = 0; i < dots.length; i++){
+      dots[i].addEventListener("click", function(){
+        var t = this.getAttribute("data-sk-theme");
+        var real = document.querySelector('[data-theme-opt="' + t + '"]');
+        if(real) real.click();
+        paintDots();
+      });
+    }
+    /* Đồng bộ khi theme đổi từ nơi khác (nút header ở trang phụ). */
+    try{
+      new MutationObserver(paintDots).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+    }catch(e){}
+  }
+
+  /* --- Tìm kiếm topbar → ô tìm Kanji thật của Home --- */
+  var searchTimer = null;
+  var mirroredInp = null;
+  function homeSearchEls(){ return { inp: $("kSearch"), res: $("kResults") }; }
+  function topbarSearch(q, scrollNow){
+    var h = homeSearchEls();
+    if(!h.inp) return;
+    if(h.inp.value !== q){
+      h.inp.value = q;
+      try{ h.inp.dispatchEvent(new Event("input", {bubbles: true})); }catch(e){
+        var b = $("kSearchBtn"); if(b) b.click();
+      }
+    }
+    if(scrollNow && q && h.res){
+      try{ h.res.scrollIntoView({behavior: "smooth", block: "start"}); }catch(e){ h.res.scrollIntoView(); }
+    }
+  }
+  function wireSearch(){
+    var top = $("skSbSearch"); if(!top) return;
+    top.addEventListener("input", function(){
+      var q = top.value;
+      topbarSearch(q, false);
+      if(searchTimer) clearTimeout(searchTimer);
+      searchTimer = setTimeout(function(){
+        var h = homeSearchEls();
+        if(!h.res || !top.value.trim()) return;
+        var r = h.res.getBoundingClientRect();
+        if(r.top > window.innerHeight || r.bottom < 0){
+          try{ h.res.scrollIntoView({behavior: "smooth", block: "start"}); }catch(e){}
+        }
+      }, 350);
+    });
+    top.addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); topbarSearch(top.value, true); }
+    });
+  }
+  function mirrorHomeSearch(){
+    /* Gõ ở ô tìm Home thì ô topbar đồng bộ theo. Mỗi lần renderHome tạo
+       #kSearch mới nên gắn lại ở đây; chỉ gắn 1 lần cho mỗi element. */
+    var h = homeSearchEls();
+    if(!h.inp || mirroredInp === h.inp) return;
+    mirroredInp = h.inp;
+    h.inp.addEventListener("input", function(){
+      var top = $("skSbSearch");
+      if(top && top.value !== h.inp.value) top.value = h.inp.value;
+    });
+  }
+
+  /* --- Chuông: di chuyển nút chuông thật vào topbar khi ở Home màn hình rộng --- */
+  var notifMoved = false, notifHome = null, notifNext = null;
+  function syncNotif(){
+    var btn = $("notifBtn");
+    var wrap = btn ? (btn.closest ? btn.closest(".hdr-pop-wrap") : btn.parentNode) : null;
+    if(!wrap) return;
+    if(notifHome === null){ notifHome = wrap.parentNode; notifNext = wrap.nextSibling; }
+    var slot = $("skNotifSlot");
+    if(onHomeWide()){
+      if(!notifMoved && slot){ slot.appendChild(wrap); notifMoved = true; }
+    } else if(notifMoved && notifHome){
+      notifHome.insertBefore(wrap, notifNext);
+      notifMoved = false;
+    }
+  }
+
+  /* --- Thẻ người dùng: dữ liệu thật, không hardcode --- */
+  var lastUserHTML = null;
+  function refreshUserCard(){
+    var box = $("skSbUser"); if(!box) return;
+    var html = "";
+    var u = null;
+    try{ u = (typeof webCurrentUser === "function") ? webCurrentUser() : null; }catch(e){ u = null; }
+    if(!u){
+      html = '<button class="sk-login" id="skSbLogin" type="button"><span class="ic">👤</span><span class="lbl">Đăng nhập</span></button>';
+    } else {
+      var m = null;
+      try{ m = (typeof rankMeData === "function") ? rankMeData() : null; }catch(e){ m = null; }
+      var name = (m && m.name) || u.name || u.email || "Học viên";
+      var photo = (m && m.photo) || u.photoURL || "";
+      var av = photo
+        ? '<span class="av"><img src="' + escHtml(photo) + '" alt=""></span>'
+        : '<span class="av">' + escHtml(String(name).charAt(0).toUpperCase()) + '</span>';
+      var sub = "";
+      if(m && m.rankName){
+        sub = "◆ " + m.rankName;
+        if(typeof m.exp === "number") sub += " · " + Number(m.exp).toLocaleString("vi-VN") + " EXP";
+      } else if(m && typeof m.exp === "number"){
+        sub = Number(m.exp).toLocaleString("vi-VN") + " EXP";
+      }
+      html = '<a class="sk-user-link" href="#/canhan">' + av +
+        '<span class="meta"><b>' + escHtml(name) + '</b>' +
+        (sub ? '<small>' + escHtml(sub) + '</small>' : '') + '</span></a>';
+    }
+    if(html === lastUserHTML) return;
+    lastUserHTML = html;
+    box.innerHTML = html;
+    var lb = $("skSbLogin");
+    if(lb) lb.addEventListener("click", function(){
+      if(typeof openAuthModal === "function") openAuthModal();
+    });
+  }
+
+  /* --- Tag giảm giá Nâng Premium: tính thật từ SK_PACKAGES, chỉ khi đang sale --- */
+  function refreshSaleTag(){
+    var tag = $("skSaleTag"); if(!tag) return;
+    var show = false, pct = 0;
+    try{
+      if(typeof skSaleActive === "function" && skSaleActive() &&
+         typeof SK_PACKAGES !== "undefined" && SK_PACKAGES && SK_PACKAGES.year){
+        var y = SK_PACKAGES.year;
+        if(y.full > 0 && y.sale < y.full){ pct = Math.round((1 - y.sale / y.full) * 100); show = pct > 0; }
+      }
+    }catch(e){ show = false; }
+    tag.hidden = !show;
+    tag.textContent = show ? ("-" + pct + "%") : "";
+  }
+
+  /* --- Mục đang chọn trong sidebar (theo hash hiện tại) --- */
+  function syncActiveNav(){
+    var seg = "";
+    try{
+      var raw = (location.hash || "#/").replace(/^#/, "");
+      seg = raw.split("?")[0].split("/").filter(Boolean)[0] || "";
+    }catch(e){ seg = ""; }
+    var key = "";
+    try{ key = (typeof NAV_MAP !== "undefined" && NAV_MAP) ? (NAV_MAP[seg] || "") : ""; }catch(e){ key = ""; }
+    if(!key) key = (seg === "" ? "kanji" : seg);
+    var links = document.querySelectorAll("#skNav a[data-nav]");
+    for(var i = 0; i < links.length; i++){
+      links[i].classList.toggle("active", links[i].getAttribute("data-nav") === key);
+    }
+  }
+
+  /* --- Đồng bộ tổng (gọi khi đổi route / đổi cỡ màn hình / khởi động) --- */
+  function sync(){
+    syncNotif();
+    refreshUserCard();
+    refreshSaleTag();
+    mirrorHomeSearch();
+    paintDots();
+    syncActiveNav();
+  }
+
+  function init(){
+    applyState();
+    wireThemeDots();
+    wireSearch();
+    var cb = $("skSbCollapse");
+    if(cb) cb.addEventListener("click", function(){
+      var c = document.body.classList.toggle("sk-sb-collapsed");
+      lsSet(LS_COL, c ? "1" : "0");
+      updateCollapseBtn();
+    });
+    var tg = $("skSbToggle");
+    if(tg) tg.addEventListener("click", function(){
+      var h = document.body.classList.toggle("sk-sb-hidden");
+      lsSet(LS_HID, h ? "1" : "0");
+      updateToggleBtn();
+    });
+    /* route()/renderHome() gắn-gỡ class sk-home-sidebar trên body — theo dõi để
+       đồng bộ chuông/thẻ người dùng/tìm kiếm mỗi lần đổi trang. */
+    try{
+      new MutationObserver(function(muts){
+        for(var i = 0; i < muts.length; i++){
+          if(muts[i].attributeName === "class"){ sync(); return; }
+        }
+      }).observe(document.body, {attributes: true, attributeFilter: ["class"]});
+    }catch(e){}
+    /* Đăng nhập/đăng xuất vẽ lại #userArea — thẻ sidebar cập nhật theo. */
+    try{
+      var ua = $("userArea");
+      if(ua) new MutationObserver(refreshUserCard).observe(ua, {childList: true, subtree: true});
+    }catch(e){}
+    var rzT = null;
+    window.addEventListener("resize", function(){
+      if(rzT) clearTimeout(rzT);
+      rzT = setTimeout(sync, 150);
+    });
+    window.addEventListener("focus", refreshUserCard);
+    /* EXP có thể đổi khi đang ở Home (làm nhiệm vụ, đồng bộ ví) — làm mới thẻ
+       định kỳ; chỉ ghi DOM khi nội dung thật sự đổi nên không nháy/không phá focus. */
+    setInterval(refreshUserCard, 2000);
+    sync();
+  }
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
 </script>
 
