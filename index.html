@@ -599,6 +599,7 @@ html[data-theme="toi"] .ex-sec{color:var(--red)}
 .ex-chip:hover{border-color:var(--red)}
 .ex-chip.used{opacity:.32; pointer-events:none}
 audio.ex-audio{width:100%; margin:4px 0 6px}
+.ex-play-btn{margin:4px 0 6px}
 .ex-listen-note{margin:2px 0 8px; color:var(--muted); font-size:13.5px}
 .qresult{margin-top:13px; border-radius:11px; padding:12px 15px; font-size:14.5px; display:none}
 .qresult.show{display:block}
@@ -5674,11 +5675,13 @@ function renderExamPlayer(){
    Web khác mobile ở 2 điểm nên không port 1-1 được:
    (a) web render TẤT CẢ thẻ cùng lúc (mobile render 1 câu/lần) — trạng thái
        cổng nghe nằm trong EX.listen, khóa theo chỉ số câu;
-   (b) web dùng <audio controls> native (mobile dùng nút ▶ + Audio() mới mỗi
-       lượt) — người học có thể pause/resume/seek, nên 1 lượt chỉ tính khi
-       tiếng thực sự phát ra TỪ ĐẦU (currentTime < 1 ở 'playing'); resume
-       giữa chừng không tính lượt mới. Sau khi nghe đủ 2 lượt thì gỡ luôn
-       điều khiển (đúng mobile: hết 2 lượt thì không còn nút phát lại).
+   (b) web dùng nút phát riêng + 1 <audio> không controls (W21-1: bỏ
+       controls native vì cho tua tự do → bypass cổng nghe; mobile dùng nút
+       ▶ + Audio() mới mỗi lượt) — người học có thể pause/resume nhưng
+       không tua được, nên 1 lượt chỉ tính khi tiếng thực sự phát ra TỪ
+       ĐẦU (currentTime < 1 ở 'playing'); resume giữa chừng không tính lượt
+       mới. Sau khi nghe đủ 2 lượt thì ẩn luôn nút phát (đúng mobile: hết
+       2 lượt thì không còn nút phát lại).
    Van an toàn (đúng mobile, renderQ: stage ask + plays>=2 + không đang phát
    thì chuyển sang answer): nếu đã dùng đủ 2 lượt mà audio chưa từng phát
    tới cuối (vd pause giữa lượt 2 rồi bỏ), đáp án vẫn mở ở sự kiện 'pause'
@@ -5703,10 +5706,20 @@ function exListenSync(qi, noteOverride){
   var st = exListenState(qi);
   var note = card.querySelector('[data-exln="' + qi + '"]');
   if(note) note.textContent = noteOverride || exListenNoteText(st);
+  var au = card.querySelector(".ex-audio");
+  /* W21-1: nút phát riêng thay controls native — hết 2 lượt thì ẩn nút
+     (đúng mobile: không còn nút phát lại); đang phát lượt 2 thì giữ nút
+     để người học vẫn tạm dừng được. */
+  var btn = card.querySelector('[data-explay="' + qi + '"]');
+  if(btn){
+    var noMore = st.plays >= 2 && (!au || au.paused);
+    btn.disabled = noMore;
+    btn.style.display = noMore ? "none" : "";
+    if(!noMore) btn.textContent = (au && !au.paused) ? "⏸ Tạm dừng" : "▶ Nghe";
+  }
   if(st.heard){
     var opts = card.querySelector('[data-listen-opts="' + qi + '"]');
     if(opts) opts.style.display = "";
-    var au = card.querySelector(".ex-audio");
     if(au && st.plays >= 2) au.controls = false;
   }
 }
@@ -5719,9 +5732,13 @@ function qcardHTML(q, i, num){
   if(q.passFirst && q.passageHTML) h += '<div class="qpass jp">' + q.passageHTML + "</div>";
   else if(q.passFirst && q.passage) h += '<div class="qpass jp">' + esc(q.passage) + "</div>";
   if(q.audio){
-    /* D-4: hết 2 lượt phát thì gỡ điều khiển (đúng mobile: không còn nút
-       phát lại); chưa nộp thì hiện dòng nhắc cổng nghe. */
-    h += '<audio class="ex-audio"' + ((lst && lst.heard && lst.plays >= 2) ? '' : ' controls') + ' preload="none" src="' + esc(q.audio) + '"></audio>';
+    /* W21-1: bỏ <audio controls> native ở thẻ chưa nộp (cho tua tự do →
+       bypass cổng nghe D-4) — dùng nút phát riêng như mobile: không tua
+       được, mỗi lần bấm phát từ đầu; hết 2 lượt thì không còn nút phát
+       lại. Câu đã nộp (lst null) giữ controls để nghe lại tự do khi xem
+       lại bài. */
+    h += '<audio class="ex-audio"' + (lst ? '' : ' controls') + ' preload="none" src="' + esc(q.audio) + '"></audio>';
+    if(lst && !(lst.heard && lst.plays >= 2)) h += '<button type="button" class="btn sm ex-play-btn" data-explay="' + i + '">▶ Nghe</button>';
     if(lst) h += '<p class="ex-listen-note" data-exln="' + i + '">' + esc(exListenNoteText(lst)) + '</p>';
   }
   if(q.type === "star"){
@@ -5825,10 +5842,13 @@ function bindExamCards(){
   EX.qs.forEach(function(q, i){ if(q.audio && !EX.submitted) bindOneCard(i); });
 }
 function bindOneCard(qi){
-  /* D-4: cổng nghe trên <audio controls> native (port exPlayListen của
-     mobile): lượt chỉ tính ở 'playing' khi phát từ đầu; 'ended' mở đáp án;
-     lượt 3+ bị chặn; pause sau khi đã đủ 2 lượt cũng mở đáp án (van an toàn
-     đúng mobile — tránh kẹt khi không nghe tới cuối lượt 2). */
+  /* D-4: cổng nghe trên nút phát riêng + <audio> không controls (W21-1:
+     bỏ controls native vì cho tua tự do; port exPlayListen của mobile):
+     lượt chỉ tính ở 'playing' khi phát từ đầu; 'ended' mở đáp án chỉ khi
+     lượt phát này bắt đầu từ đầu (cờ _skHeardOk — tua tới cuối bằng
+     devtools cũng không mở được đáp án); lượt 3+ bị chặn; pause sau khi
+     đã đủ 2 lượt cũng mở đáp án (van an toàn đúng mobile — tránh kẹt khi
+     không nghe tới cuối lượt 2). */
   if(!EX || EX.submitted) return;
   var q = EX.qs[qi];
   if(!q || !q.audio) return;
@@ -5838,6 +5858,20 @@ function bindOneCard(qi){
   if(!au || au._skBound) return;
   au._skBound = true;
   var st = exListenState(qi);
+  /* W21-1: nút phát riêng — bấm khi đang phát thì tạm dừng, bấm khi dừng
+     thì phát tiếp (phát từ đầu nếu đã phát xong); hết 2 lượt thì không
+     phát nữa. Nút không cho tua nên không bypass được cổng nghe. */
+  var btn = card.querySelector('[data-explay="' + qi + '"]');
+  if(btn && !btn._skBound){
+    btn._skBound = true;
+    btn.addEventListener("click", function(){
+      if(!au.paused){ au.pause(); return; }
+      if(st.plays >= 2){ exListenSync(qi, "Đã phát đủ 2 lần của câu này."); return; }
+      if(au.ended){ try{ au.currentTime = 0; }catch(_){} }
+      var p = au.play();
+      if(p && p.catch) p.catch(function(){});
+    });
+  }
   au.addEventListener("play", function(){
     if(st.plays >= 2 && (au.currentTime < 1 || au.ended)){
       au.pause();
@@ -5846,6 +5880,8 @@ function bindOneCard(qi){
     }
   });
   au.addEventListener("playing", function(){
+    /* W21-1: lượt phát này bắt đầu từ đầu → 'ended' được phép mở đáp án. */
+    if(au.currentTime < 1) au._skHeardOk = true;
     if(au.currentTime >= 1 || au._skCounted) return;
     if(st.plays >= 2){
       au.pause();
@@ -5872,9 +5908,15 @@ function bindOneCard(qi){
        ở 'seeking' để suy vị trí trước khi tua — lúc handler chạy thì
        currentTime đã là vị trí đích.) */
     if(au.currentTime < 1) au._skCounted = false;
+    /* W21-1: tua tới giữa/cuối (chỉ làm được qua devtools — nút phát
+       không cho tua) → lượt này không tính là đã nghe từ đầu. */
+    else au._skHeardOk = false;
   });
   au.addEventListener("ended", function(){
     au._skCounted = false;
+    /* W21-1: chỉ mở đáp án khi lượt phát này bắt đầu từ đầu — tua tới
+       gần cuối rồi phát (kể cả qua devtools) thì 'ended' không mở gì. */
+    if(!au._skHeardOk) return;
     st.heard = true;
     exListenSync(qi);
   });
@@ -7077,9 +7119,15 @@ function sv2ShowExp(i){
   if(!SV2_SUBS[i] || !SV2_SUBS[i].exp){ sv2HideExp(); return; }
   sv2ExpIdx = i; sv2ExpMode = "sent";
   var exp = document.getElementById("sv2Exp");
-  document.getElementById("sv2ExpTitle").textContent = "GIẢI THÍCH · CÂU " + (i + 1);
-  document.getElementById("sv2ExpText").textContent = SV2_SUBS[i].exp;
+  /* K-9 (mirror guard m-22 ở sv2WordTap): bong bóng đã bị gỡ (chuyển
+     trang/bài) trước khi gọi — bỏ qua, không throw ở textContent hay
+     parentNode bên dưới. */
+  var _sv2T = document.getElementById("sv2ExpTitle");
+  var _sv2X = document.getElementById("sv2ExpText");
   var box = document.getElementById("sv2Subs");
+  if(!exp || !_sv2T || !_sv2X || !box) return;
+  _sv2T.textContent = "GIẢI THÍCH · CÂU " + (i + 1);
+  _sv2X.textContent = SV2_SUBS[i].exp;
   if(exp.parentNode !== box) box.appendChild(exp);
   exp.classList.add("show");
   sv2PlaceExp();
@@ -7099,8 +7147,11 @@ function sv2ShowExp(i){
 function sv2PlaceExp(){
   if(sv2ExpIdx < 0) return;
   var exp = document.getElementById("sv2Exp");
-  if(!exp.classList.contains("show")) return;
+  /* K-9 (mirror guard m-22 ở sv2WordTap): bong bóng/khung đã bị gỡ
+     (chuyển trang/bài) — bỏ qua, không throw ở classList bên dưới. */
+  if(!exp || !exp.classList.contains("show")) return;
   var box = document.getElementById("sv2Subs");
+  if(!box) return;
   var row = document.querySelectorAll("#sv2Subs .sv2-sub")[sv2ExpIdx];
   if(!row) return;
   var eh = exp.offsetHeight, lt = row.offsetTop, lh = row.offsetHeight;
@@ -13004,9 +13055,10 @@ function skSessionShowOverlay(kind, devices, lastSeenMs){
   if(!root) return;
   var html;
   if(kind === "block"){
-    /* Block chỉ xảy ra khi đã đủ 2 thiết bị fresh khác → devices luôn là
-       mảng 2 phần tử {deviceLabel, lastSeen}. Nhánh string giữ lại để gọi
-       cũ (1 thiết bị) không vỡ. */
+    /* Block xảy ra khi đã đủ 2 thiết bị fresh khác, nhưng mảng devices có
+       thể dài hơn 2 (client sửa đổi, hoặc doc hồi sinh) nên tiêu đề dùng
+       devs.length thay vì hardcode "2" (W21-4). Nhánh string giữ lại để
+       gọi cũ (1 thiết bị) không vỡ. */
     var devs = Array.isArray(devices) ? devices : [];
     if(!devs.length && typeof devices === "string") devs = [{deviceLabel: devices, lastSeen: lastSeenMs}];
     var list = "";
@@ -13014,9 +13066,9 @@ function skSessionShowOverlay(kind, devices, lastSeenMs){
       list += '<p>Thiết bị: <b>' + esc(devs[i].deviceLabel || "Thiết bị khác") + '</b> · Hoạt động gần nhất: <b>' + esc(skSessionFmtTime(devs[i].lastSeen)) + '</b></p>';
     }
     html = '<div class="sksess-bg" id="skSessBg"><div class="sksess-box" role="dialog" aria-modal="true" aria-labelledby="skSessTitle">' +
-      '<h3 id="skSessTitle">Tài khoản đang đăng nhập ở 2 thiết bị khác</h3>' +
+      '<h3 id="skSessTitle">Tài khoản đang đăng nhập ở ' + devs.length + ' thiết bị khác</h3>' +
       list +
-      '<p>Vui lòng đăng xuất trên một trong 2 thiết bị đó trước khi đăng nhập ở đây.</p>' +
+      '<p>Vui lòng đăng xuất trên một trong ' + devs.length + ' thiết bị đó trước khi đăng nhập ở đây.</p>' +
       '<div class="row"><button class="btn sm" id="skSessOk" type="button">Đã hiểu</button></div>' +
       '</div></div>';
   }else{
@@ -13070,8 +13122,18 @@ function skSessionHeartbeatTick(){
   var ref = skSessionRef(u.uid);
   if(!ref) return;
   try{
-    var p = ref.set({lastSeen: skSessionServerTs()}, {merge: true});
-    if(p && p.catch) p.catch(function(){});
+    /* M-RES: heartbeat KHÔNG bao giờ được tạo doc — dùng update() thay cho
+       set(merge): update() fail NOT_FOUND khi doc đã mất nên không thể hồi
+       sinh doc đã xóa trong cửa sổ listener chưa giao delete event. Khi
+       fail NOT_FOUND thì chạy nhánh re-check doc-mất hiện có (kick nếu còn
+       session fresh khác, claim lại nếu không còn ai). */
+    var p = ref.update({lastSeen: skSessionServerTs()});
+    if(p && p.catch) p.catch(function(err){
+      if(err && err.code === "not-found"){
+        skSessOwnExists = false;
+        skSessionRecheck(u.uid);
+      }
+    });
   }catch(e){}
 }
 function skSessionListenStart(uid){
@@ -13142,6 +13204,9 @@ function skSessionKick(){
   skSessionHeartbeatStop();
   skSessHeld = false;
   skSessionShowOverlay("kick");
+  /* W21-6 (mẫu m-35 mobile): dừng listener đồng bộ TRƯỚC signOut — commit
+     đang chờ debounce mà bắn sau khi token mất sẽ gây 403 noise. */
+  try{ if(typeof SKSync !== "undefined" && SKSync.stopListener) SKSync.stopListener(); }catch(_){}
   var auth = null;
   try{ auth = skAuth(); }catch(e){}
   if(auth){ try{ var so = auth.signOut(); if(so && so.catch) so.catch(function(){}); }catch(e){} }
@@ -13180,7 +13245,11 @@ function skSessionClaim(uid){
         throw err;
       }
       /* Ghi doc của mình + dọn doc stale + xóa doc legacy (migration 1 lần). */
-      tx.set(myRef, {deviceId: myId, deviceLabel: label, platform: "web", loginAt: ts, lastSeen: ts}, {merge: true});
+      /* W21-5: chỉ set loginAt khi claim mới — nhánh resume (doc đã có)
+         giữ nguyên loginAt của lần đăng nhập đầu tiên. */
+      var myData = {deviceId: myId, deviceLabel: label, platform: "web", lastSeen: ts};
+      if(!ownExists) myData.loginAt = ts;
+      tx.set(myRef, myData, {merge: true});
       for(var i = 0; i < staleRefs.length; i++) tx.delete(staleRefs[i]);
       if(legacyRef) tx.delete(legacyRef);
     });
@@ -13202,6 +13271,8 @@ function skSessionClaim(uid){
          null chạy xong (nhánh null không ẩn overlay này). */
       skSessHeld = false;
       skSessionShowOverlay("block", err.skBlocked);
+      /* W21-6 (mẫu m-35 mobile): dừng listener đồng bộ TRƯỚC signOut. */
+      try{ if(typeof SKSync !== "undefined" && SKSync.stopListener) SKSync.stopListener(); }catch(_){}
       var auth = null;
       try{ auth = skAuth(); }catch(e){}
       if(auth){ try{ var so = auth.signOut(); if(so && so.catch) so.catch(function(){}); }catch(e){} }
@@ -13233,30 +13304,32 @@ function skSessionStop(){
   skSessionHeartbeatStop();
 }
 function skSessionDelete(uid){
-  if(!uid) return;
-  if(SK_ADMIN_UIDS && SK_ADMIN_UIDS.indexOf(uid) >= 0) return; /* admin không tạo session nên không có gì để xóa */
+  /* W21-2: trả Promise (resolve true khi đã xóa doc) để handler logout
+     chờ delete hoàn tất TRƯỚC signOut — delete phát sau signOut sẽ bị
+     rules từ chối (unauthenticated) và slot kẹt tới 5 phút. */
+  if(!uid) return Promise.resolve(false);
+  if(SK_ADMIN_UIDS && SK_ADMIN_UIDS.indexOf(uid) >= 0) return Promise.resolve(false); /* admin không tạo session nên không có gì để xóa */
   var myId = null;
   try{ myId = skReportDeviceId(); }catch(e){ myId = null; }
-  if(!myId) return;
+  if(!myId) return Promise.resolve(false);
   var ref = null;
   try{ ref = skSessionRef(uid, myId); }catch(e){ ref = null; }
-  if(!ref) return;
+  if(!ref) return Promise.resolve(false);
   /* Chỉ xóa doc của chính thiết bị này (m-28): đọc doc + đối chiếu
      deviceId trước khi xóa — thiết bị stale trong cửa sổ race M-08 không
      được xóa session của thiết bị khác. Đọc lỗi (mất mạng) thì bỏ qua —
      session sẽ stale sau 5 phút. */
   try{
     var p = ref.get();
-    if(!p || !p.then) return;
-    p.then(function(snap){
-      if(!snap || !snap.exists) return;
+    if(!p || !p.then) return Promise.resolve(false);
+    return p.then(function(snap){
+      if(!snap || !snap.exists) return false;
       var d = null;
       try{ d = snap.data() || {}; }catch(e){ d = {}; }
-      if(d.deviceId && d.deviceId !== myId) return;
-      var dp = ref.delete();
-      if(dp && dp.catch) dp.catch(function(){});
-    }).catch(function(){});
-  }catch(e){}
+      if(d.deviceId && d.deviceId !== myId) return false;
+      return ref.delete().then(function(){ return true; }).catch(function(){ return false; });
+    }).catch(function(){ return false; });
+  }catch(e){ return Promise.resolve(false); }
 }
 
 function initWebAuth(){
@@ -13515,15 +13588,27 @@ function renderHeaderUser(){
   document.getElementById("logoutBtn").addEventListener("click", function(){
     closeHeaderPanels();
     /* Phiên 2 thiết bị: dừng heartbeat/listener rồi xóa session doc CỦA
-       THIẾT BỊ NÀY trước signOut (fire-and-forget) để đăng nhập ở thiết
-       bị khác được ngay. */
+       THIẾT BỊ NÀY trước signOut để đăng nhập ở thiết bị khác được ngay.
+       W21-2: chờ delete hoàn tất (tối đa ~2s) rồi mới signOut — delete
+       phát sau signOut sẽ bị rules từ chối (unauthenticated). */
     var outUid = null;
     try{ var ou = webCurrentUser(); outUid = ou ? ou.uid : null; }catch(e){}
     skSessionStop();
-    skSessionDelete(outUid);
     var auth = skAuth();
-    if(auth){ auth.signOut().catch(function(){}); }
-    else{ window.SK_USER = null; if(window.SKSync) SKSync.clearLocalForLogout(); renderHeaderUser(); }
+    var doSignOut = function(){
+      if(auth){ auth.signOut().catch(function(){}); }
+      else{ window.SK_USER = null; if(window.SKSync) SKSync.clearLocalForLogout(); renderHeaderUser(); }
+    };
+    var dp = null;
+    try{ dp = skSessionDelete(outUid); }catch(e){ dp = null; }
+    if(dp && dp.then){
+      var settled = false;
+      var done = function(){ if(!settled){ settled = true; doSignOut(); } };
+      dp.then(done, done);
+      setTimeout(done, 2000); /* timeout: không treo đăng xuất khi mạng chậm */
+    }else{
+      doSignOut();
+    }
   });
 }
 
