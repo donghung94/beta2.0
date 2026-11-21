@@ -61,10 +61,12 @@
 
   /* ---------------- cấu hình ---------------- */
 
-  // Số dư gốc khi cài app lần đầu (hồ sơ mẫu trong code hiện tại).
-  // Đồng bộ lần đầu dùng (local - SEED) làm hoạt động ròng của máy đó.
-  // Nếu app đổi số dư khởi đầu thì PHẢI đổi cả hằng này.
-  var SYNC_SEED = { tuvi: 1240, linh: 320, cong: 145, duelLeft: 3, wins: 3, losses: 1 };
+  // Số dư gốc khi cài app lần đầu (USER QUYẾT 21/11 14:10: EXP 0,
+  // Xu 50 quà tặng, điểm đóng góp 0, thắng/thua 0; duelLeft giữ 3 —
+  // hạn mức đấu/ngày). Đồng bộ lần đầu dùng (local - SEED) làm hoạt
+  // động ròng của máy đó. Nếu app đổi số dư khởi đầu thì PHẢI đổi
+  // cả hằng này.
+  var SYNC_SEED = { tuvi: 0, linh: 50, cong: 0, duelLeft: 3, wins: 0, losses: 0 };
   var WALLET_FIELDS = ["tuvi", "linh", "cong", "duelLeft", "wins", "losses"];
 
   var MISSION_KEYS = ["kanji", "quiz", "review", "exam", "rot"];
