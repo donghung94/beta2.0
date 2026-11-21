@@ -18,6 +18,53 @@
   if(/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||isiPad)window.location.replace("/mobile/");
 }catch(e){}})();
 </script>
+<script>
+/* Chon nen (PC): ap dung chu de DA LUU truoc khi CSS ve de khong chop nen.
+   Mac dinh Sang; KHONG tu theo he thong. Luu o localStorage "sk_theme". */
+(function(){
+  var THEMES=["sang","toi","sakura","matcha","xanh"];
+  function valid(t){return THEMES.indexOf(t)>=0?t:"sang";}
+  /* 1. Ap dung ngay (chay trong <head>, truoc khi ve). */
+  try{
+    document.documentElement.setAttribute("data-theme",valid(localStorage.getItem("sk_theme")));
+  }catch(e){try{document.documentElement.setAttribute("data-theme","sang");}catch(e2){}}
+  /* 2. Gan nut chon nen khi DOM xong. */
+  function wire(){
+    var btn=document.getElementById("themeBtn");
+    var panel=document.getElementById("themePanel");
+    if(!btn||!panel)return;
+    function paint(t){
+      t=valid(t);
+      document.documentElement.setAttribute("data-theme",t);
+      var items=panel.querySelectorAll("[data-theme-opt]");
+      for(var i=0;i<items.length;i++)
+        items[i].classList.toggle("on",items[i].getAttribute("data-theme-opt")===t);
+    }
+    function save(t){try{localStorage.setItem("sk_theme",valid(t));}catch(e){}}
+    function close(){panel.hidden=true;btn.setAttribute("aria-expanded","false");}
+    paint(document.documentElement.getAttribute("data-theme"));
+    btn.addEventListener("click",function(e){
+      e.stopPropagation();
+      var opening=panel.hidden;
+      panel.hidden=!opening;
+      btn.setAttribute("aria-expanded",opening?"true":"false");
+      if(opening)paint(document.documentElement.getAttribute("data-theme"));
+    });
+    panel.addEventListener("click",function(e){
+      var opt=e.target&&e.target.closest?e.target.closest("[data-theme-opt]"):null;
+      if(!opt)return;
+      var t=opt.getAttribute("data-theme-opt");
+      paint(t);save(t);close();
+    });
+    document.addEventListener("click",function(e){
+      if(!panel.hidden&&!panel.contains(e.target)&&e.target!==btn)close();
+    });
+    document.addEventListener("keydown",function(e){if(e.key==="Escape")close();});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wire);
+  else wire();
+})();
+</script>
 <title>SoraKanji — Bầu trời Kanji cho người Việt</title>
 <meta name="description" content="SoraKanji — học Kanji, từ vựng, ngữ pháp và luyện thi JLPT N5–N1 cho người Việt: 2.138 kanji có chiết tự và thứ tự nét, từ vựng Minna no Nihongo kèm hình minh họa, 375 mẫu ngữ pháp, đề thi viết và nghe Test 1–9.">
 <link rel="icon" href="mobile/assets/icon-192.png">
@@ -30,7 +77,7 @@
 <script src="mobile/assets/sync-module.js"></script>
 <style>
 :root{
-  color-scheme: light dark;
+  color-scheme: light;
   --red:#c0272d; --red-dark:#971c22; --red-soft:#fdeeee;
   --ink:#21242c; --muted:#5d6572; --faint:#8a919d;
   --line:#e6e1db; --line-strong:#d8d2ca;
@@ -41,18 +88,7 @@
   --shadow:0 1px 3px rgba(33,28,20,.06),0 8px 24px -18px rgba(33,28,20,.25);
   --hdr:rgba(255,255,255,.92);
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --red:#e05257; --red-dark:#ff7a7f; --red-soft:#3a2226;
-    --ink:#eceef2; --muted:#a7aeba; --faint:#7d8492;
-    --line:#2d3038; --line-strong:#3a3e47;
-    --bg:#14161b; --card:#1d2026; --card2:#22252d;
-    --ok:#4cc07a; --ok-bg:#1e3025;
-    --bad:#ff7a7f; --bad-bg:#3a2226;
-    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px -18px rgba(0,0,0,.6);
-    --hdr:rgba(20,22,27,.92);
-  }
-}
+/* Bang mau theo chu de (Toi/Sakura/Matcha/Xanh duong): xem style sk-themes o cuoi <head>. */
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -96,7 +132,7 @@ nav.main a.on{color:var(--red); background:var(--red-soft)}
   border:1px solid var(--line); border-radius:999px; padding:6px 13px;
   font-size:13px; font-weight:700;
 }
-@media (prefers-color-scheme: dark){ .hchip{color:var(--red)} }
+html[data-theme="toi"] .hchip{color:var(--red)}
 .hchip b{font-size:15px}
 .hchip:hover{text-decoration:none; border-color:var(--red)}
 
@@ -133,10 +169,10 @@ nav.main a.on{color:var(--red); background:var(--red-soft)}
 .cd-ph span{font-size:12px; color:var(--muted)}
 .cd-ph.now{border-color:var(--red); background:var(--red-soft)}
 .cd-ph.now b{color:var(--red-dark)}
-@media (prefers-color-scheme: dark){ .cd-ph.now b{color:var(--red)} }
+html[data-theme="toi"] .cd-ph.now b{color:var(--red)}
 .cd-today{margin-top:14px; border-top:1px dashed var(--line-strong); padding-top:12px; font-size:14px}
 .cd-today b{color:var(--red-dark)}
-@media (prefers-color-scheme: dark){ .cd-today b{color:var(--red)} }
+html[data-theme="toi"] .cd-today b{color:var(--red)}
 .cd-today a{font-weight:700}
 
 /* ---------- Sections & cards ---------- */
@@ -516,7 +552,7 @@ table.kv tr:last-child td{border-bottom:none}
   margin:26px 0 4px; font-size:15px; font-weight:800; color:var(--red-dark);
   letter-spacing:.02em;
 }
-@media (prefers-color-scheme: dark){ .ex-sec{color:var(--red)} }
+html[data-theme="toi"] .ex-sec{color:var(--red)}
 .ex-inst{color:var(--muted); font-size:13.5px; margin:2px 0 12px}
 .qcard{
   background:var(--card); border:1px solid var(--line); border-radius:14px;
@@ -563,6 +599,7 @@ table.kv tr:last-child td{border-bottom:none}
 .ex-chip:hover{border-color:var(--red)}
 .ex-chip.used{opacity:.32; pointer-events:none}
 audio.ex-audio{width:100%; margin:4px 0 6px}
+.ex-listen-note{margin:2px 0 8px; color:var(--muted); font-size:13.5px}
 .qresult{margin-top:13px; border-radius:11px; padding:12px 15px; font-size:14.5px; display:none}
 .qresult.show{display:block}
 .qresult.right{background:var(--ok-bg); border:1px solid var(--ok)}
@@ -615,7 +652,7 @@ table.score td.n,table.score th.n{text-align:right; font-variant-numeric:tabular
   color:var(--red-dark); font-weight:800; font-size:14px;
   display:flex; align-items:center; justify-content:center;
 }
-@media (prefers-color-scheme: dark){ .dlg-line .sp{color:var(--red)} }
+html[data-theme="toi"] .dlg-line .sp{color:var(--red)}
 .dlg-line .dj{font-weight:600; font-size:16.5px}
 .dlg-line .dv{color:var(--muted); font-size:14px}
 .modal-bg{
@@ -1182,7 +1219,7 @@ ruby rt{font-size:.52em; color:var(--muted); font-weight:500}
 .ptu-ex .spk{width:32px; height:32px; margin-left:8px}
 .ptu-ex .spk svg{width:16px; height:16px}
 .pthl{background:#ffe3c2; color:#b85c00; border-radius:4px; padding:0 2px; font-weight:800}
-@media (prefers-color-scheme: dark){ .pthl{background:#5a3a14; color:#ffb066} }
+html[data-theme="toi"] .pthl{background:#5a3a14; color:#ffb066}
 
 /* ===== Trợ từ: thẻ bài tập nền xanh navy đậm ===== */
 .ptq{
@@ -1887,6 +1924,107 @@ body:has(.sv2-page) footer.site{padding-bottom:81px; padding-bottom:calc(81px + 
 .sora-note{font-size:11.5px; color:var(--faint); padding:0 14px 11px; margin:0}
 @media (max-width:760px){ #soraPanel{bottom:140px} }
 </style>
+<style id="sk-themes">
+/* ===== Chon nen (PC) — 5 chu de, giu tong do chu dao =====
+   Dat SAU <style id="nk-theme"> vi :root cua nk-theme ghi de :root goc;
+   html[data-theme=".."] (0,1,1) cung thang :root (0,1,0) ve do uu tien.
+   Mac dinh Sang; script dau <head> luon gan data-theme truoc khi ve. */
+html[data-theme="sang"]{
+  color-scheme:light;
+  --red:#c0272d; --red-dark:#971c22; --red-soft:#fdeeee;
+  --ink:#21242c; --muted:#5d6572; --faint:#8a919d;
+  --line:#e6e1db; --line-strong:#d8d2ca;
+  --bg:#f7f5f1; --card:#ffffff; --card2:#fbf9f6;
+  --ok:#1d8a4e; --ok-bg:#e7f5ec;
+  --bad:#c0272d; --bad-bg:#fdeeee;
+  --shadow:0 1px 3px rgba(33,28,20,.06),0 8px 24px -18px rgba(33,28,20,.25);
+  --hdr:rgba(255,255,255,.92);
+}
+html[data-theme="toi"]{
+  color-scheme:dark;
+  --red:#e05257; --red-dark:#ff7a7f; --red-soft:#3a2226;
+  --ink:#eceef2; --muted:#a7aeba; --faint:#7d8492;
+  --line:#2d3038; --line-strong:#3a3e47;
+  --bg:#14161b; --card:#1d2026; --card2:#22252d;
+  --ok:#4cc07a; --ok-bg:#1e3025;
+  --bad:#ff7a7f; --bad-bg:#3a2226;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px -18px rgba(0,0,0,.6);
+  --hdr:rgba(20,22,27,.92);
+}
+html[data-theme="sakura"]{
+  color-scheme:light;
+  --red:#c0272d; --red-dark:#971c22; --red-soft:#fbe9ec;
+  --ink:#2c2124; --muted:#7a5f66; --faint:#a08088;
+  --line:#f3d9de; --line-strong:#e5c2ca;
+  --bg:#fdf2f4; --card:#fffafa; --card2:#fdf6f7;
+  --ok:#1d8a4e; --ok-bg:#e7f5ec;
+  --bad:#c0272d; --bad-bg:#fbe9ec;
+  --shadow:0 1px 3px rgba(60,30,35,.06),0 8px 24px -18px rgba(60,30,35,.22);
+  --hdr:rgba(255,250,250,.92);
+}
+html[data-theme="matcha"]{
+  color-scheme:light;
+  --red:#c0272d; --red-dark:#971c22; --red-soft:#fdeeee;
+  --ink:#232a1e; --muted:#5c6b52; --faint:#85947c;
+  --line:#dde5d0; --line-strong:#c9d6b8;
+  --bg:#f2f5ec; --card:#ffffff; --card2:#f7faf2;
+  --ok:#1d8a4e; --ok-bg:#e7f5ec;
+  --bad:#c0272d; --bad-bg:#fdeeee;
+  --shadow:0 1px 3px rgba(35,42,30,.06),0 8px 24px -18px rgba(35,42,30,.22);
+  --hdr:rgba(255,255,255,.92);
+}
+html[data-theme="xanh"]{
+  color-scheme:light;
+  --red:#c0272d; --red-dark:#971c22; --red-soft:#fdeeee;
+  --ink:#1f2733; --muted:#5a6a7d; --faint:#8294a8;
+  --line:#d5dee9; --line-strong:#bccadb;
+  --bg:#eef2f7; --card:#ffffff; --card2:#f5f8fb;
+  --ok:#1d8a4e; --ok-bg:#e7f5ec;
+  --bad:#c0272d; --bad-bg:#fdeeee;
+  --shadow:0 1px 3px rgba(31,39,51,.06),0 8px 24px -18px rgba(31,39,51,.22);
+  --hdr:rgba(255,255,255,.92);
+}
+/* Nen Toi: cac be mat nk-theme dang ghi cung background:#fff (header, tab
+   doc, panel) + luoi trang nen body — chuyen sang bien de khong bi trang
+   loang tren nen toi. Cac chu de sang giu nguyen mau goc. */
+html[data-theme="toi"] header.site,
+html[data-theme="toi"] .vnav,
+html[data-theme="toi"] .hdr-panel,
+html[data-theme="toi"] .login-btn,
+html[data-theme="toi"] .hdr-ic,
+html[data-theme="toi"] .hdr-app,
+html[data-theme="toi"] .user-btn{background:var(--card)}
+html[data-theme="toi"] .vnav a{color:var(--muted)}
+html[data-theme="toi"] .vnav a:hover{background:var(--card2)}
+html[data-theme="toi"] .vnav a.on{background:var(--card2)}
+html[data-theme="toi"] body{background-image:
+  linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px)}
+/* ---- Nut chon nen (header PC) ----
+   Nut nam NGOAI luong bo cuc: neo tuyet doi vao khoang trong giua logo va
+   cum phai cua header (.hdr-right chi them position:relative, khong doi
+   vi tri/kich thuoc) — khong day bat ky phan tu nao. Man hep <=760px:
+   header goc da thanh 2 hang, .hdr-right rong 100% nen an nut de khoi
+   tran ra ngoai man hinh (cung breakpoint voi bo cuc goc). */
+.hdr-right{position:relative}
+#themeBtnWrap{position:absolute; right:calc(100% + 8px); top:50%; transform:translateY(-50%)}
+@media (max-width:760px){ #themeBtnWrap{display:none} }
+.theme-panel{width:228px}
+.theme-opt{
+  display:flex; align-items:center; gap:10px; width:100%;
+  padding:9px 10px; border:0; background:none; color:var(--ink);
+  font:inherit; font-size:14px; font-weight:600; text-align:left;
+  border-radius:9px; cursor:pointer;
+}
+.theme-opt:hover{background:var(--card2)}
+.theme-opt.on{background:var(--red-soft); color:var(--red-dark)}
+.theme-dot{
+  width:18px; height:18px; border-radius:50%;
+  border:1px solid var(--line-strong); flex:none;
+}
+.theme-opt .tk{margin-left:auto; color:var(--red); font-weight:800; visibility:hidden}
+.theme-opt.on .tk{visibility:visible}
+</style>
 <style id="vocab-study">
 /* ===== Trang học từ vựng: flashcard navy lớn bên trái, tab bài bên phải, danh sách từ bên dưới ===== */
 .study-grid{display:grid; grid-template-columns:minmax(0,1fr) 350px; gap:22px; align-items:start; padding:4px 0 42px}
@@ -2012,6 +2150,17 @@ body:has(.sv2-page) footer.site{padding-bottom:81px; padding-bottom:calc(81px + 
       <a class="hdr-ic" id="socialFacebook" href="#" aria-label="Trang Facebook của SoraKanji"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
       <button class="hdr-app" id="appAndroidBtn" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.21a11.7 11.7 0 0 0-10.84 0L4.22 5.92a.38.38 0 0 0-.66.38L5.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 1.25-1.25A1.25 1.25 0 0 1 7 15.25zm10 0a1.25 1.25 0 1 1 1.25-1.25A1.25 1.25 0 0 1 17 15.25z"/></svg>Android</button>
       <button class="hdr-app" id="appIosBtn" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.54c-.03-2.8 2.29-4.14 2.4-4.21-1.31-1.92-3.35-2.18-4.08-2.21-1.74-.18-3.39 1.02-4.27 1.02-.88 0-2.24-1-3.68-.97-1.89.03-3.64 1.1-4.62 2.79-1.97 3.42-.5 8.48 1.42 11.26.94 1.36 2.05 2.88 3.52 2.83 1.41-.06 1.95-.91 3.66-.91s2.19.91 3.69.88c1.52-.02 2.49-1.38 3.42-2.75 1.08-1.57 1.52-3.1 1.55-3.17-.04-.02-2.97-1.14-3.01-4.56zM14.16 4.06c.78-.95 1.31-2.27 1.16-3.58-1.13.05-2.5.75-3.31 1.7-.73.84-1.36 2.19-1.19 3.48 1.26.1 2.55-.64 3.34-1.6z"/></svg>App Store</button>
+      <div class="hdr-pop-wrap" id="themeBtnWrap">
+        <button class="hdr-ic" id="themeBtn" type="button" aria-label="Chọn nền" aria-haspopup="true" aria-expanded="false" title="Chọn nền"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg></button>
+        <div class="hdr-panel theme-panel" id="themePanel" hidden>
+          <h4>Chọn nền</h4>
+          <button class="theme-opt" type="button" data-theme-opt="sang"><span class="theme-dot" style="background:#f7f5f1"></span>Sáng<span class="tk">✓</span></button>
+          <button class="theme-opt" type="button" data-theme-opt="toi"><span class="theme-dot" style="background:#14161b"></span>Tối<span class="tk">✓</span></button>
+          <button class="theme-opt" type="button" data-theme-opt="sakura"><span class="theme-dot" style="background:#fdf2f4"></span>Sakura<span class="tk">✓</span></button>
+          <button class="theme-opt" type="button" data-theme-opt="matcha"><span class="theme-dot" style="background:#f2f5ec"></span>Matcha<span class="tk">✓</span></button>
+          <button class="theme-opt" type="button" data-theme-opt="xanh"><span class="theme-dot" style="background:#eef2f7"></span>Xanh dương<span class="tk">✓</span></button>
+        </div>
+      </div>
       <div class="hdr-pop-wrap">
         <button class="hdr-ic" id="notifBtn" type="button" aria-label="Thông báo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-badge" id="notifBadge" hidden></span></button>
         <div class="hdr-panel" id="notifPanel" hidden></div>
@@ -2538,11 +2687,11 @@ function fmtDate(d){
 }
 /* Số liệu thật từng cấp (đã đối chiếu với dữ liệu đi kèm trang) */
 var LV_TOTALS = {
-  N5: {kanji: 126, vocab: 1205, grammar: 84},
-  N4: {kanji: 235, vocab: 1347, grammar: 74},
+  N5: {kanji: 126, vocab: 1209, grammar: 84},
+  N4: {kanji: 235, vocab: 1346, grammar: 75},
   N3: {kanji: 429, vocab: 881, grammar: 72},
   N2: {kanji: 273, vocab: 2284, grammar: 72},
-  N1: {kanji: 1075, vocab: 0, grammar: 72}
+  N1: {kanji: 1075, vocab: 4813, grammar: 72}
 };
 var EXAM_TOTALS = { /* [viết, nghe, phút, điểm đậu /180] */
   N5: [67, 24, 60, 80], N4: [70, 28, 80, 90], N3: [74, 28, 100, 95],
@@ -5456,7 +5605,8 @@ function startExam(lv, testNo, qs, mins, label){
     lv: lv, test: testNo, label: label || ("Test " + testNo), qs: qs, mins: mins,
     official: (lv === "N3" && testNo === 0), /* M-07: De chuan N3 cham theo nhom N2/N1 nhu mobile */
     answers: qs.map(function(q){ return q.type === "star" ? [] : -1; }),
-    submitted: false, timeLeft: mins * 60, result: null
+    submitted: false, timeLeft: mins * 60, result: null,
+    listen: {} /* D-4: trạng thái cổng nghe từng câu nghe: {plays, heard} */
   };
 }
 function isAnswered(i){
@@ -5516,12 +5666,64 @@ function renderExamPlayer(){
   var sb = document.getElementById("exSubmit");
   if(sb) sb.addEventListener("click", function(){ confirmSubmit(); });
 }
+/* ---------- D-4: cổng nghe của đề thi (port hành vi bản mobile) ----------
+   Mobile (exListenHtml / exPlayListen, bản mobile a518e77): đáp án chỉ hiện
+   sau khi audio phát xong (sự kiện 'ended' chuyển stage ask -> answer); mỗi
+   câu tối đa 2 lượt phát, lượt chỉ tính khi 'playing' thực sự nổ, lượt 3+
+   bị bỏ qua lặng (if(st.plays >= 2) return) và nút phát lại không còn hiện.
+   Web khác mobile ở 2 điểm nên không port 1-1 được:
+   (a) web render TẤT CẢ thẻ cùng lúc (mobile render 1 câu/lần) — trạng thái
+       cổng nghe nằm trong EX.listen, khóa theo chỉ số câu;
+   (b) web dùng <audio controls> native (mobile dùng nút ▶ + Audio() mới mỗi
+       lượt) — người học có thể pause/resume/seek, nên 1 lượt chỉ tính khi
+       tiếng thực sự phát ra TỪ ĐẦU (currentTime < 1 ở 'playing'); resume
+       giữa chừng không tính lượt mới. Sau khi nghe đủ 2 lượt thì gỡ luôn
+       điều khiển (đúng mobile: hết 2 lượt thì không còn nút phát lại).
+   Van an toàn (đúng mobile, renderQ: stage ask + plays>=2 + không đang phát
+   thì chuyển sang answer): nếu đã dùng đủ 2 lượt mà audio chưa từng phát
+   tới cuối (vd pause giữa lượt 2 rồi bỏ), đáp án vẫn mở ở sự kiện 'pause'
+   — tránh kẹt vĩnh viễn không trả lời được câu. */
+function exListenState(i){
+  if(!EX.listen) EX.listen = {};
+  if(!EX.listen[i]) EX.listen[i] = {plays: 0, heard: false};
+  return EX.listen[i];
+}
+function exListenNoteText(st){
+  if(st.heard && st.plays >= 2) return "Đã phát đủ 2 lần của câu này.";
+  if(st.heard) return "Nghe lại được 1 lần nữa (mỗi câu tối đa 2 lần phát).";
+  if(st.plays === 0) return "Nghe xong, đáp án sẽ hiện để bạn chọn. Mỗi câu phát tối đa 2 lần.";
+  return "Nghe xong, đáp án sẽ hiện để bạn chọn. (đã phát " + st.plays + "/2 lần)";
+}
+/* Đồng bộ DOM của 1 thẻ nghe theo trạng thái cổng (gọi sau playing/pause/
+   ended; KHÔNG render lại cả thẻ — render lại giữa chừng sẽ hủy phần tử
+   audio đang phát). */
+function exListenSync(qi, noteOverride){
+  var card = document.getElementById("qc" + qi);
+  if(!card) return;
+  var st = exListenState(qi);
+  var note = card.querySelector('[data-exln="' + qi + '"]');
+  if(note) note.textContent = noteOverride || exListenNoteText(st);
+  if(st.heard){
+    var opts = card.querySelector('[data-listen-opts="' + qi + '"]');
+    if(opts) opts.style.display = "";
+    var au = card.querySelector(".ex-audio");
+    if(au && st.plays >= 2) au.controls = false;
+  }
+}
 function qcardHTML(q, i, num){
   var a = EX.answers[i];
+  /* D-4: cổng nghe — câu nghe chưa nộp thì khóa đáp án tới khi nghe xong. */
+  var lst = (!EX.submitted && q.audio) ? exListenState(i) : null;
+  var heard = lst ? lst.heard : true;
   var h = '<div class="qcard" id="qc' + i + '"><div class="qn">Câu ' + num + " / " + EX.qs.length + "</div>";
   if(q.passFirst && q.passageHTML) h += '<div class="qpass jp">' + q.passageHTML + "</div>";
   else if(q.passFirst && q.passage) h += '<div class="qpass jp">' + esc(q.passage) + "</div>";
-  if(q.audio) h += '<audio class="ex-audio" controls preload="none" src="' + esc(q.audio) + '"></audio>';
+  if(q.audio){
+    /* D-4: hết 2 lượt phát thì gỡ điều khiển (đúng mobile: không còn nút
+       phát lại); chưa nộp thì hiện dòng nhắc cổng nghe. */
+    h += '<audio class="ex-audio"' + ((lst && lst.heard && lst.plays >= 2) ? '' : ' controls') + ' preload="none" src="' + esc(q.audio) + '"></audio>';
+    if(lst) h += '<p class="ex-listen-note" data-exln="' + i + '">' + esc(exListenNoteText(lst)) + '</p>';
+  }
   if(q.type === "star"){
     h += '<p class="qtext jp">' + esc(q.star.pre) + '<span class="ex-slots">' +
       [0, 1, 2, 3].map(function(s){
@@ -5538,7 +5740,10 @@ function qcardHTML(q, i, num){
     if(q.promptHTML) h += '<p class="qtext jp">' + q.promptHTML + "</p>";
     else if(q.prompt) h += '<p class="qtext jp">' + esc(q.prompt) + "</p>";
     var imgCls = q.type === "imgmc" ? " img2" : "";
-    h += '<div class="opts' + imgCls + '">';
+    /* D-4: đáp án câu nghe ẩn tới khi audio phát xong (đúng mobile: đáp án
+       chỉ hiện ở stage answer). Câu viết / câu đã nộp / đã nghe xong thì
+       hiện bình thường. */
+    h += '<div class="opts' + imgCls + '"' + (lst ? ' data-listen-opts="' + i + '"' : '') + (!heard ? ' style="display:none"' : '') + '>';
     if(q.type === "imgmc"){
       q.optImgs.forEach(function(src, oi){
         h += '<button type="button" class="opt' + (a === oi ? " sel" : "") + '" data-oi="' + oi + '" data-qi="' + i + '">' +
@@ -5593,6 +5798,9 @@ function bindExamCards(){
     if(!t) return;
     var qi = parseInt(t.getAttribute("data-qi"), 10);
     var q = EX.qs[qi];
+    /* D-4: phòng thủ thêm ngoài display:none — đáp án câu nghe chưa nghe
+       xong không nhận click (kể cả click lập trình / bàn phím). */
+    if(q.audio && !EX.submitted && !exListenState(qi).heard) return;
     if(t.hasAttribute("data-oi")){
       EX.answers[qi] = parseInt(t.getAttribute("data-oi"), 10);
     } else if(t.hasAttribute("data-ci")){
@@ -5613,8 +5821,64 @@ function bindExamCards(){
     }
     updateExTop();
   });
+  /* D-4: gắn sự kiện cổng nghe cho mọi thẻ nghe đang hiển thị. */
+  EX.qs.forEach(function(q, i){ if(q.audio && !EX.submitted) bindOneCard(i); });
 }
-function bindOneCard(qi){ /* sự kiện đã ủy quyền ở #exBody; hàm giữ chỗ để mở rộng */ }
+function bindOneCard(qi){
+  /* D-4: cổng nghe trên <audio controls> native (port exPlayListen của
+     mobile): lượt chỉ tính ở 'playing' khi phát từ đầu; 'ended' mở đáp án;
+     lượt 3+ bị chặn; pause sau khi đã đủ 2 lượt cũng mở đáp án (van an toàn
+     đúng mobile — tránh kẹt khi không nghe tới cuối lượt 2). */
+  if(!EX || EX.submitted) return;
+  var q = EX.qs[qi];
+  if(!q || !q.audio) return;
+  var card = document.getElementById("qc" + qi);
+  if(!card) return;
+  var au = card.querySelector(".ex-audio");
+  if(!au || au._skBound) return;
+  au._skBound = true;
+  var st = exListenState(qi);
+  au.addEventListener("play", function(){
+    if(st.plays >= 2 && (au.currentTime < 1 || au.ended)){
+      au.pause();
+      try{ au.currentTime = 0; }catch(_){}
+      exListenSync(qi, "Đã phát đủ 2 lần của câu này.");
+    }
+  });
+  au.addEventListener("playing", function(){
+    if(au.currentTime >= 1 || au._skCounted) return;
+    if(st.plays >= 2){
+      au.pause();
+      try{ au.currentTime = 0; }catch(_){}
+      exListenSync(qi, "Đã phát đủ 2 lần của câu này.");
+      return;
+    }
+    au._skCounted = true;
+    st.plays++;
+    exListenSync(qi, "Đang phát bản nghe… Nghe xong, đáp án sẽ hiện để bạn chọn.");
+  });
+  au.addEventListener("pause", function(){
+    if(au.currentTime >= 1) au._skCounted = false;
+    /* Van an toàn (đúng mobile): đã đủ 2 lượt mà chưa nghe tới cuối thì
+       pause cũng mở đáp án — không kẹt vĩnh viễn. */
+    if(st.plays >= 2 && !st.heard && !au.ended){
+      st.heard = true;
+      exListenSync(qi);
+    }
+  });
+  au.addEventListener("seeked", function(){
+    /* Tua về đầu (< 1s) = bắt đầu lượt nghe mới: cho phép 'playing' tính
+       lượt. (Sự kiện media dispatch bất đồng bộ nên không đọc currentTime
+       ở 'seeking' để suy vị trí trước khi tua — lúc handler chạy thì
+       currentTime đã là vị trí đích.) */
+    if(au.currentTime < 1) au._skCounted = false;
+  });
+  au.addEventListener("ended", function(){
+    au._skCounted = false;
+    st.heard = true;
+    exListenSync(qi);
+  });
+}
 function updateExTop(){
   var c = document.getElementById("exCount"), p = document.getElementById("exProg");
   if(c) c.textContent = "Đã trả lời " + answeredCount() + "/" + EX.qs.length;
@@ -6594,7 +6858,8 @@ var sv2Player = null, sv2Ready = false, sv2Timer = null, sv2LastT = 0;
 /* Xem thu 30s (user quyet 17/11/2026): bai co san khong thuoc 5 video mien
    phi thi user chua Premium chi xem thu 30 giay dau — sv2Tick dung video +
    hien bang Premium khi toi moc. sv2Preview dat o svuActivate, reset moi
-   lan mo bai (mo lai duoc 30s moi); sv2PreviewDone de bang chi hien 1 lan. */
+   lan mo bai (mo lai duoc 30s moi); sv2PreviewDone de bang chi hien 1 lan
+   moi lan cham 30s (tua ve truoc 30s thi reset de mo bang lai). */
 var SV_PREVIEW_SECS = 30;
 var sv2Preview = false, sv2PreviewDone = false;
 var SV_PREVIEW_BODY = "Bạn vừa xem thử 30 giây đầu của video này. Gói miễn phí mở 1 video Shadowing đầu tiên mỗi mục (5 video) xem full — nâng cấp để xem toàn bộ video trên cả web và app điện thoại.";
@@ -6691,15 +6956,20 @@ function sv2Tick(){
   }
   document.getElementById("sv2TimeCur").textContent = svFmt(t);
   /* Xem thu 30s: toi moc thi dung video; lan dau hien bang Premium, cac lan
-     sau (bam phat lai) chi dung, khong hien bang nua. Kiem tra Premium truc
+     sau (bam phat lai) chi dung, khong hien bang nua; tua ve truoc 30s thi
+     duoc xem thu lai toi 30s (mo bang lai lan nua). Kiem tra Premium truc
      tiep moi tick de len Premium giua bai thi mo khoa ngay. */
-  if(sv2Preview && !skIsPremium() && t >= SV_PREVIEW_SECS){
-    if(sv2Player.pauseVideo) sv2Player.pauseVideo();
-    if(!sv2PreviewDone){
-      sv2PreviewDone = true;
-      if(typeof skLockedPrompt === "function") skLockedPrompt("Video này", SV_PREVIEW_BODY);
+  if(sv2Preview && !skIsPremium()){
+    if(t >= SV_PREVIEW_SECS){
+      if(sv2Player.pauseVideo) sv2Player.pauseVideo();
+      if(!sv2PreviewDone){
+        sv2PreviewDone = true;
+        if(typeof skLockedPrompt === "function") skLockedPrompt("Video này", SV_PREVIEW_BODY);
+      }
+      return;
+    } else if(sv2PreviewDone){
+      sv2PreviewDone = false;
     }
-    return;
   }
   /* Đang phát theo đoạn câu: tới cuối đoạn thì dừng (hoặc lặp lại nếu tab
      Shadowing đang bật lặp) */
@@ -7168,6 +7438,11 @@ function sv2ShowWord(i, res){
 function sv2WordTap(i, k){
   var segs = sv2Segs[i] ? sv2Segs[i].segs : null;
   if(!segs || !segs[k]) return;
+  /* m-22: bong bóng giải thích đã bị gỡ (chuyển trang/bài) trước khi bấm —
+     bỏ qua luôn, không throw ở textContent bên dưới. */
+  var _sv2T = document.getElementById("sv2ExpTitle");
+  var _sv2X = document.getElementById("sv2ExpText");
+  if(!_sv2T || !_sv2X) return;
   var seg = segs[k];
   /* Vị trí ký tự của cụm trong câu (các cụm ghép lại thành câu gốc) */
   var offset = 0;
@@ -10309,7 +10584,11 @@ function skParsePremium(p){
     else if(p.until != null){
       var ms = null;
       if(typeof p.until === "number") ms = p.until < 1e12 ? p.until * 1000 : p.until;
-      else if(typeof p.until.toMillis === "function") ms = p.until.toMillis();
+      else if(typeof p.until.toMillis === "function"){
+        /* toMillis() có thể throw (Timestamp hỏng/lạ) — bắt lại, ms giữ null
+           như input không parse được: until null, active false (luật cũ). */
+        try{ ms = p.until.toMillis(); }catch(e){}
+      }
       else if(typeof p.until === "string"){ var t = Date.parse(p.until); if(!isNaN(t)) ms = t; }
       if(ms != null){ until = ms; active = ms > Date.now(); }
     }
