@@ -4327,6 +4327,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <div class="kanatools">
           <button class="kanatab on" id="kanaHira" style="min-height:42px;padding:0 16px;font-size:14px;">Hiragana</button>
           <button class="kanatab" id="kanaKata" style="min-height:42px;padding:0 16px;font-size:14px;">Katakana</button>
+          <button class="wv-flashbtn" id="kanaFlashBtn" style="margin-left:auto;margin-top:0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-1"/></svg>Flashcard</button>
         </div>
         <h3 class="secttl" style="margin-top:2px;">Seion · Âm trong (46 chữ)</h3>
         <div class="kanagrid jp" id="kanaGrid"></div>
@@ -10898,6 +10899,21 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   document.getElementById("kanaHira").addEventListener("click", function(){ setKanaMode(0); });
   document.getElementById("kanaKata").addEventListener("click", function(){ setKanaMode(1); });
+  function kanaFlashDeck(){
+    var words = [];
+    [KANA, KANA_D, KANA_Y].forEach(function(rows){
+      rows.forEach(function(c){
+        if(!c) return;
+        words.push({word:c[kanaMode], reading:c[2], hanViet:"", meaning:"", ex:null, img:null, lv:null, from:""});
+      });
+    });
+    return words;
+  }
+  document.getElementById("kanaFlashBtn").addEventListener("click", function(){
+    wvCtx = null; wvSpecKey = kanaMode === 0 ? "KANA_HIRA" : "KANA_KATA"; wvSavedMode = false;
+    wvDeckSrc = { title: "Bảng chữ cái " + (kanaMode === 0 ? "Hiragana" : "Katakana"), words: kanaFlashDeck() };
+    openWvFlash();
+  });
   renderKana();
   document.getElementById("closeKana").addEventListener("click", function(){ hideOv(document.getElementById("kanaOverlay")); });
 
@@ -15920,8 +15936,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   function renderWvFlash(){
     var done = wvFIdx >= wvDeck.length;
     var known = wvFKnownCount();
+    var kanaDeck = (wvSpecKey && wvSpecKey.indexOf("KANA_") === 0);
     apSyncUI();
     document.getElementById("wvFlashSub").textContent =
+      kanaDeck ?
+      wvDeck.length + " chữ · Đã thuộc " + known + " / " + wvDeck.length + " chữ" :
       wvDeck.length + " từ của bài · Đã thuộc " + known + " / " + wvDeck.length + " từ";
     document.getElementById("wvFlashCard").hidden = done;
     /* Đang tự động phát thì giữ ẩn 2 nút chấm tay (apCycle gọi lại render này cho từng
@@ -15939,6 +15958,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(done){
       document.getElementById("wvFlashDoneTitle").textContent = "Đã học hết thẻ của " + wvDeckSrc.title;
       document.getElementById("wvFlashDoneNote").textContent =
+        kanaDeck ?
+        "Bạn đã thuộc " + known + " / " + wvDeck.length + " chữ." +
+        (known < wvDeck.length ? " Học lại để ôn tiếp các chữ chưa thuộc nhé." : " Thuộc hết cả bảng rồi — giỏi lắm!") :
         "Bạn đã thuộc " + known + " / " + wvDeck.length + " từ của bài này." +
         (known < wvDeck.length ? " Học lại bài để ôn tiếp các từ chưa thuộc nhé." : " Thuộc hết cả bài rồi — giỏi lắm!");
       rotActivity("vocab");
@@ -15953,7 +15975,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var imgHtml = v.img ? '<div class="wv-fimg"><img src="' + v.img + '" alt="Hình minh họa: ' + esc(v.meaning) + '"></div>' : '';
     document.getElementById("wvFlashFront").innerHTML =
       imgHtml +
-      '<div class="fw jp">' + esc(v.word) + '</div><div class="fhint">Bấm vào thẻ để lật xem cách đọc và nghĩa</div>';
+      '<div class="fw jp">' + esc(v.word) + '</div><div class="fhint">' + (kanaDeck ? "Bấm vào thẻ để lật xem cách đọc" : "Bấm vào thẻ để lật xem cách đọc và nghĩa") + '</div>';
     document.getElementById("wvFlashBack").innerHTML =
       imgHtml +
       '<div class="fread jp" style="font-size:26px;">' + esc(v.reading) + '</div>' +
@@ -15968,6 +15990,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     syncWvFCardExtras(v);
     document.getElementById("wvFlashCount").textContent =
+      kanaDeck ?
+      "Thẻ " + (wvFIdx + 1) + " / " + wvDeck.length + " · Đã thuộc " + known + " / " + wvDeck.length + " chữ" :
       "Thẻ " + (wvFIdx + 1) + " / " + wvDeck.length + " · Đã thuộc " + known + " / " + wvDeck.length + " từ của bài";
   }
   function flipWvFlash(){
@@ -24358,7 +24382,7 @@ function furiHTML(text){
       actions:[{label:"Mở Shadowing", action:"shadow"},{label:"Mở Luyện nghe", action:"listen"}] },
     { id:"flash", label:"Flashcard ôn ở đâu?",
       keywords:["flashcard","on tap","the ghi nho","da thuoc","chua thuoc","on the"],
-      answer:"Ôn flashcard có 2 đường:\n\n• Ôn kanji theo bài: hàng tiện ích đầu Home → “Flashcard” (hoặc nhiệm vụ “Ôn thẻ đến hạn”) → chọn cấp N5–N1 → chọn bài (12 chữ/bài) → bấm vào thẻ để lật xem cách đọc + nghĩa, rồi bấm “Đã thuộc” hoặc “Chưa thuộc”. Ôn xong bài là hoàn thành nhiệm vụ ôn thẻ của ngày.\n• Ôn từ vựng theo bài: mở Từ vựng → cấp → bài → trang danh sách từ → nút “Flashcard” đỏ ở góc phải trên.\n\nKhu “Sắp đến hạn” ở trang Ôn tập liệt kê các chữ sắp quên để bạn ôn lại trước.\n\nShadowing (luyện nói đuổi): hàng tiện ích đầu Home → “Shadowing” mở mục Shadowing đầy đủ — chọn cấp N5–N1 rồi shadowing theo từng hội thoại Part 3 (nghe mẫu → nghe chậm → ghi âm nhắc lại tối đa 30 giây → nghe lại so sánh); 8 câu Minna vẫn còn ở cuối trang N5. Vào Luyện nghe → chọn cấp cũng tới được mục này và xem video phụ đề chạy.",
+      answer:"Ôn flashcard có 3 đường:\n\n• Ôn kanji theo bài: hàng tiện ích đầu Home → “Flashcard” (hoặc nhiệm vụ “Ôn thẻ đến hạn”) → chọn cấp N5–N1 → chọn bài (12 chữ/bài) → bấm vào thẻ để lật xem cách đọc + nghĩa, rồi bấm “Đã thuộc” hoặc “Chưa thuộc”. Ôn xong bài là hoàn thành nhiệm vụ ôn thẻ của ngày.\n• Ôn từ vựng theo bài: mở Từ vựng → cấp → bài → trang danh sách từ → nút “Flashcard” đỏ ở góc phải trên.\n• Ôn bảng chữ cái: mở Bảng chữ cái (hàng tiện ích đầu Home) → nút “Flashcard” đỏ ở góc phải trên, cạnh 2 tab Hiragana/Katakana.\n\nKhu “Sắp đến hạn” ở trang Ôn tập liệt kê các chữ sắp quên để bạn ôn lại trước.\n\nShadowing (luyện nói đuổi): hàng tiện ích đầu Home → “Shadowing” mở mục Shadowing đầy đủ — chọn cấp N5–N1 rồi shadowing theo từng hội thoại Part 3 (nghe mẫu → nghe chậm → ghi âm nhắc lại tối đa 30 giây → nghe lại so sánh); 8 câu Minna vẫn còn ở cuối trang N5. Vào Luyện nghe → chọn cấp cũng tới được mục này và xem video phụ đề chạy.",
       actions:[{label:"Mở Flashcard", action:"flash"},{label:"Mở Shadowing", action:"shadow"}] },
     { id:"path", label:"Lộ trình, nhiệm vụ, EXP là gì?",
       keywords:["lo trinh","khai trinh do","nhiem vu","exp","cap do","streak","thang cap","chinh tuyen"],
