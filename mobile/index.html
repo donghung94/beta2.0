@@ -9083,9 +9083,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* ---------- Báo lỗi câu hỏi đề thi (18/11) ----------
      Nút "🚩 Báo lỗi" ở mỗi câu (lúc làm bài + màn xem lại) mở overlay này.
      Overlay là DOM thuần trên phòng thi: không đổi EXS.state nên timer vẫn
-     chạy, không gọi renderQ() nên đáp án đã chọn còn nguyên. Ghi Firestore
-     collection sk_reports (public create-only theo rules; ẩn danh được).
-     Chống spam theo thiết bị: 5/giờ + 20/ngày (localStorage). */
+     chạy, không gọi renderQ() nên đáp án đã chọn còn nguyên. Gửi qua Cloud
+     Function submitInbox (m-51, 21/11 — thay ghi trực tiếp Firestore
+     collection sk_reports; ẩn danh được). Chống spam theo thiết bị:
+     5/giờ + 20/ngày (localStorage) + throttle phía server. */
   var exRepOverlay = document.getElementById("exReportOverlay");
   var exRepCur = -1; /* index toàn cục của câu đang báo */
   var exRepSending = false;
@@ -9096,6 +9097,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var app = premiumFbApp();
       return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
     }catch(_){ return null; }
+  }
+  /* W21-7: id RAM du phong khi localStorage loi — MOI LAN LOAD 1 id ngau
+     nhien rieng, CACHE trong bien module de moi lan goi trong cung 1 lan
+     load (session claim, heartbeat, report) tra CUNG id. Truoc day catch
+     tra chuoi dev-unknown dung chung cho moi may loi localStorage nen cac may
+     do de len cung 1 session doc. Duong thuong (localStorage OK) khong doi. */
+  var exRepRamId = null;
+  function exRepRamDeviceId(){
+    if(!exRepRamId) exRepRamId = "ram-" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    return exRepRamId;
   }
   function exRepDeviceId(){
     try{
@@ -9108,7 +9119,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         window.localStorage.setItem("sk_device_id", id);
       }
       return id;
-    }catch(_){ return "dev-unknown"; }
+    }catch(_){ return exRepRamDeviceId(); }
   }
   function exRepPlainQ(q){
     if(q.star) return exStrip(q.fullSent);
@@ -9191,6 +9202,27 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(log.length >= EX_REP_DAY_MAX) return "Bạn đã gửi đủ 20 báo cáo trong hôm nay — thử lại vào ngày mai nhé.";
     return "";
   }
+  /* Gui bao loi/gop y qua Cloud Function submitInbox (m-51, 21/11): client
+     khong ghi truc tiep sk_reports/sk_feedback nua — function kiem tra
+     payload + throttle phia server. Gui doc NGUYEN nhu cu (ke ca
+     createdAt + uid — server tu strip uid va tu dong createdAt).
+     Fetch cors mac dinh (backend CO CORS cho origin app — KHONG dung
+     no-cors). Tra Promise cung hinh dang .add(): resolve khi {ok:true},
+     reject khi throttle (200 {ok:false})/400/loi mang de nhanh
+     .then/.catch cu chay nhu truoc. */
+  var SK_INBOX_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/submitInbox";
+  function skSubmitInbox(kind, doc){
+    return fetch(SK_INBOX_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({kind: kind, doc: doc})
+    }).then(function(r){
+      if(!r.ok) throw new Error("submitInbox HTTP " + r.status);
+      return r.json();
+    }).then(function(j){
+      if(!j || !j.ok) throw new Error((j && j.error) || "submitInbox failed");
+    });
+  }
   function exRepSend(){
     if(exRepSending) return;
     if(!EXS || exRepCur < 0 || !EXS.qs[exRepCur]){
@@ -9206,11 +9238,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     var lim = exRepCheckLimit();
     if(lim){ exRepErr(lim); return; }
-    var db = exRepDb();
-    if(!db){
-      exRepErr("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại.");
-      return;
-    }
+    /* m-51: ghi qua submitInbox (fetch) — khong can Firestore client nua. */
     var q = EXS.qs[exRepCur];
     var doc = {
       level: EXS.lv,
@@ -9233,7 +9261,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var btn = document.getElementById("exRepSend");
     if(btn) btn.disabled = true;
     exRepErr("");
-    db.collection("sk_reports").add(doc).then(function(){
+    skSubmitInbox("report", doc).then(function(){
       exRepSending = false;
       var log = exRepLogLoad();
       log.push(Date.now());
@@ -15766,14 +15794,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     try{ window.localStorage.setItem(SK_FB_KEY, JSON.stringify(a)); }catch(_){}
   }
   /* Mọi góp ý (khung trong flashcard lẫn mục cuối trang) đều qua hàm này:
-     ghi Firestore collection sk_feedback (public create-only theo rules,
-     ẩn danh được — cùng pattern sk_reports), ctx cho biết bài — và từ, nếu
-     gửi từ khung của từ. Ghi lỗi (mất mạng / chưa kết nối Firebase) thì
-     lưu bản sao dự phòng vào localStorage để không mất góp ý. done(ok)
-     gọi khi biết kết quả: ok=true đã ghi Firestore, ok=false chỉ lưu local. */
+     gửi qua Cloud Function submitInbox (m-51, 21/11 — thay ghi trực tiếp
+     Firestore collection sk_feedback), ctx cho biết bài — và từ, nếu gửi
+     từ khung của từ. Ghi lỗi (mất mạng / server throttle) thì lưu bản sao
+     dự phòng vào localStorage để không mất góp ý. done(ok) gọi khi biết
+     kết quả: ok=true đã tới máy chủ, ok=false chỉ lưu local. */
   function fbSave(text, ctx, done){
-    var db = fbDb();
-    if(!db){ fbSaveLocal(text, ctx); if(done) done(false); return; }
     var doc = {
       text: text, ctx: ctx || "",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -15781,7 +15807,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       email: (typeof signedInEmail === "string" && signedInEmail) ? signedInEmail : null,
       deviceId: exRepDeviceId()
     };
-    db.collection("sk_feedback").add(doc).then(function(){
+    skSubmitInbox("feedback", doc).then(function(){
       if(done) done(true);
     }).catch(function(){
       fbSaveLocal(text, ctx);
@@ -21184,8 +21210,8 @@ function furiHTML(text){
       skSessionHeartbeatStart();
       return Promise.resolve();
     }
-    var myId = "dev-unknown";
-    try{ myId = exRepDeviceId() || "dev-unknown"; }catch(_){}
+    var myId = "";
+    try{ myId = exRepDeviceId() || exRepRamDeviceId(); }catch(_){ myId = exRepRamDeviceId(); }
     var label = skSessionDeviceLabel();
     var col = db.collection("kanji_progress").doc(uid).collection("sessions");
     var ref = col.doc(myId);
