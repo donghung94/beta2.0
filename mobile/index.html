@@ -13938,7 +13938,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         svuFnFailed = true; return null;
       }
       if(!firebase.apps || !firebase.apps.length) firebase.initializeApp(SVU_FB_CONFIG);
-      svuFn = firebase.functions("asia-northeast1").httpsCallable("makeLessonFromVideo");
+      svuFn = firebase.app().functions("asia-northeast1").httpsCallable("makeLessonFromVideo");
       return svuFn;
     }catch(e){ svuFnFailed = true; return null; }
   }
