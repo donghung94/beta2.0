@@ -2342,6 +2342,15 @@ html[data-theme="toi"] body{background-image:
 .skh-bar{ flex:1; min-width:60px; height:10px; background:var(--line); border-radius:999px; overflow:hidden; }
 .skh-bar i{ display:block; height:100%; background:linear-gradient(90deg,#c0272d,#e05257); border-radius:999px; }
 .skh-pct{ color:var(--red); font-size:16px; flex:none; }
+/* Nút Khai trình độ trong thẻ Lộ trình 30 ngày (Home) */
+.skh-card .skh-planhead{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:0 0 14px; }
+.skh-card .skh-planhead h2{ margin:0; }
+.skp-declare-btn{ border:1px solid var(--line-strong); background:var(--card2); color:var(--ink); border-radius:999px; padding:6px 14px; font-weight:700; font-size:13.5px; cursor:pointer; white-space:nowrap; }
+.skp-declare-btn.hl{ background:var(--red); border-color:var(--red); color:#fff; }
+.skp-declare-panel{ display:none; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:0 0 14px; background:var(--card2); }
+.skp-declare-panel.open{ display:block; }
+.skp-declare-panel .cd-lv{ margin:0; }
+.skp-declare-panel p{ margin:10px 0 0; font-size:13.5px; color:var(--muted); }
 .skh-card .cd-card{ background:transparent; border:0; box-shadow:none; padding:0; }
 /* Lưới 12 thẻ mục học (không thanh tiến độ — app không có số liệu thật từng mục) */
 .skh-sect{ font-size:19px; font-weight:800; margin:26px 0 0; }
@@ -3221,7 +3230,17 @@ function renderHome(){
       '<a class="skp-cta" href="#/canhan">Xem lộ trình →</a></div>';
   }
   /* 4. Lộ trình 30 ngày dạng lưới 10 cột (như bảng xem trước) */
-  h += '<section class="skh-card"><h2>🗺️ Lộ trình 30 ngày</h2>' +
+  h += '<section class="skh-card"><div class="skh-planhead"><h2>🗺️ Lộ trình 30 ngày</h2>' +
+    '<button type="button" class="skp-declare-btn' + (declaredLvW === 0 ? " hl" : "") + '" id="skpDeclareBtn">🎓 Khai trình độ</button></div>' +
+    '<div class="skp-declare-panel" id="skpDeclarePanel"><div class="cd-lv" style="padding:0">' +
+    LV_NAMES_W.map(function(n, i){
+      return '<button type="button" data-sdlv="' + i + '"' + (i === declaredLvW ? ' class="on"' : "") + ">" + n + "</button>";
+    }).join("") + '</div>' +
+    '<p id="skpDeclareSummary">' +
+    (declaredLvW === 0
+      ? "Chưa khai trình độ → lộ trình 30 ngày cấp N5 (chặng 1). Chọn cấp bạn đã đạt để app xếp lộ trình phù hợp."
+      : "Đã khai: " + LV_NAMES_W[declaredLvW] + " → lộ trình 30 ngày cấp " + planLv + " (chặng " + (declaredLvW + 1) + ").") +
+    "</p></div>" +
     '<div class="skh-road"><span>' + (planDone >= 30 ? "Đã hoàn thành lộ trình" : "Ngày <b>" + curDayNum + "/30</b> · " + planLv) + '</span><div class="skh-bar"><i style="width:' + planPct + '%"></i></div><b class="skh-pct">' + planPct + '%</b></div>' +
     '<div class="skp-plangrid" id="skpPlanGrid">' +
     (function(){
@@ -3351,6 +3370,20 @@ function bindHome(){
     if(st === "cur"){ location.hash = b.getAttribute("data-href") || "#/canhan"; return; }
     location.hash = "#/canhan";
   });
+  /* Khai trình độ trong thẻ Lộ trình: mở panel chọn cấp, chọn xong vẽ lại Home. */
+  var dBtn = document.getElementById("skpDeclareBtn");
+  var dPanel = document.getElementById("skpDeclarePanel");
+  if(dBtn && dPanel){
+    dBtn.addEventListener("click", function(){
+      dPanel.classList.toggle("open");
+    });
+    dPanel.addEventListener("click", function(e){
+      var b = e.target.closest ? e.target.closest("[data-sdlv]") : null;
+      if(!b) return;
+      skpSetDeclaredLv(parseInt(b.getAttribute("data-sdlv"), 10));
+      renderHome();
+    });
+  }
   /* Đăng nhập/đăng xuất ngay trên Home: auth listener của app không vẽ lại Home
      nên kiểm tra 2s/lần (cùng nhịp với thẻ user ở sidebar) để cập nhật lời chào
      + nhiệm vụ khi tài khoản đổi; tự dọn khi rời Home. */
@@ -10618,6 +10651,13 @@ var REALMS_PATH = [ /* cùng dữ liệu lộ trình với bản mobile */
 ];
 var LV_NAMES_W = ["Chưa khai", "N5", "N4", "N3", "N2", "N1"];
 var declaredLvW = 0; /* 0 = chưa khai trình độ */
+try{ var _dlv0 = parseInt(localStorage.getItem("sk_declared_lv") || "0", 10); if(_dlv0 >= 0 && _dlv0 <= 5) declaredLvW = _dlv0; }catch(e){}
+/* Ghi cấp đã khai: RAM + localStorage (khách vẫn giữ sau reload) + đẩy sync. */
+function skpSetDeclaredLv(v){
+  declaredLvW = v;
+  try{ localStorage.setItem("sk_declared_lv", String(v)); }catch(e){}
+  skSyncPushPlan();
+}
 /* ===== Lộ trình 30 ngày theo cấp đang học =====
    Tiến độ lưu riêng từng cấp ở localStorage "sk_plan_done_<cấp>" (số ngày đã xong, 0–30):
    ngày 1..done đã xong · ngày done+1 đang học · các ngày sau khóa. */
@@ -10735,8 +10775,7 @@ function renderPersonalPage(){
   $app.innerHTML = h;
   $app.querySelectorAll("[data-dlv]").forEach(function(b){
     b.addEventListener("click", function(){
-      declaredLvW = parseInt(b.getAttribute("data-dlv"), 10);
-      skSyncPushPlan();
+      skpSetDeclaredLv(parseInt(b.getAttribute("data-dlv"), 10));
       renderPersonalPage();
     });
   });
@@ -14578,7 +14617,7 @@ var SK_SYNC_ADAPTER = {
         /* Cấp đang học từ máy khác: chỉ áp dụng khi phiên này chưa khai. */
         if(declaredLvW === 0 && payload && payload.appliedLv){
           var i = ["N5", "N4", "N3", "N2", "N1"].indexOf(payload.appliedLv);
-          if(i >= 0) declaredLvW = i + 1;
+          if(i >= 0){ declaredLvW = i + 1; try{ localStorage.setItem("sk_declared_lv", String(declaredLvW)); }catch(e){} }
         }
         return;
       }
