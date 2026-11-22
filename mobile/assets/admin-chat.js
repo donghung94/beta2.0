@@ -182,7 +182,7 @@
   function markRead(){
     if(!uid) return;
     try{
-      var fn = firebase.functions("asia-northeast1").httpsCallable("markAdminChatRead");
+      var fn = firebase.app().functions("asia-northeast1").httpsCallable("markAdminChatRead");
       fn({uid: uid, lastSeenAt: Date.now()}).catch(function(){ /* best-effort */ });
     }catch(_){}
   }
@@ -223,7 +223,7 @@
     showError("");
     var call;
     try{
-      call = firebase.functions("asia-northeast1").httpsCallable("sendAdminChatMessage")({text: text});
+      call = firebase.app().functions("asia-northeast1").httpsCallable("sendAdminChatMessage")({text: text});
     }catch(err){
       setSending(false);
       setHint("Chưa gửi được — thử lại nhé.");

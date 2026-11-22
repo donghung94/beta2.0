@@ -187,7 +187,7 @@ function ensureFunctions(){
 }
 function callFn(name, args){
   return ensureFunctions().then(function(){
-    return firebase.functions("asia-northeast1").httpsCallable(name)(args);
+    return firebase.app().functions("asia-northeast1").httpsCallable(name)(args);
   });
 }
 function markRead(uid){
