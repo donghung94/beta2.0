@@ -6898,6 +6898,46 @@ function skAdminRenderFeedback(){
   el.innerHTML = list.length ? list.map(skAdminFeedbackRowHtml).join("")
     : '<p class="adm-note" style="margin:0">Chưa có góp ý nào.</p>';
 }
+/* --- Admin web: hộp thư chat 1:1 (DESIGN.md §7). Logic nằm ở file lazy
+   mobile/assets/admin-chat-inbox.js (dùng chung với mobile); index chỉ thêm
+   boot stub + render mỏng. Web không đăng ký FCM ở v1 (không có SW). --- */
+var _adminInboxPromise = null;
+function ensureAdminInbox(){
+  if(window.SKAdminInbox) return Promise.resolve(true);
+  if(!_adminInboxPromise){
+    _adminInboxPromise = loadJS("mobile/assets/admin-chat-inbox.js").then(function(){
+      if(!window.SKAdminInbox){ delete _jsCache["mobile/assets/admin-chat-inbox.js"]; throw new Error("admin-chat-inbox.js không có SKAdminInbox"); }
+      return true;
+    }).catch(function(err){ _adminInboxPromise = null; throw err; });
+  }
+  return _adminInboxPromise;
+}
+var skAdmChatInboxErr = "";
+function skAdminRenderChatInbox(){
+  var el = document.getElementById("admChatInboxList");
+  if(!el) return;
+  if(window.SKAdminInbox && window.SKAdminInbox.isMounted && window.SKAdminInbox.isMounted(el)){
+    window.SKAdminInbox.mountList(el, {});
+    return;
+  }
+  if(skAdmChatInboxErr){
+    el.innerHTML = '<p class="adm-note" style="margin:0">' + esc(skAdmChatInboxErr) + '</p>';
+    return;
+  }
+  if(window.SKAdminInbox){
+    window.SKAdminInbox.mountList(el, {db: skDb(), initial: SK_ADM.chats || []});
+    return;
+  }
+  el.innerHTML = '<p class="adm-note" style="margin:0">Đang tải hộp thư chat…</p>';
+  ensureAdminInbox().then(function(){
+    var box = document.getElementById("admChatInboxList");
+    if(box && window.SKAdminInbox) window.SKAdminInbox.mountList(box, {db: skDb(), initial: SK_ADM.chats || []});
+  }).catch(function(){
+    skAdmChatInboxErr = "Không tải được hộp thư chat — kiểm tra mạng rồi tải lại trang nhé.";
+    var box2 = document.getElementById("admChatInboxList");
+    if(box2) box2.innerHTML = '<p class="adm-note" style="margin:0">' + esc(skAdmChatInboxErr) + '</p>';
+  });
+}
 </script>
 
 <script>
@@ -12187,7 +12227,7 @@ function renderPrivacyPage(){
    premium của kanji_progress.
    Không có Tặng Xu / Khóa tài khoản: bản mobile chỉ là dữ liệu mẫu local,
    app chưa có cơ chế thật cho 2 việc đó. */
-var SK_ADM = {students: [], orders: [], reports: [], feedback: [], stats: null, visits: null, visitRange: "7", stuPage: 1};
+var SK_ADM = {students: [], orders: [], reports: [], feedback: [], chats: [], stats: null, visits: null, visitRange: "7", stuPage: 1};
 var SK_ADM_PAGE_SIZE = 10; /* so hoc vien moi trang danh sach admin */
 function skAdminTsMs(v){
   if(v == null) return null;
@@ -12642,6 +12682,7 @@ function skAdminFill(){
   skAdminRenderStudents();
   skAdminRenderReports();
   skAdminRenderFeedback();
+  skAdminRenderChatInbox();
 }
 function skAdminRenderShell(){
   var h = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/caidat">Cài đặt</a> / Bảng điều khiển</div>' +
@@ -12683,6 +12724,8 @@ function skAdminRenderShell(){
     '<div class="card"><div id="admReportList"></div><p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 50 báo cáo mới nhất (cả ẩn danh). Báo cáo lưu ở collection sk_reports.</p></div>' +
     '<h2 class="secttl">Thư góp ý</h2>' +
     '<div class="card"><div id="admFeedbackList"></div><p class="adm-note" style="margin:10px 0 0">Hiển thị tối đa 50 góp ý mới nhất (cả ẩn danh). Góp ý lưu ở collection sk_feedback — học viên gửi từ khung góp ý trong app di động.</p></div>' +
+    '<h2 class="secttl">Hộp thư chat</h2>' +
+    '<div class="card"><div id="admChatInboxList"></div><p class="adm-note" style="margin:10px 0 0">Tin nhắn 1:1 từ học viên — cuộc trò chuyện có tin chưa đọc xếp trên cùng, tối đa 50 cuộc. Bấm vào một dòng để mở và trả lời.</p></div>' +
     '<h2 class="secttl">Học viên</h2>' +
     '<div class="card" id="admStudentCard"><label class="auth-field" style="margin-top:0">Tìm kiếm<input id="admSearch" type="text" autocomplete="off" placeholder="Tìm theo tên, email hoặc UID"></label>' +
     '<div id="admStudentList" style="margin-top:6px"></div><div id="admStudentPager" class="adm-pager"></div><p class="adm-note" id="admStudentNote" style="margin:10px 0 0"></p></div>' +
@@ -12789,7 +12832,8 @@ function skAdminLoad(){
     skAdminCountTotal(db),
     skAdminLoadVisits(db),
     db.collection("sk_reports").orderBy("createdAt", "desc").limit(50).get().catch(function(){ return null; }),
-    db.collection("sk_feedback").orderBy("createdAt", "desc").limit(50).get().catch(function(){ return null; })
+    db.collection("sk_feedback").orderBy("createdAt", "desc").limit(50).get().catch(function(){ return null; }),
+    db.collection("sk_chats").orderBy("updatedAt", "desc").limit(50).get().catch(function(){ return null; })
   ]).then(function(res){
     if(!skRenderAlive(rTok)) return;
     var progDocs = [];
@@ -12831,6 +12875,13 @@ function skAdminLoad(){
       feedbackDocs.push(fd);
     });
     SK_ADM.feedback = feedbackDocs;
+    var chatDocs = [];
+    if(res[6]) res[6].forEach(function(snap){
+      var cd = snap.data() || {};
+      cd.id = snap.id;
+      chatDocs.push(cd);
+    });
+    SK_ADM.chats = chatDocs;
     if(!document.getElementById("admStats")) skAdminRenderShell();
     skAdminFill();
   });
