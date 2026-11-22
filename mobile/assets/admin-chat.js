@@ -4,7 +4,10 @@
    window.firebase (compat 10.12.2), window.SKSync, DOM theo id.
    showOv/hideOv của app được truyền vào qua open({showOv, hideOv});
    không có hook thì tự đóng/mở overlay bằng class (dự phòng).
-   Collection/function/hằng số theo DESIGN.md (đóng băng 22/11/2026). */
+   Collection/function/hằng số theo DESIGN.md (đóng băng 22/11/2026).
+   22/11 18:38 (user duyệt): tài khoản admin mở khung học viên → hiện
+   hướng dẫn + nút mở Hộp thư chat, không cho gửi (server bắt admin phải
+   có toUid nên gửi từ khung này luôn lỗi invalid-argument). */
 (function(){
   "use strict";
 
@@ -14,8 +17,10 @@
   var DEVICE_KEY = "sk_device_id";
   var PUSH_ASKED_KEY = "sk_ac_push_asked";
   var SEND_GAP_MS = 3000; /* giãn cách client, mirror sendChat() phòng chat */
+  var ADMIN_UIDS = ["xSqrzV8AKHdi8yNs0mlcw885N492", "kymtRAzDs9RefxtoREh5sa6fE142"]; /* khớp ADMIN_UIDS trong index + rules isAdmin() */
 
   var uid = null, hooks = null, isOpen = false;
+  var adminView = false; /* đang mở khung với tài khoản admin → chỉ hiện hướng dẫn sang hộp thư */
   var msgUnsub = null, msgUid = null, threadUnsub = null, threadUid = null;
   var firstSnapshot = false, sending = false, lastSendAt = 0;
   var lastMarkedMsgAt = 0, unreadCount = 0, msgListenerFailed = false;
@@ -29,6 +34,7 @@
       return u ? u.uid : "";
     }catch(_){ return ""; }
   }
+  function isAdminUid(u){ return !!u && ADMIN_UIDS.indexOf(u) >= 0; }
 
   /* deviceId: SKSync.getDeviceId() là global duy nhất trỏ vào getDeviceId()
      trong IIFE script chính (dòng ~22643 baseline); dự phòng đọc/tạo
@@ -207,6 +213,7 @@
     setHint(on ? "Đang gửi…" : "");
   }
   function sendMessage(){
+    if(adminView) return; /* tài khoản admin: khung này không gửi được */
     if(sending) return;
     var inp = $("acChatInput");
     if(!inp) return;
@@ -277,6 +284,71 @@
     }catch(_){}
   }
 
+  /* ---------- Chế độ xem admin: tài khoản admin mở khung học viên thì
+     KHÔNG cho gửi (server bắt admin phải có toUid) — ẩn khung gửi, hiện
+     hướng dẫn + nút mở Hộp thư chat. Nút bấm vào đúng lối vào dashboard
+     của app (meAdminRow, dự phòng gridAdminCell) nên hộp thư tự tải theo
+     đường mở dashboard thường lệ (openAdmin → admLoadDashboard). */
+  function composerFoot(){
+    var inp = $("acChatInput");
+    if(inp && inp.closest) return inp.closest(".detailfoot");
+    return null;
+  }
+  function setComposerVisible(vis){
+    var foot = composerFoot();
+    if(foot) foot.hidden = !vis;
+    var inp = $("acChatInput"), btn = $("acChatSend"), hint = $("acChatHint");
+    if(inp) inp.hidden = !vis;
+    if(btn) btn.hidden = !vis;
+    if(hint) hint.hidden = !vis;
+  }
+  function adminNoticeEl(){
+    var n = $("acAdminNotice");
+    if(n) return n;
+    n = document.createElement("div");
+    n.id = "acAdminNotice";
+    n.style.cssText = "padding:18px 6px; text-align:center;";
+    var p = document.createElement("p");
+    p.style.cssText = "font-size:14.5px; line-height:1.6; color:var(--ink-2, #555); margin:0 0 14px;";
+    p.textContent = "Tài khoản admin trả lời học viên từ Hộp thư chat.";
+    var b = document.createElement("button");
+    b.type = "button";
+    b.id = "acAdminInboxBtn";
+    b.style.cssText = "background:#d32f2f; color:#fff; border:none; border-radius:10px; padding:11px 20px; font-size:15px; font-weight:600;";
+    b.textContent = "Mở Hộp thư chat";
+    b.addEventListener("click", function(){
+      close();
+      var row = document.getElementById("meAdminRow") || document.getElementById("gridAdminCell");
+      if(row && row.click) row.click();
+    });
+    n.appendChild(p);
+    n.appendChild(b);
+    var host = null;
+    var st = $("acChatStatus");
+    if(st && st.parentNode) host = st.parentNode;
+    if(!host) host = $("adminChatOverlay");
+    if(host) host.appendChild(n);
+    return n;
+  }
+  function showAdminView(){
+    adminView = true;
+    var list = $("acChatList");
+    if(list){ while(list.firstChild) list.removeChild(list.firstChild); list.hidden = true; }
+    setComposerVisible(false);
+    showStatus("");
+    showError("");
+    var n = adminNoticeEl();
+    if(n) n.hidden = false;
+  }
+  function hideAdminView(){
+    adminView = false;
+    var n = $("acAdminNotice");
+    if(n) n.hidden = true;
+    var list = $("acChatList");
+    if(list) list.hidden = false;
+    setComposerVisible(true);
+  }
+
   /* ---------- Mở / đóng ---------- */
   function open(h){
     if(h && typeof h === "object") hooks = h;
@@ -296,6 +368,11 @@
     showError("");
     showOverlay();
     bindAuthWatcher();
+    if(isAdminUid(u)){
+      showAdminView();
+      return true;
+    }
+    hideAdminView();
     startThreadListener();
     startMsgListener();
     if(unreadCount > 0) markRead();
