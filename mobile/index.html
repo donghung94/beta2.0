@@ -2308,6 +2308,20 @@
   }
   .chatsend svg{width:19px; height:19px;}
 
+  /* ---------- Chat 1:1 admin (W1) ---------- */
+  .appicon[data-app="adminchat"] .a-ic{position:relative;}
+  .ac-badge{min-width:19px; height:19px; padding:0 5px; border-radius:10px; background:var(--red); color:#fff; border:2px solid var(--card); font-size:11px; font-weight:800; line-height:1; display:flex; align-items:center; justify-content:center;}
+  .ac-badge[hidden]{display:none;}
+  .appicon .ac-badge{position:absolute; top:-6px; right:-6px;}
+  .mrow .ac-badge{position:static; flex:0 0 auto;}
+  .ac-status{font-size:13px; color:var(--ink-3); text-align:center; margin:16px 0 0;}
+  .ac-error{font-size:13px; color:var(--red); text-align:center; margin:12px 0 0;}
+  .ac-error[hidden]{display:none;}
+  .ac-error button{margin-left:6px; border:1.5px solid var(--red); background:none; color:var(--red); border-radius:999px; padding:4px 12px; font:inherit; font-weight:700; cursor:pointer;}
+  .ac-foot-in{flex:1; min-width:0;}
+  .ac-foot .chatbar{margin-top:0;}
+  .ac-hint{font-size:12.5px; color:var(--ink-3); text-align:center; min-height:18px; margin:8px 0 0;}
+
   /* front overlays (draw / kana / vocab / path) */
   .overlay.front{z-index:46;}
   .drawbox{
@@ -3397,6 +3411,9 @@
           <button class="appicon" data-app="duel">
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-duel"></use></svg></span><span>Đấu trường</span>
           </button>
+          <button class="appicon" data-app="adminchat">
+            <span class="a-ic jp" aria-hidden="true">💬<span class="ac-badge" id="acTileBadge" hidden></span></span><span>Nhắn admin</span>
+          </button>
           <button class="appicon" data-app="admin" id="gridAdminCell" hidden>
             <span class="a-ic"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#ic-admin"></use></svg></span><span>Quản trị</span>
           </button>
@@ -3665,6 +3682,12 @@
             Phòng chat học viên
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
+          <button class="mrow" id="meAdminChatRow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+            Nhắn tin cho admin
+            <span class="ac-badge" id="acMeBadge" hidden></span>
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
           <button class="mrow" id="meWriteRow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a4.6 4.6 0 0 0-7-7l-7 7v7Z"/><path d="m5 19 1.5-4.5L12 9"/></svg>
             Tạo phiếu luyện viết
@@ -3869,6 +3892,11 @@
           <button class="mrow" id="setContactBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
             Liên hệ
+            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+          <button class="mrow" id="setAdminChatBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+            Nhắn tin cho admin
             <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
           </button>
           <button class="mrow" id="setTermsBtn">
@@ -5234,6 +5262,9 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <h2 class="secttl">Báo lỗi câu hỏi</h2>
         <div class="card shopcard" id="admReports" style="margin-top:0;"></div>
         <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Báo lỗi do học viên gửi từ nút “Báo lỗi” ở mỗi câu hỏi đề thi (trong lúc làm bài và màn xem lại) — mới nhất xếp trên cùng, tối đa 50 báo cáo.</p>
+        <h2 class="secttl">Hộp thư chat</h2>
+        <div class="card shopcard" id="admChatInbox" style="margin-top:0;"></div>
+        <p style="font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;">Tin nhắn 1:1 từ học viên — cuộc trò chuyện có tin chưa đọc xếp trên cùng, tối đa 50 cuộc. Bấm vào một dòng để mở và trả lời.</p>
         </div>
       </div>
     </div>
@@ -5642,6 +5673,34 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
+    <!-- ============ CHAT 1:1 ADMIN (W1) ============ -->
+    <div class="overlay front" id="adminChatOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeAdminChat" aria-label="Quay lại — đóng nhắn tin cho admin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2>Nhắn tin cho admin</h2><span>Đội ngũ SoraKanji sẽ trả lời bạn</span></div>
+      </div>
+      <div class="detailbody">
+        <h2 class="secttl">Nhắn tin cho admin</h2>
+        <p class="ac-status" id="acChatStatus">Đang tải…</p>
+        <div class="ac-error" id="acChatError" hidden><span id="acChatErrorTxt"></span><button id="acChatRetry" type="button">Thử lại</button></div>
+        <div class="chatlist" id="acChatList"></div>
+        <div class="wv-endpad" aria-hidden="true"></div>
+      </div>
+      <div class="detailfoot ac-foot">
+        <div class="ac-foot-in">
+          <div class="chatbar">
+            <input id="acChatInput" type="text" maxlength="1000" placeholder="Nhắn cho admin…" autocomplete="off" aria-label="Nhắn tin cho admin" />
+            <button class="chatsend" id="acChatSend" type="button" aria-label="Gửi tin nhắn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>
+            </button>
+          </div>
+          <p class="ac-hint" id="acChatHint"></p>
+        </div>
+      </div>
+    </div>
+
     <!-- ============ ĐIỀU KHOẢN SỬ DỤNG ============ -->
     <div class="overlay front" id="termsOverlay" aria-hidden="true">
       <div class="detailhead">
@@ -5880,8 +5939,15 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Premium — xem skResumePendingGate). Chỉ là cờ — không lưu mục nào:
      sau đăng nhập, user Premium bấm lại mục vừa bấm để mở. */
   var skPendingGate = false;
+  var skPendingAdminChat = false; /* user bấm "Nhắn admin" khi chưa đăng nhập (hoặc mở deep link ?open=adminchat) — đăng nhập xong skResumePendingGate mở chat. Xóa khi user đóng bảng đăng nhập (nút × / bấm nền — cùng chỗ xóa skPendingGate). */
   var skPendingBuyPkg = null; /* gói user định mua khi bấm mua lúc chưa đăng nhập ("year"|"lifetime") — ý định mua sống sót qua lần đăng nhập: skResumePendingGate nối tiếp bằng skStartCheckout(pkg) thay vì hiện bảng Premium (xem khối VietQR). Xóa khi user đóng bảng đăng nhập (nút × / bấm nền — cùng chỗ xóa skPendingGate). */
   function skResumePendingGate(){
+    if(skPendingAdminChat){
+      /* Vừa đăng nhập để nhắn admin: mở chat (openAdminChat tự kiểm
+         tra đăng nhập — lúc này đã có phiên nên đi thẳng vào ensure + mở). */
+      skPendingAdminChat = false;
+      openAdminChat();
+    }
     if(!skPendingGate) return;
     skPendingGate = false;
     var done = false;
@@ -8250,6 +8316,59 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(cb) _svLessonsPromise.then(function(){ cb(true); }, function(){ cb(false); });
     return _svLessonsPromise;
   }
+  /* ---------- Chat 1:1 admin — boot stub (W1): logic nằm ở
+     assets/admin-chat.js, tải lười khi mở chat lần đầu. Chuỗi URL dùng
+     dấu ngoặc kép "assets/..." để transform bọc Capacitor bắt được như
+     các ensure* khác. */
+  var _adminChatPromise = null;
+  function ensureAdminChat(){
+    if(window.SKAdminChat) return Promise.resolve(true);
+    if(!_adminChatPromise){
+      _adminChatPromise = loadJS("assets/admin-chat.js").then(function(){
+        if(!window.SKAdminChat){ delete _jsCache["assets/admin-chat.js"]; throw new Error("admin-chat.js không có SKAdminChat"); }
+        return true;
+      }).catch(function(err){ _adminChatPromise = null; throw err; });
+    }
+    return _adminChatPromise;
+  }
+  function openAdminChat(){
+    if(!signedInUid){
+      /* Chưa đăng nhập: đặt cờ rồi mở bảng đăng nhập; đăng nhập xong
+         skResumePendingGate nối tiếp mở chat (mẫu showPremiumPrompt). */
+      skPendingAdminChat = true;
+      if(!skAuth()){ skAuthGateShow(false); return; }
+      openLogin();
+      return;
+    }
+    ensureAdminChat().then(function(){
+      if(window.SKAdminChat) window.SKAdminChat.open({showOv: showOv, hideOv: hideOv});
+    }).catch(function(){
+      /* Lỗi tải module: mở khung chat với thông báo lỗi + Thử lại,
+         không treo (nút đóng vẫn hoạt động — xem wiring bên dưới). */
+      var ov = document.getElementById("adminChatOverlay");
+      var st = document.getElementById("acChatStatus");
+      var er = document.getElementById("acChatError");
+      var rt = document.getElementById("acChatRetry");
+      if(st) st.textContent = "";
+      if(er){
+        var tx = document.getElementById("acChatErrorTxt");
+        if(tx) tx.textContent = "Không tải được khung chat — kiểm tra mạng rồi thử lại nhé.";
+        er.hidden = false;
+      }
+      if(rt) rt.onclick = function(){ hideOv(ov); openAdminChat(); };
+      if(ov) showOv(ov);
+    });
+  }
+  /* Nút đóng khung chat: module lo liệu khi đã tải; chưa tải (lỗi tải ở
+     trên) thì đóng trực tiếp. Gán 1 lần lúc chạy script — overlay đã có
+     trong DOM vì script nằm cuối body. */
+  (function(){
+    var cb = document.getElementById("closeAdminChat");
+    if(cb) cb.addEventListener("click", function(){
+      if(window.SKAdminChat) window.SKAdminChat.close();
+      else hideOv(document.getElementById("adminChatOverlay"));
+    });
+  })();
   function exEnsureData(lv, cb){
     /* Lazy-load: tải đặc tả đề, rồi nạp đủ cả 5 ngân hàng đề (M7b, sửa
        lệch đề H7 — xem ensureAllExamBanks: EXSEG_DICT đóng băng ở lần
@@ -9715,6 +9834,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   (function(){
     var scb = document.getElementById("setContactBtn");
     if(scb) scb.addEventListener("click", openContact);
+    var sacb = document.getElementById("setAdminChatBtn");
+    if(sacb) sacb.addEventListener("click", openAdminChat);
     var ccb = document.getElementById("closeContact");
     if(ccb) ccb.addEventListener("click", function(){ hideOv(document.getElementById("contactOverlay")); });
     var sb = document.getElementById("admContactSaveBtn");
@@ -18667,6 +18788,7 @@ function furiHTML(text){
       else if(a === "path") openPath();
       else if(a === "me") goTab("me");
       else if(a === "settings") goTab("settings");
+      else if(a === "adminchat") openAdminChat();
       else if(a === "admin") openAdmin();
     });
   });
@@ -18686,6 +18808,7 @@ function furiHTML(text){
   /* ---------- Hàng trong tab Cá nhân ---------- */
   document.getElementById("meRankRow").addEventListener("click", function(){ goTab("rank"); });
   document.getElementById("meChatRow").addEventListener("click", function(){ goTab("chat"); });
+  document.getElementById("meAdminChatRow").addEventListener("click", function(){ openAdminChat(); });
   document.getElementById("meWriteRow").addEventListener("click", function(){ openWorksheet(); });
   document.getElementById("meSettingsRow").addEventListener("click", function(){ goTab("settings"); });
 
@@ -20181,6 +20304,7 @@ function furiHTML(text){
     admLoadVisits(db);
     admLoadReports(db);
     admLoadFeedback(db);
+    admLoadChatInbox(db);
     Promise.all([
       db.collection("kanji_progress").limit(1000).get(),
       db.collection("sk_orders").orderBy("createdAt", "desc").limit(100).get()
@@ -20284,6 +20408,49 @@ function furiHTML(text){
         : "Không tải được góp ý — kiểm tra mạng rồi mở lại trang nhé.";
       renderAdminInbox();
     });
+  }
+  /* ---------- Hộp thư chat admin (Chat 1:1 + FCM push v1, DESIGN.md §7) ----------
+     Logic inbox nằm ở file lazy assets/admin-chat-inbox.js (không tăng tải
+     trọng startup); index chỉ thêm boot stub ensureAdminInbox + loader/render
+     mỏng theo đúng mẫu admLoadReports/admLoadFeedback. */
+  var _adminInboxPromise = null;
+  function ensureAdminInbox(){
+    if(window.SKAdminInbox) return Promise.resolve(true);
+    if(!_adminInboxPromise){
+      _adminInboxPromise = loadJS("assets/admin-chat-inbox.js").then(function(){
+        if(!window.SKAdminInbox){ delete _jsCache["assets/admin-chat-inbox.js"]; throw new Error("admin-chat-inbox.js không có SKAdminInbox"); }
+        return true;
+      }).catch(function(err){ _adminInboxPromise = null; throw err; });
+    }
+    return _adminInboxPromise;
+  }
+  var admChatInboxErr = "";
+  function admLoadChatInbox(db){
+    admChatInboxErr = "";
+    renderAdminChatInbox();
+    ensureAdminInbox().then(function(){
+      var box = document.getElementById("admChatInbox");
+      if(box && window.SKAdminInbox) window.SKAdminInbox.mountList(box, {db: db});
+      /* Admin nhận push trên điện thoại: mở hộp thư lần đầu → đăng ký FCM
+         (module tự bỏ qua trên web; lỗi push không gãy hộp thư). */
+      if(window.SKAdminInbox && window.SKAdminInbox.ensureAdminPush) window.SKAdminInbox.ensureAdminPush();
+    }).catch(function(){
+      admChatInboxErr = "Không tải được hộp thư chat — kiểm tra mạng rồi mở lại trang nhé.";
+      renderAdminChatInbox();
+    });
+  }
+  function renderAdminChatInbox(){
+    var box = document.getElementById("admChatInbox");
+    if(!box) return;
+    if(window.SKAdminInbox && window.SKAdminInbox.isMounted && window.SKAdminInbox.isMounted(box)){
+      window.SKAdminInbox.mountList(box, {});
+      return;
+    }
+    if(admChatInboxErr){
+      box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admChatInboxErr) + '</p>';
+      return;
+    }
+    box.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải hộp thư chat…</p>';
   }
   function admRepPart(p){ return p === "listening" ? "Nghe" : "Viết"; }
   function renderAdminReports(){
@@ -20605,12 +20772,14 @@ function furiHTML(text){
       list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">Đang tải danh sách học viên…</p>';
       renderAdminInbox();
       renderAdminReports();
+      renderAdminChatInbox();
       return;
     }
     if(admLoadErr){
       list.innerHTML = '<p style="font-size:13.5px; color:var(--ink-2); margin:6px 0; line-height:1.55;">' + esc(admLoadErr) + '</p>';
       renderAdminInbox();
       renderAdminReports();
+      renderAdminChatInbox();
       return;
     }
     /* Lọc theo từ khóa rồi phân trang phía client (10/trang): danh sách đã
@@ -20663,6 +20832,7 @@ function furiHTML(text){
     });
     renderAdminInbox();
     renderAdminReports();
+    renderAdminChatInbox();
   }
   /* ---------- Phân trang danh sách học viên (V3, 2026-11-19) ----------
      Phân trang phía client trên admStudents đã fetch (tối đa 1.000):
@@ -20831,7 +21001,7 @@ function furiHTML(text){
       });
     }
   })();
-  document.getElementById("closeAdmin").addEventListener("click", function(){ hideOv(adminOverlay); });
+  document.getElementById("closeAdmin").addEventListener("click", function(){ if(window.SKAdminInbox){ try{ window.SKAdminInbox.closeThread(); }catch(_){} try{ window.SKAdminInbox.unmountList(); }catch(_){} } hideOv(adminOverlay); });
   document.getElementById("meAdminRow").addEventListener("click", openAdmin);
   document.getElementById("admGrantBtn").addEventListener("click", admGrantPremium);
   ["7", "30", "12"].forEach(function(r){
@@ -21716,7 +21886,7 @@ function furiHTML(text){
          user bấm mục khóa rồi bấm Thử lại ở cổng lỗi). */
       /* Bị chặn/kick thì KHÔNG mở bảng đăng nhập — overlay chặn/kick đang
          hiện (xem skSessionOnBlocked/skSessionOnKicked). */
-      if(!skSessionKicked && !skSessionBlocked && (skPendingEmailLink || (skPendingGate && skAuth()))) openLogin();
+      if(!skSessionKicked && !skSessionBlocked && (skPendingEmailLink || (skPendingGate && skAuth()) || (skPendingAdminChat && skAuth()))) openLogin();
       avatarGoogle = null; /* ảnh Google đi theo phiên đăng nhập; ảnh tự tải vẫn giữ trên máy */
       renderAvatarPhoto();
       /* Dọn cache Premium + khóa lại ngay (listener của paywall cũng làm
@@ -21894,9 +22064,9 @@ function furiHTML(text){
      bảng = từ bỏ cổng đang chờ (xóa skPendingGate + ý định mua
      skPendingBuyPkg nếu có) rồi đóng như thường. */
   var loginCloseXBtn = document.getElementById("loginCloseX");
-  if(loginCloseXBtn) loginCloseXBtn.addEventListener("click", function(){ skPendingGate = false; skPendingBuyPkg = null; closeLogin(); });
+  if(loginCloseXBtn) loginCloseXBtn.addEventListener("click", function(){ skPendingGate = false; skPendingBuyPkg = null; skPendingAdminChat = false; closeLogin(); });
   document.getElementById("loginLogout").addEventListener("click", doLogout);
-  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")){ skPendingGate = false; skPendingBuyPkg = null; closeLogin(); } });
+  if(loginScrim) loginScrim.addEventListener("click", function(){ if(loginSheet.classList.contains("open")){ skPendingGate = false; skPendingBuyPkg = null; skPendingAdminChat = false; closeLogin(); } });
 
   /* ---------- Ảnh đại diện: tự lấy ảnh Google khi đăng nhập Gmail + tự tải ảnh lên ----------
      Nguồn ảnh, theo thứ tự người dùng chọn (lưu localStorage "sk_avatar_choice"):
@@ -22148,6 +22318,13 @@ function furiHTML(text){
   try{
     var startTab = new URLSearchParams(window.location.search).get("tab");
     if(startTab && screens[startTab]) goTab(startTab);
+  }catch(_){}
+  /* Deep link push FCM (?open=adminchat): đặt cờ 1 lần lúc mở app —
+     applyAuthUser nối tiếp khi auth sẵn sàng (đã đăng nhập →
+     skResumePendingGate mở chat; chưa đăng nhập → mở bảng đăng nhập
+     rồi resume mở chat). */
+  try{
+    if(new URLSearchParams(window.location.search).get("open") === "adminchat") skPendingAdminChat = true;
   }catch(_){}
   renderPWA();
 
