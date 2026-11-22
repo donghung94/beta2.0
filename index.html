@@ -2932,7 +2932,10 @@ function loadJS(src){
   _jsCache[src] = new Promise(function(res, rej){
     var s = document.createElement("script");
     s.src = src; s.onload = function(){ res(true); };
-    s.onerror = function(){ rej(new Error("Không tải được " + src)); };
+    /* Lỗi thì xóa cache để lần thử lại tải lại thật (trước đây promise
+       reject bị kẹt trong cache — mở lại mục trong cùng phiên không
+       bao giờ tải lại được dù UI hẹn "mở lại mục này"/"thử lại"). */
+    s.onerror = function(){ delete _jsCache[src]; rej(new Error("Không tải được " + src)); };
     document.body.appendChild(s);
   });
   return _jsCache[src];
