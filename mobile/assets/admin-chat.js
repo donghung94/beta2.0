@@ -182,7 +182,7 @@
   function markRead(){
     if(!uid) return;
     try{
-      var fn = firebase.functions().httpsCallable("markAdminChatRead");
+      var fn = firebase.functions("asia-northeast1").httpsCallable("markAdminChatRead");
       fn({uid: uid, lastSeenAt: Date.now()}).catch(function(){ /* best-effort */ });
     }catch(_){}
   }
@@ -223,7 +223,7 @@
     showError("");
     var call;
     try{
-      call = firebase.functions().httpsCallable("sendAdminChatMessage")({text: text});
+      call = firebase.functions("asia-northeast1").httpsCallable("sendAdminChatMessage")({text: text});
     }catch(err){
       setSending(false);
       setHint("Chưa gửi được — thử lại nhé.");
@@ -240,6 +240,7 @@
       if(code === "resource-exhausted") setHint("Bạn gửi nhanh quá — chờ vài giây rồi gửi lại nhé.");
       else if(code === "unauthenticated") setHint("Phiên đăng nhập hết hạn — đăng nhập lại rồi gửi nhé.");
       else if(code === "invalid-argument") setHint("Tin nhắn chưa hợp lệ — kiểm tra lại rồi gửi nhé.");
+      else if(code === "not-found") setHint("Không kết nối được dịch vụ chat — thử lại sau nhé.");
       else setHint("Chưa gửi được — kiểm tra mạng rồi thử lại nhé.");
     });
   }
