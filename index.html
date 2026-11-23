@@ -2945,7 +2945,8 @@ function loadJS(src){
 function loadingHTML(txt){
   return '<div class="loading">' + esc(txt || "Đang tải dữ liệu…") + "</div>";
 }
-var SET_SOUND = true; /* công tắc "Âm thanh & giọng đọc" ở trang Cài đặt */
+/* A-20: công tắc "Âm thanh & giọng đọc" — lưu localStorage "sk_sound" ("1"/"0", mặc định BẬT khi chưa có key; mẫu skSyncEnabled). */
+var SET_SOUND = true; try{ SET_SOUND = localStorage.getItem("sk_sound") !== "0"; }catch(e){}
 function speak(text){
   try{
     if(!SET_SOUND) return;
@@ -6069,6 +6070,16 @@ function renderExamIntro(lv, testNo){
   /* Gate điểm mở đề (phòng thủ thêm ngoài skGateForHash ở route()). */
   if(skExamLocked(lv, testNo)){ renderLockedPage(lv, "Đề thi JLPT " + lv + " — " + (testNo === 0 ? "Đề chuẩn" : "Test " + testNo), "#/thi/" + lv + "/" + testNo); return; }
   var isOff = (lv === "N3" && testNo === 0);
+  /* A-01: chặn đề "ma" — chỉ Đề chuẩn N3 (testNo 0) + Test 1–9 là đề thật.
+     Số ngoài miền (0 ở cấp khác, >9, âm, NaN) → trang không tìm thấy. */
+  if(!isOff && !(testNo >= 1 && testNo <= 9)){
+    document.title = "Không tìm thấy đề thi này | SoraKanji";
+    $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / <a href="#/thi">Luyện thi JLPT</a> / ' +
+      '<a href="#/thi/' + esc(lv) + '">' + esc(lv) + "</a></div>" +
+      "<h1>Không tìm thấy đề thi này</h1><p>Đề thi này không tồn tại — mỗi cấp chỉ có Test 1–9" + (lv === "N3" ? " và Đề chuẩn N3" : "") + ".</p></div>" +
+      '<div style="padding:6px 0 10px"><a class="btn ghost" href="#/thi/' + esc(lv) + '">← Quay lại đề thi ' + esc(lv) + "</a></div>";
+    return;
+  }
   var tname = isOff ? "Đề chuẩn" : "Test " + testNo;
   document.title = "JLPT " + lv + " — " + tname + " | SoraKanji";
   $app.innerHTML = loadingHTML("Đang chuẩn bị đề thi…");
@@ -10336,11 +10347,22 @@ function renderReadList(lv, kind){
   }).catch(function(){ if(!skRenderAlive(rTok)) return; $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tải được bài đọc.</div>'; });
 }
 var readPicks = {};
+/* A-05 (23/11): bài đọc JLPT hiện furigana ở N5/N4/N3 như bản mobile
+   (rdHTML) — dùng grFuri() có sẵn (GR_FURI_LEVELS = N5/N4/N3); N2/N1 giữ
+   chữ Hán trần như đề thật. Áp cho đoạn văn + câu hỏi + đáp án + đáp án
+   đúng hiện trong khung kết quả; tiêu đề/giải thích/bảng từ vựng giữ
+   nguyên như mobile (giải thích + từ vựng không gắn furigana).
+   Nạp thêm grammar-extra.js (FURI_SUPP + FURI_KANJI) trước khi render:
+   không có 2 bảng này, furiHTML rơi xuống cách đọc kun từng chữ lẻ
+   (円→まる, 一→ひと, 大人→おお+ひと…) — sai so với bản mobile vốn có
+   sẵn 2 bảng inline. Lỗi tải bảng này không chặn bài đọc (xem .catch
+   dưới) — bài vẫn hiện với từ điển KANJI_DB. */
 function renderReadItem(lv, kind, idx){
   var rTok = skBeginRender();
   idx = parseInt(idx, 10);
   $app.innerHTML = loadingHTML("Đang tải bài đọc…");
-  ensureReading(lv, kind).then(function(items){
+  Promise.all([ensureReading(lv, kind), ensureGrammarExtra().catch(function(){})]).then(function(res){
+    var items = res[0];
     if(!skRenderAlive(rTok)) return;
     var it = (items || [])[idx];
     if(!it){ $app.innerHTML = '<div class="empty-note" style="margin:30px 0">Không tìm thấy bài đọc này.</div>'; return; }
@@ -10351,13 +10373,13 @@ function renderReadItem(lv, kind, idx){
       '<a href="#/doc/' + lv + "/" + kind + '">' + lv + " · " + READ_KIND_LABEL[kind] + "</a> / Bài " + (idx + 1) + "</div>" +
       '<h1 class="jp" style="font-size:26px">' + esc(it.title || "") + "</h1></div>" +
       '<div style="max-width:800px;padding-bottom:36px">' +
-      '<div class="qpass jp" style="font-size:17.5px">' + esc(body) + "</div>";
+      '<div class="qpass jp" style="font-size:17.5px">' + grFuri(lv, body) + "</div>";
     (it.qs || []).forEach(function(q, qi){
       h += '<div class="qcard"><div class="qn">Câu hỏi ' + (qi + 1) + '</div>' +
-        '<p class="qtext jp">' + esc(q.q) + '</p><div class="opts" id="rqOpts' + qi + '">' +
+        '<p class="qtext jp">' + grFuri(lv, q.q) + '</p><div class="opts" id="rqOpts' + qi + '">' +
         (q.opts || []).map(function(o, oi){
           return '<button type="button" class="opt" data-rq="' + qi + '" data-roi="' + oi + '"><span class="no">' + (oi + 1) +
-            '</span><span class="jp">' + esc(o) + "</span></button>";
+            '</span><span class="jp">' + grFuri(lv, o) + "</span></button>";
         }).join("") + '</div><div class="qresult" id="rqRes' + qi + '"></div></div>';
     });
     h += '<button class="btn" id="rqCheck">Kiểm tra đáp án</button>';
@@ -10388,13 +10410,13 @@ function renderReadItem(lv, kind, idx){
         var pick = readPicks[qi];
         if(pick == null){
           box.className = "qresult show wrong";
-          box.innerHTML = "<b>Chưa chọn đáp án.</b> Đáp án đúng: <b>" + esc((q.opts || [])[q.ans]) + "</b>" +
+          box.innerHTML = "<b>Chưa chọn đáp án.</b> Đáp án đúng: <b>" + grFuri(lv, (q.opts || [])[q.ans]) + "</b>" +
             (q.exp ? '<div class="qe">' + esc(q.exp) + "</div>" : "");
           return;
         }
         var ok = pick === q.ans;
         box.className = "qresult show " + (ok ? "right" : "wrong");
-        box.innerHTML = "<b>" + (ok ? "Đúng ✓" : "Chưa đúng ✗") + "</b> · Đáp án đúng: <b>" + esc((q.opts || [])[q.ans]) + "</b>" +
+        box.innerHTML = "<b>" + (ok ? "Đúng ✓" : "Chưa đúng ✗") + "</b> · Đáp án đúng: <b>" + grFuri(lv, (q.opts || [])[q.ans]) + "</b>" +
           (q.exp ? '<div class="qe">' + esc(q.exp) + "</div>" : "");
       });
       var first = document.querySelector(".qresult.show");
@@ -11966,7 +11988,8 @@ function renderCongdongPage(){
 }
 
 /* ================= CÀI ĐẶT ================= */
-var SORA_ON = true; /* công tắc "Hiện nút trợ lý Sora" */
+/* A-20: công tắc "Hiện nút trợ lý Sora" — lưu localStorage "sk_sora" ("1"/"0", mặc định BẬT khi chưa có key). */
+var SORA_ON = true; try{ SORA_ON = localStorage.getItem("sk_sora") !== "0"; }catch(e){}
 function applySoraVisibility(){
   var fab = document.getElementById("soraFab");
   if(fab) fab.style.display = SORA_ON ? "" : "none";
@@ -12154,11 +12177,13 @@ function renderSettingsPage(){
   var msg = document.getElementById("setMsg");
   document.getElementById("setSound").addEventListener("click", function(){
     SET_SOUND = !SET_SOUND;
+    try{ localStorage.setItem("sk_sound", SET_SOUND ? "1" : "0"); }catch(e){} /* A-20: lưu công tắc */
     document.getElementById("swSound").classList.toggle("on", SET_SOUND);
     msg.textContent = SET_SOUND ? "Đã bật âm thanh & giọng đọc." : "Đã tắt âm thanh & giọng đọc.";
   });
   document.getElementById("setSora").addEventListener("click", function(){
     SORA_ON = !SORA_ON;
+    try{ localStorage.setItem("sk_sora", SORA_ON ? "1" : "0"); }catch(e){} /* A-20: lưu công tắc */
     document.getElementById("swSora").classList.toggle("on", SORA_ON);
     applySoraVisibility();
     msg.textContent = SORA_ON ? "Đã hiện nút trợ lý Sora." : "Đã ẩn nút trợ lý Sora — bật lại ở đây khi cần.";
@@ -13349,6 +13374,7 @@ function initSora(){
     inp.value = "";
     soraAsk(v, null);
   });
+  applySoraVisibility(); /* A-20: áp trạng thái đã lưu của công tắc Sora ngay khi mở app */
 }
 
 /* ================= THANH TRÊN CÙNG + MỤC ĐÃ LƯU + CHUÔNG THÔNG BÁO ================= */
