@@ -114,6 +114,7 @@
     "sk_progress", "sk_saved_words", "sk_exam_best", "sk_settings",
     "sk_sv_mine", "sk_avatar_custom", "sk_avatar_choice",
     "sk_jlpt_target", "sk_jlpt_plan", "sk_jlpt_done",
+    "sk_declared_lv", // A-16 (23/11): cap da khai (web) — phai xoa khi dang xuat, neu khong tai khoan sau ke thua cap cua tai khoan truoc va ghi de plan30 server cua minh
     "sk_plan_done_N5", "sk_plan_done_N4", "sk_plan_done_N3",
     "sk_plan_done_N2", "sk_plan_done_N1",
     "sk_grammar_learned", "sk_sync_uid", "sk_sync_wu",
@@ -135,6 +136,7 @@
   var unsubListener = null;
   var syncingAll = false;
   var missionsInFlight = null; // M-20: promise của lần syncMissions đang chạy (chống chạy chồng)
+  var walletPushQueue = Promise.resolve(); // A-15 (23/11): chuoi push vi — lan push sau chi chay khi lan truoc xong, tinh lai delta tu baseline moi (chong cong trung delta khi schedulePush chong voi syncAll)
   var enabled = true; // công tắc đồng bộ (Cài đặt mobile: settings.sync)
   var parentEnsureTried = {}; // uid -> true: đã thử tạo doc cha trong lần tải trang này
 
@@ -1088,7 +1090,20 @@
     if (cur && cur.duelLeft !== undefined) next.duelLeft = cur.duelLeft;
   }
 
+  /* A-15 (23/11): 2 lan pushWallet chay chong tren 1 may cong trung delta
+   * (ca 2 tinh delta ngoai transaction tu cung baseline cu). Xep hang:
+   * lan push sau doi lan truoc xong moi chay pushWalletRun, luc do doc
+   * lai local + baseline moi nen delta cua lan sau = 0 neu khong co thay
+   * doi moi (khong cong trung), hoac = dung phan moi kiem duoc giua chung
+   * (khong mat EXP). Chuoi khong dut khi 1 lan loi (catch trong queue). */
   function pushWallet(uid, firstSync) {
+    var run = function () { return pushWalletRun(uid, firstSync); };
+    var p = walletPushQueue.then(run, run);
+    walletPushQueue = p.then(function () {}, function () {});
+    return p;
+  }
+
+  function pushWalletRun(uid, firstSync) {
     var local = walletLocal();
     if (local === undefined) return Promise.resolve(false);
     var base = baselineGet();
