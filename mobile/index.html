@@ -4173,8 +4173,8 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <div class="pw-plan">
             <b>Gói Năm</b>
             <div class="pw-per">Chỉ ~990đ/ngày</div>
-            <span class="pw-price">360.000đ</span><span class="pw-old">799.000đ</span>
-            <span class="pw-save">Tiết kiệm 439.000đ</span>
+            <span class="pw-price">360.000đ</span><span class="pw-old">449.000đ</span>
+            <span class="pw-save">Tiết kiệm 89.000đ</span>
             <ul>
               <li>Mở toàn bộ N3–N1: kanji, từ vựng, ngữ pháp</li>
               <li>Đề thi JLPT N3–N1 Test 1–9, chấm /180</li>
@@ -4188,8 +4188,8 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <div class="pw-plan hot">
             <b>Gói Trọn đời · Phổ biến nhất</b>
             <div class="pw-per">Mua 1 lần, học mãi mãi</div>
-            <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
-            <span class="pw-save">Tiết kiệm 1.500.000đ</span>
+            <span class="pw-price">999.000đ</span><span class="pw-old">1.199.000đ</span>
+            <span class="pw-save">Tiết kiệm 200.000đ</span>
             <ul>
               <li>Tất cả tính năng của Gói Năm</li>
               <li>Không cần gia hạn, không lo hết hạn</li>
@@ -6340,11 +6340,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      chữ; IAP sẽ thay thế sau theo plan riêng. Phát hiện native qua
      window.Capacitor, an toàn khi Capacitor vắng mặt (PWA).
      Giá: Năm 360.000đ, Trọn đời 999.000đ (giảm đến 06/12/2026, sau đó về
-     giá gốc 799.000đ / 2.499.000đ — cùng luật skPrice của web). */
+     giá gốc 449.000đ / 1.199.000đ — cùng luật skPrice của web). */
   var SK_SALE_END = new Date("2026-12-06T23:59:59+07:00").getTime(); /* hết 06/12/2026 */
   var SK_PACKAGES = {
-    year: {label: "Gói Năm", dur: "12 tháng", sale: 360000, full: 799000, save: 439000},
-    lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 2499000, save: 1500000}
+    year: {label: "Gói Năm", dur: "12 tháng", sale: 360000, full: 449000, save: 89000},
+    lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 1199000, save: 200000}
   };
   var SK_VTB_ACC = "108888811513";
   var SK_VTB_NAME = "DONG THANH HUNG";
@@ -25273,7 +25273,7 @@ function furiHTML(text){
       actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] },
     { id:"premium", label:"Gói miễn phí có gì? Premium là gì?",
       keywords:["goi mien phi","mien phi","premium","goi tra phi","nang cap","mua goi","gia goi","xem thu","goi nam","goi tron doi"],
-      answer:"Gói miễn phí gồm toàn bộ nội dung N5–N4 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 360.000đ (giá gốc 799.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 2.499.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.\n\nCách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Premium mở sau khi chuyển khoản thành công — thường trong vài phút, tối đa 24 giờ.",
+      answer:"Gói miễn phí gồm toàn bộ nội dung N5–N4 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 360.000đ (giá gốc 449.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 1.199.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.\n\nCách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Premium mở sau khi chuyển khoản thành công — thường trong vài phút, tối đa 24 giờ.",
       actions:[] }
   ];
   var FALLBACK = {
