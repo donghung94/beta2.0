@@ -5643,6 +5643,120 @@ function drawCjBody(scroll){
   drawCjQuiz(false);
   if(scroll) box.scrollIntoView({behavior: "smooth", block: "start"});
 }
+/* ===== Bài tập chia thể: chấp nhận đáp án kana (24/11) — logic dùng chung web + mobile.
+   Cùng thuật toán, cùng kết quả ở cả hai bản. DÁN NGUYÊN VĂN vào cả 2 file,
+   đặt ngay trước hàm cjNorm (mobile) / cjNormW (web). ===== */
+/* Cách đọc thể từ điển của 15 động từ trong CJ_EX — đã kiểm chứng với trường
+   reading của VOCAB_MINNA (live, N5): mỗi động từ đều có dạng ます trong
+   VOCAB_MINNA; cách đọc từ điển suy ra từ thân ます + âm cuối của dạng từ
+   điển trong câu hỏi (vd かきます → かき + く = かく; のみます → のむ).
+   Ngoại lệ duy nhất: 来る → くる (bất quy tắc, không suy ra từ きます;
+   dạng kana của 来る cũng đã có sẵn trong mảng a của CJ_EX). */
+var CJ_READING = {
+  "書く":"かく", "飲む":"のむ", "買う":"かう", "話す":"はなす", "泳ぐ":"およぐ",
+  "読む":"よむ", "食べる":"たべる", "見る":"みる", "する":"する", "来る":"くる",
+  "行く":"いく", "会う":"あう", "待つ":"まつ", "呼ぶ":"よぶ", "起きる":"おきる"
+};
+/* Bảng chuyển hàng kana cho Nhóm I (godan): [u, i, a, e, o]. */
+var CJ_ROWS = {
+  "う":["う","い","あ","え","お"], "く":["く","き","か","け","こ"], "ぐ":["ぐ","ぎ","が","げ","ご"],
+  "す":["す","し","さ","せ","そ"], "つ":["つ","ち","た","て","と"], "ぬ":["ぬ","に","な","ね","の"],
+  "ぶ":["ぶ","び","ば","べ","ぼ"], "む":["む","み","ま","め","も"], "る":["る","り","ら","れ","ろ"]
+};
+/* Dạng kana bất quy tắc Nhóm III, theo thứ tự thể 0–13:
+   [ます, 辞書, ない, て, た, 意向, 可能, 命令, 禁止, ば, たら, 受身, 使役, 使役受身] */
+var CJ_IRREG = {
+  "する":["します","する","しない","して","した","しよう","できる","しろ","するな","すれば","したら","される","させる","させられる"],
+  "くる":["きます","くる","こない","きて","きた","こよう","こられる","こい","くるな","くれば","きたら","こられる","こさせる","こさせられる"]
+};
+/* Chia 1 động từ (dạng kana từ điển + nhóm) sang thể formIdx (0–13) → mảng
+   các dạng kana chấp nhận (thường 1; Nhóm I 使役受身形 có 2: dạng dài + rút gọn). */
+function cjConjKana(dictKana, group, formIdx){
+  if(CJ_IRREG[dictKana]) return [CJ_IRREG[dictKana][formIdx]];
+  var last = dictKana.charAt(dictKana.length - 1);
+  var stem = dictKana.slice(0, -1);
+  if(group === "Nhóm II"){
+    if(formIdx === 1) return [dictKana];
+    if(formIdx === 8) return [dictKana + "な"];
+    var s2 = ["ます", null, "ない", "て", "た", "よう", "られる", "ろ", null, "れば", "たら", "られる", "させる", "させられる"];
+    return [stem + s2[formIdx]];
+  }
+  /* Nhóm I */
+  var row = CJ_ROWS[last];
+  if(!row) return [];
+  var i = row[1], a = row[2], e = row[3], o = row[4];
+  var aBase = (last === "う") ? "わ" : a; /* động từ tận cùng う → わ (không phải あ) */
+  if(formIdx === 1) return [dictKana];
+  if(formIdx === 8) return [dictKana + "な"];
+  if(formIdx === 3 || formIdx === 4){
+    /* て形/た形: 行く là ngoại lệ duy nhất trong 15 động từ (いって/いった). */
+    if(dictKana === "いく") return [formIdx === 3 ? "いって" : "いった"];
+    var te = {"く":"いて","ぐ":"いで","す":"して","う":"って","つ":"って","る":"って","ぬ":"んで","ぶ":"んで","む":"んで"}[last];
+    if(formIdx === 4) te = te.replace("て", "た").replace("で", "だ");
+    return [stem + te];
+  }
+  if(formIdx === 10) return [cjConjKana(dictKana, group, 4)[0] + "ら"];
+  if(formIdx === 13) return [stem + aBase + "せられる", stem + aBase + "される"];
+  if(formIdx === 0) return [stem + i + "ます"];
+  if(formIdx === 2) return [stem + aBase + "ない"];
+  if(formIdx === 5) return [stem + o + "う"];
+  if(formIdx === 6) return [stem + e + "る"];
+  if(formIdx === 7) return [stem + e];
+  if(formIdx === 9) return [stem + e + "ば"];
+  if(formIdx === 11) return [stem + aBase + "れる"];
+  if(formIdx === 12) return [stem + aBase + "せる"];
+  return [];
+}
+/* Nửa chiều rộng katakana → katakana đầy đủ (kèm ﾞ/ﾟ). */
+var CJ_HALF = {
+  "ｱ":"ア","ｲ":"イ","ｳ":"ウ","ｴ":"エ","ｵ":"オ","ｶ":"カ","ｷ":"キ","ｸ":"ク","ｹ":"ケ","ｺ":"コ",
+  "ｻ":"サ","ｼ":"シ","ｽ":"ス","ｾ":"セ","ｿ":"ソ","ﾀ":"タ","ﾁ":"チ","ﾂ":"ツ","ﾃ":"テ","ﾄ":"ト",
+  "ﾅ":"ナ","ﾆ":"ニ","ﾇ":"ヌ","ﾈ":"ネ","ﾉ":"ノ","ﾊ":"ハ","ﾋ":"ヒ","ﾌ":"フ","ﾍ":"ヘ","ﾎ":"ホ",
+  "ﾏ":"マ","ﾐ":"ミ","ﾑ":"ム","ﾒ":"メ","ﾓ":"モ","ﾔ":"ヤ","ﾕ":"ユ","ﾖ":"ヨ","ﾗ":"ラ","ﾘ":"リ",
+  "ﾙ":"ル","ﾚ":"レ","ﾛ":"ロ","ﾜ":"ワ","ﾝ":"ン","ｧ":"ァ","ｨ":"ィ","ｩ":"ゥ","ｪ":"ェ","ｫ":"ォ",
+  "ｬ":"ャ","ｭ":"ュ","ｮ":"ョ","ｯ":"ッ","ｰ":"ー"
+};
+var CJ_HALF_DAKU = {
+  "カﾞ":"ガ","キﾞ":"ギ","クﾞ":"グ","ケﾞ":"ゲ","コﾞ":"ゴ","サﾞ":"ザ","シﾞ":"ジ","スﾞ":"ズ","セﾞ":"ゼ","ソﾞ":"ゾ",
+  "タﾞ":"ダ","チﾞ":"ヂ","ツﾞ":"ヅ","テﾞ":"デ","トﾞ":"ド","ハﾞ":"バ","ヒﾞ":"ビ","フﾞ":"ブ","ヘﾞ":"ベ","ホﾞ":"ボ",
+  "ハﾟ":"パ","ヒﾟ":"ピ","フﾟ":"プ","ヘﾟ":"ペ","ホﾟ":"ポ","ウﾞ":"ヴ"
+};
+/* Chuẩn hóa đáp án người gõ trước khi so: bỏ mọi khoảng trắng (kể cả toàn
+   giác U+3000); nửa chiều rộng katakana → đầy đủ; ký tự ASCII toàn chiều
+   rộng → nửa chiều rộng; katakana → hiragana (dùng skKanaNorm có sẵn). */
+function cjNormInput(s){
+  s = (s || "").replace(/[\u3000\s]+/g, "");
+  s = s.replace(/[\uFF66-\uFF9D][\uFF9E\uFF9F]?/g, function(m){
+    var base = CJ_HALF[m.charAt(0)];
+    if(!base) return m;
+    if(m.length === 2){
+      var d = CJ_HALF_DAKU[base + m.charAt(1)];
+      if(d) return d;
+    }
+    return base;
+  });
+  s = s.replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+  return skKanaNorm(s);
+}
+/* Kiểm tra đáp án gõ có đúng không: chấp nhận (a) dạng kanji trong q.a,
+   (b) dạng kana suy ra từ cách đọc + luật chia thể, (c) romaji của dạng kana
+   (chỉ khi input là romaji thuần). Bài 辞書形 (formIdx 1) cho thể ます nên
+   động từ gốc lấy từ q.a[0]; các bài khác lấy từ q.q. */
+function cjAccepts(q, formIdx, val){
+  var v = cjNormInput(val);
+  if(!v) return false;
+  if(q.a.some(function(a){ return cjNormInput(a) === v; })) return true;
+  var dictKanji = (formIdx === 1) ? q.a[0] : q.q;
+  var dk = CJ_READING[dictKanji];
+  if(!dk) return false;
+  var kanas = cjConjKana(dk, q.g, formIdx);
+  if(kanas.some(function(k){ return k === v; })) return true;
+  if(/^[a-zA-Z\u0101\u012B\u016B\u0113\u014D]+$/.test(v)){
+    var vr = skRomaCanon(v);
+    if(kanas.some(function(k){ return skRomaCanon(skKanaToRomaji(k)) === vr; })) return true;
+  }
+  return false;
+}
 function cjNormW(s){ return (s || "").replace(/\s+/g, "").trim(); }
 function drawCjQuiz(focusInput){
   var box = document.getElementById("cjQuizBox");
@@ -5706,7 +5820,7 @@ function cjCheckW(){
   if(!cjNormW(val)) return;
   var q = cjQuizW.items[cjQuizW.idx];
   cjQuizW.typed = val.trim();
-  cjQuizW.ok = q.a.some(function(a){ return cjNormW(a) === cjNormW(val); });
+  cjQuizW.ok = cjAccepts(q, cjQuizW.form, val);
   if(cjQuizW.ok) cjQuizW.score++;
   cjQuizW.locked = true;
   drawCjQuiz(false);
