@@ -6380,6 +6380,9 @@ function bindOneCard(qi){
       if(!au.paused){ au.pause(); return; }
       if(st.plays >= 2){ exListenSync(qi, "Đã phát đủ 2 lần của câu này."); return; }
       if(au.ended){ try{ au.currentTime = 0; }catch(_){} }
+      /* A-07: tạm dừng mọi audio nghe khác trước khi phát — tránh 2 bản
+         nghe phát chồng lên nhau (web trước đây không có logic này). */
+      document.querySelectorAll(".ex-audio").forEach(function(o){ if(o !== au && !o.paused) o.pause(); });
       var p = au.play();
       if(p && p.catch) p.catch(function(){});
     });
@@ -7543,15 +7546,24 @@ function sv2LoadPlayer(autoplay){
   }
 }
 function sv2TogglePlay(){
-  if(!sv2Player){ sv2LoadPlayer(true); return; }
+  if(!sv2Player){ sv2Audio.pause(); sv2LoadPlayer(true); return; }
   if(sv2Player.getPlayerState && sv2Player.getPlayerState() === 1){ sv2Player.pauseVideo(); return; }
   sv2SegEnd = -1;
+  sv2Audio.pause(); /* A-13 (23/11): phat video thi dung giong ghi am dang phat */
   if(sv2Player.playVideo) sv2Player.playVideo();
 }
 function sv2SeekPlay(t){
   sv2LoadPlayer(false);
+  /* A-10 (23/11): chup generation + id bai luc goi; vong lap chet khi doi
+     bai/dong player (sv2SeekGen tang trong sv2Teardown) hoac sau 10s. */
+  var myGen = sv2SeekGen, myId = SV2_ID, t0 = Date.now();
   function go(){
-    if(sv2Player && sv2Ready && sv2Player.seekTo){ sv2Player.seekTo(t + 0.03, true); sv2Player.playVideo(); }
+    if(myGen !== sv2SeekGen || myId !== SV2_ID) return;
+    if(sv2Player && sv2Ready && sv2Player.seekTo){
+      sv2Audio.pause(); /* A-13 (23/11): phat video thi dung giong ghi am dang phat */
+      sv2Player.seekTo(t + 0.03, true); sv2Player.playVideo();
+    }
+    else if(Date.now() - t0 > 10000){ sv2Status("Không tải được video, bấm lại nhé."); }
     else setTimeout(go, 300);
   }
   go();
@@ -7560,11 +7572,18 @@ function sv2SeekPlay(t){
 function sv2PlaySeg(s){
   sv2SegStart = s.t; sv2SegEnd = sv2EndOf(s);
   sv2LoadPlayer(false);
+  /* A-10 (23/11): nhu sv2SeekPlay — vong lap chet khi doi bai/dong player hoac sau 10s. */
+  var myGen = sv2SeekGen, myId = SV2_ID, t0 = Date.now();
   function go(){
+    if(myGen !== sv2SeekGen || myId !== SV2_ID) return;
     if(sv2Player && sv2Ready && sv2Player.seekTo){
       if(sv2Player.setPlaybackRate) sv2Player.setPlaybackRate(sv2Rates[sv2RateIdx]);
+      sv2Audio.pause(); /* A-13 (23/11): phat video thi dung giong ghi am dang phat */
       sv2Player.seekTo(s.t + 0.03, true);
       sv2Player.playVideo();
+    } else if(Date.now() - t0 > 10000){
+      sv2SegEnd = -1; /* het han: bo moc dung doan de lan phat sau khong bi dung som */
+      sv2Status("Không tải được video, bấm lại nhé.");
     } else setTimeout(go, 300);
   }
   go();
@@ -8177,6 +8196,15 @@ function sv2RenderSubs(){
 var sv2ShIdx = 0;
 var sv2Urls = {}, sv2Scores = {};
 var sv2Recorder = null, sv2Chunks = [], sv2Stream = null, sv2RecTimer = null, sv2Sec = 0, sv2SR = null, sv2RecIdx = 0;
+/* A-08/A-09 (23/11): sv2RecStarting chan bam Ghi am 2 lan luc getUserMedia
+   dang cho quyen; sv2RecGen la generation token — tang trong sv2Teardown
+   (dong player/doi bai) va route() (doi trang), .then cua gUM thay token cu
+   thi dung track ngay, khong tao recorder. */
+var sv2RecStarting = false, sv2RecGen = 0;
+/* A-10 (23/11): sv2SeekGen — generation token cho vong lap retry seek cua
+   sv2SeekPlay/sv2PlaySeg; tang trong sv2Teardown nen vong lap cu chet khi
+   dong player/doi bai. */
+var sv2SeekGen = 0;
 var sv2Audio = new Audio();
 function sv2Status(t){ document.getElementById("sv2Status").textContent = t; }
 function sv2RenderSh(){
@@ -8205,6 +8233,7 @@ function sv2ShowScore(st, s, idx){
   if(idx === sv2ShIdx) document.getElementById("sv2Score").innerHTML = html;
 }
 function sv2StartRec(){
+  if(sv2RecStarting) return; /* A-08 (23/11): dang cho quyen micro — bo qua lan bam thu 2 */
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !("MediaRecorder" in window)){
     sv2Status("Trình duyệt này chưa hỗ trợ ghi âm trong trang. Bạn thử mở app bằng Chrome hoặc Safari mới nhất nhé.");
     return;
@@ -8214,11 +8243,18 @@ function sv2StartRec(){
   sv2Audio.pause();
   delete sv2Scores[sv2ShIdx];
   document.getElementById("sv2Score").innerHTML = "";
+  sv2RecStarting = true; /* A-08 */
+  var myGen = sv2RecGen; /* A-09 (23/11): chup generation luc goi getUserMedia */
   navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream){
+    if(myGen !== sv2RecGen){ /* A-09: da dong player/doi trang luc cho quyen — dung track ngay, khong ghi */
+      stream.getTracks().forEach(function(tr){ tr.stop(); });
+      sv2RecStarting = false;
+      return;
+    }
     sv2Stream = stream; sv2Chunks = []; sv2RecIdx = sv2ShIdx;
     var mySR = scBegin(); sv2SR = mySR;
     try{ sv2Recorder = new MediaRecorder(stream); }
-    catch(e){ scAbort(mySR); sv2StopTracks(); sv2Status("Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
+    catch(e){ scAbort(mySR); sv2StopTracks(); sv2RecStarting = false; sv2Status("Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
     sv2Recorder.ondataavailable = function(ev){ if(ev.data && ev.data.size) sv2Chunks.push(ev.data); };
     sv2Recorder.onstop = function(){
       sv2StopTracks(); sv2FinishRecUI();
@@ -8234,6 +8270,7 @@ function sv2StartRec(){
       if(sv2SR === mySR) sv2SR = null;
     };
     sv2Recorder.start();
+    sv2RecStarting = false; /* A-08: recorder da chay — nut Ghi am gio dung duoc de dung ghi */
     sv2Sec = 0;
     document.getElementById("sv2Rec").classList.add("rec");
     document.getElementById("sv2RecLabel").textContent = "Đang ghi… 0s — bấm để dừng";
@@ -8244,6 +8281,7 @@ function sv2StartRec(){
       if(sv2Sec >= 30 && sv2Recorder && sv2Recorder.state === "recording") sv2Recorder.stop();
     }, 1000);
   }).catch(function(){
+    sv2RecStarting = false; /* A-08 */
     sv2Status("Chưa ghi âm được: trình duyệt chưa được cấp quyền micro. Bạn kiểm tra quyền micro cho trang này rồi thử lại nhé.");
   });
 }
@@ -8843,10 +8881,12 @@ function sv2BindLesson(){
   });
   on("sv2Rec", "click", function(){
     if(sv2Recorder && sv2Recorder.state === "recording"){ sv2Recorder.stop(); return; }
+    if(sv2RecStarting) return; /* A-08 (23/11): dang cho quyen micro — bo qua lan bam thu 2 */
     sv2StartRec();
   });
   on("sv2Mine", "click", function(){
     if(!sv2Urls[sv2ShIdx]) return;
+    if(sv2Player && sv2Player.pauseVideo) sv2Player.pauseVideo(); /* A-13 (23/11): nghe giong minh thi dung video YouTube */
     sv2Audio.src = sv2Urls[sv2ShIdx];
     sv2Audio.play();
     sv2Status("Đang phát giọng của bạn. Nghe xong bấm nút phát để nghe lại đoạn mẫu trong video và so sánh.");
@@ -8883,6 +8923,8 @@ function sv2BindLesson(){
    onstop cua MediaRecorder, nen tach handler truoc khi dung ghi am. */
 function sv2Teardown(){
   sv2Open = false;
+  sv2RecGen++; /* A-09 (23/11): getUserMedia dang cho (neu co) se thay token cu -> dung track, khong ghi */
+  sv2SeekGen++; /* A-10 (23/11): vong lap retry seek cu chet */
   if(sv2Recorder){
     try{
       sv2Recorder.onstop = null; sv2Recorder.ondataavailable = null;
@@ -9446,6 +9488,10 @@ function svInitCatalog(){
 
 var listenPick = -1, listenChecked = false;
 var lsWebScores = {}; /* M-06: diem phat am tung cau shadowing Part 3, key lv-idx-li — giu khi roi trang roi quay lai (nhu lsScores mobile) */
+/* A-08/A-09 Part-3 (23/11): shP3RecStarting chan bam Ghi am 2 lan luc cho
+   quyen micro; shP3RecGen tang trong route() — gUM tra ve sau khi doi trang
+   thi dung track ngay, khong tao recorder. */
+var shP3RecStarting = false, shP3RecGen = 0;
 function speakRate(text, rate){
   if(!SET_SOUND) return;
   try{
@@ -9569,6 +9615,7 @@ function renderListenItem(lv, idx){
       b.addEventListener("click", function(){
         var li = parseInt(b.getAttribute("data-sh-rec"), 10);
         if(shRec && shLine === li){ shStopRec(); return; }
+        if(shP3RecStarting) return; /* A-08 (23/11): dang cho quyen micro — bo qua lan bam thu 2 */
         shStopRec();
         if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === "undefined"){
           shStatus(li, "Trình duyệt này không hỗ trợ ghi âm — hãy nghe mẫu và tự nhắc lại thành tiếng.");
@@ -9578,13 +9625,20 @@ function renderListenItem(lv, idx){
         delete lsWebScores[lv + "-" + idx + "-" + li];
         var scBox = $app.querySelector('[data-sh-score="' + li + '"]');
         if(scBox) scBox.innerHTML = "";
+        shP3RecStarting = true; /* A-08 */
+        var myGen = shP3RecGen; /* A-09 (23/11): chup generation luc goi getUserMedia */
         navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream){
+          if(myGen !== shP3RecGen){ /* A-09: da doi trang luc cho quyen — dung track ngay, khong ghi */
+            stream.getTracks().forEach(function(t){ t.stop(); });
+            shP3RecStarting = false;
+            return;
+          }
           shStream = stream; shLine = li;
           var chunks = [];
           var mySR = scBegin(); shSR = mySR; /* M-06: bat nhan dien giong noi de cham diem */
           var mr;
           try{ mr = new MediaRecorder(stream); }
-          catch(e){ scAbort(mySR); if(shStream){ shStream.getTracks().forEach(function(t){ t.stop(); }); shStream = null; } shStatus(li, "Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
+          catch(e){ scAbort(mySR); if(shStream){ shStream.getTracks().forEach(function(t){ t.stop(); }); shStream = null; } shP3RecStarting = false; shStatus(li, "Thiết bị chưa sẵn sàng ghi âm. Bạn thử lại sau nhé."); return; }
           shRec = mr;
           mr.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
           mr.onstop = function(){
@@ -9602,11 +9656,13 @@ function renderListenItem(lv, idx){
             if(shSR === mySR) shSR = null;
           };
           mr.start();
+          shP3RecStarting = false; /* A-08: recorder da chay — nut Ghi am gio dung duoc de dung ghi */
           b.textContent = "■ Dừng ghi";
           b.classList.add("rec");
           shStatus(li, "Đang ghi… nói đuổi theo câu mẫu ngay nhé (tối đa 30 giây).");
           shTimer = setTimeout(function(){ shStopRec(); }, 30000);
         }).catch(function(){
+          shP3RecStarting = false; /* A-08 */
           shStatus(li, "Không ghi âm được — trình duyệt chưa được cấp quyền micro.");
         });
       });
@@ -12970,6 +13026,11 @@ function syncNavToHash(){
 var _skLastRouted = null; /* hash mà route() xử lý gần nhất — cho lớp điều hướng dự phòng bên dưới */
 function route(){
   _skLastRouted = location.hash || "#/";
+  /* A-09 (23/11): doi trang — getUserMedia dang cho (neu co) se thay token cu
+     -> dung track ngay, khong bat dau ghi am sau khi user da roi di. Chi tang
+     token, khong doi logic routing. */
+  shP3RecGen++;
+  sv2RecGen++;
   /* Sidebar PC (mọi trang): class sk-home-sidebar gắn vĩnh viễn ở controller;
      chỉ gỡ class sk-is-home (đánh dấu đang ở Home — topbar chỉ hiện ô tìm ở Home). */
   document.body.classList.remove("sk-is-home");
