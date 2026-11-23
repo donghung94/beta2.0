@@ -4138,9 +4138,9 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     <div id="skSessionOverlay" class="sksession" hidden aria-hidden="true" role="alert">
       <div class="sksession-card">
         <img class="login-mascot" src="assets/chibi.png" alt="">
-        <h3 id="skSessionTitle">Tài khoản đang đăng nhập ở 2 thiết bị khác</h3>
+        <h3 id="skSessionTitle">Tài khoản đang đăng nhập ở thiết bị khác</h3>
         <p class="sksession-detail" id="skSessionDetail" hidden></p>
-        <p class="sksession-msg" id="skSessionMsg">Vui lòng đăng xuất trên một trong 2 thiết bị đó trước khi đăng nhập ở đây.</p>
+        <p class="sksession-msg" id="skSessionMsg">Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.</p>
         <button class="sheetbtn" id="skSessionOk" type="button">Đã hiểu</button>
       </div>
     </div>
@@ -8210,6 +8210,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!ch) return;
     ensureKanjiDB(function(){
       var e = dbFind(ch);
+      /* A-17 (23/11): cổng Premium cho chi tiết kanji N3+ — mọi cửa vào
+         (chip/kính lúp vẽ, lưới cấp, tìm kiếm, nút "Về chi tiết" flashcard)
+         đều qua openKanjiFor nên gate tại đây bao phủ tất cả. 12 chữ Bài 12
+         đều là N5/N4 trong KANJI_DB nên bài học free không bị ảnh hưởng. */
+      if(e && e.jlpt && !premiumGateLevel(e.jlpt)) return;
       if(!e && !pool){ showCandNote(ch); return; }
       currentPool = pool || null;
       currentCell = cell || null;
@@ -10388,6 +10393,57 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     showSuggest('<div class="sg-head">Gợi ý phổ biến</div>' +
       itemHTML("k", 8) + itemHTML("v", 0) + itemHTML("v", 2) + itemHTML("v", 3) + itemHTML("k", 11));
   }
+  /* A-19 (23/11): kết quả kanji từ KANJI_DB đầy đủ (2.138 chữ) — kind "d",
+     mở bằng openKanjiChar qua data-ch (không có index trong KANJI 12 chữ). */
+  function dbItemHTML(e){
+    var on = (e.on || []).join("、"), kun = (e.kun || []).join("、");
+    return '<button class="sg-item" data-kind="d" data-ch="' + e.kanji + '"><span class="sg-ch jp">' + e.kanji + '</span>' +
+      '<span class="sg-main"><span class="sg-w">' + esc(e.hanViet) + ' · ' + esc(e.meaning) + '</span>' +
+      '<span class="sg-m jp">' + esc(on) + ' · ' + esc(kun) + '</span></span><span class="sg-tag">KANJI</span></button>';
+  }
+  /* A-19: kết quả từ vựng từ VOCAB_MINNA/VOCAB_N1 đã nạp trong bộ nhớ —
+     kind "m", data-i là index trong searchVocabCache (đã map về dạng
+     openVocab: {w, r, roma, hv, m, ex}). */
+  var searchVocabCache = [];
+  function vocabItemHTML(v, i){
+    return '<button class="sg-item" data-kind="m" data-i="' + i + '"><span class="sg-ch w jp">' + esc(v.w) + '</span>' +
+      '<span class="sg-main"><span class="sg-w jp">' + esc(v.r) + (v.roma ? ' <span class="sg-r">' + esc(v.roma) + '</span>' : '') + '</span>' +
+      '<span class="sg-m">' + esc(v.hv) + ' · ' + esc(v.m) + '</span></span><span class="sg-tag">TỪ VỰNG</span></button>';
+  }
+  /* Chỉ mục tìm kiếm dựng 1 lần (chuỗi đã chuẩn hóa norm) để mỗi lần gõ
+     chỉ quét indexOf, không norm lại 2.138 chữ + ~10.500 từ mỗi phím. */
+  var searchDbIndex = null; /* [{ch, hay}] — từ KANJI_DB */
+  function searchDbBuild(){
+    if(searchDbIndex) return searchDbIndex;
+    var db = window.KANJI_DB; if(!db) return null;
+    var idx = [];
+    Object.keys(db).forEach(function(ch){
+      var e = db[ch];
+      idx.push({ch: ch, hay: norm(ch + " " + (e.hanViet || "") + " " + (e.meaning || "") + " " + (e.on || []).join(" ") + " " + (e.kun || []).join(" "))});
+    });
+    searchDbIndex = idx;
+    return idx;
+  }
+  var searchVocabIndex = null; /* [{v (đã map), hay}] — từ VOCAB_MINNA/N1 */
+  var searchVocabStamp = "";
+  function searchVocabBuild(){
+    var stamp = (window.VOCAB_MINNA ? "M" : "") + (window.VOCAB_N1 ? "N" : "");
+    if(searchVocabIndex && searchVocabStamp === stamp) return searchVocabIndex;
+    searchVocabStamp = stamp;
+    var idx = [];
+    function add(rows){
+      (rows || []).forEach(function(v){
+        var mapped = {w: v.word, r: v.reading || "", roma: "", hv: v.hanViet || "", m: v.meaning || "",
+          ex: (v.ex && v.ex[0]) ? [v.ex[0][0], v.ex[0][1] || ""] : undefined};
+        idx.push({v: mapped, hay: norm(v.word + " " + (v.reading || "") + " " + (v.hanViet || "") + " " + (v.meaning || ""))});
+      });
+    }
+    if(window.VOCAB_MINNA) Object.keys(window.VOCAB_MINNA).forEach(function(lv){ add(window.VOCAB_MINNA[lv]); });
+    if(window.VOCAB_N1) add(window.VOCAB_N1);
+    searchVocabIndex = idx;
+    return idx;
+  }
+  var searchDbPending = false; /* đang chờ kanji-data.js nạp xong để tìm lại */
   function runSearch(){
     var q = sInput.value;
     sClear.hidden = !q;
@@ -10401,18 +10457,67 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var hay = norm(v.w + " " + v.r + " " + v.roma + " " + v.hv + " " + v.m);
       if(hay.indexOf(nq) >= 0) vs.push(i);
     });
-    if(!ks.length && !vs.length){
+    /* A-19 (23/11): tìm thêm trong KANJI_DB đầy đủ (2.138 chữ) khi chưa đủ
+       4 kết quả kanji; dữ liệu chưa nạp thì kích hoạt loader có sẵn rồi
+       tìm lại khi nạp xong (app đã nạp nền sau 1,5s nên thường có sẵn). */
+    var dbKs = [];
+    var db = window.KANJI_DB;
+    if(db){
+      var idx = searchDbBuild();
+      var seen = {};
+      ks.forEach(function(i){ seen[KANJI[i].ch] = 1; });
+      for(var j = 0; j < idx.length && ks.length + dbKs.length < 4; j++){
+        if(idx[j].hay.indexOf(nq) >= 0 && !seen[idx[j].ch]){ seen[idx[j].ch] = 1; dbKs.push(idx[j].ch); }
+      }
+    }else if(kanjiDBState !== 3 && !searchDbPending){
+      searchDbPending = true;
+      ensureKanjiDB(function(){
+        searchDbPending = false;
+        if(sInput.value === q) runSearch();
+      });
+    }
+    /* A-19: tìm thêm trong từ vựng đầy đủ (VOCAB_MINNA/VOCAB_N1) CHỈ khi
+       đã nạp trong bộ nhớ (vd user đã mở mục Từ vựng) — KHÔNG kích hoạt
+       tải file 3–4MB từ ô tìm kiếm. */
+    var dbVs = [];
+    if(window.VOCAB_MINNA || window.VOCAB_N1){
+      var vidx = searchVocabBuild();
+      var vseen = {};
+      vs.forEach(function(i){ vseen[VOCAB[i].w] = 1; });
+      for(var k = 0; k < vidx.length && vs.length + dbVs.length < 5; k++){
+        if(vidx[k].hay.indexOf(nq) >= 0 && !vseen[vidx[k].v.w]){ vseen[vidx[k].v.w] = 1; dbVs.push(vidx[k].v); }
+      }
+    }
+    searchVocabCache = dbVs;
+    if(!ks.length && !vs.length && !dbKs.length && !dbVs.length){
+      /* DB đang nạp dở thì hẹn hiện "đang tải" thay vì "không thấy" —
+         callback ensureKanjiDB ở trên sẽ chạy lại runSearch khi nạp xong. */
+      if(!db && searchDbPending){
+        showSuggest('<div class="sg-none">Đang tải dữ liệu kanji…</div>');
+        return;
+      }
       showSuggest('<div class="sg-none">Không thấy kết quả cho <b>“' + q.replace(/</g, "") + '”</b>.<br>Thử gõ Hán Việt (ví dụ “điện”), cách đọc romaji (ví dụ “den”) hoặc 1 chữ kanji.</div>');
       return;
     }
     var html = "";
-    if(ks.length){ html += '<div class="sg-head">Kanji</div>'; ks.slice(0, 4).forEach(function(i){ html += itemHTML("k", i); }); }
-    if(vs.length){ html += '<div class="sg-head">Từ vựng</div>'; vs.slice(0, 5).forEach(function(i){ html += itemHTML("v", i); }); }
+    if(ks.length || dbKs.length){
+      html += '<div class="sg-head">Kanji</div>';
+      ks.slice(0, 4).forEach(function(i){ html += itemHTML("k", i); });
+      dbKs.forEach(function(ch){ html += dbItemHTML(db[ch]); });
+    }
+    if(vs.length || dbVs.length){
+      html += '<div class="sg-head">Từ vựng</div>';
+      vs.slice(0, 5).forEach(function(i){ html += itemHTML("v", i); });
+      dbVs.forEach(function(v, i){ html += vocabItemHTML(v, i); });
+    }
     showSuggest(html);
   }
-  function openResult(kind, i){
+  function openResult(kind, i, ch){
     hideSuggest();
-    if(kind === "k") openKanji(KANJI[i], null); else openVocab(VOCAB[i]);
+    if(kind === "k") openKanji(KANJI[i], null);
+    else if(kind === "d") openKanjiChar(ch); /* A-19: kanji từ KANJI_DB — qua cổng Premium ở openKanjiFor (A-17) */
+    else if(kind === "m"){ var v = searchVocabCache[i]; if(v) openVocab(v); } /* A-19: từ vựng từ VOCAB_MINNA/N1 */
+    else openVocab(VOCAB[i]);
   }
   sInput.addEventListener("input", runSearch);
   sInput.addEventListener("focus", function(){ if(sBox.hidden) runSearch(); });
@@ -10433,7 +10538,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   sInput.addEventListener("keydown", function(e){
     if(e.key === "Enter"){
       var first = sBox.querySelector(".sg-item");
-      if(first){ openResult(first.dataset.kind, parseInt(first.dataset.i, 10)); sInput.blur(); }
+      if(first){ openResult(first.dataset.kind, parseInt(first.dataset.i, 10), first.dataset.ch); sInput.blur(); }
     }
     if(e.key === "Escape") hideSuggest();
   });
@@ -10441,13 +10546,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var it = e.target.closest ? e.target.closest(".sg-item") : null;
     if(!it) return;
     e.preventDefault();
-    openResult(it.dataset.kind, parseInt(it.dataset.i, 10));
+    openResult(it.dataset.kind, parseInt(it.dataset.i, 10), it.dataset.ch);
   });
   sBox.addEventListener("click", function(e){
     /* Dùng bàn phím (Tab tới gợi ý rồi Enter/Space) cũng mở được kết quả như chạm */
     var it = e.target.closest ? e.target.closest(".sg-item") : null;
     if(!it) return;
-    openResult(it.dataset.kind, parseInt(it.dataset.i, 10));
+    openResult(it.dataset.kind, parseInt(it.dataset.i, 10), it.dataset.ch);
   });
   sClear.addEventListener("click", function(){
     sInput.value = ""; sClear.hidden = true; sInput.focus(); runSearch();
@@ -21697,7 +21802,7 @@ function furiHTML(text){
           });
           if(!ownExists && fresh.length >= SK_SESSION_MAX){
             var err = new Error("sk-session-blocked");
-            err.skSessionBlocked = fresh; /* MẢNG 2 thiết bị — overlay liệt kê cả 2 */
+            err.skSessionBlocked = fresh; /* MẢNG mọi session fresh khác (thường 2; có thể hơn nếu client sửa đổi) — overlay liệt kê tất cả, tiêu đề dùng độ dài mảng (A-59) */
             throw err;
           }
           if(ownExists){
@@ -21905,12 +22010,15 @@ function furiHTML(text){
     var detail = document.getElementById("skSessionDetail");
     if(!ov) return;
     if(kind === "block"){
-      /* d = MẢNG 2 thiết bị đang giữ (claim chỉ chặn khi đủ 2 fresh). Dùng
-         textContent (không innerHTML) nên label độc hại không chèn được HTML. */
-      if(title) title.textContent = "Tài khoản đang đăng nhập ở 2 thiết bị khác";
-      if(msg) msg.textContent = "Vui lòng đăng xuất trên một trong 2 thiết bị đó trước khi đăng nhập ở đây.";
+      /* A-59 (23/11, hồi quy W21-4): d là MẢNG mọi session fresh khác —
+         thường là 2 (claim chặn khi đủ 2) nhưng client sửa đổi có thể tạo
+         nhiều hơn (K-17) nên tiêu đề/thông báo dùng độ dài mảng thay vì
+         hardcode "2" (mirror bản web). */
+      var list = Array.isArray(d) ? d : (d ? [d] : []);
+      var n = list.length;
+      if(title) title.textContent = "Tài khoản đang đăng nhập ở " + n + " thiết bị khác";
+      if(msg) msg.textContent = "Vui lòng đăng xuất trên một trong " + n + " thiết bị đó trước khi đăng nhập ở đây.";
       if(detail){
-        var list = Array.isArray(d) ? d : (d ? [d] : []);
         var lines = [];
         for(var i = 0; i < list.length; i++){
           var one = list[i] || {};
