@@ -81,7 +81,17 @@
     border-radius:44px;
     border:1px solid rgba(0,0,0,.18);
     box-shadow:var(--shadow);
-    overflow:hidden;
+    overflow:hidden; /* fallback: trinh duyet cu chua co overflow:clip */
+    /* BUG 23/11 (cham diem Shadowing "do" + khong cuon duoc): khung #phone
+       KHONG duoc cuon — cac overlay dong (translateY(100%)) lam scrollHeight
+       gap doi (1688px o viewport 844), nen scrollIntoView({block:"center"})
+       / focus / ban phim iOS cuon ca khung len (do duoc: scrollTop 136 sau
+       1 lan scrollIntoView), toan bo giao dien lech khoi man hinh, nut Ghi
+       am + thanh tab truot khoi cho, day khung thanh vung chet. overflow:clip
+       khoa scrollTop = 0 vinh vien (scrollIntoView/focus/ban phim deu khong
+       cuon duoc), van cat noi dung nhu hidden. Cuon that cua app nam trong
+       .screen/.detailbody/.exambody (overflow-y:auto rieng), khong anh huong. */
+    overflow:clip;
     position:relative;
     display:flex; flex-direction:column;
   }
