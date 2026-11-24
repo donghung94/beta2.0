@@ -5812,7 +5812,7 @@ var CJ_IRREG = {
   "くる":["きます","くる","こない","きて","きた","こよう","こられる","こい","くるな","くれば","きたら","こられる","こさせる","こさせられる"]
 };
 /* Chia 1 động từ (dạng kana từ điển + nhóm) sang thể formIdx (0–13) → mảng
-   các dạng kana chấp nhận (thường 1; Nhóm I 使役受身形 có 2: dạng dài + rút gọn). */
+   các dạng kana chấp nhận (thường 1; Nhóm I 使役受身形 có 2: dạng dài + rút gọn (trừ động từ tận cùng す: chỉ dạng dài)). */
 function cjConjKana(dictKana, group, formIdx){
   if(CJ_IRREG[dictKana]) return [CJ_IRREG[dictKana][formIdx]];
   var last = dictKana.charAt(dictKana.length - 1);
@@ -5838,7 +5838,7 @@ function cjConjKana(dictKana, group, formIdx){
     return [stem + te];
   }
   if(formIdx === 10) return [cjConjKana(dictKana, group, 4)[0] + "ら"];
-  if(formIdx === 13) return [stem + aBase + "せられる", stem + aBase + "される"];
+  if(formIdx === 13){ if(last === "す") return [stem + aBase + "せられる"]; return [stem + aBase + "せられる", stem + aBase + "される"]; }
   if(formIdx === 0) return [stem + i + "ます"];
   if(formIdx === 2) return [stem + aBase + "ない"];
   if(formIdx === 5) return [stem + o + "う"];
