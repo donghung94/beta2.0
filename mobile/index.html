@@ -3382,6 +3382,7 @@
             <h1>Chào buổi tối, bạn học</h1>
             <p id="heroSub">Hôm nay luyện tập tiếp N4 nhé</p>
             <div class="hero-chiprow"><span class="realmchip" id="heroRealmChip"><i></i><svg class="ins" viewBox="0 0 24 24" aria-hidden="true"><use href="#rk1"></use></svg> BINH NHÌ · BẬC 2</span><span class="hero-contact" id="heroContactIcons" style="display:none"></span></div>
+            <div id="heroMonthNote" style="display:none; margin-top:10px; padding:10px 12px; border:1.5px solid var(--amber); border-radius:12px; font-size:13.5px; line-height:1.55;"></div>
           </div>
           <img class="herologo" src="assets/logo.png" alt="Logo SoraKanji — chữ 空漢 màu xanh dương nằm dọc bên trái, bé chibi áo đen đeo kiếm đứng bên phải chỉ tay vào chữ" width="96" height="96" />
         </div>
@@ -4164,7 +4165,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
 
     <!-- Trang giới thiệu gói Premium (mở từ dialog, nút "Nâng cấp Premium"
          ở Tokutei, hoặc mục "Nâng cấp Premium" ở Cài đặt): nội dung như
-         trang #/nangcap bản web — 2 gói, quyền lợi từng gói, ghi chú giảm
+         trang #/nangcap bản web — 3 gói, quyền lợi từng gói, ghi chú giảm
          giá. Trên mobile web (PWA) mỗi gói có nút mua mở trang thanh toán
          VietQR (#skCheckoutOverlay); trong app bọc Capacitor nút mua bị ẩn
          (quy tắc App Store 3.1.1 — IAP sau), chỉ còn hướng dẫn mua bằng chữ. -->
@@ -4173,7 +4174,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="iconbtn" id="closePwPlans" aria-label="Quay lại — đóng trang gói Premium">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2>Nâng cấp Premium</h2><span>Gói Năm · Gói Trọn đời</span></div>
+        <div><h2>Nâng cấp Premium</h2><span>Gói Tháng · Gói Năm · Gói Trọn đời</span></div>
       </div>
       <div class="detailbody">
         <h3 class="wvsec">Nâng cấp Premium</h3>
@@ -4181,7 +4182,22 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <div class="pw-sale">🎉 Ưu đãi ra mắt — giảm giá đến <b>06/12/2026</b> (ngày thi JLPT). Sau thời gian này gói về giá gốc.</div>
         <div class="pw-plans">
           <div class="pw-plan">
-            <b>Gói Năm</b>
+            <b>Gói Tháng</b>
+            <div class="pw-per">Chỉ ~1.970đ/ngày</div>
+            <span class="pw-price">59.000đ</span><span class="pw-old">69.000đ</span>
+            <span class="pw-save">Tiết kiệm 10.000đ</span>
+            <ul>
+              <li>Mở toàn bộ N3–N1: kanji, từ vựng, ngữ pháp</li>
+              <li>Đề thi JLPT N3–N1 Test 1–9, chấm /180</li>
+              <li>Luyện nghe + video Shadowing (xem trọn vẹn)</li>
+              <li>Đọc hiểu N3–N1</li>
+              <li>Tokutei xây dựng 730 câu</li>
+              <li>Đồng bộ web và app điện thoại</li>
+            </ul>
+            <button class="cta pw-buy" id="pwBuyMonth" type="button" data-pkg="month">Mua Gói Tháng</button>
+          </div>
+          <div class="pw-plan hot">
+            <b>Gói Năm · Phổ biến nhất</b>
             <div class="pw-per">Chỉ ~990đ/ngày</div>
             <span class="pw-price">360.000đ</span><span class="pw-old">449.000đ</span>
             <span class="pw-save">Tiết kiệm 89.000đ</span>
@@ -4195,8 +4211,8 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             </ul>
             <button class="cta pw-buy" id="pwBuyYear" type="button" data-pkg="year">Mua Gói Năm</button>
           </div>
-          <div class="pw-plan hot">
-            <b>Gói Trọn đời · Phổ biến nhất</b>
+          <div class="pw-plan">
+            <b>Gói Trọn đời</b>
             <div class="pw-per">Mua 1 lần, học mãi mãi</div>
             <span class="pw-price">999.000đ</span><span class="pw-old">1.199.000đ</span>
             <span class="pw-save">Tiết kiệm 200.000đ</span>
@@ -5237,6 +5253,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <input class="adm-input" id="admGrantUid" type="text" placeholder="UID học viên (28 ký tự)" autocomplete="off" aria-label="UID học viên" />
           <div style="display:flex; gap:8px; margin-top:10px;">
             <select class="adm-input" id="admGrantPlan" aria-label="Chọn gói Premium" style="flex:1;">
+              <option value="month">Gói Tháng (1 tháng)</option>
               <option value="year">Gói Năm (12 tháng)</option>
               <option value="lifetime">Gói Trọn đời</option>
             </select>
@@ -5735,15 +5752,16 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <h3>3. Gói miễn phí và gói trả phí</h3>
           <ul>
             <li><b>Miễn phí:</b> toàn bộ nội dung cấp độ N5–N4 ở mọi mục, cùng 1 video song ngữ mỗi mục (5 video).</li>
+            <li><b>Gói Tháng:</b> mở toàn bộ nội dung N3–N1 trong 1 tháng kể từ ngày kích hoạt.</li>
             <li><b>Gói Năm:</b> mở toàn bộ nội dung N3–N1 trong 12 tháng kể từ ngày kích hoạt.</li>
             <li><b>Gói Trọn đời:</b> mở toàn bộ nội dung N3–N1 không giới hạn thời gian.</li>
           </ul>
-          <p>Giá gói theo bảng giá tại thời điểm mua (giá hiện tại: Gói Năm 360.000đ, Gói Trọn đời 999.000đ). SoraKanji có thể điều chỉnh bảng giá; giá đã thanh toán không thay đổi.</p>
+          <p>Giá gói theo bảng giá tại thời điểm mua (giá hiện tại: Gói Tháng 59.000đ, Gói Năm 360.000đ, Gói Trọn đời 999.000đ). SoraKanji có thể điều chỉnh bảng giá; giá đã thanh toán không thay đổi.</p>
           <h3>4. Thanh toán và kích hoạt</h3>
           <ul>
             <li>Thanh toán bằng chuyển khoản ngân hàng thủ công theo hướng dẫn hiển thị tại trang thanh toán (số tiền, nội dung chuyển khoản và mã đơn hàng riêng cho mỗi đơn).</li>
             <li>Gói được kích hoạt sau khi SoraKanji xác nhận đã nhận được tiền chuyển khoản, thường trong vài phút và tối đa 24 giờ.</li>
-            <li>Gói trả phí <b>không tự động gia hạn</b>. Khi Gói Năm hết hạn, bạn có thể mua lại nếu muốn tiếp tục sử dụng.</li>
+            <li>Gói trả phí <b>không tự động gia hạn</b>. Khi Gói Tháng hoặc Gói Năm hết hạn, bạn có thể mua lại nếu muốn tiếp tục sử dụng.</li>
             <li>Mỗi đơn hàng gắn với tài khoản đã đăng nhập lúc mua; gói đã kích hoạt không chuyển sang tài khoản khác.</li>
           </ul>
           <h3>5. Chính sách hoàn tiền</h3>
@@ -5942,6 +5960,24 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     return u > Date.now();
   }
   function isPremium(){ return premiumIsActive(premiumCacheLoad()); }
+  /* Nhắc hết hạn cho Gói Tháng mua bằng chuyển khoản tay (không tự gia hạn):
+     còn <=3 ngày thì hiện banner ở hero Home. Chỉ gói Tháng — Năm/Trọn đời
+     không nhắc. Đọc từ cache Premium (premiumApplyDocData cập nhật). */
+  function skRenderMonthExpiryNote(){
+    var el = document.getElementById("heroMonthNote");
+    if(!el) return;
+    var p = premiumCacheLoad();
+    if(!p || p.plan !== "month" || p.until == null){ el.style.display = "none"; el.innerHTML = ""; return; }
+    var untilMs = premiumUntilMs(p.until);
+    var ms = untilMs - Date.now();
+    if(ms <= 0 || ms > 3 * 86400000){ el.style.display = "none"; el.innerHTML = ""; return; }
+    var d = Math.ceil(ms / 86400000);
+    var dateTxt = new Date(untilMs).toLocaleDateString("vi-VN");
+    el.innerHTML = "⏰ Premium Tháng của bạn sắp hết hạn sau <b>" + d + " ngày</b> (đến " + dateTxt + ") — <a href=\"#\" id=\"heroMonthRenew\">gia hạn ngay →</a>";
+    el.style.display = "block";
+    var a = document.getElementById("heroMonthRenew");
+    if(a) a.addEventListener("click", function(e){ e.preventDefault(); openPwPlans(); });
+  }
   function premiumLevelOpen(lv){ return lv === "N5" || lv === "N4" || isPremium(); }
   /* Cổng chờ đăng nhập (đăng nhập tùy chọn, 18/11): user bấm mục khóa khi
      chưa đăng nhập thì mở bảng đăng nhập TRƯỚC thay vì bảng Premium; đăng
@@ -5950,7 +5986,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      sau đăng nhập, user Premium bấm lại mục vừa bấm để mở. */
   var skPendingGate = false;
   var skPendingAdminChat = false; /* user bấm "Nhắn admin" khi chưa đăng nhập (hoặc mở deep link ?open=adminchat) — đăng nhập xong skResumePendingGate mở chat. Xóa khi user đóng bảng đăng nhập (nút × / bấm nền — cùng chỗ xóa skPendingGate). */
-  var skPendingBuyPkg = null; /* gói user định mua khi bấm mua lúc chưa đăng nhập ("year"|"lifetime") — ý định mua sống sót qua lần đăng nhập: skResumePendingGate nối tiếp bằng skStartCheckout(pkg) thay vì hiện bảng Premium (xem khối VietQR). Xóa khi user đóng bảng đăng nhập (nút × / bấm nền — cùng chỗ xóa skPendingGate). */
+  var skPendingBuyPkg = null; /* gói user định mua khi bấm mua lúc chưa đăng nhập ("month"|"year"|"lifetime") — ý định mua sống sót qua lần đăng nhập: skResumePendingGate nối tiếp bằng skStartCheckout(pkg) thay vì hiện bảng Premium (xem khối VietQR). Xóa khi user đóng bảng đăng nhập (nút × / bấm nền — cùng chỗ xóa skPendingGate). */
   function skResumePendingGate(){
     if(skPendingAdminChat){
       /* Vừa đăng nhập để nhắn admin: mở chat (openAdminChat tự kiểm
@@ -6220,6 +6256,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       premiumCacheSave(null);
     }
     if(isPremium() !== before) premiumApplyLocks();
+    skRenderMonthExpiryNote();
   }
   /* Đọc lại Premium từ Firestore (đường .get()). Chống gọi dồn 15 giây:
      focus + visibilitychange hay bắn cùng lúc khi user quay lại app. */
@@ -6338,7 +6375,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
        - SK_VTB_ACC = "108888811513" (VietinBank, DONG THANH HUNG)
        - memo = "SEVQR " + code (SePay chỉ nhận giao dịch VietinBank có nội
          dung bắt đầu bằng SEVQR)
-       - doc sk_orders/{code}: {uid, email, displayName, package: "year"|
+       - doc sk_orders/{code}: {uid, email, displayName, package: "month"|"year"|
          "lifetime", amount, status: "pending", createdAt: serverTimestamp}
        - code = "SK" + 8 ký tự [A-Z0-9]; đơn chờ lưu localStorage key
          "sk_pending_order" (CÙNG KEY với web — cùng origin sorakanji.com)
@@ -6349,10 +6386,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      luồng VietQR — nút mua ẩn (skCheckoutInit), chỉ còn hướng dẫn mua bằng
      chữ; IAP sẽ thay thế sau theo plan riêng. Phát hiện native qua
      window.Capacitor, an toàn khi Capacitor vắng mặt (PWA).
-     Giá: Năm 360.000đ, Trọn đời 999.000đ (giảm đến 06/12/2026, sau đó về
-     giá gốc 449.000đ / 1.199.000đ — cùng luật skPrice của web). */
+     Giá: Tháng 59.000đ, Năm 360.000đ, Trọn đời 999.000đ (giảm đến 06/12/2026,
+     sau đó về giá gốc 69.000đ / 449.000đ / 1.199.000đ — cùng luật skPrice của web). */
   var SK_SALE_END = new Date("2026-12-06T23:59:59+07:00").getTime(); /* hết 06/12/2026 */
   var SK_PACKAGES = {
+    month: {label: "Gói Tháng", dur: "1 tháng", sale: 59000, full: 69000, save: 10000},
     year: {label: "Gói Năm", dur: "12 tháng", sale: 360000, full: 449000, save: 89000},
     lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 1199000, save: 200000}
   };
@@ -6494,7 +6532,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      khác nhau) trong lúc đang tạo đơn thì lần sau bị bỏ qua; nút mua cũng
      bị disable + đổi chữ "Đang tạo đơn…" cho tới khi xong/lỗi. */
   var skCheckoutInFlight = false;
-  function skBuyBtn(pkg){ return document.getElementById(pkg === "lifetime" ? "pwBuyLifetime" : "pwBuyYear"); }
+  function skBuyBtn(pkg){ return document.getElementById(pkg === "lifetime" ? "pwBuyLifetime" : pkg === "month" ? "pwBuyMonth" : "pwBuyYear"); }
   function skSetBuyBusy(pkg, busy){
     var btn = skBuyBtn(pkg);
     if(!btn) return;
@@ -6506,7 +6544,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      native → đang tạo đơn → đã Premium → chưa đăng nhập → chưa có email →
      đã có đơn chờ (mở lại, không tạo mới) → tạo đơn mới. */
   function skStartCheckout(pkg){
-    pkg = (pkg === "lifetime") ? "lifetime" : "year";
+    pkg = (pkg === "lifetime") ? "lifetime" : (pkg === "month") ? "month" : "year";
     if(skIsNativeApp()) return; /* GATE NATIVE: không tạo đơn trong app bọc */
     if(skCheckoutInFlight) return;
     if(isPremium()){
@@ -6661,9 +6699,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      chữ), trên mobile web thì ẨN hướng dẫn mua bằng chữ (mua ngay tại đây). */
   function skCheckoutInit(){
     var native = skIsNativeApp();
+    var bm = document.getElementById("pwBuyMonth");
     var by = document.getElementById("pwBuyYear");
     var bl = document.getElementById("pwBuyLifetime");
     var guide = document.getElementById("pwGuide");
+    if(bm){
+      bm.hidden = native;
+      if(!native) bm.addEventListener("click", function(){ skStartCheckout("month"); });
+    }
     if(by){
       by.hidden = native;
       if(!native) by.addEventListener("click", function(){ skStartCheckout("year"); });
@@ -19949,6 +19992,7 @@ function cjAccepts(q, formIdx, val){
       : "Lộ trình 30 ngày của khóa <b>" + plv + "</b>: mỗi tuần Kanji · Từ vựng · Ngữ pháp · Nghe · Đọc hiểu · Ôn tập · Thi thử. Hôm nay là <b>Ngày " + (pdone + 1) + "</b> — bấm vào để xem nhiệm vụ.";
     /* Chip cấp bậc theo EXP (không theo cấp đã khai) — renderRank() vẽ. */
     renderRank();
+    skRenderMonthExpiryNote();
     /* Icon liên hệ sau pill cấp bậc (cache — không đọc Firestore thừa;
        cũng là đường retry nếu lần tải ở boot gặp lỗi). */
     skLoadSocialLinks(false).then(skRenderHeroContactIcons);
@@ -20983,7 +21027,7 @@ function cjAccepts(q, formIdx, val){
   var admStudentsPage = 1; /* trang hiện tại (1-based) của danh sách học viên */
   var adminOverlay = document.getElementById("adminOverlay");
   function admMsg(t){ setTxt("admMsg", t); }
-  function admPlanLabel(pkg){ return pkg === "lifetime" ? "Trọn đời" : (pkg === "year" ? "Gói Năm" : "—"); }
+  function admPlanLabel(pkg){ return pkg === "lifetime" ? "Trọn đời" : (pkg === "year" ? "Gói Năm" : (pkg === "month" ? "Gói Tháng" : "—")); }
   function admFmtDate(ms){
     if(!ms) return "—";
     try{ return new Date(ms).toLocaleDateString("vi-VN"); }catch(_){ return "—"; }
@@ -21515,7 +21559,7 @@ function cjAccepts(q, formIdx, val){
     pageItems.forEach(function(s){
       var badge;
       if(s.premium && premiumIsActive(s.premium)){
-        badge = '<span class="badge">' + esc(s.premium.plan === "lifetime" ? "Trọn đời" : "Gói Năm") + (s.premium.plan === "year" && s.premium.until ? " · hết hạn " + esc(admFmtDate(premiumTsToMs(s.premium.until))) : "") + '</span>';
+        badge = '<span class="badge">' + esc(s.premium.plan === "lifetime" ? "Trọn đời" : s.premium.plan === "year" ? "Gói Năm" : "Gói Tháng") + ((s.premium.plan === "year" || s.premium.plan === "month") && s.premium.until ? " · hết hạn " + esc(admFmtDate(premiumTsToMs(s.premium.until))) : "") + '</span>';
       } else if(s.premium && s.premium.plan){
         badge = '<span class="badge blocked">Hết hạn</span>';
       } else {
@@ -21627,22 +21671,26 @@ function cjAccepts(q, formIdx, val){
     var uid = inp ? inp.value.trim() : "";
     var plan = sel ? sel.value : "year";
     if(!uid){ gmsg("Bạn chưa nhập UID học viên."); if(inp) inp.focus(); return; }
-    if(plan !== "year" && plan !== "lifetime"){ gmsg("Gói chưa hợp lệ."); return; }
-    if(!confirm("Cấp " + (plan === "lifetime" ? "Gói Trọn đời" : "Gói Năm (12 tháng)") + " cho UID " + uid + "?\nPremium cũ của tài khoản này (nếu có) sẽ bị thay thế.")) return;
+    if(plan !== "month" && plan !== "year" && plan !== "lifetime"){ gmsg("Gói chưa hợp lệ."); return; }
+    if(!confirm("Cấp " + (plan === "lifetime" ? "Gói Trọn đời" : plan === "month" ? "Gói Tháng (1 tháng)" : "Gói Năm (12 tháng)") + " cho UID " + uid + "?\nPremium cũ của tài khoản này (nếu có) sẽ bị thay thế.")) return;
     var db = admDb();
     if(!db){ gmsg("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại."); return; }
     gmsg("Đang cấp Premium…");
     if(btn) btn.disabled = true;
     var now = firebase.firestore.Timestamp.now();
     var until = null;
-    if(plan === "year"){
+    if(plan === "month"){
+      var d = now.toDate();
+      d.setMonth(d.getMonth() + 1);
+      until = firebase.firestore.Timestamp.fromDate(d);
+    } else if(plan === "year"){
       var d = now.toDate();
       d.setMonth(d.getMonth() + 12);
       until = firebase.firestore.Timestamp.fromDate(d);
     }
     db.collection("kanji_progress").doc(uid).set({premium: {plan: plan, since: now, until: until}}, {merge: true}).then(function(){
       if(btn) btn.disabled = false;
-      gmsg("Đã cấp " + (plan === "lifetime" ? "Gói Trọn đời" : "Gói Năm") + " cho " + uid + ".");
+      gmsg("Đã cấp " + (plan === "lifetime" ? "Gói Trọn đời" : plan === "month" ? "Gói Tháng" : "Gói Năm") + " cho " + uid + ".");
       admMsg("Đã cấp Premium — đang tải lại dữ liệu…");
       admLoadDashboard();
     }).catch(function(err){
@@ -26011,7 +26059,7 @@ function cjAccepts(q, formIdx, val){
       actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] },
     { id:"premium", label:"Gói miễn phí có gì? Premium là gì?",
       keywords:["goi mien phi","mien phi","premium","goi tra phi","nang cap","mua goi","gia goi","xem thu","goi nam","goi tron doi"],
-      answer:"Gói miễn phí gồm toàn bộ nội dung N5–N4 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 360.000đ (giá gốc 449.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 1.199.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.\n\nCách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Premium mở sau khi chuyển khoản thành công — thường trong vài phút, tối đa 24 giờ.",
+      answer:"Gói miễn phí gồm toàn bộ nội dung N5–N4 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Tháng 59.000đ (giá gốc 69.000đ, dùng 1 tháng), Gói Năm 360.000đ (giá gốc 449.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 1.199.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.\n\nCách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Premium mở sau khi chuyển khoản thành công — thường trong vài phút, tối đa 24 giờ.",
       actions:[] }
   ];
   var FALLBACK = {
