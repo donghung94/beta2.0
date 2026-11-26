@@ -420,8 +420,8 @@ table.kv tr:last-child td{border-bottom:none}
 .lesson-card span{display:block; color:var(--muted); font-size:13px; margin-top:2px}
 .lesson-card .ldone{color:#14713c; font-weight:800; font-size:12.5px; margin-top:5px}
 /* ----- Nâng cấp Premium / thanh toán ----- */
-.pkg-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:18px 0}
-@media (max-width:700px){ .pkg-grid{grid-template-columns:1fr} }
+.pkg-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:18px 0}
+@media (max-width:900px){ .pkg-grid{grid-template-columns:1fr} }
 .pkg-card{position:relative; background:var(--card); border:2px solid var(--line); border-radius:16px; padding:22px 20px; box-shadow:var(--shadow)}
 .pkg-card.hot{border-color:var(--red)}
 .pkg-badge{position:absolute; top:-12px; right:16px; background:var(--red); color:#fff; font-size:12.5px; font-weight:800; padding:4px 12px; border-radius:99px}
@@ -3355,6 +3355,7 @@ function renderHome(){
   h += '<div class="skh-home">';
   /* 1. Lời chào (tên thật từ state app; khách -> "bạn") */
   h += '<div class="skp-greet"><h2>Chào <span id="skpGreetName">' + esc(skpGreetName()) + '</span>, học tiếp thôi!</h2><p>' + dateLine + '</p></div>';
+  h += skMonthExpiryNoteHTML();
   /* 2. Hàng 2 cột: Đếm ngược JLPT | Nhiệm vụ hôm nay */
   h += '<div class="skp-row">';
   h += '<section class="skh-card"><h2>⏳ Đếm ngược JLPT</h2>' +
@@ -11687,6 +11688,7 @@ function renderChuyenAmPage(){
    lai thì còn hạn. Cache trong phiên ở SK_PREMIUM. */
 var SK_SALE_END = new Date("2026-12-06T23:59:59+07:00").getTime(); /* hết 06/12/2026 */
 var SK_PACKAGES = {
+  month: {label: "Gói Tháng", dur: "1 tháng", sale: 59000, full: 69000, save: 10000},
   year: {label: "Gói Năm", dur: "12 tháng", sale: 360000, full: 449000, save: 89000},
   lifetime: {label: "Gói Trọn đời", dur: "Mở khóa vĩnh viễn", sale: 999000, full: 1199000, save: 200000}
 };
@@ -11726,6 +11728,17 @@ function skAuthUser(){
 var SK_PREMIUM = {loaded: false, active: false, until: null, pkg: null};
 var skLockedTarget = null; /* hash trang bị khóa — về đó sau khi Premium kích hoạt */
 function skIsPremium(){ return !!SK_PREMIUM.active; }
+/* Nhắc hết hạn cho Gói Tháng mua bằng chuyển khoản tay (không tự gia hạn):
+   còn <=3 ngày thì hiện banner ở đầu Home. Chỉ gói Tháng — Năm/Trọn đời
+   không nhắc. Trả "" khi không cần nhắc. */
+function skMonthExpiryNoteHTML(){
+  if(!SK_PREMIUM.active || SK_PREMIUM.pkg !== "month" || SK_PREMIUM.until == null) return "";
+  var ms = SK_PREMIUM.until - Date.now();
+  if(ms <= 0 || ms > 3 * 86400000) return "";
+  var d = Math.ceil(ms / 86400000);
+  var dateTxt = new Date(SK_PREMIUM.until).toLocaleDateString("vi-VN");
+  return '<div class="note-box" style="margin:0 0 14px">⏰ Premium Tháng của bạn sắp hết hạn sau <b>' + d + ' ngày</b> (đến ' + dateTxt + ') — gia hạn ngay để không bị gián đoạn. <a href="#/nangcap"><b>Gia hạn ngay →</b></a></div>';
+}
 function skLevelLocked(lv){ return lv !== "N5" && lv !== "N4" && !skIsPremium(); }
 /* Gate riêng cho đề thi (mở free Test 1–2 N3/N2/N1): N5/N4 không khóa;
    Premium không khóa; N3/N2/N1 chỉ mở Test 1–2 — Test 3–9 và Đề chuẩn
@@ -12008,7 +12021,7 @@ function skGenOrderCode(){
   return out;
 }
 /* Tạo doc sk_orders/{code} theo hợp đồng backend:
-   {uid, email, displayName, package: "year"|"lifetime", amount, status: "pending", createdAt}.
+   {uid, email, displayName, package: "month"|"year"|"lifetime", amount, status: "pending", createdAt}.
    displayName để admin đối soát khi tài khoản chưa có email. Tài khoản chưa có
    email thì không tạo đơn được (lỗi "no-email") — phải đăng nhập lại Google để
    bổ sung email trước khi mua.
@@ -12108,7 +12121,7 @@ function renderPremiumStatusView(notice){
   document.title = "Premium | SoraKanji";
   var untilTxt = SK_PREMIUM.until == null ? "Trọn đời — không hết hạn" :
     "đến ngày " + new Date(SK_PREMIUM.until).toLocaleDateString("vi-VN");
-  var pkgTxt = SK_PREMIUM.pkg === "lifetime" ? "Gói Trọn đời" : SK_PREMIUM.pkg === "year" ? "Gói Năm" : "Premium";
+  var pkgTxt = SK_PREMIUM.pkg === "lifetime" ? "Gói Trọn đời" : SK_PREMIUM.pkg === "year" ? "Gói Năm" : SK_PREMIUM.pkg === "month" ? "Gói Tháng" : "Premium";
   $app.innerHTML = '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Nâng cấp</div>' +
     "<h1>💎 Bạn đang dùng Premium</h1>" +
     "<p>Toàn bộ nội dung N3–N1 đã mở cho tài khoản của bạn.</p></div>" +
@@ -12122,18 +12135,18 @@ function renderPremiumStatusView(notice){
 function pkgCardHTML(pkg, sale){
   var p = SK_PACKAGES[pkg];
   var price = sale ? p.sale : p.full;
-  /* Gói Năm: giá mỗi ngày (làm tròn tới 10đ) — 360k -> ~990đ/ngày. */
-  var perDay = (Math.round(price / 365 / 10) * 10).toLocaleString("vi-VN");
-  var h = '<div class="pkg-card' + (pkg === "lifetime" ? " hot" : "") + '">' +
-    (pkg === "lifetime" ? '<span class="pkg-badge">Phổ biến nhất</span>' : "") +
+  /* Giá mỗi ngày (làm tròn tới 10đ) — Năm 360k -> ~990đ/ngày; Tháng 59k -> ~1.970đ/ngày. */
+  var perDay = (Math.round(price / (pkg === "month" ? 30 : 365) / 10) * 10).toLocaleString("vi-VN");
+  var h = '<div class="pkg-card' + (pkg === "year" ? " hot" : "") + '">' +
+    (pkg === "year" ? '<span class="pkg-badge">Phổ biến nhất</span>' : "") +
     "<h3>" + p.label + "</h3>" +
-    '<div class="pkg-sub">' + (pkg === "year" ? "Chỉ ~" + perDay + "đ/ngày" : "Mua 1 lần, học mãi mãi") + "</div>";
+    '<div class="pkg-sub">' + (pkg === "lifetime" ? "Mua 1 lần, học mãi mãi" : "Chỉ ~" + perDay + "đ/ngày") + "</div>";
   if(sale) h += '<div style="margin-top:8px"><span class="pkg-old">' + skFmtVND(p.full) + "</span></div>";
   else h += '<div style="height:22px"></div>';
-  h += '<div class="pkg-price">' + skFmtVND(price) + "<small>" + (pkg === "year" ? "/năm" : " (mua 1 lần)") + "</small></div>";
+  h += '<div class="pkg-price">' + skFmtVND(price) + "<small>" + (pkg === "year" ? "/năm" : pkg === "month" ? "/tháng" : " (mua 1 lần)") + "</small></div>";
   if(sale) h += '<div><span class="pkg-save">Tiết kiệm ' + skFmtVND(p.save) + "</span></div>";
   else h += '<div style="height:30px"></div>';
-  if(pkg === "year"){
+  if(pkg !== "lifetime"){
     h += "<ul><li>Mở toàn bộ N3–N1: kanji, từ vựng, ngữ pháp</li>" +
       "<li>Đề thi JLPT N3–N1 Test 1–9, chấm /180</li>" +
       "<li>Luyện nghe + video Shadowing</li>" +
@@ -12146,7 +12159,7 @@ function pkgCardHTML(pkg, sale){
       "<li>Thanh toán 1 lần duy nhất</li>" +
       "<li>Dùng trọn đời trên web và app điện thoại</li></ul>";
   }
-  h += '<button class="btn" id="' + (pkg === "year" ? "buyYear" : "buyLifetime") + '" type="button">' +
+  h += '<button class="btn" id="' + (pkg === "year" ? "buyYear" : pkg === "month" ? "buyMonth" : "buyLifetime") + '" type="button">' +
     (webCurrentUser() ? "Mua " + p.label : "Đăng nhập để mua") + "</button></div>";
   return h;
 }
@@ -12171,41 +12184,43 @@ function skStartSaleCountdown(){
   tick();
   skSaleTimer = setInterval(tick, 1000);
 }
-/* Bảng so sánh chi tiết 2 gói (trang Nâng cấp): tính năng đã có thì tick xanh
-   ở cả 2 cột (2 gói giống nhau mọi tính năng, chỉ khác thời hạn); tính năng
-   roadmap chưa có thì ghi "Sắp có" ở cả 2 cột — KHÔNG tick xanh. */
+/* Bảng so sánh chi tiết 3 gói (trang Nâng cấp): tính năng đã có thì tick xanh
+   ở cả 3 cột (3 gói giống nhau mọi tính năng, chỉ khác thời hạn); tính năng
+   roadmap chưa có thì ghi "Sắp có" ở cả 3 cột — KHÔNG tick xanh. */
 function upgradeCompareHTML(){
   var tick = '<span class="cmp-tick">✓</span>';
   var soon = '<span class="cmp-soon">Sắp có</span>';
-  function row(name, a, b){ return "<tr><td>" + name + "</td><td>" + a + "</td><td>" + b + "</td></tr>"; }
+  function row(name, a, b, c){ return "<tr><td>" + name + "</td><td>" + a + "</td><td>" + b + "</td><td>" + c + "</td></tr>"; }
   var h = '<h2 class="secttl">So sánh chi tiết các gói</h2>' +
     '<div class="cmp-wrap"><table class="cmp-table"><thead><tr><th>Tính năng</th>' +
+    '<th class="cmp-month">Gói Tháng<span class="cmp-price">' + skFmtVND(skPrice("month")) + "/tháng</span></th>" +
     '<th class="cmp-year">Gói Năm<span class="cmp-price">' + skFmtVND(skPrice("year")) + "/năm</span></th>" +
     '<th class="cmp-life">Gói Trọn đời<span class="cmp-price">' + skFmtVND(skPrice("lifetime")) + " (mua 1 lần)</span></th>" +
     "</tr></thead><tbody>" +
-    row("Thời hạn sử dụng", '<span class="cmp-val">12 tháng</span>', '<span class="cmp-val">Mãi mãi</span>') +
-    row("Kanji N3–N1 đầy đủ", tick, tick) +
-    row("Từ vựng N3–N1 đầy đủ", tick, tick) +
-    row("Ngữ pháp N3–N1 đầy đủ", tick, tick) +
-    row("Luyện đề JLPT Test 1–9 × 5 cấp", tick, tick) +
-    row("Luyện nghe + video Shadowing", tick, tick) +
-    row("Đọc hiểu N3–N1", tick, tick) +
-    row("Tokutei xây dựng 730 câu", tick, tick) +
-    row("Trợ từ, Cách chia thể, Trọng âm, Chuyển âm", tick, tick) +
-    row("Flashcard (5 câu ví dụ mỗi từ)", tick, tick) +
-    row("Lộ trình học 30 ngày", tick, tick) +
-    row("Đồng bộ web và app điện thoại", tick, tick) +
-    row("Đọc hiểu AI", soon, soon) +
-    row("Credit AI (tra từ, hỏi đáp, chấm bài)", soon, soon) +
-    row("Phân tích câu AI", soon, soon) +
-    row("Kaiwa nhập vai với AI", soon, soon) +
-    row("Affiliate 15% hoa hồng", soon, soon) +
+    row("Thời hạn sử dụng", '<span class="cmp-val">1 tháng</span>', '<span class="cmp-val">12 tháng</span>', '<span class="cmp-val">Mãi mãi</span>') +
+    row("Kanji N3–N1 đầy đủ", tick, tick, tick) +
+    row("Từ vựng N3–N1 đầy đủ", tick, tick, tick) +
+    row("Ngữ pháp N3–N1 đầy đủ", tick, tick, tick) +
+    row("Luyện đề JLPT Test 1–9 × 5 cấp", tick, tick, tick) +
+    row("Luyện nghe + video Shadowing", tick, tick, tick) +
+    row("Đọc hiểu N3–N1", tick, tick, tick) +
+    row("Tokutei xây dựng 730 câu", tick, tick, tick) +
+    row("Trợ từ, Cách chia thể, Trọng âm, Chuyển âm", tick, tick, tick) +
+    row("Flashcard (5 câu ví dụ mỗi từ)", tick, tick, tick) +
+    row("Lộ trình học 30 ngày", tick, tick, tick) +
+    row("Đồng bộ web và app điện thoại", tick, tick, tick) +
+    row("Đọc hiểu AI", soon, soon, soon) +
+    row("Credit AI (tra từ, hỏi đáp, chấm bài)", soon, soon, soon) +
+    row("Phân tích câu AI", soon, soon, soon) +
+    row("Kaiwa nhập vai với AI", soon, soon, soon) +
+    row("Affiliate 15% hoa hồng", soon, soon, soon) +
     "<tr><td></td>" +
+    '<td><button class="btn" id="buyMonthT" type="button">Chọn Gói Tháng</button></td>' +
     '<td><button class="btn" id="buyYearT" type="button">Chọn Gói Năm</button></td>' +
     '<td><button class="btn" id="buyLifetimeT" type="button">Chọn Trọn đời</button></td></tr>' +
     "</tbody></table></div>" +
-    '<p class="cmp-note">Hai gói có đầy đủ tính năng như nhau, chỉ khác thời hạn sử dụng. ' +
-    "Các tính năng ghi “Sắp có” đang được phát triển và sẽ có cho cả 2 gói khi ra mắt.</p>";
+    '<p class="cmp-note">Ba gói có đầy đủ tính năng như nhau, chỉ khác thời hạn sử dụng. ' +
+    "Các tính năng ghi “Sắp có” đang được phát triển và sẽ có cho cả 3 gói khi ra mắt.</p>";
   return h;
 }
 function renderPackagesView(){
@@ -12221,6 +12236,7 @@ function renderPackagesView(){
     h += '<div class="sale-bar" style="background:var(--card2);border-color:var(--line-strong);color:var(--muted)">Ưu đãi ra mắt đã kết thúc ngày 06/12/2026 — giá dưới đây là giá chính thức.</div>';
   }
   h += '<div class="pkg-grid">';
+  h += pkgCardHTML("month", sale);
   h += pkgCardHTML("year", sale);
   h += pkgCardHTML("lifetime", sale);
   h += "</div>";
@@ -12230,10 +12246,12 @@ function renderPackagesView(){
   h += '<p style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn ghost" href="#/tuvung/N5">Học N5–N4 miễn phí</a>' +
     '<a class="btn ghost" href="#/thi/N5">Thi thử N5</a></p></div>';
   $app.innerHTML = h;
-  var by = document.getElementById("buyYear"), bl = document.getElementById("buyLifetime");
+  var bm = document.getElementById("buyMonth"), by = document.getElementById("buyYear"), bl = document.getElementById("buyLifetime");
+  if(bm) bm.addEventListener("click", function(){ skStartCheckout("month"); });
   if(by) by.addEventListener("click", function(){ skStartCheckout("year"); });
   if(bl) bl.addEventListener("click", function(){ skStartCheckout("lifetime"); });
-  var byT = document.getElementById("buyYearT"), blT = document.getElementById("buyLifetimeT");
+  var bmT = document.getElementById("buyMonthT"), byT = document.getElementById("buyYearT"), blT = document.getElementById("buyLifetimeT");
+  if(bmT) bmT.addEventListener("click", function(){ var b = document.getElementById("buyMonth"); if(b) b.click(); });
   /* Nút chọn gói ở bảng so sánh bấm hộ nút mua trên thẻ gói — dùng đúng 1 luồng
      skStartCheckout; nút thẻ bị khóa ("Đang tạo đơn…") thì .click() không có
      tác dụng nên không tạo trùng đơn. */
@@ -12258,7 +12276,7 @@ function skStartCheckout(pkg){
     renderNangcapPage();
     return;
   }
-  var btn = document.getElementById(pkg === "year" ? "buyYear" : "buyLifetime");
+  var btn = document.getElementById(pkg === "year" ? "buyYear" : pkg === "month" ? "buyMonth" : "buyLifetime");
   if(btn){ btn.disabled = true; btn.textContent = "Đang tạo đơn…"; }
   var amount = skPrice(pkg);
   skCreateOrder(pkg, amount).then(function(code){
@@ -12659,15 +12677,16 @@ function renderTermsPage(){
     "<h2>3. Gói miễn phí và gói trả phí</h2>" +
     "<ul>" +
     "<li><b>Miễn phí:</b> toàn bộ nội dung cấp độ N5–N4 ở mọi mục, cùng 1 video song ngữ đầu tiên mỗi mục xem full (5 video) và xem thử 30 giây các video còn lại.</li>" +
+    "<li><b>Gói Tháng:</b> mở toàn bộ nội dung N3–N1 trong 1 tháng kể từ ngày kích hoạt.</li>" +
     "<li><b>Gói Năm:</b> mở toàn bộ nội dung N3–N1 trong 12 tháng kể từ ngày kích hoạt.</li>" +
     "<li><b>Gói Trọn đời:</b> mở toàn bộ nội dung N3–N1 không giới hạn thời gian.</li>" +
     "</ul>" +
-    "<p>Giá gói theo bảng giá tại thời điểm mua (giá hiện tại: Gói Năm 360.000đ, Gói Trọn đời 999.000đ). SoraKanji có thể điều chỉnh bảng giá; giá đã thanh toán không thay đổi.</p>" +
+    "<p>Giá gói theo bảng giá tại thời điểm mua (giá hiện tại: Gói Tháng 59.000đ, Gói Năm 360.000đ, Gói Trọn đời 999.000đ). SoraKanji có thể điều chỉnh bảng giá; giá đã thanh toán không thay đổi.</p>" +
     "<h2>4. Thanh toán và kích hoạt</h2>" +
     "<ul>" +
     "<li>Thanh toán bằng chuyển khoản ngân hàng thủ công theo hướng dẫn hiển thị tại trang thanh toán (số tiền, nội dung chuyển khoản và mã đơn hàng riêng cho mỗi đơn).</li>" +
     "<li>Gói được kích hoạt sau khi SoraKanji xác nhận đã nhận được tiền chuyển khoản, thường trong vài phút và tối đa 24 giờ.</li>" +
-    "<li>Gói trả phí <b>không tự động gia hạn</b>. Khi Gói Năm hết hạn, bạn có thể mua lại nếu muốn tiếp tục sử dụng.</li>" +
+    "<li>Gói trả phí <b>không tự động gia hạn</b>. Khi Gói Tháng hoặc Gói Năm hết hạn, bạn có thể mua lại nếu muốn tiếp tục sử dụng.</li>" +
     "<li>Mỗi đơn hàng gắn với tài khoản đã đăng nhập lúc mua; gói đã kích hoạt không chuyển sang tài khoản khác.</li>" +
     "</ul>" +
     "<h2>5. Chính sách hoàn tiền</h2>" +
@@ -13018,6 +13037,7 @@ function skAdminFmtDate(v){
   try{ return new Date(ms).toLocaleString("vi-VN"); }catch(e){ return "—"; }
 }
 function skAdminPkgLabel(pkg){
+  if(pkg === "month") return "Gói Tháng";
   if(pkg === "year") return "Gói Năm";
   if(pkg === "lifetime") return "Gói Trọn đời";
   return pkg || "—";
@@ -13031,7 +13051,11 @@ function skAdminGrant(uid, pkg){
   if(!db) return Promise.reject(new Error("not-ready"));
   var now = firebase.firestore.Timestamp.now();
   var until = null;
-  if(pkg === "year"){
+  if(pkg === "month"){
+    var d = now.toDate();
+    d.setMonth(d.getMonth() + 1);
+    until = firebase.firestore.Timestamp.fromDate(d);
+  } else if(pkg === "year"){
     var d = now.toDate();
     d.setMonth(d.getMonth() + 12);
     until = firebase.firestore.Timestamp.fromDate(d);
@@ -13051,6 +13075,7 @@ function skAdminStudentRowHtml(s){
   var info = skAdminPremiumInfo(s.premium);
   var badge = !info.active ? "<span class=\"adm-badge adm-free\">Miễn phí</span>"
     : info.plan === "year" ? "<span class=\"adm-badge adm-year\">Năm" + (info.untilMs ? " đến " + esc(skAdminFmtDate(info.untilMs)) : "") + "</span>"
+    : info.plan === "month" ? "<span class=\"adm-badge adm-year\">Tháng" + (info.untilMs ? " đến " + esc(skAdminFmtDate(info.untilMs)) : "") + "</span>"
     : "<span class=\"adm-badge adm-life\">Trọn đời</span>";
   return "<div class=\"adm-row\" data-adm-uid=\"" + esc(s.uid) + "\"><div><b>" + esc(s.name || "—") + "</b> " + badge +
     "<div class=\"adm-uid\">" + (s.email ? esc(s.email) + "<br>" : "") + esc(s.uid) + "<br>Ngày tạo: " + esc(skAdminFmtDate(s.createdAt)) + "</div></div>" +
@@ -13244,9 +13269,9 @@ function skAdminRenderShell(){
     '<p id="admVisitDetail" class="adm-note" style="margin:10px 0 0">Bấm vào một cột để xem số lượt của ngày/tháng đó.</p>' +
     '<p class="adm-note" style="margin:6px 0 0">Số liệu truy cập chỉ có từ ngày bật ghi log — không có dữ liệu trước đó.</p></div>' +
     '<h2 class="secttl">Cấp Premium tay</h2>' +
-    '<div class="card" id="admGrantCard"><p class="adm-note" style="margin:0">Nhập UID học viên (lấy từ danh sách bên dưới — bấm "Cấp Premium" ở từng dòng để điền sẵn), chọn gói rồi bấm Cấp. Gói Năm có hạn 12 tháng, Trọn đời không hết hạn. Cấp cho UID chưa từng mở app cũng được.</p>' +
+    '<div class="card" id="admGrantCard"><p class="adm-note" style="margin:0">Nhập UID học viên (lấy từ danh sách bên dưới — bấm "Cấp Premium" ở từng dòng để điền sẵn), chọn gói rồi bấm Cấp. Gói Tháng có hạn 1 tháng, Gói Năm có hạn 12 tháng, Trọn đời không hết hạn. Cấp cho UID chưa từng mở app cũng được.</p>' +
     '<label class="auth-field">UID học viên<input id="admGrantUid" type="text" autocomplete="off" placeholder="VD: xSqrzV8AKHdi8yNs0mlcw885N492"></label>' +
-    '<label class="auth-field">Gói<select id="admGrantPkg"><option value="year">Gói Năm — 12 tháng</option><option value="lifetime">Gói Trọn đời</option></select></label>' +
+    '<label class="auth-field">Gói<select id="admGrantPkg"><option value="month">Gói Tháng — 1 tháng</option><option value="year">Gói Năm — 12 tháng</option><option value="lifetime">Gói Trọn đời</option></select></label>' +
     '<p id="admGrantMsg" style="font-size:13.5px;font-weight:700;min-height:20px;margin:12px 0 0"></p>' +
     '<button class="btn" id="admGrantBtn" type="button" style="margin-top:10px">Cấp Premium</button></div>' +
     '<h2 class="secttl">Liên kết liên hệ</h2>' +
@@ -13712,7 +13737,7 @@ var SORA_TOPICS = [
     actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Về trang chủ", action:"home"}] },
   { id:"premium", label:"Gói miễn phí mở những gì, Premium khác gì?",
     keywords:["mien phi","goi free","premium","nang cap","mua goi","gia goi","tra phi","360","999"],
-    answer:"Gói miễn phí mở toàn bộ nội dung N5–N4 ở mọi mục (kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu). Riêng video Shadowing: 1 video đầu tiên mỗi mục xem full (5 video), các video còn lại xem thử 30 giây; tự tạo được 1 video từ link YouTube.\n\nPremium (Gói Năm 360.000đ, Gói Trọn đời 999.000đ — giảm giá đến 06/12/2026) mở toàn bộ N3–N1, xem full mọi video Shadowing và tạo video từ link không giới hạn, trên cả web và app điện thoại. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24 giờ.",
+    answer:"Gói miễn phí mở toàn bộ nội dung N5–N4 ở mọi mục (kanji, từ vựng, ngữ pháp, đề thi, luyện nghe, đọc hiểu). Riêng video Shadowing: 1 video đầu tiên mỗi mục xem full (5 video), các video còn lại xem thử 30 giây; tự tạo được 1 video từ link YouTube.\n\nPremium (Gói Tháng 59.000đ, Gói Năm 360.000đ, Gói Trọn đời 999.000đ — giảm giá đến 06/12/2026) mở toàn bộ N3–N1, xem full mọi video Shadowing và tạo video từ link không giới hạn, trên cả web và app điện thoại. Thanh toán bằng chuyển khoản ngân hàng, kích hoạt tự động thường vài phút, tối đa 24 giờ.",
     actions:[{label:"Xem gói Premium", action:"nangcap"}] }
 ];
 var SORA_FALLBACK = {
