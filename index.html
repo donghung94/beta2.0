@@ -11083,7 +11083,8 @@ function renderReadHome(){
       var lk = skLevelLocked(lv);
       return '<a class="lesson-card" href="#/doc/' + lv + "/" + ks[0] + '"><b>' + (lk ? "🔒 " : "") + "Đọc hiểu " + lv + "</b><span>" +
         (ks.length * 10) + " bài · " + ks.map(function(k){ return READ_KIND_LABEL[k]; }).join(", ") + (lk ? " · Premium" : "") + "</span></a>";
-    }).join("") + "</div>";
+    }).join("") +
+    '<a class="lesson-card" href="#/dokkai"><b>📖 Đọc hiểu AI</b><span>50 bài · Audio karaoke, bản dịch và câu hỏi kiểm tra · Bài N5–N4 mở miễn phí · Bài N3–N1 cần Premium</span></a>' + "</div>";
 }
 function renderReadList(lv, kind){
   var rTok = skBeginRender();
