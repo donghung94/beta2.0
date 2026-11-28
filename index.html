@@ -11077,14 +11077,21 @@ function renderReadHome(){
     '<div class="page-head"><div class="crumb"><a href="#/">Trang chủ</a> / Đọc hiểu</div>' +
     "<h1>Đọc hiểu</h1>" +
     "<p>200 bài đọc tự biên soạn đúng chuẩn từng cấp độ — chỉ dùng kanji, từ vựng và ngữ pháp của đúng cấp đó. Mỗi bài có câu hỏi trắc nghiệm, giải thích và bảng từ vựng cuối bài.</p></div>" +
-    '<div class="lesson-grid" style="padding:18px 0 34px">' +
+    '<div class="lesson-grid" style="padding:18px 0 10px">' +
     LEVELS.map(function(lv){
       var ks = readKinds(lv);
       var lk = skLevelLocked(lv);
       return '<a class="lesson-card" href="#/doc/' + lv + "/" + ks[0] + '"><b>' + (lk ? "🔒 " : "") + "Đọc hiểu " + lv + "</b><span>" +
         (ks.length * 10) + " bài · " + ks.map(function(k){ return READ_KIND_LABEL[k]; }).join(", ") + (lk ? " · Premium" : "") + "</span></a>";
     }).join("") +
-    '<a class="lesson-card" href="#/dokkai"><b>📖 Đọc hiểu AI</b><span>50 bài · Audio karaoke, bản dịch và câu hỏi kiểm tra · Bài N5–N4 mở miễn phí · Bài N3–N1 cần Premium</span></a>' + "</div>";
+    "</div>" +
+    '<h2 class="secttl">Đọc hiểu AI</h2>' +
+    '<div class="lesson-grid" style="padding:0 0 34px">' +
+    LEVELS.map(function(lv){
+      var lk = skLevelLocked(lv);
+      return '<a class="lesson-card" href="#/dokkai?lv=' + lv + '"><b>' + (lk ? "🔒 " : "") + "📖 Đọc hiểu AI " + lv + "</b><span>10 bài · Audio karaoke, bản dịch và câu hỏi kiểm tra" + (lk ? " · Premium" : "") + "</span></a>";
+    }).join("") +
+    "</div>";
 }
 function renderReadList(lv, kind){
   var rTok = skBeginRender();
