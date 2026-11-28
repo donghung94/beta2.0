@@ -2396,6 +2396,242 @@ body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-apps{ display:none; }
 .sk-logout:hover{ color:var(--red); border-color:var(--red); }
 body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-logout .lbl{ display:none; }
 body.sk-home-sidebar.sk-sb-collapsed #skSidebar .sk-logout{ justify-content:center; }
+<style id="sk-home-aio">
+/* ============ Home kieu AIO (mau user duyet 28/11, chi web/PC) ============
+   - Chi doi GIAO DIEN trang Home + sidebar PC (#skSidebar, >=1024px).
+     Khong doi logic/data/JS/Firebase/gate/gia/nhiem vu/lo trinh.
+   - .vnav (bo cuc hep/mobile) + header cu giu nguyen.
+   - Mau kem chi ap cho nen Sang (mac dinh); cac nen khac dung bien --aio-*
+     map ve bien theme cua chinh no nen khong vo mau.
+   - So lieu tren the lay tu data that cua file live (xem REPORT.md):
+     Kanji = totalKanji() tinh luc chay; Tu vung 10.608 = Minna 10.533 +
+     bai mo dau 75; Ngu phap 375; Doc hieu 200 bai JLPT (+50 bai AI o
+     #/dokkai, link tu #/doc); Nghe 149; Shadowing 190; De thi 46 =
+     45 Test 1-9 + De chuan N3; Lo trinh 30 ngay; Tokutei 1.056;
+     On tap = countSavedWords() luc chay. */
+:root, html[data-theme="sang"]{
+  --aio-bg:#FFF9EE; --aio-paper:#FFFEF9; --aio-paper2:#FFFDF4; --aio-ink:#2E2318;
+  --aio-muted:#8A7A66; --aio-brown:#5B3A17; --aio-brown2:#7A4E1F; --aio-line:#EBDDC0;
+  --aio-pill:#F3E7C8; --aio-coral:#FF7A59; --aio-coral-bg:#FFE3D9;
+  --aio-chip-on-bg:#2E2318; --aio-chip-on-ink:#FFE9B8;
+  --aio-shadow:0 4px 20px rgba(92,58,23,.07), 0 1px 3px rgba(92,58,23,.06);
+}
+html[data-theme="toi"]{
+  --aio-bg:#14161b; --aio-paper:#1d2026; --aio-paper2:#22252d; --aio-ink:#eceef2;
+  --aio-muted:#a7aeba; --aio-brown:#E8C88A; --aio-brown2:#E8C88A; --aio-line:#2d3038;
+  --aio-pill:#3a2f1d; --aio-coral:#ff7a7f; --aio-coral-bg:#3a2226;
+  --aio-chip-on-bg:#E8C88A; --aio-chip-on-ink:#2E2318;
+  --aio-shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px -18px rgba(0,0,0,.6);
+}
+html[data-theme="sakura"], html[data-theme="matcha"], html[data-theme="xanh"]{
+  --aio-bg:var(--bg); --aio-paper:var(--card); --aio-paper2:var(--card2);
+  --aio-ink:var(--ink); --aio-muted:var(--muted); --aio-brown:var(--ink);
+  --aio-brown2:var(--ink); --aio-line:var(--line); --aio-pill:var(--red-soft);
+  --aio-coral:var(--red); --aio-coral-bg:var(--red-soft);
+  --aio-chip-on-bg:var(--ink); --aio-chip-on-ink:var(--card);
+  --aio-shadow:var(--shadow);
+}
+/* Nen kem + cham tron: CHI Home, CHI nen Sang. */
+html[data-theme="sang"] body.sk-is-home, html:not([data-theme]) body.sk-is-home{
+  background-color:#FFF9EE;
+  background-image:radial-gradient(rgba(180,150,90,.13) 1px, transparent 1.1px);
+  background-size:22px 22px;
+}
+body.sk-is-home{ background-color:var(--aio-bg, var(--bg)); }
+/* --- Khung Home --- */
+.aio-home{ max-width:1180px; margin:0 auto; padding:18px 22px 40px; }
+/* --- Hero: chao + dai diem danh tuan --- */
+.aio-hero{
+  background:linear-gradient(180deg,var(--aio-paper),var(--aio-paper2));
+  border:1px solid var(--aio-line); border-radius:24px; padding:18px 20px 14px;
+  position:relative; overflow:hidden; box-shadow:var(--aio-shadow);
+}
+.aio-hero::after{ content:""; position:absolute; right:110px; top:-30px; width:170px; height:170px; background:var(--aio-pill); border-radius:50%; opacity:.55; }
+.aio-hero h2{ margin:0; font-size:26px; letter-spacing:-.03em; font-weight:900; position:relative; z-index:1; color:var(--aio-ink); }
+.aio-hero h2 span{ color:var(--aio-coral); }
+.aio-hero > p{ margin:6px 0 0; color:var(--aio-muted); font-size:14px; font-weight:600; position:relative; z-index:1; }
+.aio-sparkle{ position:absolute; right:180px; top:14px; font-size:22px; color:#C9B8E6; z-index:1; }
+.aio-cat{ position:absolute; right:18px; top:12px; width:46px; height:46px; background:var(--aio-paper); border:1px solid var(--aio-line); border-radius:50%; display:grid; place-items:center; font-size:24px; z-index:1; box-shadow:var(--aio-shadow); }
+.aio-strip{
+  margin-top:14px; background:var(--aio-paper); border:1px solid var(--aio-line);
+  border-radius:14px; display:flex; align-items:stretch; gap:0; overflow:hidden;
+  position:relative; z-index:1; flex-wrap:wrap;
+}
+.aio-datebox{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:7px 14px; border-right:1px solid var(--aio-line); min-width:92px; }
+.aio-datebox small{ background:var(--aio-coral); color:#fff; font-size:9px; font-weight:800; letter-spacing:.06em; padding:2px 8px; border-radius:999px; }
+.aio-datebox b{ font-size:13px; margin-top:3px; color:var(--aio-ink); }
+.aio-datebox b strong{ font-size:16px; }
+.aio-mission-chip{ display:flex; align-items:center; gap:8px; padding:8px 14px; border-right:1px solid var(--aio-line); }
+.aio-mission-chip b{ font-size:13px; line-height:1.1; color:var(--aio-ink); }
+.aio-mission-chip span{ display:block; color:var(--aio-muted); font-weight:500; font-size:11px; }
+.aio-week{ display:flex; gap:4px; align-items:center; padding:8px 12px; flex:1; justify-content:center; }
+.aio-day{ display:flex; flex-direction:column; align-items:center; gap:2px; min-width:30px; }
+.aio-day label{ font-size:10px; font-weight:700; color:var(--aio-muted); }
+.aio-day .aio-dot{ width:20px; height:20px; border-radius:50%; border:1.5px solid var(--aio-line); display:grid; place-items:center; font-size:11px; color:#fff; background:var(--aio-paper); }
+.aio-day small{ font-size:10px; font-weight:700; color:var(--aio-muted); }
+.aio-day.today label{ color:var(--aio-coral); }
+.aio-day.today .aio-dot{ background:var(--aio-coral); border-color:var(--aio-coral); }
+.aio-countdown-chip{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 14px; border-left:1px solid var(--aio-line); font-size:13px; font-weight:700; color:var(--aio-ink); }
+.aio-countdown-chip span{ font-size:11px; color:var(--aio-muted); font-weight:600; }
+/* --- Hoc tiep (giữ component cũ, đổi vỏ sang nâu kem) --- */
+.aio-resume{
+  display:flex; align-items:center; gap:20px; flex-wrap:wrap; background:#5B3A17; color:#FFF3D6;
+  border-radius:18px; padding:20px 26px; box-shadow:var(--aio-shadow); margin-top:14px;
+}
+.aio-resume h3{ margin:0 0 4px; font-size:19px; color:#FFF3D6; }
+.aio-resume p{ margin:0; font-size:14px; opacity:.94; }
+.aio-resume .aio-cta{ margin-left:auto; background:#FFF3D6; color:#5B3A17; font-weight:800; font-size:15px; padding:11px 22px; border-radius:999px; white-space:nowrap; text-decoration:none; }
+/* --- Tieu de muc --- */
+.aio-sec-head{ display:flex; align-items:baseline; gap:12px; margin:20px 2px 12px; flex-wrap:wrap; }
+.aio-sec-head h2{ margin:0; font-size:18px; font-weight:900; letter-spacing:-.02em; color:var(--aio-ink); }
+.aio-sec-head p{ margin:0; color:var(--aio-muted); font-size:13px; }
+.aio-sec-head p::before{ content:"—  "; color:#CBB98A; }
+.aio-sec-head-sm{ margin-top:16px; }
+/* --- 7 the pastel chinh + 6 the phu --- */
+.aio-cards{ display:grid; grid-template-columns:repeat(7,1fr); gap:10px; }
+.aio-cards-more{ display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+.aio-card{
+  border-radius:20px; padding:26px 12px 14px; position:relative; overflow:hidden;
+  border:1px solid rgba(0,0,0,.04); min-height:172px; display:flex; flex-direction:column;
+  cursor:pointer; transition:transform .15s, box-shadow .15s; text-decoration:none;
+}
+.aio-card:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(92,58,23,.10); text-decoration:none; }
+.aio-card::before{ content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.55) 1px, transparent 1.2px); background-size:14px 14px; opacity:.5; pointer-events:none; }
+.aio-tape{ position:absolute; top:0; left:50%; transform:translateX(-50%); width:44px; height:14px; background:rgba(255,255,255,.65); border-left:1px dashed rgba(0,0,0,.06); border-right:1px dashed rgba(0,0,0,.06); opacity:.9; z-index:2; }
+.aio-count{ align-self:flex-start; background:rgba(255,255,255,.92); font-size:9.5px; font-weight:800; letter-spacing:.05em; padding:4px 7px; border-radius:999px; position:relative; z-index:1; box-shadow:0 1px 4px rgba(0,0,0,.06); color:#2E2318; }
+.aio-card h3{ margin:9px 0 4px; font-size:15.5px; font-weight:900; letter-spacing:-.02em; position:relative; z-index:1; color:#2E2318; }
+.aio-card p{ margin:0; font-size:11.5px; line-height:1.45; color:rgba(46,35,24,.72); font-weight:500; position:relative; z-index:1; }
+.aio-illus{ margin-top:auto; padding-top:12px; display:flex; justify-content:center; position:relative; z-index:1; }
+.aio-bubble{ width:72px; height:56px; border-radius:50%; display:grid; place-items:center; font-size:28px; }
+.aio-big-kanji{ font-size:30px; font-weight:900; color:#2B5A83; line-height:1; }
+.aio-card.c-blue{ background:#D6EAF8; } .aio-card.c-blue .aio-bubble{ background:#BFE0F5; }
+.aio-card.c-lav{ background:#E4DBF5; } .aio-card.c-lav .aio-bubble{ background:#D3C6F0; }
+.aio-card.c-peach{ background:#FDE6C9; } .aio-card.c-peach .aio-bubble{ background:#FBD9A8; }
+.aio-card.c-mint{ background:#D2F0DD; } .aio-card.c-mint .aio-bubble{ background:#B7E8C8; }
+.aio-card.c-pink{ background:#FADCE8; } .aio-card.c-pink .aio-bubble{ background:#F6C3D6; }
+.aio-card.c-cream{ background:#F7EBCB; } .aio-card.c-cream .aio-bubble{ background:#F1DFA6; }
+.aio-card.c-sky{ background:#D2EAF8; } .aio-card.c-sky .aio-bubble{ background:#B9DDF3; }
+.aio-cards-more .aio-card{ min-height:150px; padding-top:22px; }
+/* --- Hang duoi: Ke hoach + Lo trinh --- */
+.aio-lower{ display:grid; grid-template-columns:1.95fr 1fr; gap:12px; margin-top:14px; align-items:start; }
+.aio-panel{ border-radius:22px; border:1px solid var(--aio-line); box-shadow:var(--aio-shadow); background:var(--aio-paper); padding:18px 16px 14px; }
+.aio-panel.aio-plan{ background:#F6E8C8; }
+.aio-panel-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.aio-panel-head h3{ margin:0; font-size:16px; font-weight:900; color:var(--aio-ink); }
+.aio-badge-count{ width:46px; height:46px; border-radius:50%; background:var(--aio-paper); border:1.5px solid #D9C08A; display:grid; place-items:center; text-align:center; line-height:1; flex:none; }
+.aio-badge-count b{ font-size:14px; color:var(--aio-ink); }
+.aio-badge-count small{ font-size:9px; color:var(--aio-muted); font-weight:700; }
+.aio-mnote{ margin:12px 0 0; font-size:13px; color:var(--aio-muted); }
+/* Nhiem vu: giu class .skp-mrow cu (skpRenderMissions ve), chi doi vo. */
+.aio-plan .skp-mrow{ display:flex; align-items:center; gap:12px; background:var(--aio-paper); border:1.5px solid transparent; border-radius:14px; padding:11px 12px; min-height:52px; }
+.aio-plan .skp-mrow.done{ border-color:var(--aio-brown); }
+.aio-plan .skp-mcheck{ width:30px; height:30px; border-radius:9px; background:#FDE6C9; }
+.aio-plan .skp-mrow.done .skp-mcheck{ background:#2F9E44; border-color:#2F9E44; color:#fff; }
+.aio-plan .skp-mstate{ font-size:10px; font-weight:800; letter-spacing:.05em; color:#2F7D32; border:1.5px solid #8FD19A; padding:5px 9px; border-radius:999px; white-space:nowrap; min-width:0; }
+.aio-plan .skp-mstate.doing{ color:#d96a08; border-color:#F0C08A; }
+.aio-plan .skp-mrow:not(.done) .skp-mstate:not(.doing){ color:var(--aio-muted); border-color:var(--aio-line); }
+/* Lo trinh */
+.aio-road-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+.aio-road-head h3{ margin:0; font-size:16px; font-weight:900; color:var(--aio-ink); }
+.aio-open-link{ font-size:12px; font-weight:700; color:var(--aio-brown); text-decoration:none; }
+.aio-pct{ font-size:30px; font-weight:900; letter-spacing:-.04em; margin:10px 0 2px; color:var(--aio-ink); }
+.aio-road-sub{ font-size:12.5px; color:var(--aio-muted); font-weight:600; margin:0; }
+.aio-progress{ height:8px; background:#F1E8D0; border-radius:999px; margin:14px 0 6px; position:relative; }
+.aio-progress i{ position:absolute; left:0; top:0; bottom:0; background:var(--aio-brown); border-radius:999px; }
+.aio-marker{ text-align:right; font-size:10.5px; color:var(--aio-muted); font-weight:600; }
+.aio-road-stats{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0; }
+.aio-rstat{ background:var(--aio-paper2); border:1px solid var(--aio-line); border-radius:12px; padding:9px 10px; }
+.aio-rstat small{ display:block; color:var(--aio-muted); font-size:10.5px; font-weight:600; line-height:1.3; }
+.aio-rstat b{ font-size:14px; color:var(--aio-ink); }
+.aio-road .skp-declare-btn{ margin:10px 0; }
+.aio-road .skp-declare-panel{ background:var(--aio-paper2); border-color:var(--aio-line); }
+.aio-road .skp-plangrid{ margin-top:4px; }
+.aio-road .skp-day{ background:var(--aio-paper); border-color:var(--aio-line); color:var(--aio-ink); }
+.aio-road .skp-day.done{ background:#2F9E44; border-color:#2F9E44; color:#fff; }
+.aio-road .skp-day.cur{ background:var(--aio-brown); border-color:var(--aio-brown); color:#FFF3D6; box-shadow:0 0 0 2px var(--aio-pill); }
+.aio-road .skp-day.lock{ background:var(--aio-paper2); }
+/* Dem nguoc JLPT: giu id #cdCard + class .cd-card (bindHome ve lai khi doi cap). */
+.aio-countdown{ margin-top:12px; }
+.aio-countdown .skp-count-top{ margin-bottom:10px; }
+.aio-countdown .skp-days b{ color:var(--aio-coral); }
+.aio-countdown .cd-card{ background:transparent; border:0; box-shadow:none; padding:0; }
+.aio-countdown .cd-lv button{ border-color:var(--aio-line); }
+.aio-countdown .cd-ph.now{ border-color:var(--aio-brown); }
+.aio-countdown .cd-ph.now b{ color:var(--aio-brown); }
+/* Dai cap quan doi */
+.aio-rank{ margin-top:12px; background:var(--aio-paper); border:1px solid var(--aio-line); border-radius:22px; padding:16px 18px; box-shadow:var(--aio-shadow); display:grid; grid-template-columns:1.2fr 1fr auto; gap:18px; align-items:center; }
+.aio-rank h3{ margin:0 0 8px; font-size:14px; font-weight:900; color:var(--aio-ink); }
+.aio-ranks{ display:flex; flex-wrap:wrap; gap:6px; }
+.aio-rank-chip{ font-size:11px; font-weight:700; padding:6px 9px; border-radius:999px; background:#FFF6DE; border:1px solid #EDE0B8; color:#7A6A52; }
+.aio-rank-chip.on{ background:var(--aio-chip-on-bg); color:var(--aio-chip-on-ink); border-color:var(--aio-chip-on-bg); }
+.aio-expbar{ height:9px; background:#F1E8D0; border-radius:999px; overflow:hidden; margin:8px 0 6px; }
+.aio-expbar i{ display:block; height:100%; background:linear-gradient(90deg,#FF8A3D,#FF6B4A); border-radius:999px; }
+.aio-exp-text{ font-size:12px; color:var(--aio-muted); font-weight:600; }
+.aio-exp-text b{ color:var(--aio-ink); }
+.aio-rank-side{ display:flex; flex-direction:column; gap:8px; }
+.aio-xu{ text-align:center; background:var(--aio-paper2); border:1px dashed var(--aio-line); border-radius:16px; padding:10px 18px; }
+.aio-xu b{ font-size:18px; color:#B7791F; }
+.aio-xu small{ display:block; color:var(--aio-muted); font-weight:700; font-size:11px; margin-top:2px; }
+.aio-xu a{ color:var(--aio-brown); font-weight:700; }
+/* Nut Cai App */
+.aio-app-pill{ display:block; margin:18px auto 0; background:var(--aio-brown); color:#FFF3D6; border-color:var(--aio-brown); }
+.aio-app-pill:hover{ background:var(--aio-brown2); color:#FFF3D6; }
+/* --- Sidebar PC (>=1024px): tao hinh theo mau, giu nguyen co che thu gon/an --- */
+@media (min-width:1024px){
+  body.sk-home-sidebar #skSidebar{
+    width:252px; background:var(--aio-paper, var(--card));
+    border-right:1px solid var(--aio-line, var(--line));
+  }
+  body.sk-home-sidebar .content{ margin-left:252px; }
+  body.sk-home-sidebar footer.site{ margin-left:252px; }
+  body.sk-home-sidebar.sk-sb-collapsed .content{ margin-left:72px; }
+  body.sk-home-sidebar.sk-sb-collapsed footer.site{ margin-left:72px; }
+  body.sk-home-sidebar #skHomeTopbar{ background:var(--aio-bg, var(--bg)); border-bottom:1px solid var(--aio-line, var(--line)); }
+  body.sk-home-sidebar #skHomeTopbar .sk-search{ background:var(--aio-paper, var(--card)); border-color:var(--aio-line, var(--line-strong)); }
+  #skSidebar .sk-brand{ border-bottom:1px dashed var(--aio-line, var(--line)); padding:14px 16px 12px; }
+  #skSidebar .sk-brand img{ width:38px; height:38px; border-radius:11px; }
+  #skSidebar .sk-brand b{ font-size:17px; letter-spacing:-.02em; }
+  #skSidebar .sk-brand b i{ color:var(--aio-coral, var(--red)); }
+  #skSidebar .sk-brand small{ font-size:9px; letter-spacing:.12em; font-weight:700; text-transform:uppercase; }
+  #skSidebar .sk-nav a{ padding:9px 10px; border-radius:12px; font-size:13.5px; font-weight:600; color:var(--aio-ink, var(--ink)); border:1px solid transparent; gap:10px; }
+  #skSidebar .sk-nav a:hover{ background:#FFF6DE; }
+  #skSidebar .sk-nav a.active{ background:var(--aio-pill, var(--red-soft)); border-color:#D9C08A; color:var(--aio-brown, var(--ink)); box-shadow:inset 0 0 0 1px #fff; font-weight:700; }
+  #skSidebar .sk-nav a .vi{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; flex:none; background:#FFF6DE; }
+  #skSidebar .sk-nav a[data-nav="home"] .vi{ background:#FFE8D6; }
+  #skSidebar .sk-nav a[data-nav="kanji"] .vi{ background:#D6EAF8; }
+  #skSidebar .sk-nav a[data-nav="tango"] .vi{ background:#E4DBF5; }
+  #skSidebar .sk-nav a[data-nav="bunpo"] .vi{ background:#FDE6C9; }
+  #skSidebar .sk-nav a[data-nav="jlpt"] .vi{ background:#D2EAF8; }
+  #skSidebar .sk-nav a[data-nav="shadowing"] .vi{ background:#FADCE8; }
+  #skSidebar .sk-nav a[data-nav="canhan"] .vi{ background:#F7EBCB; }
+  #skSidebar .sk-nav a[data-nav="daluu"] .vi{ background:#D2F0DD; }
+  #skSidebar .sk-nav a[data-nav="xephang"] .vi{ background:#FFF0B8; }
+  #skSidebar .sk-nav a[data-nav="congdong"] .vi{ background:#D2EAF8; }
+  #skSidebar .sk-nav a[data-nav="trondoi"] .vi{ background:#FFE3D9; }
+  #skSidebar .sk-nav a[data-nav="caidat"] .vi{ background:#EDEBE8; }
+  #skSidebar .sk-foot{ border-top:1px solid var(--aio-line, var(--line)); }
+  #skSidebar .sk-user-link{ background:var(--aio-paper, var(--card)); border:1px solid var(--aio-line, var(--line)); border-radius:16px; padding:12px; }
+  #skSidebar .sk-collapse{ border-radius:12px; }
+}
+/* --- Responsive (theo mau) --- */
+@media (max-width:1180px){
+  .aio-cards{ grid-template-columns:repeat(4,1fr); }
+  .aio-cards-more{ grid-template-columns:repeat(3,1fr); }
+  .aio-lower{ grid-template-columns:1fr 1fr; }
+}
+@media (max-width:900px){
+  .aio-hero h2{ font-size:21px; }
+  .aio-cat{ display:none; }
+  .aio-cards{ grid-template-columns:repeat(2,1fr); }
+  .aio-cards-more{ grid-template-columns:repeat(2,1fr); }
+  .aio-lower{ grid-template-columns:1fr; }
+  .aio-rank{ grid-template-columns:1fr; }
+  .aio-strip{ gap:6px; padding:6px; }
+  .aio-datebox, .aio-mission-chip, .aio-countdown-chip{ border:0; }
+  .aio-week{ order:4; flex-basis:100%; justify-content:space-between; padding:6px 4px; }
+}
+@media (max-width:380px){ .aio-cards, .aio-cards-more{ grid-template-columns:1fr 1fr; gap:8px; } .aio-card{ min-height:158px; } }
+@media (prefers-reduced-motion:reduce){ .aio-card{ transition:none !important; } }
 </style>
 </head>
 <body>
@@ -3304,6 +3540,13 @@ function skpRenderMissions(payload, status){
       '<span class="skp-mstate' + (isDone ? " done" : (state === "Đang làm" ? " doing" : "")) + '">' + state + '</span></div>';
   }).join("");
   rowsEl.innerHTML = rows;
+  /* Chip nhiệm vụ ở hero AIO (cùng số thật n/5; không có thì giữ "…"). */
+  var chip = document.getElementById("aioMissionChip");
+  if(chip){
+    if(status === "error") chip.innerHTML = "<b>🎯 —/5</b><span>Chưa tải được nhiệm vụ</span>";
+    else if(status === "guest") chip.innerHTML = "<b>🎯 0/5</b><span>Đăng nhập để xem nhiệm vụ</span>";
+    else chip.innerHTML = "<b>🎯 " + n + "/5</b><span>" + (n >= 5 ? "Đã xong nhiệm vụ hôm nay ✓" : "Nhiệm vụ hôm nay · làm trên app di động") + "</span>";
+  }
 }
 /* Tải trạng thái nhiệm vụ: CHỈ ĐỌC 1 lần doc sync missions của chính tài khoản
    (rules cho phép chủ tài khoản đọc). Không listener, không ghi gì. */
@@ -3323,6 +3566,48 @@ function skpLoadMissions(){
       skpRenderMissions(payload, "ok");
     }, function(){ skpRenderMissions(null, "error"); });
   }catch(e){ skpRenderMissions(null, "error"); }
+}
+
+/* ===== Dải cấp bậc AIO ở Home: 10 cấp quân đội + EXP + thắng Đấu trường =====
+   Số thật từ ví đồng bộ (skWebExp/skRankFromExp). Xu: web KHÔNG đọc số dư Xu
+   (skFetchWalletExp chỉ đọc tuvi/wins) nên KHÔNG hiện số Xu giả — chỉ ghi
+   "xem trên app". Hàm global để probe harness gọi trực tiếp. */
+function aioRankHTML(){
+  var st = null;
+  try{ st = (typeof skWebExp === "function") ? skWebExp() : null; }catch(e){ st = null; }
+  var curIdx = -1, r = null;
+  if(st && st.status === "known"){
+    try{ r = skRankFromExp(st.exp); curIdx = r.idx; }catch(e){ r = null; curIdx = -1; }
+  }
+  var names = ["Tân binh", "Binh nhì", "Binh nhất", "Hạ sĩ", "Trung sĩ", "Thượng sĩ", "Thiếu úy", "Trung úy", "Thượng úy", "Tướng"];
+  var chips = names.map(function(n, i){
+    return '<span class="aio-rank-chip' + (i === curIdx ? " on" : "") + '">' + n + '</span>';
+  }).join("");
+  var mid = "";
+  if(!st || st.status === "loggedout"){
+    mid = '<div class="aio-exp-text">Đăng nhập để xem cấp bậc theo tổng EXP của bạn.</div><div class="aio-expbar"><i style="width:0%"></i></div>';
+  } else if(st.status === "loading"){
+    mid = '<div class="aio-exp-text">Đang tải EXP…</div><div class="aio-expbar"><i style="width:0%"></i></div>';
+  } else if(st.status === "error"){
+    mid = '<div class="aio-exp-text">Không tải được EXP — kiểm tra mạng rồi mở lại Trang chủ.</div><div class="aio-expbar"><i style="width:0%"></i></div>';
+  } else {
+    var pct = r.next ? Math.floor(r.progress * 100) : 100;
+    mid = '<div class="aio-exp-text"><b>' + skFmtExp(r.exp) + '</b> / ' + skFmtExp(r.next ? r.next.min : r.exp) + ' EXP — còn <b>' + skFmtExp(r.need) + ' EXP</b> nữa tới <b>' + (r.next ? r.next.name : "Tướng") + '</b></div>' +
+      '<div class="aio-expbar"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="aio-exp-text">Hoàn thành nhiệm vụ hôm nay để nhận tối đa 195 EXP/ngày</div>';
+  }
+  var wins = (st && st.status === "known" && typeof st.wins === "number") ? st.wins : null;
+  var side = '<div class="aio-rank-side">' +
+    '<div class="aio-xu"><b>' + (wins === null ? "—" : "⚔️ " + wins + " thắng") + '</b><small>Đấu trường</small></div>' +
+    '<div class="aio-xu"><b>Xu</b><small>Số dư xem trên <a href="#/caidat">app di động</a></small></div>' +
+    '</div>';
+  return '<div><h3>🎖️ Cấp bậc quân đội</h3><div class="aio-ranks">' + chips + '</div></div>' +
+    '<div>' + mid + '</div>' + side;
+}
+function aioRefreshRank(){
+  var el = document.getElementById("aioRank");
+  if(!el) return;
+  el.innerHTML = aioRankHTML();
 }
 
 function renderHome(){
@@ -3352,35 +3637,81 @@ function renderHome(){
   var wd = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
   var nowD = new Date();
   var dateLine = wd[nowD.getDay()] + ", ngày " + nowD.getDate() + " tháng " + (nowD.getMonth() + 1) + " năm " + nowD.getFullYear();
-  h += '<div class="skh-home">';
-  /* 1. Lời chào (tên thật từ state app; khách -> "bạn") */
-  h += '<div class="skp-greet"><h2>Chào <span id="skpGreetName">' + esc(skpGreetName()) + '</span>, học tiếp thôi!</h2><p>' + dateLine + '</p></div>';
+  h += '<div class="skh-home aio-home">';
+  /* 1. Hero: lời chào + dải điểm danh tuần (chỉ dữ liệu thật).
+     Dải gồm: ô ngày (thật) · chip nhiệm vụ hôm nay n/5 (skpRenderMissions
+     điền; khách -> gợi ý đăng nhập) · lịch tuần T2–CN (lịch thật, chỉ tô
+     hôm nay — web KHÔNG có dữ liệu điểm danh từng ngày nên không tích ✓
+     ngày nào) · chip đếm ngược JLPT (tóm tắt; chi tiết ở panel bên dưới). */
+  var aioWeek = (function(){
+    var dow = nowD.getDay(); /* 0=CN */
+    var monday = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate() - ((dow + 6) % 7));
+    var lbls = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+    var out = "";
+    for(var i = 0; i < 7; i++){
+      var dd = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+      var isToday = dd.getDate() === nowD.getDate() && dd.getMonth() === nowD.getMonth() && dd.getFullYear() === nowD.getFullYear();
+      out += '<div class="aio-day' + (isToday ? " today" : "") + '"><label>' + lbls[i] + '</label><span class="aio-dot">' + (isToday ? "✓" : "·") + '</span><small>' + dd.getDate() + '</small></div>';
+    }
+    return out;
+  })();
+  h += '<section class="aio-hero"><span class="aio-sparkle">✦</span><div class="aio-cat">🦊</div>' +
+    '<h2>Chào <span id="skpGreetName">' + esc(skpGreetName()) + '</span>, học tiếp thôi!</h2><p>' + dateLine + '</p>' +
+    '<div class="aio-strip">' +
+    '<div class="aio-datebox"><small>THÁNG ' + (nowD.getMonth() + 1) + '</small><b><strong>' + nowD.getDate() + '</strong> ' + wd[nowD.getDay()] + '</b></div>' +
+    '<div class="aio-mission-chip" id="aioMissionChip"><b>🎯 …</b><span>Đang tải nhiệm vụ…</span></div>' +
+    '<div class="aio-week" aria-label="Tuần này">' + aioWeek + '</div>' +
+    '<div class="aio-countdown-chip">⏳ Còn <b>' + D + ' ngày</b><span>tới kỳ thi ' + fmtDate(examD) + '</span></div>' +
+    '</div></section>';
   h += skMonthExpiryNoteHTML();
-  /* 2. Hàng 2 cột: Đếm ngược JLPT | Nhiệm vụ hôm nay */
-  h += '<div class="skp-row">';
-  h += '<section class="skh-card"><h2>⏳ Đếm ngược JLPT</h2>' +
-    '<div class="skp-count-top"><div class="skp-days"><b>' + D + '</b><span>ngày nữa</span></div>' +
-    '<div><h3>Kỳ thi ' + fmtDate(examD) + '</h3><p>Mục tiêu của bạn: <b>' + homeState.target + '</b></p></div></div>' +
-    '<div class="cd-card" id="cdCard">' + cdCardHTML() + '</div></section>';
-  /* Nhiệm vụ hôm nay: khung chờ, bindHome gọi skpLoadMissions() điền số thật
-     (khách -> 0/5 ngay; đã đăng nhập -> đọc doc sync missions). */
-  h += '<section class="skh-card skp-missions" id="skpMissions"><h2>🎯 Nhiệm vụ hôm nay <span class="skp-mcount" id="skpMissionCount">…</span></h2>' +
-    '<div id="skpMissionRows"></div>' +
-    '<p class="skp-mnote" id="skpMissionNote">Đang tải…</p></section>';
-  h += '</div>';
-  /* 3. Thẻ đỏ Học tiếp — nhiệm vụ ngày hiện tại của lộ trình 30 ngày (thật) */
+  /* 2. Thẻ Học tiếp (nhiệm vụ ngày hiện tại của lộ trình 30 ngày, thật). */
   if(resumeDay){
-    h += '<div class="skp-resume"><div><h3>Học tiếp: ' + esc(resumeDay.title) + '</h3>' +
+    h += '<div class="aio-resume"><div><h3>Học tiếp: ' + esc(resumeDay.title) + '</h3>' +
       '<p>Lộ trình 30 ngày ' + planLv + ' · Ngày ' + resumeDay.day + '/30 · ' + PLAN_SKILL_NAMES[resumeDay.skill] + '</p></div>' +
-      '<a class="skp-cta" href="' + resumeDay.href + '">Học ngay →</a></div>';
+      '<a class="aio-cta" href="' + resumeDay.href + '">Học ngay →</a></div>';
   } else {
-    h += '<div class="skp-resume"><div><h3>Bạn đã hoàn thành lộ trình 30 ngày ' + planLv + '!</h3>' +
+    h += '<div class="aio-resume"><div><h3>Bạn đã hoàn thành lộ trình 30 ngày ' + planLv + '!</h3>' +
       '<p>Xem lại toàn bộ lộ trình hoặc khai cấp cao hơn để học tiếp.</p></div>' +
-      '<a class="skp-cta" href="#/canhan">Xem lộ trình →</a></div>';
+      '<a class="aio-cta" href="#/canhan">Xem lộ trình →</a></div>';
   }
-  /* 4. Lộ trình 30 ngày dạng lưới 10 cột (như bảng xem trước) */
-  h += '<section class="skh-card"><div class="skh-planhead"><h2>🗺️ Lộ trình 30 ngày</h2>' +
-    '<button type="button" class="skp-declare-btn' + (declaredLvW === 0 ? " hl" : "") + '" id="skpDeclareBtn">🎓 Khai trình độ</button></div>' +
+  /* 3. Hôm nay học gì? — 7 thẻ pastel chính (số thật, đã kiểm chứng; xem REPORT).
+     Kanji = totalKanji() tính lúc chạy. Từ vựng 10.608 = Minna 10.533 +
+     bài mở đầu 75 (tile cũ ghi 10.605 là số cũ, lệch 3). Đọc hiểu 200 bài
+     JLPT (+50 bài AI ở #/dokkai, link từ #/doc). Đề thi 46 = 45 Test 1–9
+     + Đề chuẩn N3. */
+  h += '<div class="aio-sec-head"><h2>Hôm nay học gì?</h2><p>Mỗi ngày một chút, đều đặn là được.</p></div>';
+  function aioCard(href, cls, count, name, sub, illus){
+    return '<a class="aio-card ' + cls + '" href="' + href + '"><span class="aio-tape"></span><span class="aio-count">' + count + '</span><h3>' + name + '</h3><p>' + sub + '</p><div class="aio-illus"><div class="aio-bubble">' + illus + '</div></div></a>';
+  }
+  h += '<section class="aio-cards">' +
+    aioCard("#/kanji", "c-blue", totalKanji.toLocaleString("vi-VN") + " CHỮ", "Kanji", "Học chữ Hán theo cấp độ, có mẹo nhớ &amp; nét viết", '<span class="aio-big-kanji">日月火</span>') +
+    aioCard("#/tuvung", "c-lav", "10.608 TỪ", "Từ vựng", "Minna no Nihongo · N5–N1, kèm hình minh họa", "🗂️") +
+    aioCard("#/nguphap", "c-peach", "375 MẪU", "Ngữ pháp", "Học từng bước, đủ mọi cấp N5 → N1", "✅📝") +
+    aioCard("#/doc", "c-mint", "200 BÀI", "Đọc hiểu", "Bài đọc JLPT · N5–N1 + Thư viện Đọc hiểu AI 50 bài", "📄📄") +
+    aioCard("#/shadowing", "c-pink", "190 BÀI", "Shadowing", "Một video, luyện nghe &amp; nói theo từng câu", "▶️🎞️") +
+    aioCard("#/canhan", "c-cream", "30 NGÀY", "Lộ trình", "30 ngày tới " + planLv + ", theo từng ngày rõ ràng", "🗺️📍") +
+    aioCard("#/thi", "c-sky", "46 ĐỀ", "Đề thi", "45 đề thi thử + Đề chuẩn N3 · chấm như thi thật", "📋✔️") +
+    '</section>';
+  /* 3b. Khám phá thêm — 6 thẻ còn lại của Home cũ (giữ đủ lối vào: Luyện nghe
+     và Đọc hiểu AI không có trong sidebar, chỉ vào được từ Home). */
+  h += '<div class="aio-sec-head aio-sec-head-sm"><h2>Khám phá thêm</h2><p>Còn nhiều mục hay nữa.</p></div>';
+  h += '<section class="aio-cards-more">' +
+    aioCard("#/nghe", "c-sky", "149 HỘI THOẠI", "Luyện nghe", "Nghe hiểu JLPT · N5–N1, có lời thoại", "🎧") +
+    aioCard("#/tuvung/cn", "c-cream", "1.056 TỪ", "Tokutei", "Từ vựng chuyên ngành · 14 ngành", "🏗️") +
+    aioCard("#/xephang", "c-pink", "ĐẤU TRƯỜNG", "Đấu trường", "Xem hạng đấu · Đấu trên app di động", "⚔️") +
+    aioCard("#/xephang", "c-lav", "XẾP HẠNG", "Xếp hạng", "Bảng xếp hạng EXP · cấp quân đội", "🏆") +
+    aioCard("#/daluu", "c-mint", countSavedWords().toLocaleString("vi-VN") + " TỪ ĐÃ LƯU", "Ôn tập", "Ôn thẻ đã lưu khi sắp quên", "🔖") +
+    aioCard("#/congdong", "c-blue", "CỘNG ĐỒNG", "Cộng đồng", "Cộng đồng học viên SoraKanji", "👥") +
+    '</section>';
+  /* 4. Hàng dưới: Kế hoạch hôm nay (nhiệm vụ — giữ nguyên id cho
+     skpRenderMissions/bindHome) + Lộ trình 30 ngày (giữ nguyên lưới ngày
+     + Khai trình độ). */
+  h += '<section class="aio-lower">';
+  h += '<div class="aio-panel aio-plan"><div class="aio-panel-head"><h3>📋 Kế hoạch hôm nay.</h3><div class="aio-badge-count"><div><b id="skpMissionCount">…</b><br><small>bài</small></div></div></div>' +
+    '<div id="skpMissions"><div id="skpMissionRows"></div>' +
+    '<p class="aio-mnote" id="skpMissionNote">Đang tải…</p></div></div>';
+  h += '<div class="aio-panel aio-road"><div class="aio-road-head"><h3>🗺️ Lộ trình.</h3><a class="aio-open-link" href="#/canhan">Mở →</a></div>' +
+    '<button type="button" class="skp-declare-btn' + (declaredLvW === 0 ? " hl" : "") + '" id="skpDeclareBtn">🎓 Khai trình độ</button>' +
     '<div class="skp-declare-panel" id="skpDeclarePanel"><div class="cd-lv" style="padding:0">' +
     LV_NAMES_W.map(function(n, i){
       return '<button type="button" data-sdlv="' + i + '"' + (i === declaredLvW ? ' class="on"' : "") + ">" + n + "</button>";
@@ -3390,7 +3721,14 @@ function renderHome(){
       ? "Chưa khai trình độ → lộ trình 30 ngày cấp N5 (chặng 1). Chọn cấp bạn đã đạt để app xếp lộ trình phù hợp."
       : "Đã khai: " + LV_NAMES_W[declaredLvW] + " → lộ trình 30 ngày cấp " + planLv + " (chặng " + (declaredLvW + 1) + ").") +
     "</p></div>" +
-    '<div class="skh-road"><span>' + (planDone >= 30 ? "Đã hoàn thành lộ trình" : "Ngày <b>" + curDayNum + "/30</b> · " + planLv) + '</span><div class="skh-bar"><i style="width:' + planPct + '%"></i></div><b class="skh-pct">' + planPct + '%</b></div>' +
+    '<div class="aio-pct">' + planPct + '%</div>' +
+    '<p class="aio-road-sub">chặng đường tới JLPT ' + planLv + '</p>' +
+    '<div class="aio-progress"><i style="width:' + planPct + '%"></i></div>' +
+    '<div class="aio-marker">' + (planDone >= 30 ? "Đã hoàn thành lộ trình" : "Ngày <b>" + curDayNum + "/30</b> · " + planLv) + '</div>' +
+    '<div class="aio-road-stats">' +
+    '<div class="aio-rstat"><small>Ngày đã xong</small><b>' + planDone + '/30</b></div>' +
+    '<div class="aio-rstat"><small>Cấp mục tiêu</small><b>' + homeState.target + '</b></div>' +
+    '</div>' +
     '<div class="skp-plangrid" id="skpPlanGrid">' +
     (function(){
       var cells = "";
@@ -3405,29 +3743,19 @@ function renderHome(){
       return cells;
     })() +
     '</div>' +
-    '<p style="margin:12px 0 0"><a href="#/canhan" style="font-weight:700">Xem lộ trình 30 ngày →</a></p></section>';
-  /* 5. Mục học — 12 thẻ link thật, KHÔNG thanh tiến độ (app không có số liệu thật từng mục).
-     Đấu trường: web không có route đấu trường — thẻ dẫn tới #/xephang (theo FAQ của app:
-     đấu trường là tính năng app di động). Tokutei: web không có trang thi Tokutei —
-     thẻ dẫn tới #/tuvung/cn (từ vựng chuyên ngành 14 ngành Tokutei). Ôn tập: số từ
-     đã lưu thật từ countSavedWords(). */
-  h += '<h2 class="skh-sect">Mục học</h2><div class="skh-tiles">' +
-    skhTile("#/kanji", "🏯", "Chữ Hán", totalKanji.toLocaleString("vi-VN") + " chữ · theo cấp JLPT") +
-    skhTile("#/tuvung", "👑", "Từ vựng", "10.605 từ · Minna no Nihongo") +
-    skhTile("#/nguphap", "文", "Ngữ pháp", "375 mẫu câu · N5–N1") +
-    skhTile("#/doc", "📖", "Đọc hiểu", "200 bài đọc · N5–N1") +
-    skhTile("#/nghe", "🎧", "Luyện nghe", "149 hội thoại · N5–N1") +
-    skhTile("#/shadowing", "🎙️", "Shadowing", "190 bài video · karaoke") +
-    skhTile("#/thi", "試", "Đề thi JLPT", "45 đề thi thử · đủ 5 cấp") +
-    skhTile("#/tuvung/cn", "🏗️", "Tokutei", "1.056 từ · 14 ngành") +
-    skhTile("#/xephang", "⚔️", "Đấu trường", "Xem hạng đấu · Đấu trên app di động") +
-    skhTile("#/xephang", "🏆", "Xếp hạng", "Bảng xếp hạng EXP") +
-    skhTile("#/daluu", "🔖", "Ôn tập", countSavedWords().toLocaleString("vi-VN") + " từ đã lưu") +
-    skhTile("#/congdong", "👥", "Cộng đồng", "Cộng đồng học viên") +
-    '</div>';
-  /* 6. Cài App (Tìm kiếm / Vẽ / lưới Kanji đã chuyển sang mục Kanji #/kanji). */
-  h += '<button class="app-pill" id="appPill" type="button">📱 Cài App SoraKanji</button>';
-
+    '<p style="margin:12px 0 0"><a href="#/canhan" style="font-weight:700">Xem lộ trình 30 ngày →</a></p></div>';
+  h += '</section>';
+  /* 5. Đếm ngược JLPT (đầy đủ: chọn cấp mục tiêu + 3 giai đoạn + Hôm nay nên
+     học). Mẫu không có chỗ cho panel này nên đặt thành panel riêng dưới hàng
+     Lộ trình — giữ nguyên id #cdCard cho bindHome. */
+  h += '<section class="aio-panel aio-countdown"><div class="aio-panel-head"><h3>⏳ Đếm ngược JLPT</h3></div>' +
+    '<div class="skp-count-top"><div class="skp-days"><b>' + D + '</b><span>ngày nữa</span></div>' +
+    '<div><h3>Kỳ thi ' + fmtDate(examD) + '</h3><p>Mục tiêu của bạn: <b>' + homeState.target + '</b></p></div></div>' +
+    '<div class="cd-card" id="cdCard">' + cdCardHTML() + '</div></section>';
+  /* 6. Cấp bậc quân đội + EXP + thắng Đấu trường (số thật từ ví đồng bộ). */
+  h += '<section class="aio-rank" id="aioRank">' + aioRankHTML() + '</section>';
+  /* 7. Cài App (giữ nguyên id/hành vi). */
+  h += '<button class="app-pill aio-app-pill" id="appPill" type="button">📱 Cài App SoraKanji</button>';
   h += '</div>';
   $app.innerHTML = h;
   bindHome();
@@ -3508,6 +3836,11 @@ function bindHome(){
   });
   /* Nhiệm vụ hôm nay: tải trạng thái hoàn thành thật từ doc sync missions. */
   skpLoadMissions();
+  /* Dải cấp AIO: nếu đã đăng nhập mà EXP đang tải thì kích hoạt fetch ví
+     (auth listener đã gọi 1 lần khi đăng nhập; gọi lại ở đây an toàn vì
+     skFetchWalletExp tự chặn fetch trùng). */
+  try{ if(typeof skFetchWalletExp === "function" && typeof skWebExp === "function" && skWebExp().status === "loading") skFetchWalletExp(); }catch(e){}
+  try{ var _s0 = skWebExp(); window.aioLastRankSt = _s0.status; }catch(e){ window.aioLastRankSt = ""; }
   /* Lưới lộ trình 30 ngày: ngày đang học -> tới thẳng nhiệm vụ của ngày đó;
      ngày đã xong -> về trang Cá nhân xem lộ trình; ngày chưa mở -> không làm gì. */
   var pg = document.getElementById("skpPlanGrid");
@@ -3549,6 +3882,10 @@ function bindHome(){
     try{ u = webCurrentUser(); }catch(e){}
     var uid = (u && u.uid) || "";
     if(uid !== skpLastUid){ skpLastUid = uid; skpRefreshGreet(); skpLoadMissions(); }
+    var st2 = null;
+    try{ st2 = (typeof skWebExp === "function") ? skWebExp() : null; }catch(e){}
+    var st2s = st2 ? st2.status : "";
+    if(st2s !== window.aioLastRankSt){ window.aioLastRankSt = st2s; try{ aioRefreshRank(); }catch(e){} }
   }, 2000);
 }
 
